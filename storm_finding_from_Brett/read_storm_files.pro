@@ -2,7 +2,7 @@
 
 ;PRO read_storm_files,STORMFILENAME=stormFileName
 
-stormDir='/SPENCEdata/Research/Cusp/ACE_FAST/storm_finding_from_Brett/'
+stormDir='/SPENCEdata/Research/Cusp/storms_Alfvens/storm_finding_from_Brett/'
 largeStormFile='Large_storms_from_20150513_list.txt'
 smallStormFile='Small_storms_from_20150513_list.txt'
 
