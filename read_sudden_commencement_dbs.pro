@@ -1,4 +1,4 @@
-;2015/08/13
+;2015/08/12
 ;Now we're going to read in NOAA's storm sudden commencement databases
 
 ;They are located here:
@@ -11,6 +11,9 @@
 
 ;Jim wants me to find an automated way to identify storm sudden commencement, but I'd rather rely on the work of others.
 ;I'll be comparing their lists with the storms identified by Brett Anderson's dst_stormfinder_v2.pro.
+
+;2015/08/14 : Added the whole 'add_tstamp_to_NOAA_SSC_DBs' thing to give Julday and tstamps, and to
+;sort the dbs by time
 
 PRO READ_SUDDEN_COMMENCEMENT_DBS
 
@@ -59,6 +62,9 @@ PRO READ_SUDDEN_COMMENCEMENT_DBS
 
   ssc1 = CREATE_STRUCT("filename",SSC_FILE1,ssc1)
   ssc2 = CREATE_STRUCT("filename",SSC_FILE2,ssc2)
+
+  add_tstamp_to_noaa_ssc_dbs,ssc1
+  add_tstamp_to_noaa_ssc_dbs,ssc2
 
   save,ssc1,ssc2,filename='SSC_dbs--storm2_mods.txt__STORM2_MODS.SSC--idl.sav'
 

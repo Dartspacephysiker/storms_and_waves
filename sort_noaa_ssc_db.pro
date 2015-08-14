@@ -1,7 +1,12 @@
+;;Obsoleted 2015/08/14. This is now done in read_sudden_commencement_dbs when
+;;add_tstamp_to_noaa_ssc_dbs is called at the bottom of the pro.
 PRO  SORT_NOAA_SSC_DB,ssc,jd
 
   jd_ssc = JULDAY(ssc.month, ssc.day, ssc.year, ssc.hour, ssc.minute)
+
   si=sort(jd_ssc)
+
+  jd=jd_ssc(si)
 
   ssc_sorted={FILENAME:ssc.filename, $
               YEAR:ssc.year(si), $
@@ -21,8 +26,6 @@ PRO  SORT_NOAA_SSC_DB,ssc,jd
               AVG_DUR:ssc.avg_dur(si), $
               AVG_AMPLITUDE:ssc.avg_amplitude(si)}
   ssc=ssc_sorted
-
-  jd=jd_ssc(si)
 
   PRINT,"Finished sorting NOAA SSC database!"
 

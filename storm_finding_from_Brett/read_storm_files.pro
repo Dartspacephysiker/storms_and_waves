@@ -1,4 +1,5 @@
 ;2015/06/12 This pro just reads the storm files that Brett gifted me
+;2015/08/14 Added Julian day to struct
 
 ;PRO read_storm_files,STORMFILENAME=stormFileName
 
@@ -59,6 +60,12 @@ jultime = (JulDay([largeStormDat.month,smallStormDat.month], $
 stormStruct={stormStruct,is_largeStorm:[largeStormDat.is_largeStorm,smallStormDat.is_largeStorm], $
              storm:[largeStormDat.storm,smallStormDat.storm], $
              time:julTime, $
+             julday:JULDAY([largeStormDat.month,smallStormDat.month], $
+                           [largeStormDat.day,smallStormDat.day], $
+                           [largeStormDat.year,smallStormDat.year], $
+                           [largeStormDat.hour,smallStormDat.hour], $
+                           [largeStormDat.minute,smallStormDat.minute], $
+                           0), $
              tStamp:TIMESTAMP(YEAR = [largeStormDat.year,smallStormDat.year], $
                               MONTH = [largeStormDat.month,smallStormDat.month], $
                               DAY = [largeStormDat.day,smallStormDat.day], $
@@ -72,5 +79,7 @@ stormStruct={stormStruct,is_largeStorm:[largeStormDat.is_largeStorm,smallStormDa
              minute:[largeStormDat.minute,smallStormDat.minute], $
              dst:[largeStormDat.dst,smallStormDat.dst], $
              drop_in_dst:[largeStormDat.drop_in_dst,smallStormDat.drop_in_dst]}
+
+sort_bretts_db,stormStruct
 
 save,stormStruct,filename=stormOutDir+stormOutFile

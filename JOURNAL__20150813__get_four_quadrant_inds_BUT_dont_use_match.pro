@@ -19,22 +19,19 @@ PRO JOURNAL__20150813__GET_FOUR_QUADRANT_INDS_BUT_DONT_USE_MATCH
   DB_NOAA = 'SSC_dbs--storm2_mods.txt__STORM2_MODS.SSC--idl.sav'
 
   INDS_OUTFILE = 'large_and_small_storms--Oct1996-Oct2000--indices_for_four_quadrants--Anderson.sav'
-  ;restore and sort brett's DB by time
+
   PRINT,"Restoring " + DB_BRETT + "..."
   restore,DBDIR+DB_BRETT
-  SORT_BRETTS_DB,stormStruct,jd_st
 
   PRINT,"Restoring " + DB_NOAA + "..."
   restore,DBDIR+DB_NOAA
-  SORT_NOAA_SSC_DB,ssc1,jd_ssc1
-  SORT_NOAA_SSC_DB,ssc2,jd_ssc2
 
   ;;**************************************************
   ;;Time things
   ;; timestamps (why?). All have fields year, month, day, hour, minute
-  ts_ssc1 = TIMESTAMP(YEAR=ssc1.year, MONTH=ssc1.month, DAY=ssc1.day, HOUR=ssc1.hour, MINUTE=ssc1.minute)
-  ts_ssc2 = TIMESTAMP(YEAR=ssc2.year, MONTH=ssc2.month, DAY=ssc2.day, HOUR=ssc2.hour, MINUTE=ssc2.minute)
-  ts_st = TIMESTAMP(YEAR=stormStruct.year, MONTH=stormStruct.month, DAY=stormStruct.day, HOUR=stormStruct.hour, MINUTE=stormStruct.minute)
+  ;; ts_ssc1 = TIMESTAMP(YEAR=ssc1.year, MONTH=ssc1.month, DAY=ssc1.day, HOUR=ssc1.hour, MINUTE=ssc1.minute)
+  ;; ts_ssc2 = TIMESTAMP(YEAR=ssc2.year, MONTH=ssc2.month, DAY=ssc2.day, HOUR=ssc2.hour, MINUTE=ssc2.minute)
+  ;; ts_st = TIMESTAMP(YEAR=stormStruct.year, MONTH=stormStruct.month, DAY=stormStruct.day, HOUR=stormStruct.hour, MINUTE=stormStruct.minute)
   
   ;; Julian day (rather have UTC)
   ;; jd_ssc1 = JULDAY(ssc1.month, ssc1.day, ssc1.year, ssc1.hour, ssc1.minute)
@@ -140,7 +137,7 @@ PRO JOURNAL__20150813__GET_FOUR_QUADRANT_INDS_BUT_DONT_USE_MATCH
 
   ;;And here's how you know whether or not is was succesfull...
   ;;All values should be positive, since Brett identifies minimum DST and sudden commencement must occur before the minimum DST value.
-  print,jd_st(quad1_i_st)-jd_ssc1(quad1_i_1)
+  ;; print,jd_st(quad1_i_st)-jd_ssc1(quad1_i_1)
 
   ;;Really should check for dupes here
   check_dupes,quad12_ii_st ;First Brett dupes, Q 1-2
@@ -185,30 +182,39 @@ PRO JOURNAL__20150813__GET_FOUR_QUADRANT_INDS_BUT_DONT_USE_MATCH
      qi_NOAA_l = LIST(quad1_i_1)
      qi_NOAA_l.add,quad2_i_1
      qi_NOAA_l.add,quad5_i_1
-     qi_NOAA = {GENERATING_FILE:'journal__20150813__get_four_quadrant_inds_but_dont_use_match.pro', $
+     qi_NOAA = {qi_SSC, $
+                NAME:'qi_NOAA', $
+                GENERATING_FILE:'journal__20150813__get_four_quadrant_inds_but_dont_use_match.pro', $
                 GIT_DB:'storms_and_waves', $
                 USE_WITH_DB:DB_NOAA, $
-                qi_info:'See comments at top of generating file for description of the four quadrants these indices represent.' + string(10B) + $
+                list_i:qi_NOAA_l, $
+                qi_info:"Structure for NOAA database of storm sudden commencements" + string(10B) + $
                 'Q1: Brett identifies as LARGE storm, and sudden commencement appears in NOAA SSC DB' + string(10B) + $
                 'Q2: Brett identifies as SMALL storm, and sudden commencement appears in NOAA SSC DB' + string(10B) + $
-                'Q5: Identified in NOAA db, but not identified in Brett DB', $
-                list_i:qi_NOAA_l}
+                'Q5: Identified in NOAA db, but not identified in Brett DB' + string(10B) + $
+                'See comments at top of generating file for description of the four quadrants these indices represent.'}
 
   ENDIF
-  qi_st = {GENERATING_FILE:'journal__20150813__get_four_quadrant_inds_but_dont_use_match.pro', $
+  qi_st = {qi_SSC, $
+           NAME:'qi_st', $
+           GENERATING_FILE:'journal__20150813__get_four_quadrant_inds_but_dont_use_match.pro', $
            GIT_DB:'storms_and_waves', $
            USE_WITH_DB:DB_BRETT, $
-           qi_info:'See comments at top of generating file for description of the four quadrants these indices represent.' + string(10B) + $
+           list_i:qi_st_l, $
+           qi_info:"Structure for Brett's storm database"+ string(10B) + $
            'Q1: Brett identifies as LARGE storm, and sudden commencement appears in NOAA SSC DB' + string(10B) + $
            'Q2: Brett identifies as SMALL storm, and sudden commencement appears in NOAA SSC DB' + string(10B) + $
            'Q3: Brett identifies as LARGE storm, and sudden commencement DOES NOT appear in NOAA SSC DB' + string(10B) + $
-           'Q4: Brett identifies as SMALL storm, and sudden commencement DOES NOT appear in NOAA SSC DB' + string(10B), $
-           list_i:qi_st_l}
+           'Q4: Brett identifies as SMALL storm, and sudden commencement DOES NOT appear in NOAA SSC DB' + string(10B) + $
+           'See comments at top of generating file for description of the four quadrants these indices represent.'}
               
-  saveStr='save' 
+  qi = [qi_st,qi_NOAA]
 
-  saveStr +=',qi_st'
-  IF do_loc_st THEN saveStr += ',qi_NOAA'
+
+  saveStr='save' 
+  ;; saveStr +=',qi_st'
+  ;; IF do_loc_st THEN saveStr += ',qi_NOAA'
+  saveStr +=',qi'
   saveStr += ',filename=' + '"'+INDS_OUTFILE+'"'
   print,'Saving to file ' + INDS_OUTFILE + '...'
   biz = EXECUTE(saveStr)
