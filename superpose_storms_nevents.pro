@@ -390,35 +390,164 @@ PRO superpose_storms_nevents,stormTimeArray_utc, $
      
   ENDELSE
 
-  ;; ;And NOW let's plot quantity from the Alfven DB to see how it fares during storms
+  ;; Get ranges for plots
+  minMaxDat=MAKE_ARRAY(nStorms,2,/DOUBLE)
+  
+  IF neg_and_pos_separ OR (log_DBQuantity) THEN BEGIN
+     cdb_ind_list = LIST(WHERE(maximus.(maxInd) GT 0))
+     cdb_ind_list.add,WHERE(maximus.(maxInd) LT 0)
+     
+     ;; pos_cdb_ind = WHERE(maximus.(maxInd) GT 0)
+     ;; neg_cdb_ind = WHERE(maximus.(maxInd) LT 0)
+     
+  ENDIF
+
+  FOR i=0,nStorms-1 DO BEGIN
+     
+     tempInds=cgsetintersection(good_i,[cdb_storm_i(i,0):cdb_storm_i(i,1):1])
+     minMaxDat(i,1)=MAX(maximus.(maxInd)(tempInds),MIN=tempMin)
+     minMaxDat(i,0)=tempMin
+     
+     IF neg_and_pos_separ THEN BEGIN
+        
+        ;; get appropriate indices
+        plot_i=cgsetintersection(good_i,indgen(cdb_storm_i(i,1)-cdb_storm_i(i,0)+1)+cdb_storm_i(i,0))
+        
+        plot_i_list = LIST(cgsetintersection(plot_i,cdb_ind_list[0])) ;pos and neg
+        plot_i_list.add,cgsetintersection(plot_i,cdb_ind_list[1])
+        
+        ;; get relevant time range
+        cdb_t=LIST( (DOUBLE(cdbTime(plot_i_list[0]))-DOUBLE(centerTime(i)))/3600. )
+        cdb_t.add,( (DOUBLE(cdbTime(plot_i_list[1]))-DOUBLE(centerTime(i)))/3600. )
+        
+        ;; get corresponding data
+        cdb_y=LIST(maximus.(maxInd)(plot_i_list[0]))
+        cdb_y.add,ABS(maximus.(maxInd)(plot_i_list[1]))
+        
+        nEVTot = MAKE_ARRAY(2,/INTEGER,VALUE=0)
+        
+        IF i EQ 0 THEN BEGIN
+           tot_plot_i_pos_list=LIST(plot_i_list[0])
+           tot_cdb_t_pos_list=LIST((cdb_t[0]))
+           tot_cdb_y_pos_list=LIST(cdb_y[0])
+           
+           tot_plot_i_neg_list=LIST(plot_i_list[1])
+           tot_cdb_t_neg_list=LIST((cdb_t[1]))
+           tot_cdb_y_neg_list=LIST(cdb_y[1])
+           
+           ;; plot_i_listlist=LIST(plot_i_list)
+           ;; cdb_t_list=LIST(cdb_t)
+           ;; nEvTotList=LIST(nEvTot)
+        ENDIF ELSE BEGIN
+           tot_plot_i_pos_list.add,plot_i_list[0]
+           tot_cdb_t_pos_list.add,(cdb_t[0])
+           tot_cdb_y_neg_list.add,cdb_y[0]
+           
+           tot_plot_i_neg_list.add,plot_i_list[1]
+           tot_cdb_t_neg_list.add,(cdb_t[1])
+           tot_cdb_y_neg_list.add,cdb_y[1]
+           
+              ;; plot_i_listlist.add,plot_i_list
+           ;; cdb_t_list.add,cdb_t
+           ;; nEvTotList.add,nEvTot
+        ENDELSE 
+        
+        ;; IF (plot_i_list[0])(0) GT -1 AND N_ELEMENTS(plot_i_list[0]) GT 1 THEN BEGIN
+        IF (plot_i_list[0])(0) GT -1 AND N_ELEMENTS(plot_i_list[0]) GT 1 THEN BEGIN
+           
+           IF KEYWORD_SET(nEventHists) OR (avg_type_maxInd GT 0) THEN BEGIN ;Histos of Alfvén events relative to storm epoch
+              
+              IF N_ELEMENTS(nEvHist_pos) EQ 0 THEN BEGIN
+                 nEvHist_pos=histogram((cdb_t[0]),LOCATIONS=tBin, $
+                                       MAX=tAfterStorm+nEvBinsize,MIN=-tBeforeStorm, $
+                                       BINSIZE=nEvBinsize)
+                 nEvTot[0]=N_ELEMENTS(plot_i_list[0])
+              ENDIF ELSE BEGIN
+                 nEvHist_pos=histogram((cdb_t[0]),LOCATIONS=tBin, $
+                                       MAX=tAfterStorm+nEvBinsize,MIN=-tBeforeStorm, $
+                                       BINSIZE=nEvBinsize, $
+                                       INPUT=nEvHist_pos)
+                 nEvTot[0]+=N_ELEMENTS(plot_i_list[0])
+              ENDELSE
+           ENDIF                ;end nEventHists
+        ENDIF
+        
+        IF (plot_i_list[1])(0) GT -1 AND (N_ELEMENTS(plot_i_list[1]) GT 1) THEN BEGIN
+           
+           IF KEYWORD_SET(nEventHists) OR (avg_type_maxInd GT 0) THEN BEGIN ;Histos of Alfvén events relative to storm epoch
+              
+              IF N_ELEMENTS(nEvHist_neg) EQ 0 THEN BEGIN
+                 nEvHist_neg=histogram((cdb_t[1]),LOCATIONS=tBin, $
+                                       MAX=tAfterStorm+nEvBinsize,MIN=-tBeforeStorm, $
+                                       BINSIZE=nEvBinsize)
+                 nEvTot[1]=N_ELEMENTS(plot_i_list[1])
+              ENDIF ELSE BEGIN
+                 nEvHist_neg=histogram((cdb_t[1]),LOCATIONS=tBin, $
+                                       MAX=tAfterStorm+nEvBinsize,MIN=-tBeforeStorm, $
+                                       BINSIZE=nEvBinsize, $
+                                       INPUT=nEvHist_neg)
+                 nEvTot[1]+=N_ELEMENTS(plot_i_list[1])
+              ENDELSE
+           ENDIF                ;end nEventHists
+        ENDIF
+        
+     ENDIF ELSE BEGIN
+        ;; get appropriate indices
+        plot_i=cgsetintersection(good_i,indgen(cdb_storm_i(i,1)-cdb_storm_i(i,0)+1)+cdb_storm_i(i,0))
+        
+        ;; get relevant time range
+        cdb_t=(DOUBLE(cdbTime(plot_i))-DOUBLE(centerTime(i)))/3600.
+        
+        ;; get corresponding data
+        cdb_y=maximus.(maxInd)(plot_i)
+        
+        IF i EQ 0 THEN BEGIN
+           nEvTot=N_ELEMENTS(plot_i)
+           
+           tot_plot_i_list=LIST(plot_i)
+           tot_cdb_t_list=LIST(cdb_t)
+           
+           tot_cdb_y_list=LIST(cdb_y)
+           nEvTotList=LIST(nEvTot)
+        ENDIF ELSE BEGIN
+           nEvTot+=N_ELEMENTS(plot_i)
+           
+           tot_plot_i_list.add,plot_i
+           tot_cdb_t_list.add,cdb_t
+           
+           tot_cdb_y_list.add,cdb_y
+           nEvTotList.add,nEvTot
+        ENDELSE 
+        
+        
+        IF plot_i(0) GT -1 AND N_ELEMENTS(plot_i) GT 1 THEN BEGIN
+           
+           IF KEYWORD_SET(nEventHists) OR (avg_type_maxInd GT 0) THEN BEGIN ;Histos of Alfvén events relative to storm epoch
+              
+              IF i EQ 0 THEN BEGIN
+                 nEvHist=histogram(cdb_t,LOCATIONS=tBin, $
+                                   MAX=tAfterStorm+nEvBinsize,MIN=-tBeforeStorm, $
+                                   BINSIZE=nEvBinsize)
+              ENDIF ELSE BEGIN
+                 nEvHist=histogram(cdb_t,LOCATIONS=tBin, $
+                                   MAX=tAfterStorm+nEvBinsize,MIN=-tBeforeStorm, $
+                                   BINSIZE=nEvBinsize, $
+                                   INPUT=nEvHist)
+              ENDELSE
+           ENDIF                ;end nEventHists
+        ENDIF
+        
+     ENDELSE
+     
+  ENDFOR
+  
   IF KEYWORD_SET(maxInd) THEN BEGIN
      mTags=TAG_NAMES(maximus)
      
      ;; maximusWindow=WINDOW(WINDOW_TITLE="Maximus plots", $
      ;;                 DIMENSIONS=[1200,800])
      
-     ;; Get ranges for plots
-     minMaxDat=MAKE_ARRAY(nStorms,2,/DOUBLE)
-     
-     IF neg_and_pos_separ OR (log_DBQuantity) THEN BEGIN
-        cdb_ind_list = LIST(WHERE(maximus.(maxInd) GT 0))
-        cdb_ind_list.add,WHERE(maximus.(maxInd) LT 0)
-
-        ;; pos_cdb_ind = WHERE(maximus.(maxInd) GT 0)
-        ;; neg_cdb_ind = WHERE(maximus.(maxInd) LT 0)
-
-     ENDIF
-     
-     FOR i=0,nStorms-1 DO BEGIN
-        tempInds=cgsetintersection(good_i,[cdb_storm_i(i,0):cdb_storm_i(i,1):1])
-        minMaxDat(i,1)=MAX(maximus.(maxInd)(tempInds),MIN=tempMin)
-        minMaxDat(i,0)=tempMin
-     ENDFOR
-     
      IF log_DBquantity OR neg_and_pos_separ THEN BEGIN
-
-        ;maxDat_neg, minDat_neg
-        ;maxDat_pos, minDat_pos
 
         neg_and_pos_separ = 1
 
@@ -455,15 +584,15 @@ PRO superpose_storms_nevents,stormTimeArray_utc, $
 
         IF (cdb_ind_list[0])(0) NE -1 AND (cdb_ind_list[1])(0) NE -1 THEN BEGIN
            
-           IF N_ELEMENTS((maxDat[0])) EQ 0 THEN BEGIN
-              IF N_ELEMENTS((maxDat[1])) EQ 0 THEN BEGIN
+           IF N_ELEMENTS(maxDat[0]) EQ 0 THEN BEGIN
+              IF N_ELEMENTS(maxDat[1]) EQ 0 THEN BEGIN
                  PRINT,"something's up; neither maxdat_pos nor maxdat_neg are defined..."
                  RETURN
               ENDIF
-              (maxDat[0])=(maxDat[1])
+              maxDat[0]=maxDat[1]
            ENDIF
-           IF N_ELEMENTS((maxDat[1])) EQ 0 THEN BEGIN
-              (maxDat[1])=(maxDat[0])
+           IF N_ELEMENTS(maxDat[1]) EQ 0 THEN BEGIN
+              maxDat[1]=maxDat[0]
            ENDIF
 
            IF N_ELEMENTS((minDat[0])) EQ 0 THEN BEGIN
@@ -471,17 +600,17 @@ PRO superpose_storms_nevents,stormTimeArray_utc, $
                  PRINT,"something's up; neither maxdat_pos nor maxdat_neg are defined..."
                  RETURN
               ENDIF
-              (minDat[0])=(minDat[1])
+              minDat[0]=minDat[1]
            ENDIF
            IF N_ELEMENTS((minDat[1])) EQ 0 THEN BEGIN
-              (minDat[1])=(minDat[0])
+              minDat[1]=minDat[0]
            ENDIF
 
-           IF (maxDat[0]) GE (maxDat[1]) THEN (maxDat[1])=(maxDat[0]) $
-           ELSE (maxDat[0])=(maxDat[1])
+           IF (maxDat[0]) GE (maxDat[1]) THEN maxDat[1]=maxDat[0] $
+           ELSE maxDat[0]=maxDat[1]
 
-           IF (minDat[0]) LE (minDat[1]) THEN (minDat[1])=(minDat[0]) $
-           ELSE (minDat[0])=(minDat[1])
+           IF (minDat[0]) LE (minDat[1]) THEN minDat[1]=minDat[0] $
+           ELSE minDat[0]=minDat[1]
         ENDIF
 
      ENDIF ELSE BEGIN
@@ -489,7 +618,7 @@ PRO superpose_storms_nevents,stormTimeArray_utc, $
         minDat=MIN(minMaxDat(*,0))
      ENDELSE
      
-     ;; now plot DB quantity
+     ;; ;And NOW let's plot quantity from the Alfven DB to see how it fares during storms
      xTitle='Hours since storm commencement'
      ;; yTitle='Maximus:
      
@@ -504,25 +633,18 @@ PRO superpose_storms_nevents,stormTimeArray_utc, $
 
            plot_i_list = LIST(cgsetintersection(plot_i,cdb_ind_list[0]))
            plot_i_list.add,cgsetintersection(plot_i,cdb_ind_list[1])
-           ;; plot_i_pos=cgsetintersection(plot_i,cdb_ind_list[0])
-           ;; plot_i_neg=cgsetintersection(plot_i,cdb_ind_list[1])
 
            ;; get relevant time range
-           ;; cdb_t_pos=(DOUBLE(cdbTime((plot_i_list[0])))-DOUBLE(centerTime(i)))/3600.
-           ;; cdb_t_neg=(DOUBLE(cdbTime((plot_i_list[1])))-DOUBLE(centerTime(i)))/3600.
-           cdb_t=LIST( (DOUBLE(cdbTime((plot_i_list[0])))-DOUBLE(centerTime(i)))/3600. )
-           cdb_t.add,( (DOUBLE(cdbTime((plot_i_list[1])))-DOUBLE(centerTime(i)))/3600. )
+           cdb_t=LIST( (DOUBLE(cdbTime(plot_i_list[0]))-DOUBLE(centerTime(i)))/3600. )
+           cdb_t.add,( (DOUBLE(cdbTime(plot_i_list[1]))-DOUBLE(centerTime(i)))/3600. )
            
            ;; get corresponding data
-           ;; cdb_y=maximus.(maxInd)(cdb_storm_i(i,0):cdb_storm_i(i,1))
-           ;; cdb_y_pos=maximus.(maxInd)((plot_i_list[0]))
-           ;; cdb_y_neg=ABS(maximus.(maxInd)((plot_i_list[1])))
            cdb_y=LIST(maximus.(maxInd)(plot_i_list[0]))
            cdb_y.add,ABS(maximus.(maxInd)(plot_i_list[1]))
            
            nEVTot = MAKE_ARRAY(2,/INTEGER,VALUE=0)
 
-           IF (plot_i_list[0])(0) GT -1 AND N_ELEMENTS((plot_i_list[0])) GT 1 THEN BEGIN
+           IF (plot_i_list[0])(0) GT -1 AND N_ELEMENTS(plot_i_list[0]) GT 1 THEN BEGIN
 
               plot_pos=plot((cdb_t[0]), $
                             (cdb_y[0]), $
@@ -543,28 +665,9 @@ PRO superpose_storms_nevents,stormTimeArray_utc, $
                             SYM_TRANSPARENCY=defSymTransp)
               
               
-              IF KEYWORD_SET(nEventHists) OR (avg_type_maxInd GT 0) THEN BEGIN ;Histos of Alfvén events relative to storm epoch
-                 
-                 IF N_ELEMENTS(nEvHist_pos) EQ 0 THEN BEGIN
-                    nEvHist_pos=histogram((cdb_t[0]),LOCATIONS=tBin, $
-                                      MAX=tAfterStorm+nEvBinsize,MIN=-tBeforeStorm, $
-                                      BINSIZE=nEvBinsize)
-                    nEvTot[0]=N_ELEMENTS((plot_i_list[0]))
-                    tot_plot_i_pos_list=LIST((plot_i_list[0]))
-                    tot_cdb_t_pos_list=LIST((cdb_t[0]))
-                 ENDIF ELSE BEGIN
-                    nEvHist_pos=histogram((cdb_t[0]),LOCATIONS=tBin, $
-                                      MAX=tAfterStorm+nEvBinsize,MIN=-tBeforeStorm, $
-                                      BINSIZE=nEvBinsize, $
-                                      INPUT=nEvHist_pos)
-                    nEvTot[0]+=N_ELEMENTS((plot_i_list[0]))
-                    tot_plot_i_pos_list.add,(plot_i_list[0])
-                    tot_cdb_t_pos_list.add,(cdb_t[0])
-                 ENDELSE
-              ENDIF             ;end nEventHists
            ENDIF
 
-           IF (plot_i_list[1])(0) GT -1 AND (N_ELEMENTS((plot_i_list[1])) GT 1) THEN BEGIN
+           IF (plot_i_list[1])(0) GT -1 AND (N_ELEMENTS(plot_i_list[1]) GT 1) THEN BEGIN
 
               plot_neg=plot((cdb_t[1]), $
                             (cdb_y[1]), $
@@ -583,27 +686,7 @@ PRO superpose_storms_nevents,stormTimeArray_utc, $
                             OVERPLOT=1, $
                             LAYOUT=neg_layout, $
                             SYM_TRANSPARENCY=defSymTransp)
-              
-              
-              IF KEYWORD_SET(nEventHists) OR (avg_type_maxInd GT 0) THEN BEGIN ;Histos of Alfvén events relative to storm epoch
-                 
-                 IF N_ELEMENTS(nEvHist_neg) EQ 0 THEN BEGIN
-                    nEvHist_neg=histogram((cdb_t[1]),LOCATIONS=tBin, $
-                                          MAX=tAfterStorm+nEvBinsize,MIN=-tBeforeStorm, $
-                                          BINSIZE=nEvBinsize)
-                    nEvTot[1]=N_ELEMENTS((plot_i_list[1]))
-                    tot_plot_i_neg_list=LIST((plot_i_list[1]))
-                    tot_cdb_t_neg_list=LIST((cdb_t[1]))
-                 ENDIF ELSE BEGIN
-                    nEvHist_neg=histogram((cdb_t[1]),LOCATIONS=tBin, $
-                                          MAX=tAfterStorm+nEvBinsize,MIN=-tBeforeStorm, $
-                                          BINSIZE=nEvBinsize, $
-                                          INPUT=nEvHist_neg)
-                    nEvTot[1]+=N_ELEMENTS((plot_i_list[1]))
-                    tot_plot_i_neg_list.add,(plot_i_list[1])
-                    tot_cdb_t_neg_list.add,(cdb_t[1])
-                 ENDELSE
-              ENDIF             ;end nEventHists
+
            ENDIF
 
         ENDIF ELSE BEGIN
@@ -632,26 +715,6 @@ PRO superpose_storms_nevents,stormTimeArray_utc, $
               ;;           /CURRENT,OVERPLOT=(i EQ 0) ? 0: 1, $
               ;;           SYM_TRANSPARENCY=defSymTransp)
               
-              
-              IF KEYWORD_SET(nEventHists) OR (avg_type_maxInd GT 0) THEN BEGIN ;Histos of Alfvén events relative to storm epoch
-                 
-                 IF i EQ 0 THEN BEGIN
-                    nEvHist=histogram(cdb_t,LOCATIONS=tBin, $
-                                      MAX=tAfterStorm+nEvBinsize,MIN=-tBeforeStorm, $
-                                      BINSIZE=nEvBinsize)
-                    nEvTot=N_ELEMENTS(plot_i)
-                    tot_plot_i_list=LIST(plot_i)
-                    tot_cdb_t_list=LIST(cdb_t)
-                 ENDIF ELSE BEGIN
-                    nEvHist=histogram(cdb_t,LOCATIONS=tBin, $
-                                      MAX=tAfterStorm+nEvBinsize,MIN=-tBeforeStorm, $
-                                      BINSIZE=nEvBinsize, $
-                                      INPUT=nEvHist)
-                    nEvTot+=N_ELEMENTS(plot_i)
-                    tot_plot_i_list.add,plot_i
-                    tot_cdb_t_list.add,cdb_t
-                 ENDELSE
-              ENDIF             ;end nEventHists
            ENDIF
            
         ENDELSE                 ;end ~neg_and_pos_separ
