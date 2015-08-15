@@ -2,6 +2,9 @@
 ;Holy mackerel, it's Saturday and I simply cannot work fast enough. I have a draft of this paper due to Chris Chaston by end of
 ;day, and I've been piddling with code for nearly seven hours. Whatever—it's gots to be done.
 
+;So if you want to make the plot that I'm calling 'final,' just run this thing, move the legend in the final SEA window to an
+;appropriate place, then click the disk to save. The saving is not automated.
+
 PRO JOURNAL__20150815__redo_SEA_with_NOAA_and_random_bkgrnd__Alfven_storm_GRL
 
   ;the ins
@@ -18,7 +21,6 @@ PRO JOURNAL__20150815__redo_SEA_with_NOAA_and_random_bkgrnd__Alfven_storm_GRL
 
   DBDIR = '/home/spencerh/Research/Cusp/database/sw_omnidata/'
   DB_BRETT = 'large_and_small_storms--1985-2011--Anderson.sav'
-  DB_NOAA = 'SSC_dbs--storm2_mods.txt__STORM2_MODS.SSC--idl.sav'
   DB_NOAA = 'SSC_dbs--storm2_mods.txt__STORM2_MODS.SSC--idl.sav'
 
   INDS_FILE = 'large_and_small_storms--Oct1996-Oct2000--indices_for_four_quadrants--Anderson.sav'

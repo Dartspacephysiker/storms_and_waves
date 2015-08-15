@@ -24,7 +24,7 @@
 ;                              MAXIND            : Index into maximus structure; plot corresponding quantity as a function of time
 ;                                                    since storm commencement (e.g., MAXIND=6 corresponds to mag current).
 ;                              AVG_TYPE_MAXIND   : Type of averaging to perform for events in a particular time bin.
-;                                                    1: standard averaging; 2: log averaging
+;                                                    0: standard averaging; 1: log averaging (if /LOG_DBQUANTITY is set)
 ;                              LOG_DB_QUANTITY   : Plot the quantity from the Alfven wave database on a log scale
 ;                              NO_SUPERPOSE      : Don't superpose Alfven wave DB quantities over Dst/SYM-H 
 ;                              NEG_AND_POS_LAYOUT: Set to array of plot layout for pos_and_neg_plots
