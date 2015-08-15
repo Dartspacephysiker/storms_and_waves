@@ -4,8 +4,14 @@
 
 PRO JOURNAL__20150815__REDO_w_BrettNOAA__Fig4_SEA_of_upflowing_ions__Alfven_storm_GRL
 
-  ;the outs
+  ;; ;the ins
+  nEvBinsize=600.D
+  ;; ;
+
+  ;; ;the outs
   date='20150815'
+
+  outMaxFile='Fig_4--ion_flux_up--no_restriction_on_chare_or_alt--10-hour_avg--proper_storm_commencement_smaller.png'
 
   DBDIR = '/home/spencerh/Research/Cusp/database/sw_omnidata/'
   DB_BRETT = 'large_and_small_storms--1985-2011--Anderson.sav'
@@ -42,26 +48,17 @@ PRO JOURNAL__20150815__REDO_w_BrettNOAA__Fig4_SEA_of_upflowing_ions__Alfven_stor
   dstStr='--dst-centered'
   sscStr='--ssc-centered'
 
-  ;;SSC-centered here
-  superpose_storms_nevents,STORMTYPE=1,STORMINDS=q1_st,/OVERPLOT_HIST,/NEVENTHISTS, REMOVE_DUPES=rmDupes,SSC_TIMES_UTC=q1_utc, $
-                           /USE_DARTDB_START_ENDDATE,TBEFORESTORM=tBeforeAfterStorm,TAFTERSTORM=tBeforeAfterStorm, $
-                           MAXIND=maxInd, $
-                           NEVBINSIZE=nEvBinsize, NEVRANGE=nEvRange, $
-                           SAVEFILE=tempOutFile, $
-                           RETURNED_NEV_TBINS_AND_HIST=stormtime_returned_tbins_and_nevhist
-
   ;ION_FLUX_UP
-  SUPERPOSE_STORMS_AND_ALFVEN_DB_QUANTITIES,MAXIND=16,STORMTYPE=1, $
-                                            /USE_DARTDB_START_ENDDATE, $
-                                            AVG_TYPE_MAXIND=1, $
-                                            /NEG_AND_POS_SEPAR,/LOG_DBQUANTITY, $
-                                            NEVBINSIZE=600,TBEFORESTORM=60,TAFTERSTORM=60, $
-                                            SUBSET_OF_STORMS=lrg_commencement.ind, $
-                                            HOUR_OFFSET_OF_SUBSET=lrg_commencement.offset, $
-                                            YRANGE_MAXIND=[1e5,1e10], $
-                                            YTITLE_MAXIND="Maximum upward ion flux (N $cm^{-3} s^{-1}$)", $
-                                            /USE_SYMH
-
+  superpose_storms_nevents,STORMTYPE=1,STORMINDS=q1_st,SSC_TIMES_UTC=q1_utc,/OVERPLOT_HIST,/NEVENTHISTS,REMOVE_DUPES=rmDupes, $
+                           /USE_DARTDB_START_ENDDATE, $
+                           TBEFORESTORM=60.0D,TAFTERSTORM=60.0D, $
+                           NEVBINSIZE=nEvBinsize, $
+                           MAXIND=maxInd, $
+                           AVG_TYPE_MAXIND=1, $
+                           SAVEMAXPLOTNAME=outMaxFile, $
+                           /LOG_DBQUANTITY, /NEG_AND_POS_SEPAR, $
+                           YRANGE_MAXIND=[1e5,1e10], $
+                           YTITLE_MAXIND="Maximum upward ion flux (N $cm^{-3} s^{-1}$)"
 
 
 END

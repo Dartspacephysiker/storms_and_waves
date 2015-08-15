@@ -160,10 +160,10 @@ PRO superpose_randomtimes_and_alfven_db_quantities,NRANDTIME=nRandTime,STARTDATE
      restore,dataDir+stormDir+stormFile[stormType]
   ENDIF ELSE BEGIN
      ;kluge to keep user-specified binsize
-     old_nevbinsize=nevbinsize
+     ;; old_nevbinsize=nevbinsize
      PRINT,'Restoring user-supplied storm file: ' + stormFile
      restore,stormFile
-     nevbinsize=old_nevbinsize
+     ;; nevbinsize=old_nevbinsize
   ENDELSE
 
   ;get a few variables from restored storm file

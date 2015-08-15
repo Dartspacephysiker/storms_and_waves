@@ -188,6 +188,11 @@ PRO superpose_storms_nevents,stormTimeArray_utc, $
   IF KEYWORD_SET(savePlotName) THEN BEGIN
      IF SIZE(savePlotName,/TYPE) NE 7 THEN savePlotName="SYM-H_plus_histogram.png"
   ENDIF
+  
+  IF KEYWORD_SET(returned_nev_tbins_and_hist) AND ~KEYWORD_SET(nEventHists) THEN BEGIN
+     PRINT,"You've asked for returned_nev_tbins_and_hist, but you haven't set nEventHists! No can do."
+     RETURN
+  ENDIF
 
   ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
   ;Get all storms occuring within specified date range, if an array of times hasn't been provided
@@ -489,7 +494,7 @@ PRO superpose_storms_nevents,stormTimeArray_utc, $
         IF (plot_i_list[0])(0) GT -1 AND N_ELEMENTS(plot_i_list[0]) GT 1 THEN BEGIN
            
            IF KEYWORD_SET(nEventHists) OR (avg_type_maxInd GT 0) THEN BEGIN ;Histos of Alfvén events relative to storm epoch
-              
+
               IF N_ELEMENTS(nEvHist_pos) EQ 0 THEN BEGIN
                  nEvHist_pos=histogram((cdb_t[0]),LOCATIONS=tBin, $
                                        MAX=tAfterStorm+nEvBinsize,MIN=-tBeforeStorm, $
@@ -698,7 +703,7 @@ PRO superpose_storms_nevents,stormTimeArray_utc, $
         ;; IF saveFile THEN saveStr+=',cNEvHist,cdf_nEv,plot_nEv,nEvHist,tBin,nEvBinsize'
         IF saveFile THEN saveStr+=',cNEvHist,nEvHist,tBin,nEvBinsize,tot_plot_i_list,maxInd'
      ENDELSE
-     returned_nev_tbins_and_Hist=[[tbin],[nEvHist]]
+     IF KEYWORD_SET(nEventHists) AND KEYWORD_SET(returned_nev_tbins_and_hist) THEN returned_nev_tbins_and_Hist=[[tbin],[nEvHist]]
   ENDIF                         ;end IF nEventHists
   
   IF KEYWORD_SET(savePlotName) THEN BEGIN
@@ -938,7 +943,9 @@ PRO superpose_storms_nevents,stormTimeArray_utc, $
                             (log_DBQuantity) ? 10^Avgs_pos(safe_i) : Avgs_pos(safe_i), $
                             TITLE=plotTitle, $
                             XTITLE='Hours since storm commencement', $
-                            YTITLE=mTags(maxInd), $
+                            YTITLE=(KEYWORD_SET(yTitle_maxInd) ? $
+                                    yTitle_maxInd : $
+                                    mTags(maxInd)), $
                             XRANGE=xRange, $
                             YRANGE=(KEYWORD_SET(yRange_maxInd)) ? $
                             yRange_maxInd : [minDat[0],maxDat[0]], $
@@ -976,7 +983,9 @@ PRO superpose_storms_nevents,stormTimeArray_utc, $
                             (log_DBQuantity) ? 10^Avgs_neg(safe_i) : Avgs_neg(safe_i), $
                             TITLE=plotTitle, $
                             XTITLE='Hours since storm commencement', $
-                            YTITLE=mTags(maxInd), $
+                            YTITLE=(KEYWORD_SET(yTitle_maxInd) ? $
+                                    yTitle_maxInd : $
+                                    mTags(maxInd)), $
                             XRANGE=xRange, $
                             YRANGE=(KEYWORD_SET(yRange_maxInd)) ? $
                             yRange_maxInd : [minDat[1],maxDat[1]], $
