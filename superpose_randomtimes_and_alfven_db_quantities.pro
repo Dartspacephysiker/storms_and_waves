@@ -30,6 +30,7 @@
 ; EXAMPLE:
 ;
 ; MODIFICATION HISTORY:   2015/06/12 Born
+;                         2015/08/14 Add SKIPPLOTS keyword
 ;                           
 ;-
 
@@ -43,7 +44,8 @@ PRO superpose_randomtimes_and_alfven_db_quantities,NRANDTIME=nRandTime,STARTDATE
    STORMFILE=stormFile, $
    NEVENTHISTS=nEventHists,NEVBINSIZE=nEvBinSize, $
    USE_DARTDB_START_ENDDATE=use_dartdb_start_enddate, $
-   OVERLAY_NEVENTHISTS=overlay_nEventHists, NEVRANGE=nEvRange,RETURNED_NEV_tbins_and_HIST=returned_nEv_tbins_and_Hist ;, $
+   OVERLAY_NEVENTHISTS=overlay_nEventHists, NEVRANGE=nEvRange,RETURNED_NEV_tbins_and_HIST=returned_nEv_tbins_and_Hist, $ ;, $
+   SKIPPLOTS=skipPlots
    ;; DO_KSSTATS=do_ksstats
   
   dataDir='/SPENCEdata/Research/Cusp/database/'
@@ -157,7 +159,7 @@ PRO superpose_randomtimes_and_alfven_db_quantities,NRANDTIME=nRandTime,STARTDATE
      PRINT,"Looking at " + stormStr + " storms per user instruction..."
      restore,dataDir+stormDir+stormFile[stormType]
   ENDIF ELSE BEGIN
-     ;kluge
+     ;kluge to keep user-specified binsize
      old_nevbinsize=nevbinsize
      PRINT,'Restoring user-supplied storm file: ' + stormFile
      restore,stormFile
@@ -165,17 +167,19 @@ PRO superpose_randomtimes_and_alfven_db_quantities,NRANDTIME=nRandTime,STARTDATE
   ENDELSE
 
   ;get a few variables from restored storm file
-  totNRandTime=N_ELEMENTS(geomag_plot_i_list)
+  nRandTime=KEYWORD_SET(nRandTime) ? nRandTime : N_ELEMENTS(geomag_plot_i_list)
   tBeforeRandTime=tBeforeStorm
   tAfterRandTime=tAfterStorm
   ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
   ;Make a randomtimes struct which parallels that of the stormStruct used in the pro superpose_storms[...]
   
-  tempTimes=RANDOMU(seed,totNRandTime,/DOUBLE)*(stopDate-startDate)+startDate
+  tempTimes=RANDOMU(seed,nRandTime,/DOUBLE)*(stopDate-startDate)+startDate
   tempTimes=tempTimes(SORT(tempTimes))
   randTStruct={time:tempTimes, $
                tStamp:time_to_str(tempTimes)}
  
+  randTStruct_inds=WHERE(randTStruct.time GE startDate AND randTStruct.time LE stopDate,/NULL)
+
   ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
   ;Get all randomtimes occuring within specified range
 
@@ -193,11 +197,6 @@ PRO superpose_randomtimes_and_alfven_db_quantities,NRANDTIME=nRandTime,STARTDATE
         stopDate=startDate+86400.*31.*12.
      ENDIF
      
-     randTStruct_inds=WHERE(randTStruct.time GE startDate AND randTStruct.time LE stopDate,/NULL)
-     
-     PRINT,STRCOMPRESS(N_ELEMENTS(randTStruct_inds),/REMOVE_ALL)+" storms out of " + STRCOMPRESS(totNRandTime,/REMOVE_ALL) + " selected"
-
-     nRandTime=N_ELEMENTS(randTStruct_inds)
      IF nRandTime EQ 0 THEN BEGIN
         PRINT,"No randTimes found for given time range:"
         PRINT,"Start date: ",time_to_str(startDate)
@@ -207,7 +206,8 @@ PRO superpose_randomtimes_and_alfven_db_quantities,NRANDTIME=nRandTime,STARTDATE
      ENDIF
      
      ;; Generate a list of indices to be plotted from the selected geomagnetic index, either SYM-H or DST, and do dat
-     datStartStop = MAKE_ARRAY(totNRandTime,2,/DOUBLE)
+     ;; datStartStop = MAKE_ARRAY(totNRandTime,2,/DOUBLE)
+     datStartStop = MAKE_ARRAY(nRandTime,2,/DOUBLE)
      datStartStop(*,0) = randTStruct.time - tBeforeRandTime*3600.                    ;(*,0) are the times before which we don't want data for each storm
      datStartStop(*,1) = randTStruct.time + tAfterRandTime*3600.                     ;(*,1) are the times after which we don't want data for each storm
      
@@ -290,36 +290,40 @@ PRO superpose_randomtimes_and_alfven_db_quantities,NRANDTIME=nRandTime,STARTDATE
      ;; ENDFOR
   ENDIF ELSE BEGIN ;Just do a regular superposition of all the plots
 
-     plotWind=WINDOW(WINDOW_TITLE="Superposed randT plots: "+ $
-                     randTStruct.tStamp(randTStruct_inds(0)) + " - " + $
-                     randTStruct.tStamp(randTStruct_inds(-1)), $
-                     DIMENSIONS=[1200,900])
-     xTitle='Hours since randT commencement'
-     yTitle=(~use_SYMH) ? 'DST (nT)' : 'SYM-H (nT)'
-     
-     xRange=[-tBeforeRandTime,tAfterRandTime]
-     yRange=[geomag_min,geomag_max]
-     ;; yRange=[-350,50]
-     
-     FOR i=0,nRandTime-1 DO BEGIN
+     IF ~KEYWORD_SET(skipPlots) THEN BEGIN
+        plotWind=WINDOW(WINDOW_TITLE="Superposed randT plots: "+ $
+                        randTStruct.tStamp(randTStruct_inds(0)) + " - " + $
+                        randTStruct.tStamp(randTStruct_inds(-1)), $
+                        DIMENSIONS=[1200,900])
+        xTitle='Hours since randT commencement'
+        yTitle=(~use_SYMH) ? 'DST (nT)' : 'SYM-H (nT)'
+        
+        xRange=[-tBeforeRandTime,tAfterRandTime]
+        yRange=[geomag_min,geomag_max]
+        ;; yRange=[-350,50]
+        
+        FOR i=0,nRandTime-1 DO BEGIN
 
-        plot=plot((geomag_time_list(i)-randTStruct.time(randTStruct_inds(i)))/3600.,geomag_dat_list(i), $
-                  XTITLE=xTitle+titleSuff, $
-                  YTITLE=yTitle, $
-                  XRANGE=xRange, $
-                  YRANGE=yRange, $
-                  AXIS_STYLE=1, $
-                  MARGIN=(overlay_nEventHists) ? plotMargin : !NULL, $
-                  XTICKFONT_SIZE=max_xtickfont_size, $
-                  XTICKFONT_STYLE=max_xtickfont_style, $
-                  YTICKFONT_SIZE=max_ytickfont_size, $
-                  YTICKFONT_STYLE=max_ytickfont_style, $
-                  ;; LAYOUT=[1,4,i+1], $
-                  /CURRENT,OVERPLOT=(i EQ 0) ? 0 : 1, $
-                  SYM_TRANSPARENCY=defSymTransp, $
-                  TRANSPARENCY=defLineTransp, $
-                  THICK=2.5)
-     ENDFOR
+           plot=plot((geomag_time_list(i)-randTStruct.time(randTStruct_inds(i)))/3600.,geomag_dat_list(i), $
+                     XTITLE=xTitle+titleSuff, $
+                     YTITLE=yTitle, $
+                     XRANGE=xRange, $
+                     YRANGE=yRange, $
+                     AXIS_STYLE=1, $
+                     MARGIN=(overlay_nEventHists) ? plotMargin : !NULL, $
+                     XTICKFONT_SIZE=max_xtickfont_size, $
+                     XTICKFONT_STYLE=max_xtickfont_style, $
+                     YTICKFONT_SIZE=max_ytickfont_size, $
+                     YTICKFONT_STYLE=max_ytickfont_style, $
+                     ;; LAYOUT=[1,4,i+1], $
+                     /CURRENT,OVERPLOT=(i EQ 0) ? 0 : 1, $
+                     SYM_TRANSPARENCY=defSymTransp, $
+                     TRANSPARENCY=defLineTransp, $
+                     THICK=2.5)
+        ENDFOR
+
+     ENDIF ;end ~skipPlots
+
   ENDELSE
 
   ;And NOW let's plot quantity from the Alfven DB to see how it fares during randTs
@@ -327,8 +331,8 @@ PRO superpose_randomtimes_and_alfven_db_quantities,NRANDTIME=nRandTime,STARTDATE
      good_i=get_chaston_ind(maximus,"OMNI",-1,/BOTH_HEMIS)
      mTags=TAG_NAMES(maximus)
      
-     IF ~overlay_nEventHists THEN maximusWindow=WINDOW(WINDOW_TITLE="Maximus plots", $
-                                                       DIMENSIONS=[1200,900])
+     IF ~overlay_nEventHists AND ~KEYWORD_SET(skipPlots) THEN maximusWindow=WINDOW(WINDOW_TITLE="Maximus plots", $
+                                                                                 DIMENSIONS=[1200,900])
      
      ;; Get ranges for plots
      maxMinutes=MAX((cdbTime(cdb_randT_i(*,1))-cdbTime(cdb_randT_i(*,0)))/3600.,longestRandT_i,MIN=minMinutes)
@@ -375,24 +379,26 @@ PRO superpose_randomtimes_and_alfven_db_quantities,NRANDTIME=nRandTime,STARTDATE
            ;; print,min(cdb_t)
            ;; print,max(cdb_t)
            IF ~overlay_nEventHists THEN BEGIN
-              plot=plot(cdb_t, $
-                        (log_DBquantity) ? ALOG10(cdb_y) : cdb_y, $
-                        XTITLE='Hours since storm commencement'+titleSuff, $
-                        ;; YTITLE="Upward ion flux (N/$cm^3$)", $
-                        YTITLE=mTags(maxInd), $
-                        XRANGE=xRange, $
-                        YRANGE=(KEYWORD_SET(yRange_maxInd)) ? $
-                        yRange_maxInd : [minDat,maxDat], $
-                        ;; YRANGE=[minDat,maxDat], $
-                        YLOG=(log_DBQuantity) ? 1 : 0, $
-                        LINESTYLE=' ', $
-                        SYMBOL='+', $
-                        XTICKFONT_SIZE=max_xtickfont_size, $
-                        XTICKFONT_STYLE=max_xtickfont_style, $
-                        /CURRENT,OVERPLOT=(i EQ 0) ? 0: 1, $
-                        SYM_TRANSPARENCY=defSymTransp)
-           ENDIF
 
+              IF ~KEYWORD_SET(skipPlots) THEN BEGIN
+                 plot=plot(cdb_t, $
+                           (log_DBquantity) ? ALOG10(cdb_y) : cdb_y, $
+                           XTITLE='Hours since storm commencement'+titleSuff, $
+                           ;; YTITLE="Upward ion flux (N/$cm^3$)", $
+                           YTITLE=mTags(maxInd), $
+                           XRANGE=xRange, $
+                           YRANGE=(KEYWORD_SET(yRange_maxInd)) ? $
+                           yRange_maxInd : [minDat,maxDat], $
+                           ;; YRANGE=[minDat,maxDat], $
+                           YLOG=(log_DBQuantity) ? 1 : 0, $
+                           LINESTYLE=' ', $
+                           SYMBOL='+', $
+                           XTICKFONT_SIZE=max_xtickfont_size, $
+                           XTICKFONT_STYLE=max_xtickfont_style, $
+                           /CURRENT,OVERPLOT=(i EQ 0) ? 0: 1, $
+                           SYM_TRANSPARENCY=defSymTransp)
+              ENDIF
+           ENDIF
 
            IF KEYWORD_SET(nEventHists) THEN BEGIN                                                ;Histos of Alfvén events relative to randT epoch
               
@@ -422,52 +428,54 @@ PRO superpose_randomtimes_and_alfven_db_quantities,NRANDTIME=nRandTime,STARTDATE
      
      ENDFOR
 
-     IF overlay_nEventHists THEN BEGIN
-        ;; geomagWindow.setCurrent
-        
-        plot_nEv=plot(tBin,nEvHist, $
-                      /STAIRSTEP, $
-                      YRANGE=KEYWORD_SET(nEvRange) ? nEvRange : [0,7500], $
-                      NAME='Event histogram', $
-                      XRANGE=xRange, $
-                      AXIS_STYLE=0, $
-                      COLOR='red', $
-                      MARGIN=plotMargin, $
-                      THICK=6.5, $ ;OVERPLOT=KEYWORD_SET(overplot_hist),$
-                      /CURRENT)
-        
-        yaxis = AXIS('Y', LOCATION='right', TARGET=plot_nEv, $
-                     TITLE='Number of events'+titleSuff, $
-                     MAJOR=6, $
-                     MINOR=3, $
-                     TICKFONT_SIZE=max_ytickfont_size, $
-                     TICKFONT_STYLE=max_ytickfont_style, $
-                     ;; AXIS_RANGE=[minDat,maxDat], $
-                     TEXTPOS=1, $
-                     COLOR='red')
-        
-        
-     ENDIF ELSE BEGIN
-        IF KEYWORD_SET(nEventHists) THEN BEGIN
-           histWindow=WINDOW(WINDOW_TITLE="Histogram of number of Alfven events", $
-                             DIMENSIONS=[1200,900])
+     
+     IF ~KEYWORD_SET(skipPlots) THEN BEGIN
+        IF overlay_nEventHists THEN BEGIN
+           ;; geomagWindow.setCurrent
+           
            plot_nEv=plot(tBin,nEvHist, $
                          /STAIRSTEP, $
-                         TITLE='Random epochs for comparison with ' + STRCOMPRESS(nRandTime,/REMOVE_ALL) + $
-                         ' ' + stormStr + ' storms, ' + $
-                         randTStruct.tStamp(randTStruct_inds(0)) + " - " + $
-                         randTStruct.tStamp(randTStruct_inds(-1)), $
-                         XTITLE='Hours since randomly selected time', $
-                         YTITLE='Number of Alfvén events', $
-                         /CURRENT, LAYOUT=[2,1,1],COLOR='red')
+                         YRANGE=KEYWORD_SET(nEvRange) ? nEvRange : [0,7500], $
+                         NAME='Event histogram', $
+                         XRANGE=xRange, $
+                         AXIS_STYLE=0, $
+                         COLOR='red', $
+                         MARGIN=plotMargin, $
+                         THICK=6.5, $ ;OVERPLOT=KEYWORD_SET(overplot_hist),$
+                         /CURRENT)
            
-           cNEvHist = TOTAL(nEvHist, /CUMULATIVE) / nEvTot
-           cdf_nEv=plot(tBin,cNEvHist, $
-                        XTITLE='Hours since randomly selected time', $
-                        YTITLE='Cumulative number of Alfvén events', $
-                        /CURRENT, LAYOUT=[2,1,2], AXIS_STYLE=1,COLOR='blue')
-        ENDIF
-     ENDELSE
+           yaxis = AXIS('Y', LOCATION='right', TARGET=plot_nEv, $
+                        TITLE='Number of events'+titleSuff, $
+                        MAJOR=6, $
+                        MINOR=3, $
+                        TICKFONT_SIZE=max_ytickfont_size, $
+                        TICKFONT_STYLE=max_ytickfont_style, $
+                        ;; AXIS_RANGE=[minDat,maxDat], $
+                        TEXTPOS=1, $
+                        COLOR='red')
+           
+        ENDIF ELSE BEGIN
+           IF KEYWORD_SET(nEventHists) THEN BEGIN
+              histWindow=WINDOW(WINDOW_TITLE="Histogram of number of Alfven events", $
+                                DIMENSIONS=[1200,900])
+              plot_nEv=plot(tBin,nEvHist, $
+                            /STAIRSTEP, $
+                            TITLE='Random epochs for comparison with ' + STRCOMPRESS(nRandTime,/REMOVE_ALL) + $
+                            ' ' + stormStr + ' storms, ' + $
+                            randTStruct.tStamp(randTStruct_inds(0)) + " - " + $
+                            randTStruct.tStamp(randTStruct_inds(-1)), $
+                            XTITLE='Hours since randomly selected time', $
+                            YTITLE='Number of Alfvén events', $
+                            /CURRENT, LAYOUT=[2,1,1],COLOR='red')
+              
+              cNEvHist = TOTAL(nEvHist, /CUMULATIVE) / nEvTot
+              cdf_nEv=plot(tBin,cNEvHist, $
+                           XTITLE='Hours since randomly selected time', $
+                           YTITLE='Cumulative number of Alfvén events', $
+                           /CURRENT, LAYOUT=[2,1,2], AXIS_STYLE=1,COLOR='blue')
+           ENDIF
+        ENDELSE
+     ENDIF
 
      returned_nev_tbins_and_Hist=[[tbin],[nEvHist]]
   ENDIF

@@ -53,8 +53,8 @@ PRO superpose_storms_nevents,stormTimeArray_utc, $
                              STORMINDS=stormInds, SSC_TIMES_UTC=ssc_times_utc, $
                              REMOVE_DUPES=remove_dupes, STORMTYPE=stormType, $
                              USE_SYMH=use_symh, $
-                             NEVENTHISTS=nEventHists,NEVBINSIZE=nEvBinSize, $
-                             BKGRND_HIST=bkgrnd_hist, $
+                             NEVENTHISTS=nEventHists,NEVBINSIZE=nEvBinSize, NEVRANGE=nEvRange, $
+                             RETURNED_NEV_TBINS_and_HIST=returned_nEv_tbins_and_Hist, BKGRND_HIST=bkgrnd_hist, $
                              NEG_AND_POS_SEPAR=neg_and_pos_separ, POS_LAYOUT=pos_layout, NEG_LAYOUT=neg_layout, $
                              MAXIND=maxInd, AVG_TYPE_MAXIND=avg_type_maxInd, $
                              RESTRICT_ALTRANGE=restrict_altRange,RESTRICT_CHARERANGE=restrict_charERange, $
@@ -108,6 +108,7 @@ PRO superpose_storms_nevents,stormTimeArray_utc, $
 
   defSymTransp         = 97
   defLineTransp        = 75
+  defLineThick         = 2.5
 
   ;; ;For nEvent histos
   defnEvBinsize        = 150.0D                                                                        ;in minutes
@@ -123,6 +124,11 @@ PRO superpose_storms_nevents,stormTimeArray_utc, $
   avg_symSize=2.0
   avg_symThick=2.0
   avg_Thick=2.5
+
+  ;; nMajorTicks=5
+  ;; nMinorTicks=3
+  nMajorTicks=4
+  nMinorTicks=4
 
   defRes = 200
   ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
@@ -193,6 +199,7 @@ PRO superpose_storms_nevents,stormTimeArray_utc, $
      centerTime = stormTimeArray_utc
      tStamps = TIME_TO_STR(stormTimeArray_utc)
      stormString = 'user-provided'
+
   ENDIF ELSE BEGIN              ;Looks like we're relying on Brett
 
      totDBStorms=N_ELEMENTS(stormStruct.time)
@@ -262,10 +269,12 @@ PRO superpose_storms_nevents,stormTimeArray_utc, $
         tStamps = stormStruct.tstamp(stormStruct_inds)
      ENDELSE
      
+     IF saveFile THEN saveStr+=',startDate,stopDate,stormType,stormStruct_inds'
+
   ENDELSE
 
   IF KEYWORD_SET(remove_dupes) THEN BEGIN
-     PRINT,'Removing storms that would otherwise appear twice in the superposed epoch analysis..'
+     PRINT,'Finding and trashing storms that would otherwise appear twice in the superposed epoch analysis...'
      
      keep_i = MAKE_ARRAY(nStorms,/INTEGER,VALUE=1)
      
@@ -279,15 +288,18 @@ PRO superpose_storms_nevents,stormTimeArray_utc, $
      ENDFOR
 
      keep = WHERE(keep_i,nKeep,COMPLEMENT=bad_i,NCOMPLEMENT=nBad,/NULL)
-     PRINT,'Losing ' + STRCOMPRESS(nBad,/REMOVE_ALL) + ' storms that would otherwise be duplicated in the SEA...'
      ;; ;resize everythang
-     IF N_ELEMENTS(bad) GT 0 THEN BEGIN
+     IF N_ELEMENTS(bad_i) GT 0 THEN BEGIN
+        PRINT,'Losing ' + STRCOMPRESS(N_ELEMENTS(bad_i),/REMOVE_ALL) + ' storms that would otherwise be duplicated in the SEA...'
+
+        FOR j=0,N_ELEMENTS(bad_i)-1 DO print,FORMAT='("Storm ",I0,":",TR5,A0)',bad_i(j),tStamps(bad_i(j)) ;show me where!
 
         nStorms = nKeep
         centerTime = centerTime(keep)
         tStamps = tStamps(keep)
 
-     ENDIF
+     ENDIF ELSE PRINT,"No dupes to be had here!"
+
   ENDIF
 
   ;; Generate a list of indices to be plotted from the selected geomagnetic index, either SYM-H or DST, and do dat
@@ -368,7 +380,8 @@ PRO superpose_storms_nevents,stormTimeArray_utc, $
      ENDFOR
   ENDFOR
 
-  IF saveFile THEN saveStr+=',startDate,stopDate,stormType,stormStruct_inds,tBeforeStorm,tAfterStorm,geomag_min,geomag_max,geomag_plot_i_list,geomag_dat_list,geomag_time_list,dbFile'
+  IF saveFile THEN saveStr+=',nStorms,centerTime,tStamps,stormString,dbFile,tBeforeStorm,tAfterStorm,geomag_min,geomag_max,geomag_plot_i_list,geomag_dat_list,geomag_time_list'
+
   ;; ;Now plot geomag quantities
   IF KEYWORD_SET(no_superpose) THEN BEGIN
      geomagWindow=WINDOW(WINDOW_TITLE="SYM-H plots", $
@@ -406,14 +419,14 @@ PRO superpose_storms_nevents,stormTimeArray_utc, $
                      /CURRENT,OVERPLOT=(i EQ 0) ? 0 : 1, $
                      SYM_TRANSPARENCY=defSymTransp, $
                      TRANSPARENCY=defLineTransp, $
-                     THICK=1.5) 
+                     THICK=defLineThick) 
            
         ENDIF ELSE PRINT,'Losing storm #' + STRCOMPRESS(i,/REMOVE_ALL) + ' on the list! Only one elem...'
      ENDFOR
      
      axes=plot.axes
-     axes[0].MAJOR=5
-     axes[1].MINOR=3
+     axes[0].MAJOR=(nMajorTicks EQ 4) ? nMajorTicks -1 : nMajorTicks
+     axes[1].MINOR=nMinorTicks
      ;; ; Has user requested overlaying DST/SYM-H with the histogram?
      
   ENDELSE
@@ -642,8 +655,8 @@ PRO superpose_storms_nevents,stormTimeArray_utc, $
         
         yaxis = AXIS('Y', LOCATION='right', TARGET=plot_nEv, $
                      TITLE='Number of events', $
-                     MAJOR=5, $
-                     MINOR=3, $
+                     MAJOR=nMajorTicks, $
+                     MINOR=nMinorTicks, $
                      TICKFONT_SIZE=20, $
                      TICKFONT_STYLE=1, $
                      ;; AXIS_RANGE=[minDat,maxDat], $
@@ -669,8 +682,8 @@ PRO superpose_storms_nevents,stormTimeArray_utc, $
         
         ;; xaxis = AXIS('Y', LOCATION='right', TARGET=plot_nEv, $
         ;;              TITLE='Number of events', $
-        ;;              MAJOR=5, $
-        ;;              MINOR=3, $
+        ;;              MAJOR=nMajorTicks, $
+        ;;              MINOR=nMinorTicks, $
         ;;              ;; AXIS_RANGE=[minDat,maxDat], $
         ;;              TEXTPOS=1, $
         ;;              COLOR='red')
@@ -685,6 +698,7 @@ PRO superpose_storms_nevents,stormTimeArray_utc, $
         ;; IF saveFile THEN saveStr+=',cNEvHist,cdf_nEv,plot_nEv,nEvHist,tBin,nEvBinsize'
         IF saveFile THEN saveStr+=',cNEvHist,nEvHist,tBin,nEvBinsize,tot_plot_i_list,maxInd'
      ENDELSE
+     returned_nev_tbins_and_Hist=[[tbin],[nEvHist]]
   ENDIF                         ;end IF nEventHists
   
   IF KEYWORD_SET(savePlotName) THEN BEGIN

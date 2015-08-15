@@ -58,7 +58,7 @@ PRO superpose_storms_and_alfven_db_quantities,stormTimeArray,STARTDATE=startDate
    RESTRICT_ALTRANGE=restrict_altRange,RESTRICT_CHARERANGE=restrict_charERange, $
    SAVEFILE=saveFile, $
    TITLESUFF=titleSuff, $
-   RETURNED_NEV_tbins_and_HIST=returned_nEv_tbins_and_Hist, BKGRND_HIST=bkgrnd_hist
+   RETURNED_NEV_TBINS_AND_HIST=returned_nEv_tbins_and_Hist, BKGRND_HIST=bkgrnd_hist
   
   dataDir='/SPENCEdata/Research/Cusp/database/'
   
