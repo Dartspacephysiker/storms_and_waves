@@ -568,7 +568,9 @@ PRO superpose_storms_and_alfven_db_quantities,stormTimeArray,STARTDATE=startDate
                                SYMBOL='+', $
                                SYM_COLOR='SEA GREEN', $
                                XTICKFONT_SIZE=max_xtickfont_size, $
-                                  XTICKFONT_STYLE=max_xtickfont_style, $
+                               XTICKFONT_STYLE=max_xtickfont_style, $
+                               YTICKFONT_SIZE=max_ytickfont_size, $
+                               YTICKFONT_STYLE=max_ytickfont_style, $
                                /CURRENT, $
                                OVERPLOT=1, $
                                LAYOUT=neg_layout, $
@@ -625,6 +627,8 @@ PRO superpose_storms_and_alfven_db_quantities,stormTimeArray,STARTDATE=startDate
                            SYMBOL='+', $
                            XTICKFONT_SIZE=max_xtickfont_size, $
                            XTICKFONT_STYLE=max_xtickfont_style, $
+                           YTICKFONT_SIZE=max_ytickfont_size, $
+                           YTICKFONT_STYLE=max_ytickfont_style, $
                            /CURRENT,OVERPLOT=(i EQ 0) ? 0: 1, $
                            SYM_TRANSPARENCY=defSymTransp)
               ENDIF

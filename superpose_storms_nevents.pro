@@ -48,18 +48,24 @@
 
 PRO superpose_storms_nevents,stormTimeArray_utc, $
                              TBEFORESTORM=tBeforeStorm,TAFTERSTORM=tAfterStorm, $
-                             STARTDATE=startDate, STOPDATE=stopDate, STORMINDS=stormInds, SSC_TIMES_UTC=ssc_times_utc, $
+                             STARTDATE=startDate, STOPDATE=stopDate, $
+                             DAYSIDE=dayside,NIGHTSIDE=nightside, $
+                             STORMINDS=stormInds, SSC_TIMES_UTC=ssc_times_utc, $
                              REMOVE_DUPES=remove_dupes, STORMTYPE=stormType, $
                              USE_SYMH=use_symh, $
                              NEVENTHISTS=nEventHists,NEVBINSIZE=nEvBinSize, $
+                             BKGRND_HIST=bkgrnd_hist, $
                              NEG_AND_POS_SEPAR=neg_and_pos_separ, POS_LAYOUT=pos_layout, NEG_LAYOUT=neg_layout, $
                              MAXIND=maxInd, AVG_TYPE_MAXIND=avg_type_maxInd, $
+                             RESTRICT_ALTRANGE=restrict_altRange,RESTRICT_CHARERANGE=restrict_charERange, $
                              LOG_DBQUANTITY=log_DBquantity, $
+                             YTITLE_MAXIND=yTitle_maxInd, YRANGE_MAXIND=yRange_maxInd, $
                              DBFILE=dbFile,DB_TFILE=db_tFile, $
                              NO_SUPERPOSE=no_superpose, $
                              USE_DARTDB_START_ENDDATE=use_dartdb_start_enddate, $
                              SAVEFILE=saveFile,OVERPLOT_HIST=overplot_hist, $
-                             PLOTTITLE=plotTitle,SAVEPLOTNAME=savePlotName
+                             PLOTTITLE=plotTitle,SAVEPLOTNAME=savePlotName, $
+                             SAVEMAXPLOTNAME=saveMaxPlotName
   
   dataDir='/SPENCEdata/Research/Cusp/database/'
 
@@ -89,6 +95,10 @@ PRO superpose_storms_nevents,stormTimeArray_utc, $
   defUse_SYMH          = 0
                        
   defMaxInd            = 6
+
+  defRestrict_altRange = 0
+  defRestrict_charERange = 0
+
   defavg_type_maxInd   = 0
   defLogDBQuantity     = 0
 
@@ -104,6 +114,17 @@ PRO superpose_storms_nevents,stormTimeArray_utc, $
   defnEvYRange         = [0,5000]
                        
   defSaveFile          = 0
+
+  ;;defs for maxPlots
+  max_xtickfont_size=18
+  max_xtickfont_style=1
+  max_ytickfont_size=18
+  max_ytickfont_style=1
+  avg_symSize=2.0
+  avg_symThick=2.0
+  avg_Thick=2.5
+
+  defRes = 200
   ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
   ;Check defaults
   IF N_ELEMENTS(tBeforeStorm) EQ 0 THEN tBeforeStorm = defTBeforeStorm
@@ -121,6 +142,12 @@ PRO superpose_storms_nevents,stormTimeArray_utc, $
   IF N_ELEMENTS(dbDir) EQ 0 THEN dbDir=defDBDir
   IF N_ELEMENTS(dbFile) EQ 0 THEN dbFile=defDBFile
   IF N_ELEMENTS(db_tFile) EQ 0 THEN db_tFile=defDB_tFile
+
+  IF KEYWORD_SET(dayside) THEN print,"Only considering dayside stuff!"
+  IF KEYWORD_SET(nightside) THEN print,"Only considering nightside stuff!"
+
+  IF N_ELEMENTS(restrict_charERange) EQ 0 THEN restrict_charERange = defRestrict_charERange
+  IF N_ELEMENTS(restrict_altRange) EQ 0 THEN restrict_altRange = defRestrict_altRange
 
   IF N_ELEMENTS(avg_type_maxInd) EQ 0 THEN avg_type_maxInd=defAvg_type_maxInd
 
@@ -328,8 +355,10 @@ PRO superpose_storms_nevents,stormTimeArray_utc, $
   ;; ;Get nearest events in Chaston DB
   cdb_storm_t=MAKE_ARRAY(nStorms,2,/DOUBLE)
   cdb_storm_i=MAKE_ARRAY(nStorms,2,/L64)
-  good_i=get_chaston_ind(maximus,"OMNI",-1,/BOTH_HEMIS,ALTITUDERANGE=[1000,5000], $
-                         CHARERANGE=[4,300])
+  good_i=get_chaston_ind(maximus,"OMNI",-1,/BOTH_HEMIS, $
+                         ALTITUDERANGE=(restrict_altRange) ? [1000,5000] : !NULL, $
+                         CHARERANGE=(restrict_charERange) ? [4,300] : !NULL, $
+                         DAYSIDE=dayside,NIGHTSIDE=nightside)
   
   FOR i=0,nStorms-1 DO BEGIN
      FOR j=0,1 DO BEGIN
@@ -392,10 +421,12 @@ PRO superpose_storms_nevents,stormTimeArray_utc, $
   ;; Get ranges for plots
   minMaxDat=MAKE_ARRAY(nStorms,2,/DOUBLE)
   
-  IF neg_and_pos_separ OR (log_DBQuantity) THEN BEGIN
-     cdb_ind_list = LIST(WHERE(maximus.(maxInd) GT 0))
-     cdb_ind_list.add,WHERE(maximus.(maxInd) LT 0)
+  cdb_ind_list = LIST(WHERE(maximus.(maxInd) GT 0))
+  cdb_ind_list.add,WHERE(maximus.(maxInd) LT 0)
      
+  IF neg_and_pos_separ OR ( log_DBQuantity AND (cdb_ind_list[1,0] NE -1)) THEN BEGIN
+     PRINT,'Got some negs here...'
+     WAIT,1
   ENDIF
 
   FOR i=0,nStorms-1 DO BEGIN
@@ -539,6 +570,7 @@ PRO superpose_storms_nevents,stormTimeArray_utc, $
            
            plot_nEv_pos=plot(tBin,nEvHist_pos, $
                              /STAIRSTEP, $
+                             YRANGE=KEYWORD_SET(nEvRange) ? nEvRange : defNEvYRange, $
                              TITLE='Number of Alfvén events relative to storm epoch for ' + stormString + ' storms, ' + $
                              tStamps(0) + " - " + $
                              tStamps(-1), $
@@ -561,6 +593,7 @@ PRO superpose_storms_nevents,stormTimeArray_utc, $
            
            plot_nEv_neg=plot(tBin,nEvHist_neg, $
                              /STAIRSTEP, $
+                             YRANGE=KEYWORD_SET(nEvRange) ? nEvRange : defNEvYRange, $
                              TITLE='Number of Alfvén events relative to storm epoch for ' + stormString + ' storms, ' + $
                              tStamps(0) + " - " + $
                              tStamps(-1), $
@@ -594,7 +627,7 @@ PRO superpose_storms_nevents,stormTimeArray_utc, $
                       ;; + ' storms, ' + $
                       ;; tStamps(0) + " - " + $
                       ;; tStamps(-1), $
-                      YRANGE=defnEvYRange, $
+                      YRANGE=KEYWORD_SET(nEvRange) ? nEvRange : defNEvYRange, $
                       NAME='Event histogram', $
                       ;; YRANGE=[MIN(nEvHist),MAX(nEvHist)], $
                       XRANGE=xRange, $
@@ -616,6 +649,23 @@ PRO superpose_storms_nevents,stormTimeArray_utc, $
                      ;; AXIS_RANGE=[minDat,maxDat], $
                      TEXTPOS=1, $
                      COLOR='red')
+        
+        IF KEYWORD_SET(bkgrnd_hist) THEN BEGIN
+           plot_bkgrnd=plot(tBin,bkgrnd_hist, $
+                            /STAIRSTEP, $
+                            YRANGE=KEYWORD_SET(nEvRange) ? nEvRange : [0,7500], $
+                            NAME='Background histogram (average)', $
+                            XRANGE=xRange, $
+                            AXIS_STYLE=0, $
+                            COLOR='blue', $
+                            MARGIN=plotMargin, $
+                            THICK=6.5, $ ;OVERPLOT=KEYWORD_SET(overplot_hist),$
+                            /CURRENT,TRANSPARENCY=50)
+           
+           leg = LEGEND(TARGET=[plot_nEv,plot_bkgrnd], $
+                        POSITION=[0.1,0.1], /NORMAL, $
+                        /AUTO_TEXT_COLOR)
+        ENDIF     
         
         ;; xaxis = AXIS('Y', LOCATION='right', TARGET=plot_nEv, $
         ;;              TITLE='Number of events', $
@@ -639,26 +689,25 @@ PRO superpose_storms_nevents,stormTimeArray_utc, $
   
   IF KEYWORD_SET(savePlotName) THEN BEGIN
      PRINT,"Saving plot to file: " + savePlotName
-     geomagWindow.save,savePlotName,RESOLUTION=200
+     geomagWindow.save,savePlotName,RESOLUTION=defRes
   ENDIF
 
   IF KEYWORD_SET(maxInd) THEN BEGIN
+
      mTags=TAG_NAMES(maximus)
      
      maximusWindow=WINDOW(WINDOW_TITLE="Maximus plots", $
                      DIMENSIONS=[1200,800])
      
-     IF log_DBquantity OR neg_and_pos_separ THEN BEGIN
-
-        neg_and_pos_separ = 1
+     IF ( log_DBQuantity AND (cdb_ind_list[1,0] NE -1)) OR neg_and_pos_separ THEN BEGIN
 
         ;Are there negs? Handle, if so
         IF (cdb_ind_list[0])(0) NE -1 THEN BEGIN
 
            temp=WHERE(minMaxDat(*,1) GE 0.,/NULL)
-           IF N_ELEMENTS(temp) GT 0 THEN maxDat=MAX(ABS(minMaxDat(temp,1))) ELSE maxDat=LIST(!NULL)
+           IF N_ELEMENTS(temp) GT 0 THEN maxDat=LIST(MAX(ABS(minMaxDat(temp,1)))) ELSE maxDat=LIST(!NULL)
            temp=WHERE(minMaxDat(*,0) GE 0.,/NULL)
-           IF N_ELEMENTS(temp) GT 0 THEN minDat=MIN(ABS(minMaxDat(temp,0))) ELSE minDat=LIST(!NULL)
+           IF N_ELEMENTS(temp) GT 0 THEN minDat=LIST(MIN(ABS(minMaxDat(temp,0)))) ELSE minDat=LIST(!NULL)
 
         ENDIF ELSE BEGIN
            maxDat=LIST(!NULL)
@@ -667,7 +716,9 @@ PRO superpose_storms_nevents,stormTimeArray_utc, $
 
         IF (cdb_ind_list[1])(0) NE -1 THEN BEGIN
 
-           PRINT,"There are negs in this quantity, and you've asked me to log it. I'm setting neg_and_pos_separ."
+           PRINT,"There are negs in this quantity, and you've asked me to log it. Can't do it"
+           RETURN
+           neg_and_pos_separ = 1
 
            temp=WHERE(minMaxDat(*,1) LT 0.,/NULL)
            IF N_ELEMENTS(temp) GT 0 THEN maxDat.add,MAX(ABS(minMaxDat(temp,1))) ELSE maxDat.add,!NULL
@@ -747,15 +798,22 @@ PRO superpose_storms_nevents,stormTimeArray_utc, $
                             (cdb_y[0]), $
                             TITLE=plotTitle, $
                             XTITLE='Hours since storm commencement', $
-                            YTITLE=mTags(maxInd), $
+                            YTITLE=(KEYWORD_SET(yTitle_maxInd) ? $
+                                    yTitle_maxInd : $
+                                    mTags(maxInd)), $
                             XRANGE=xRange, $
-                            YRANGE=[(minDat[0]),(maxDat[0])], $
+                            YRANGE=(KEYWORD_SET(yRange_maxInd)) ? $
+                            yRange_maxInd : [(minDat[0]),(maxDat[0])], $
                             YLOG=(log_DBQuantity) ? 1 : 0, $
                             LINESTYLE=' ', $
                             SYMBOL='+', $
                             SYM_COLOR='r', $
-                            XTICKFONT_SIZE=10, $
-                            XTICKFONT_STYLE=1, $
+                            XTICKFONT_SIZE=max_xtickfont_size, $
+                            XTICKFONT_STYLE=max_xtickfont_style, $
+                            YTICKFONT_SIZE=max_ytickfont_size, $
+                            YTICKFONT_STYLE=max_ytickfont_style, $
+                            ;; XTICKFONT_SIZE=10, $
+                            ;; XTICKFONT_STYLE=1, $
                             /CURRENT, $
                             OVERPLOT=(i EQ 0) ? 0: 1, $
                             LAYOUT=pos_layout, $
@@ -770,15 +828,20 @@ PRO superpose_storms_nevents,stormTimeArray_utc, $
                             (cdb_y[1]), $
                             TITLE=plotTitle, $
                             XTITLE='Hours since storm commencement', $
-                            YTITLE=mTags(maxInd), $
+                            YTITLE=(KEYWORD_SET(yTitle_maxInd) ? $
+                                    yTitle_maxInd : $
+                                    mTags(maxInd)), $
                             XRANGE=xRange, $
-                            YRANGE=[(minDat[1]),(maxDat[1])], $
+                            YRANGE=(KEYWORD_SET(yRange_maxInd)) ? $
+                            yRange_maxInd : [(minDat[1]),(maxDat[1])], $
                             YLOG=(log_DBQuantity) ? 1 : 0, $
                             LINESTYLE=' ', $
                             SYMBOL='+', $
                             SYM_COLOR='SEA GREEN', $
-                            XTICKFONT_SIZE=10, $
-                            XTICKFONT_STYLE=1, $
+                            XTICKFONT_SIZE=max_xtickfont_size, $
+                            XTICKFONT_STYLE=max_xtickfont_style, $
+                            YTICKFONT_SIZE=max_ytickfont_size, $
+                            YTICKFONT_STYLE=max_ytickfont_style, $
                             /CURRENT, $
                             OVERPLOT=1, $
                             LAYOUT=neg_layout, $
@@ -799,17 +862,24 @@ PRO superpose_storms_nevents,stormTimeArray_utc, $
            IF plot_i(0) GT -1 AND N_ELEMENTS(plot_i) GT 1 THEN BEGIN
 
               plot=plot(cdb_t, $
-                        (log_DBquantity) ? ALOG10(cdb_y) : cdb_y, $
+                        cdb_y, $
+                        ;; (log_DBquantity) ? ALOG10(cdb_y) : cdb_y, $
                         XTITLE='Hours since storm commencement', $
-                        YTITLE=mTags(maxInd), $
+                        YTITLE=(KEYWORD_SET(yTitle_maxInd) ? $
+                                yTitle_maxInd : $
+                                mTags(maxInd)), $
                         XRANGE=xRange, $
-                        YRANGE=[minDat,maxDat], $
+                        YRANGE=(KEYWORD_SET(yRange_maxInd)) ? $
+                        yRange_maxInd : [minDat,maxDat], $
                         YLOG=(log_DBQuantity) ? 1 : 0, $
                         LINESTYLE=' ', $
                         SYMBOL='+', $
-                        XTICKFONT_SIZE=10, $
-                        XTICKFONT_STYLE=1, $
-                        /CURRENT,OVERPLOT=(i EQ 0) ? 0: 1, $
+                        XTICKFONT_SIZE=max_xtickfont_size, $
+                        XTICKFONT_STYLE=max_xtickfont_style, $
+                        YTICKFONT_SIZE=max_ytickfont_size, $
+                        YTICKFONT_STYLE=max_ytickfont_style, $
+                        /CURRENT, $
+                        OVERPLOT=(i EQ 0) ? 0: 1, $
                         SYM_TRANSPARENCY=defSymTransp)
               
            ENDIF
@@ -856,7 +926,8 @@ PRO superpose_storms_nevents,stormTimeArray_utc, $
                             XTITLE='Hours since storm commencement', $
                             YTITLE=mTags(maxInd), $
                             XRANGE=xRange, $
-                            YRANGE=[(minDat[0]),(maxDat[0])], $
+                            YRANGE=(KEYWORD_SET(yRange_maxInd)) ? $
+                            yRange_maxInd : [minDat[0],maxDat[0]], $
                             LINESTYLE='--', $
                             COLOR='MAROON', $
                             SYMBOL='d', $
@@ -893,7 +964,8 @@ PRO superpose_storms_nevents,stormTimeArray_utc, $
                             XTITLE='Hours since storm commencement', $
                             YTITLE=mTags(maxInd), $
                             XRANGE=xRange, $
-                            YRANGE=[(minDat[1]),(maxDat[1])], $
+                            YRANGE=(KEYWORD_SET(yRange_maxInd)) ? $
+                            yRange_maxInd : [minDat[1],maxDat[1]], $
                             LINESTYLE='-:', $
                             COLOR='DARK GREEN', $
                             SYMBOL='d', $
@@ -917,7 +989,7 @@ PRO superpose_storms_nevents,stormTimeArray_utc, $
            ENDFOR
 
            Avgs=MAKE_ARRAY(nBins,/DOUBLE)
-           avg_data=maximus.(maxInd)(tot_plot_i)
+           avg_data=log_DBQuantity ? ALOG10(maximus.(maxInd)(tot_plot_i)) : maximus.(maxInd)(tot_plot_i)
            ;now loop over histogram bins, perform average
            FOR i=0,nBins-1 DO BEGIN
               temp_inds=WHERE(tot_cdb_t GE (tBin(0) + i*NEvBinsize) AND tot_cdb_t LT (tBin(0)+(i+1)*nEvBinSize))
@@ -926,22 +998,34 @@ PRO superpose_storms_nevents,stormTimeArray_utc, $
 
            safe_i=(log_DBQuantity) ? WHERE(FINITE(Avgs) AND Avgs GT 0.) : WHERE(FINITE(Avgs))
            plot=plot(tBin(safe_i)+0.5*nEvBinsize, $
-                     Avgs(safe_i), $
+                     (log_DBQuantity) ? 10^Avgs(safe_i) : Avgs(safe_i), $
+                     ;; Avgs(safe_i), $
                      TITLE=plotTitle, $
                      XTITLE='Hours since storm commencement', $
-                     YTITLE=mTags(maxInd), $
+                     YTITLE=(KEYWORD_SET(yTitle_maxInd) ? $
+                             yTitle_maxInd : $
+                             mTags(maxInd)), $
                      XRANGE=xRange, $
-                     YRANGE=[minDat,maxDat], $
+                     YRANGE=(KEYWORD_SET(yRange_maxInd)) ? $
+                     yRange_maxInd : [minDat,maxDat], $
                      LINESTYLE='--', $
                      SYMBOL='d', $
-                     XTICKFONT_SIZE=10, $
-                     XTICKFONT_STYLE=1, $
+                     XTICKFONT_SIZE=max_xtickfont_size, $
+                     XTICKFONT_STYLE=max_xtickfont_style, $
+                     YTICKFONT_SIZE=max_ytickfont_size, $
+                     YTICKFONT_STYLE=max_ytickfont_style, $
                      /CURRENT,/OVERPLOT, $
                      SYM_SIZE=1.5, $
                      SYM_COLOR='g') ;, $
            
         ENDELSE
      ENDIF
+
+     IF KEYWORD_SET(saveMaxPlotName) THEN BEGIN
+        PRINT,"Saving maxplot to file: " + saveMaxPlotName
+        maximuswindow.save,savemaxplotname,RESOLUTION=defRes
+     ENDIF
+
   ENDIF
   
   IF saveFile THEN BEGIN

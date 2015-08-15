@@ -19,6 +19,11 @@ PRO JOURNAL__20150813__GET_FOUR_QUADRANT_INDS_BUT_DONT_USE_MATCH
   DB_NOAA = 'SSC_dbs--storm2_mods.txt__STORM2_MODS.SSC--idl.sav'
 
   INDS_OUTFILE = 'large_and_small_storms--Oct1996-Oct2000--indices_for_four_quadrants--Anderson.sav'
+  INDS_OUTFILE = 'large_and_small_storms--Oct1996-Oct2000--indices_for_four_quadrants--Anderson.sav'
+
+  ;; some helper vars
+  maxDiff = 24./24.; Brett's stuff can lead sudden commencement by 16 hours, let's say
+  s2day = 1./86400.
 
   PRINT,"Restoring " + DB_BRETT + "..."
   restore,DBDIR+DB_BRETT
@@ -34,9 +39,9 @@ PRO JOURNAL__20150813__GET_FOUR_QUADRANT_INDS_BUT_DONT_USE_MATCH
   ;; ts_st = TIMESTAMP(YEAR=stormStruct.year, MONTH=stormStruct.month, DAY=stormStruct.day, HOUR=stormStruct.hour, MINUTE=stormStruct.minute)
   
   ;; Julian day (rather have UTC)
-  ;; jd_ssc1 = JULDAY(ssc1.month, ssc1.day, ssc1.year, ssc1.hour, ssc1.minute)
-  ;; jd_ssc2 = JULDAY(ssc2.month, ssc2.day, ssc2.year, ssc2.hour, ssc2.minute)
-  ;; jd_st = JULDAY(stormstruct.month, stormstruct.day, stormstruct.year, stormstruct.hour, stormstruct.minute)
+  jd_ssc1 = JULDAY(ssc1.month, ssc1.day, ssc1.year, ssc1.hour, ssc1.minute)
+  jd_ssc2 = JULDAY(ssc2.month, ssc2.day, ssc2.year, ssc2.hour, ssc2.minute)
+  jd_st = JULDAY(stormstruct.month, stormstruct.day, stormstruct.year, stormstruct.hour, stormstruct.minute)
 
   ;;Get all the times as UTC times, for crying out loud
   ;;Can't go before 1970, of course!
@@ -82,10 +87,6 @@ PRO JOURNAL__20150813__GET_FOUR_QUADRANT_INDS_BUT_DONT_USE_MATCH
   ;;*****************************************************************************************
   ;; All right, here is where we sort Brett's storm indices out into the four quadrants given
   ;; in the comments at the top of the program
-
-  ;; some helper vars
-  maxDiff = 16./24.; Brett's stuff can lead sudden commencement by 16 hours, let's say
-  s2day = 1./86400.
 
   ;;--------------------------------------------------
   ;;For quadrants 1 and 2:
