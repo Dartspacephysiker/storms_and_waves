@@ -2,7 +2,7 @@
 ;;The question becomes, what do I do with all of these blasted indices that I've labored so diligently to obtain?
 ;;We need to have a way to simply feed a list of times to superpose_storms_and_[blah...].pro
 
-PRO JOURNAL__20150814__what_to_do_with_four_quad_inds
+PRO JOURNAL__20150814__PLOTS_AND_CHECKS_WITH_FOUR_QUAD_INDS
 
   DBDIR = '/home/spencerh/Research/Cusp/database/sw_omnidata/'
   DB_BRETT = 'large_and_small_storms--1985-2011--Anderson.sav'
@@ -34,7 +34,8 @@ PRO JOURNAL__20150814__what_to_do_with_four_quad_inds
 ;; Q5: Identified in NOAA db, but not identified in Brett DB
 ;; See comments at top of generating file for description of the four quadrants these indices represent.
 
-  print,qi[0].list_i[0]
+  ;; print,qi[0].list_i[0]
+
   q1_st=qi[0].list_i[0]
   q2_st=qi[0].list_i[1]
   q3_st=qi[0].list_i[2]
@@ -56,33 +57,36 @@ PRO JOURNAL__20150814__what_to_do_with_four_quad_inds
   q1_utc=conv_julday_to_utc(ssc1.julday[q1_1])
   q2_utc=conv_julday_to_utc(ssc1.julday[q2_1])
 
-
   ;;now plot 'em!!
   maxInd=16 ;ion_flux_up
   ;; maxInd=6  ;mag_current
   ;; maxInd=7  ;esa_current
   ;; maxInd=12  ;max_chare_losscone
 
-  superpose_storms_nevents,STORMTYPE=1,STORMINDS=q1_st,MAXIND=maxInd,/OVERPLOT_HIST,/NEVENTHISTS, $
-                           /USE_DARTDB_START_ENDDATE,SAVEPLOTNAME='storms_quadrant1--dst-centered.png', $
+  rmDupes = 1
+
+  IF rmDupes THEN sufStr = '--rmDupes.png' ELSE sufStr = '.png'
+
+  superpose_storms_nevents,STORMTYPE=1,STORMINDS=q1_st,MAXIND=maxInd,/OVERPLOT_HIST,/NEVENTHISTS, REMOVE_DUPES=rmDupes, $
+                           /USE_DARTDB_START_ENDDATE,SAVEPLOTNAME='storms_quadrant1--dst-centered' + sufStr, $
                            PLOTTITLE="Quadrant 1: 'Large storms' in NOAA SSC DB (Centered on Dst min)"
-  superpose_storms_nevents,STORMTYPE=1,STORMINDS=q1_st,MAXIND=maxInd,/OVERPLOT_HIST,/NEVENTHISTS,SSC_TIMES_UTC=q1_utc, $
-                           /USE_DARTDB_START_ENDDATE,SAVEPLOTNAME='storms_quadrant1--ssc-centered.png', $
+  superpose_storms_nevents,STORMTYPE=1,STORMINDS=q1_st,MAXIND=maxInd,/OVERPLOT_HIST,/NEVENTHISTS, REMOVE_DUPES=rmDupes,SSC_TIMES_UTC=q1_utc, $
+                           /USE_DARTDB_START_ENDDATE,SAVEPLOTNAME='storms_quadrant1--ssc-centered' + sufStr, $
                            PLOTTITLE="Quadrant 1: 'Large storms' in NOAA SSC DB (Centered on NOAA SSC)"
 
-  superpose_storms_nevents,STORMTYPE=0,STORMINDS=q2_st,MAXIND=maxInd,/OVERPLOT_HIST,/NEVENTHISTS, $
-                           /USE_DARTDB_START_ENDDATE,SAVEPLOTNAME='storms_quadrant2--dst-centered.png', $
+  superpose_storms_nevents,STORMTYPE=0,STORMINDS=q2_st,MAXIND=maxInd,/OVERPLOT_HIST,/NEVENTHISTS, REMOVE_DUPES=rmDupes, $
+                           /USE_DARTDB_START_ENDDATE,SAVEPLOTNAME='storms_quadrant2--dst-centered' + sufStr, $
                            PLOTTITLE="Quadrant 2: 'Small storms' in NOAA SSC DB (Centered on NOAA SSC)"
-  superpose_storms_nevents,STORMTYPE=0,STORMINDS=q2_st,MAXIND=maxInd,/OVERPLOT_HIST,/NEVENTHISTS,SSC_TIMES_UTC=q2_utc, $
-                           /USE_DARTDB_START_ENDDATE,SAVEPLOTNAME='storms_quadrant2--ssc-centered.png', $
+  superpose_storms_nevents,STORMTYPE=0,STORMINDS=q2_st,MAXIND=maxInd,/OVERPLOT_HIST,/NEVENTHISTS, REMOVE_DUPES=rmDupes,SSC_TIMES_UTC=q2_utc, $
+                           /USE_DARTDB_START_ENDDATE,SAVEPLOTNAME='storms_quadrant2--ssc-centered' + sufStr, $
                            PLOTTITLE="Quadrant 2: 'Small storms' in NOAA SSC DB (Centered on NOAA SSC)"
 
-  superpose_storms_nevents,STORMTYPE=1,STORMINDS=q3_st,MAXIND=maxInd,/OVERPLOT_HIST,/NEVENTHISTS, $
-                           /USE_DARTDB_START_ENDDATE,SAVEPLOTNAME='storms_quadrant3--dst-centered.png', $
+  superpose_storms_nevents,STORMTYPE=1,STORMINDS=q3_st,MAXIND=maxInd,/OVERPLOT_HIST,/NEVENTHISTS, REMOVE_DUPES=rmDupes, $
+                           /USE_DARTDB_START_ENDDATE,SAVEPLOTNAME='storms_quadrant3--dst-centered' + sufStr, $
                            PLOTTITLE="Quadrant 3: 'Large' storms NOT in NOAA SSC DB (Centered on Dst min)"
 
-  superpose_storms_nevents,STORMTYPE=1,STORMINDS=q4_st,MAXIND=maxInd,/OVERPLOT_HIST,/NEVENTHISTS, $
-                           /USE_DARTDB_START_ENDDATE,SAVEPLOTNAME='storms_quadrant4--dst-centered.png', $
+  superpose_storms_nevents,STORMTYPE=0,STORMINDS=q4_st,MAXIND=maxInd,/OVERPLOT_HIST,/NEVENTHISTS, REMOVE_DUPES=rmDupes, $
+                           /USE_DARTDB_START_ENDDATE,SAVEPLOTNAME='storms_quadrant4--dst-centered' + sufStr, $
                            PLOTTITLE="Quadrant 4: 'Small' storms NOT in NOAA SSC DB (Centered on Dst min)"
 
 END
