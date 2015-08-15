@@ -56,6 +56,7 @@ PRO JOURNAL__20150814__PLOTS_AND_CHECKS_WITH_FOUR_QUAD_INDS
 
   q1_utc=conv_julday_to_utc(ssc1.julday[q1_1])
   q2_utc=conv_julday_to_utc(ssc1.julday[q2_1])
+  q5_utc=conv_julday_to_utc(ssc1.julday[q5_1])
 
   ;;now plot 'em!!
   maxInd=16 ;ion_flux_up
@@ -67,7 +68,7 @@ PRO JOURNAL__20150814__PLOTS_AND_CHECKS_WITH_FOUR_QUAD_INDS
 
   IF rmDupes THEN sufStr = '--rmDupes.png' ELSE sufStr = '.png'
 
-  superpose_storms_nevents,STORMTYPE=1,STORMINDS=q1_st,MAXIND=maxInd,/OVERPLOT_HIST,/NEVENTHISTS, REMOVE_DUPES=rmDupes, $
+  superpose_storms_nevents,STORMTYPE=1,STORMINDS=q1_st,MAXIND=maxInd,/OVERPLOT_HIST,/NEVENTHISTS, REMOVE_DUPES=rmDupes,AVG_TYPE_MAXIND=2, $
                            /USE_DARTDB_START_ENDDATE,SAVEPLOTNAME='storms_quadrant1--dst-centered' + sufStr, $
                            PLOTTITLE="Quadrant 1: 'Large storms' in NOAA SSC DB (Centered on Dst min)"
   superpose_storms_nevents,STORMTYPE=1,STORMINDS=q1_st,MAXIND=maxInd,/OVERPLOT_HIST,/NEVENTHISTS, REMOVE_DUPES=rmDupes,SSC_TIMES_UTC=q1_utc, $
@@ -88,5 +89,9 @@ PRO JOURNAL__20150814__PLOTS_AND_CHECKS_WITH_FOUR_QUAD_INDS
   superpose_storms_nevents,STORMTYPE=0,STORMINDS=q4_st,MAXIND=maxInd,/OVERPLOT_HIST,/NEVENTHISTS, REMOVE_DUPES=rmDupes, $
                            /USE_DARTDB_START_ENDDATE,SAVEPLOTNAME='storms_quadrant4--dst-centered' + sufStr, $
                            PLOTTITLE="Quadrant 4: 'Small' storms NOT in NOAA SSC DB (Centered on Dst min)"
+
+  superpose_storms_nevents,q5_utc,MAXIND=maxInd,/OVERPLOT_HIST,/NEVENTHISTS,REMOVE_DUPES=rmDupes, $
+                           /USE_DARTDB_START_ENDDATE,SAVEPLOTNAME='storms_quadrant5--ssc-centered' + sufStr, $
+                           PLOTTITLE="Quadrant 5: Storms ONLY in NOAA SSC DB "
 
 END
