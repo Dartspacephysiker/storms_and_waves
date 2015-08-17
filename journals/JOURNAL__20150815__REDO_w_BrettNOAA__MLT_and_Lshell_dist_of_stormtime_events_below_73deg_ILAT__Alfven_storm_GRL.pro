@@ -1,24 +1,23 @@
 ;2015/08/15
 ;Redoing all these thangs with Brett's storm DB and the NOAA database of sudden storm commencements COMBINED, bro
 
-PRO JOURNAL__20150815__REDO_with_BrettNOAAdbs__MLT_and_Lshell_dist_of_stormtime_events_below_73deg_ILAT__Alfven_storm_GRL
+PRO JOURNAL__20150815__REDO_w_BrettNOAA__MLT_and_Lshell_dist_of_stormtime_events_below_73deg_ILAT__Alfven_storm_GRL
   
   dataDir='/SPENCEdata/Research/Cusp/database'
   dbFile = 'Dartdb_20150814--500-16361_inc_lower_lats--burst_1000-16361--maximus.sav'
+
+  do_below_73degILAT = 1
 
   ;; ;All those storms
   ;; restore,'superposed_largestorms_-15_to_5_hours.dat'
   restore,dataDir+'/../storms_Alfvens/saves_output_etc/' + $
           'superposed_large_storm_output_w_n_Alfven_events--20150815.dat'
   
-  largeStorm_ind=tot_plot_i_list(0) & belowStr = ''
+  largeStorm_ind=tot_plot_i_list(0) 
   FOR i=1,N_ELEMENTS(tot_plot_i_list)-1 DO largeStorm_ind=[largeStorm_ind,tot_plot_i_list(i)]
   
   restore,dataDir+'/dartdb/saves/'+dbFile
 
-  
-  largestorm_ind=cgsetintersection(largestorm_ind,where(ABS(maximus.ILAT) LT 73)) & belowStr = '--below_73_deg_ILAT'
-  
   pos=[0.15,0.15,0.95,0.925]    ;Position of histos in window
   
   ;**************************************************
@@ -28,61 +27,13 @@ PRO JOURNAL__20150815__REDO_with_BrettNOAAdbs__MLT_and_Lshell_dist_of_stormtime_
   xRange_MLT=[0,24]
   xRange_ILAT=[50,90]
   
-  yRange_MLT_ILAT=[0,0.25]
+  yRange_MLT=[0,0.2]    ;These can be modded if below 73degilat is set
+  yRange_ILAT=[0,0.25]
   yRange_lShell=[0.,0.15]
-  
+
   binSize_lShell=1
   binSize_ILAT=2
   binSize_MLT=1
-  ;**************************************************
-  ;L-SHELL
-  
-  lShell=(cos(maximus.ilat*!PI/180.))^(-2)
-  
-  cghistoplot,lShell(largeStorm_ind),/OPROBABILITY, $
-              BINSIZE=binSize_lShell,OUTPUT='L-SHELL' + belowStr + '--histogram_and_cdf--large_storms--NOAA_and_Brett--1997-01-10_through_2000-10-05.png', $
-              CHARSIZE=2.5,THICK=2.0
-  ;Southern
-  cghistoplot,lShell,MAXINPUT=xRange_lShell[1],MININPUT=xRange_lShell[0], $
-              /OPROBABILITY, $    ;Southern hemi
-              BINSIZE=binSize_lShell,OUTPUT='L-SHELL--Southern' + belowStr + '--histogram_and_cdf--large_storms--NOAA_and_Brett--1997-01-10_through_2000-10-05.png'
-  
-  cghistoplot,ABS(lShell(cgsetintersection(largestorm_ind,where(maximus.ilat LT 0)))),MAXINPUT=xRange_lShell[1],MININPUT=xRange_lShell[0], $
-              /OPROBABILITY, $    ;Southern hemi
-              BINSIZE=binSize_lShell,OUTPUT='L-SHELL--Southern--reversed' + belowStr + '--histogram_and_cdf--large_storms--NOAA_and_Brett--1997-01-10_through_2000-10-05.png'
-  
-  ;Northern
-  cghistoplot,lShell(cgsetintersection(largestorm_ind,where(maximus.ilat GT 0))),MAXINPUT=xRange_lShell[1],MININPUT=xRange_lShell[0], $
-              /OPROBABILITY, $    ;Northern
-              BINSIZE=binSize_lShell,OUTPUT='L-SHELL--Northern' + belowStr + '--histogram_and_cdf--large_storms--NOAA_and_Brett--1997-01-10_through_2000-10-05.png'
-  
-  ;**************************************************
-  ;ILAT
-  
-  cghistoplot,maximus.ilat(largeStorm_ind),/OPROBABILITY, $
-              BINSIZE=binSize_ILAT,OUTPUT='ILAT' + belowStr + '--histogram_and_cdf--large_storms--NOAA_and_Brett--1997-01-10_through_2000-10-05.png',CHARSIZE=2.5,THICK=2.0
-  ;Southern
-  cghistoplot,maximus.ilat,MAXINPUT=-xRange_ILAT[0],MININPUT=-xRange_ILAT[1],/OPROBABILITY, $   ;Southern hemi
-              BINSIZE=binSize_ILAT,OUTPUT='ILAT--Southern' + belowStr + '--histogram_and_cdf--large_storms--NOAA_and_Brett--1997-01-10_through_2000-10-05.png'
-  
-  cghistoplot,ABS(maximus.ilat(cgsetintersection(largestorm_ind,where(maximus.ilat LT 0)))),MAXINPUT=xRange_ILAT[1],MININPUT=xRange_ILAT[0], $
-              /OPROBABILITY, $    ;Southern hemi
-              BINSIZE=binSize_ILAT,OUTPUT='ILAT--Southern--reversed' + belowStr + '--histogram_and_cdf--large_storms--NOAA_and_Brett--1997-01-10_through_2000-10-05.png'
-  
-  ;Northern
-  cghistoplot,maximus.ilat(cgsetintersection(largestorm_ind,where(maximus.ilat GT 0))), $
-              MAXINPUT=xRange_ILAT[1],MININPUT=xRange_ILAT[0], $
-              /OPROBABILITY, $    ;Northern
-              BINSIZE=binSize_ILAT,OUTPUT='ILAT--Northern' + belowStr + '--histogram_and_cdf--large_storms--NOAA_and_Brett--1997-01-10_through_2000-10-05.png'
-  
-  ;**************************************************
-  ;MLT
-  cghistoplot,maximus.mlt(largestorm_ind), $                                            ;South
-              /OPROBABILITY,BINSIZE=binSize_MLT,OUTPUT='MLT' + belowStr + '--histogram_and_cdf--large_storms--NOAA_and_Brett--1997-01-10_through_2000-10-05.png'
-  cghistoplot,maximus.mlt(cgsetintersection(largestorm_ind,where(maximus.ilat GT 0))), $ ;South
-              /OPROBABILITY,BINSIZE=binSize_MLT,OUTPUT='MLT--Northern' + belowStr + '--histogram_and_cdf--large_storms--NOAA_and_Brett--1997-01-10_through_2000-10-05.png'
-  cghistoplot,maximus.mlt(cgsetintersection(largestorm_ind,where(maximus.ilat LT 0))), $ ;North
-              /OPROBABILITY,BINSIZE=binSize_MLT,OUTPUT='MLT--Southern' + belowStr + '--histogram_and_cdf--large_storms--NOAA_and_Brett--1997-01-10_through_2000-10-05.png'
   
   ;****************************************
   ;good_i
@@ -90,6 +41,48 @@ PRO JOURNAL__20150815__REDO_with_BrettNOAAdbs__MLT_and_Lshell_dist_of_stormtime_
   good_i_south=get_chaston_ind(maximus,'OMNI',-1,CHARERANGE=[4,6000],/SOUTH)
   good_i_north=get_chaston_ind(maximus,'OMNI',-1,CHARERANGE=[4,6000],/NORTH)
   
+  IF do_below_73degILAT THEN BEGIN
+
+     ;; belowStr = '--below_73_deg_ILAT'
+     belowStr = '--both_histos_below_73_deg_ILAT'
+
+     old=N_ELEMENTS(largestorm_ind)
+     largestorm_ind = cgsetintersection(largestorm_ind,where(ABS(maximus.ILAT) LT 73))
+     new=N_ELEMENTS(largestorm_ind)
+     diff=old-new
+     PRINT,"Removing " + STRCOMPRESS(diff,/REMOVE_ALL) + " of " + STRCOMPRESS(old,/REMOVE_ALL) + " elements above 73 deg ILAT from storm inds..."
+
+     old=N_ELEMENTS(good_i_all)
+     good_i_all = cgsetintersection(good_i_all,where(ABS(maximus.ILAT) LT 73))
+     new=N_ELEMENTS(good_i_all)
+     diff=old-new
+     PRINT,"Removing " + STRCOMPRESS(diff,/REMOVE_ALL) + " of " + STRCOMPRESS(old,/REMOVE_ALL) + " elements above 73 deg ILAT from all inds..."
+
+     old=N_ELEMENTS(good_i_north)
+     good_i_north = cgsetintersection(good_i_north,where(ABS(maximus.ILAT) LT 73))
+     new=N_ELEMENTS(good_i_north)
+     diff=old-new
+     PRINT,"Removing " + STRCOMPRESS(diff,/REMOVE_ALL) + " of " + STRCOMPRESS(old,/REMOVE_ALL) + " elements above 73 deg ILAT from north inds..."
+
+     old=N_ELEMENTS(good_i_south)
+     good_i_south = cgsetintersection(good_i_south,where(ABS(maximus.ILAT) LT 73))
+     new=N_ELEMENTS(good_i_south)
+     diff=old-new
+     PRINT,"Removing " + STRCOMPRESS(diff,/REMOVE_ALL) + " of " + STRCOMPRESS(old,/REMOVE_ALL) + " elements above 73 deg ILAT from south inds..."
+
+     yRange_MLT=[0,0.2]
+     yRange_ILAT=[0,0.35]
+     yRange_lShell=[0.,0.2]
+
+
+  ENDIF ELSE belowStr = ''
+
+
+  
+  ;lshell calc
+  lShell=(cos(maximus.ilat*!PI/180.))^(-2)
+   
+
   ;**************************************************
   ;overlay the two MLT plots
   data_1_ind=largeStorm_ind
@@ -108,7 +101,7 @@ PRO JOURNAL__20150815__REDO_with_BrettNOAAdbs__MLT_and_Lshell_dist_of_stormtime_
   histTitle='Relative freq. of activity'
   
   BINSIZE=binSize_MLT
-  yRange=yRange_MLT_ILAT
+  yRange=yRange_MLT
   xRange=xRange_MLT
   xTitle='MLT'
   outFile='MLT' + belowStr + '--large_storms--NOAA_and_Brett--overlaid_w_all_events.png'
@@ -246,7 +239,7 @@ PRO JOURNAL__20150815__REDO_with_BrettNOAAdbs__MLT_and_Lshell_dist_of_stormtime_
   
   binsize=binSize_ILAT
   XRANGE=[-xRange_ILAT[1],xRange_ILAT[1]]
-  yRange=yRange_MLT_ILAT
+  yRange=yRange_ILAT
   xTitle='ILAT'
   outFile='ILAT' + belowStr + '--large_storms--NOAA_and_Brett--overlaid_w_all_events.png'
   
@@ -292,5 +285,58 @@ PRO JOURNAL__20150815__REDO_with_BrettNOAAdbs__MLT_and_Lshell_dist_of_stormtime_
                      DATA_1_TITLE=data_1_title,DATA_2_TITLE=data_2_title, $
                      BINSIZE=binSize,XRANGE=xRange,YRANGE=yRange,HISTTITLE=histTitle,XTITLE=xTitle, $
                      OUTFILE=outFile,POS=pos
+
+
+;***********************************************************
+;Plots that are not overlaid
+  ;;  ;**************************************************
+  ;;  ;L-SHELL
+  ;;  
+  ;;  cghistoplot,lShell(largeStorm_ind),/OPROBABILITY, $
+  ;;              BINSIZE=binSize_lShell,OUTPUT='L-SHELL' + belowStr + '--histogram_and_cdf--large_storms--NOAA_and_Brett--1997-01-10_through_2000-10-05.png', $
+  ;;              CHARSIZE=2.5,THICK=2.0
+  ;;  ;Southern
+  ;;  cghistoplot,lShell,MAXINPUT=xRange_lShell[1],MININPUT=xRange_lShell[0], $
+  ;;              /OPROBABILITY, $    ;Southern hemi
+  ;;              BINSIZE=binSize_lShell,OUTPUT='L-SHELL--Southern' + belowStr + '--histogram_and_cdf--large_storms--NOAA_and_Brett--1997-01-10_through_2000-10-05.png'
+  ;;  
+  ;;  cghistoplot,ABS(lShell(cgsetintersection(largestorm_ind,where(maximus.ilat LT 0)))),MAXINPUT=xRange_lShell[1],MININPUT=xRange_lShell[0], $
+  ;;              /OPROBABILITY, $    ;Southern hemi
+  ;;              BINSIZE=binSize_lShell,OUTPUT='L-SHELL--Southern--reversed' + belowStr + '--histogram_and_cdf--large_storms--NOAA_and_Brett--1997-01-10_through_2000-10-05.png'
+  ;;  
+  ;;  ;Northern
+  ;;  cghistoplot,lShell(cgsetintersection(largestorm_ind,where(maximus.ilat GT 0))),MAXINPUT=xRange_lShell[1],MININPUT=xRange_lShell[0], $
+  ;;              /OPROBABILITY, $    ;Northern
+  ;;              BINSIZE=binSize_lShell,OUTPUT='L-SHELL--Northern' + belowStr + '--histogram_and_cdf--large_storms--NOAA_and_Brett--1997-01-10_through_2000-10-05.png'
+  ;;  
+  ;;  ;**************************************************
+  ;;  ;ILAT
+  ;;  
+  ;;  cghistoplot,maximus.ilat(largeStorm_ind),/OPROBABILITY, $
+  ;;              BINSIZE=binSize_ILAT,OUTPUT='ILAT' + belowStr + '--histogram_and_cdf--large_storms--NOAA_and_Brett--1997-01-10_through_2000-10-05.png',CHARSIZE=2.5,THICK=2.0
+  ;;  ;Southern
+  ;;  cghistoplot,maximus.ilat,MAXINPUT=-xRange_ILAT[0],MININPUT=-xRange_ILAT[1],/OPROBABILITY, $   ;Southern hemi
+  ;;              BINSIZE=binSize_ILAT,OUTPUT='ILAT--Southern' + belowStr + '--histogram_and_cdf--large_storms--NOAA_and_Brett--1997-01-10_through_2000-10-05.png'
+  ;;  
+  ;;  cghistoplot,ABS(maximus.ilat(cgsetintersection(largestorm_ind,where(maximus.ilat LT 0)))),MAXINPUT=xRange_ILAT[1],MININPUT=xRange_ILAT[0], $
+  ;;              /OPROBABILITY, $    ;Southern hemi
+  ;;              BINSIZE=binSize_ILAT,OUTPUT='ILAT--Southern--reversed' + belowStr + '--histogram_and_cdf--large_storms--NOAA_and_Brett--1997-01-10_through_2000-10-05.png'
+  ;;  
+  ;;  ;Northern
+  ;;  cghistoplot,maximus.ilat(cgsetintersection(largestorm_ind,where(maximus.ilat GT 0))), $
+  ;;              MAXINPUT=xRange_ILAT[1],MININPUT=xRange_ILAT[0], $
+  ;;              /OPROBABILITY, $    ;Northern
+  ;;              BINSIZE=binSize_ILAT,OUTPUT='ILAT--Northern' + belowStr + '--histogram_and_cdf--large_storms--NOAA_and_Brett--1997-01-10_through_2000-10-05.png'
+  ;;  
+  ;;  ;**************************************************
+  ;;  ;MLT
+  ;;  cghistoplot,maximus.mlt(largestorm_ind), $                                            ;South
+  ;;              /OPROBABILITY,BINSIZE=binSize_MLT,OUTPUT='MLT' + belowStr + '--histogram_and_cdf--large_storms--NOAA_and_Brett--1997-01-10_through_2000-10-05.png'
+  ;;  cghistoplot,maximus.mlt(cgsetintersection(largestorm_ind,where(maximus.ilat GT 0))), $ ;South
+  ;;              /OPROBABILITY,BINSIZE=binSize_MLT,OUTPUT='MLT--Northern' + belowStr + '--histogram_and_cdf--large_storms--NOAA_and_Brett--1997-01-10_through_2000-10-05.png'
+  ;;  cghistoplot,maximus.mlt(cgsetintersection(largestorm_ind,where(maximus.ilat LT 0))), $ ;North
+  ;;              /OPROBABILITY,BINSIZE=binSize_MLT,OUTPUT='MLT--Southern' + belowStr + '--histogram_and_cdf--large_storms--NOAA_and_Brett--1997-01-10_through_2000-10-05.png'
+  ;;
+
 
 END
