@@ -1,17 +1,30 @@
 ;2015/08/15
 ;Redoing all these thangs with Brett's storm DB and the NOAA database of sudden storm commencements COMBINED, bro
 
+;;2015/08/17
+;;I totally hosed it. I should have redone this with the new stormtimes, for crying out loud, and not grabbed
+;;all events, but just those corresponding to the biggest stormtimes (i.e., 0 hours before to 20 hours after).
+;;See journal file 'JOURNAL__20150817__get_hours_neg15before_to_5after_stormtime', where I create the appropriate inds
+
+
 PRO JOURNAL__20150815__REDO_w_BrettNOAA__MLT_and_Lshell_dist_of_stormtime_events_below_73deg_ILAT__Alfven_storm_GRL
   
   dataDir='/SPENCEdata/Research/Cusp/database'
   dbFile = 'Dartdb_20150814--500-16361_inc_lower_lats--burst_1000-16361--maximus.sav'
 
-  do_below_73degILAT = 1
+  ;; do_below_73degILAT = 0
+  do_storms_below_73degILAT = 1
+
+  do_ALL_below_73degILAT = 0
+  ;; do_ALL_below_73degILAT = 1
 
   ;; ;All those storms
   ;; restore,'superposed_largestorms_-15_to_5_hours.dat'
+  ;; restore,dataDir+'/../storms_Alfvens/saves_output_etc/' + $
+  ;;         'superposed_large_storm_output_w_n_Alfven_events--20150815.dat'
+ 
   restore,dataDir+'/../storms_Alfvens/saves_output_etc/' + $
-          'superposed_large_storm_output_w_n_Alfven_events--20150815.dat'
+          'superposed_large_storm_output_w_n_Alfven_events--quadrant1--0_to_20_hours--20150817.dat'
   
   largeStorm_ind=tot_plot_i_list(0) 
   FOR i=1,N_ELEMENTS(tot_plot_i_list)-1 DO largeStorm_ind=[largeStorm_ind,tot_plot_i_list(i)]
@@ -29,9 +42,11 @@ PRO JOURNAL__20150815__REDO_w_BrettNOAA__MLT_and_Lshell_dist_of_stormtime_events
   
   yRange_MLT=[0,0.2]    ;These can be modded if below 73degilat is set
   yRange_ILAT=[0,0.25]
-  yRange_lShell=[0.,0.15]
+  ;; yRange_lShell=[0.,0.15] ;for binsize_ilat=1
+  yRange_lShell=[0.,0.25]
 
-  binSize_lShell=1
+  ;; binSize_lShell=1
+  binSize_lShell=2
   binSize_ILAT=2
   binSize_MLT=1
   
@@ -41,7 +56,26 @@ PRO JOURNAL__20150815__REDO_w_BrettNOAA__MLT_and_Lshell_dist_of_stormtime_events
   good_i_south=get_chaston_ind(maximus,'OMNI',-1,CHARERANGE=[4,6000],/SOUTH)
   good_i_north=get_chaston_ind(maximus,'OMNI',-1,CHARERANGE=[4,6000],/NORTH)
   
-  IF do_below_73degILAT THEN BEGIN
+  belowStr = ''
+
+  IF do_storms_below_73degILAT THEN BEGIN
+
+     belowStr = '--below_73_deg_ILAT'
+
+     old=N_ELEMENTS(largestorm_ind)
+     largestorm_ind = cgsetintersection(largestorm_ind,where(ABS(maximus.ILAT) LT 73))
+     new=N_ELEMENTS(largestorm_ind)
+     diff=old-new
+     PRINT,"Removing " + STRCOMPRESS(diff,/REMOVE_ALL) + " of " + STRCOMPRESS(old,/REMOVE_ALL) + " elements above 73 deg ILAT from storm inds..."
+
+     yRange_MLT=[0,0.2]
+     yRange_ILAT=[0,0.35]
+     yRange_lShell=[0.,0.2]
+
+
+  ENDIF 
+
+  IF do_all_below_73degILAT THEN BEGIN
 
      ;; belowStr = '--below_73_deg_ILAT'
      belowStr = '--both_histos_below_73_deg_ILAT'
@@ -75,8 +109,7 @@ PRO JOURNAL__20150815__REDO_w_BrettNOAA__MLT_and_Lshell_dist_of_stormtime_events
      yRange_lShell=[0.,0.2]
 
 
-  ENDIF ELSE belowStr = ''
-
+  ENDIF
 
   
   ;lshell calc
@@ -94,9 +127,9 @@ PRO JOURNAL__20150815__REDO_w_BrettNOAA__MLT_and_Lshell_dist_of_stormtime_events
   data_1_col='yellow'
   data_2_col='olive'
   
-  data_1_title='Large storms: ' + STRCOMPRESS(N_ELEMENTS(data_1_ind),/REMOVE_ALL)
+  data_1_title='Large-storm events: ' + STRCOMPRESS(N_ELEMENTS(data_1_ind),/REMOVE_ALL)
   ;; data_2_title='All events: ' + STRCOMPRESS(N_ELEMENTS(good_i_all),/REMOVE_ALL)
-  data_2_title='Non-storm: ' + STRCOMPRESS(N_ELEMENTS(data_2_ind),/REMOVE_ALL)
+  data_2_title='All other events: ' + STRCOMPRESS(N_ELEMENTS(data_2_ind),/REMOVE_ALL)
   
   histTitle='Relative freq. of activity'
   
@@ -118,9 +151,9 @@ PRO JOURNAL__20150815__REDO_w_BrettNOAA__MLT_and_Lshell_dist_of_stormtime_events
   data_2_ind=cgsetdifference(good_i_north,largeStorm_ind)
   data_2=maximus.mlt(data_2_ind)
   
-  data_1_title='Large storms: ' + STRCOMPRESS(N_ELEMENTS(data_1_ind),/REMOVE_ALL)
+  data_1_title='Large-storm events: ' + STRCOMPRESS(N_ELEMENTS(data_1_ind),/REMOVE_ALL)
   ;; data_2_title='All events: ' + STRCOMPRESS(N_ELEMENTS(good_i_north),/REMOVE_ALL)
-  data_2_title='Non-storm: ' + STRCOMPRESS(N_ELEMENTS(data_2_ind),/REMOVE_ALL)
+  data_2_title='All other events: ' + STRCOMPRESS(N_ELEMENTS(data_2_ind),/REMOVE_ALL)
   
   histTitle='Relative freq. of activity, Northern'
   
@@ -138,9 +171,9 @@ PRO JOURNAL__20150815__REDO_w_BrettNOAA__MLT_and_Lshell_dist_of_stormtime_events
   data_2_ind=cgsetdifference(good_i_south,largeStorm_ind)
   data_2=maximus.mlt(data_2_ind)
   
-  data_1_title='Large storms: ' + STRCOMPRESS(N_ELEMENTS(data_1_ind),/REMOVE_ALL)
+  data_1_title='Large-storm events: ' + STRCOMPRESS(N_ELEMENTS(data_1_ind),/REMOVE_ALL)
   ;; data_2_title='All events: ' + STRCOMPRESS(N_ELEMENTS(good_i_south),/REMOVE_ALL)
-  data_2_title='Non-storm: ' + STRCOMPRESS(N_ELEMENTS(data_2_ind),/REMOVE_ALL)
+  data_2_title='All other events: ' + STRCOMPRESS(N_ELEMENTS(data_2_ind),/REMOVE_ALL)
   
   histTitle='Relative freq. of activity, Southern'
   
@@ -162,8 +195,8 @@ PRO JOURNAL__20150815__REDO_w_BrettNOAA__MLT_and_Lshell_dist_of_stormtime_events
   data_1_col='yellow'
   data_2_col='olive'
   
-  data_1_title='Large storms: ' + STRCOMPRESS(N_ELEMENTS(data_1_ind),/REMOVE_ALL)
-  data_2_title='Non-storm: ' + STRCOMPRESS(N_ELEMENTS(data_2_ind),/REMOVE_ALL)
+  data_1_title='Large-storm events: ' + STRCOMPRESS(N_ELEMENTS(data_1_ind),/REMOVE_ALL)
+  data_2_title='All other events: ' + STRCOMPRESS(N_ELEMENTS(data_2_ind),/REMOVE_ALL)
   
   histTitle='Relative freq. of activity'
   
@@ -187,8 +220,8 @@ PRO JOURNAL__20150815__REDO_w_BrettNOAA__MLT_and_Lshell_dist_of_stormtime_events
   data_2_ind=cgsetdifference(good_i_north,largeStorm_ind)
   data_2=lShell(data_2_ind)
   
-  data_1_title='Large storms: ' + STRCOMPRESS(N_ELEMENTS(data_1_ind),/REMOVE_ALL)
-  data_2_title='Non-storm: ' + STRCOMPRESS(N_ELEMENTS(data_2_ind),/REMOVE_ALL)
+  data_1_title='Large-storm events: ' + STRCOMPRESS(N_ELEMENTS(data_1_ind),/REMOVE_ALL)
+  data_2_title='All other events: ' + STRCOMPRESS(N_ELEMENTS(data_2_ind),/REMOVE_ALL)
   ;; xRange=[50,90]
   xRange=xRange_lShell
   histTitle='Relative freq. of activity, Northern'
@@ -207,8 +240,8 @@ PRO JOURNAL__20150815__REDO_w_BrettNOAA__MLT_and_Lshell_dist_of_stormtime_events
   data_2_ind=cgsetdifference(good_i_south,largeStorm_ind)
   data_2=lShell(data_2_ind)
   
-  data_1_title='Large storms: ' + STRCOMPRESS(N_ELEMENTS(data_1_ind),/REMOVE_ALL)
-  data_2_title='Non-storm: ' + STRCOMPRESS(N_ELEMENTS(data_2_ind),/REMOVE_ALL)
+  data_1_title='Large-storm events: ' + STRCOMPRESS(N_ELEMENTS(data_1_ind),/REMOVE_ALL)
+  data_2_title='All other events: ' + STRCOMPRESS(N_ELEMENTS(data_2_ind),/REMOVE_ALL)
   xRange=xRange_lShell
   ;; xRange=[-90,-50]
   histTitle='Relative freq. of activity, Southern'
@@ -232,8 +265,8 @@ PRO JOURNAL__20150815__REDO_w_BrettNOAA__MLT_and_Lshell_dist_of_stormtime_events
   data_1_col='yellow'
   data_2_col='olive'
   
-  data_1_title='Large storms: ' + STRCOMPRESS(N_ELEMENTS(data_1_ind),/REMOVE_ALL)
-  data_2_title='Non-storm: ' + STRCOMPRESS(N_ELEMENTS(data_2_ind),/REMOVE_ALL)
+  data_1_title='Large-storm events: ' + STRCOMPRESS(N_ELEMENTS(data_1_ind),/REMOVE_ALL)
+  data_2_title='All other events: ' + STRCOMPRESS(N_ELEMENTS(data_2_ind),/REMOVE_ALL)
   
   histTitle='Relative freq. of activity'
   
@@ -256,8 +289,8 @@ PRO JOURNAL__20150815__REDO_w_BrettNOAA__MLT_and_Lshell_dist_of_stormtime_events
   data_2_ind=cgsetdifference(good_i_north,largeStorm_ind)
   data_2=maximus.ilat(data_2_ind)
   
-  data_1_title='Large storms: ' + STRCOMPRESS(N_ELEMENTS(data_1_ind),/REMOVE_ALL)
-  data_2_title='Non-storm: ' + STRCOMPRESS(N_ELEMENTS(data_2_ind),/REMOVE_ALL)
+  data_1_title='Large-storm events: ' + STRCOMPRESS(N_ELEMENTS(data_1_ind),/REMOVE_ALL)
+  data_2_title='All other events: ' + STRCOMPRESS(N_ELEMENTS(data_2_ind),/REMOVE_ALL)
   XRANGE=xRange_ILAT
   histTitle='Relative freq. of activity, Northern'
   
@@ -275,8 +308,8 @@ PRO JOURNAL__20150815__REDO_w_BrettNOAA__MLT_and_Lshell_dist_of_stormtime_events
   data_2_ind=cgsetdifference(good_i_south,largeStorm_ind)
   data_2=maximus.ilat(data_2_ind)
   
-  data_1_title='Large storms: ' + STRCOMPRESS(N_ELEMENTS(data_1_ind),/REMOVE_ALL)
-  data_2_title='Non-storm: ' + STRCOMPRESS(N_ELEMENTS(data_2_ind),/REMOVE_ALL)
+  data_1_title='Large-storm events: ' + STRCOMPRESS(N_ELEMENTS(data_1_ind),/REMOVE_ALL)
+  data_2_title='All other events: ' + STRCOMPRESS(N_ELEMENTS(data_2_ind),/REMOVE_ALL)
   xRange=-REVERSE(xRange_ILAT)
   histTitle='Relative freq. of activity, Southern'
   
