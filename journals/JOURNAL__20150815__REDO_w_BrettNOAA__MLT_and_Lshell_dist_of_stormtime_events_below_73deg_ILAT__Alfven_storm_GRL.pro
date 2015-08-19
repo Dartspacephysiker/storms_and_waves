@@ -12,8 +12,8 @@ PRO JOURNAL__20150815__REDO_w_BrettNOAA__MLT_and_Lshell_dist_of_stormtime_events
   dataDir='/SPENCEdata/Research/Cusp/database'
   dbFile = 'Dartdb_20150814--500-16361_inc_lower_lats--burst_1000-16361--maximus.sav'
 
-  ;; do_below_73degILAT = 0
-  do_storms_below_73degILAT = 1
+  do_storms_below_73degILAT = 0
+  ;; do_storms_below_73degILAT = 1
 
   do_ALL_below_73degILAT = 0
   ;; do_ALL_below_73degILAT = 1

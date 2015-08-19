@@ -133,8 +133,8 @@ PRO superpose_storms_nevents,stormTimeArray_utc, $
 
   ;; nMajorTicks=5
   ;; nMinorTicks=3
-  nMajorTicks=4
-  nMinorTicks=4
+  nMajorTicks=5
+  nMinorTicks=2
 
   defNoPlots = 0 
   defNoMaxPlots = 0
@@ -444,7 +444,7 @@ PRO superpose_storms_nevents,stormTimeArray_utc, $
         
         axes=plot.axes
         ;; axes[0].MAJOR=(nMajorTicks EQ 4) ? nMajorTicks -1 : nMajorTicks
-        axes[1].MINOR=nMinorTicks
+        axes[1].MINOR=nMinorTicks+1
         ;; ; Has user requested overlaying DST/SYM-H with the histogram?
      ENDIF ;end noplots
   ENDELSE

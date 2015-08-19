@@ -18,7 +18,7 @@ PRO JOURNAL__20150815__redo_SEA_with_NOAA_and_random_bkgrnd__Alfven_storm_GRL
   ;the outs
   ;; date='20150815'
   date='20150817'
-  tempOutFile = 'superposed_large_storm_output_w_n_Alfven_events--'+date+'.dat'
+  tempOutFile = 'saves_output_etc/superposed_large_storm_output_w_n_Alfven_events--'+date+'.dat'
 
   DBDIR = '/home/spencerh/Research/Cusp/database/sw_omnidata/'
   DB_BRETT = 'large_and_small_storms--1985-2011--Anderson.sav'
@@ -48,11 +48,6 @@ PRO JOURNAL__20150815__redo_SEA_with_NOAA_and_random_bkgrnd__Alfven_storm_GRL
 
   rmDupes = 1
   IF rmDupes THEN sufStr = '--rmDupes' + sufStr
-
-  qStr='storms_quadrant'
-
-  dstStr='--dst-centered'
-  sscStr='--ssc-centered'
 
   ;;SSC-centered here
   superpose_storms_nevents,STORMTYPE=1,STORMINDS=q1_st,/OVERPLOT_HIST,/NEVENTHISTS, REMOVE_DUPES=rmDupes,SSC_TIMES_UTC=q1_utc, $
@@ -84,6 +79,6 @@ PRO JOURNAL__20150815__redo_SEA_with_NOAA_and_random_bkgrnd__Alfven_storm_GRL
                            /USE_DARTDB_START_ENDDATE,TBEFORESTORM=60.,TAFTERSTORM=60., $
                            MAXIND=maxInd, $
                            NEVBINSIZE=nEvBinsize, NEVRANGE=nEvRange, $
-                           BKGRND_HIST=sumHist/40.
+                           BKGRND_HIST=sumHist/40.,/NOMAXPLOTS
 
 END

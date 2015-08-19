@@ -28,6 +28,8 @@ PRO JOURNAL__20150715__four_storms_from_Yao_w_Alfvens_overlaid_in_COLOR__Alfven_
 
   DBFile='dartdb/saves/Dartdb_20150611--500-16361_inc_lower_lats--maximus.sav'  
   DB_tFile='dartdb/saves/Dartdb_20150611--500-16361_inc_lower_lats--cdbtime.sav'
+  ;; DBFile   = 'dartdb/saves/Dartdb_20150814--500-16361_inc_lower_lats--burst_1000-16361--maximus.sav'
+  ;; DB_tFile = 'Dartdb_20150814--500-16361_inc_lower_lats--burst_1000-16361--cdbtime.sav'
   
   maxInd=6
   log_DBquantity=0

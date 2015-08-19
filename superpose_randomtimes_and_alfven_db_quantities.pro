@@ -71,8 +71,8 @@ PRO superpose_randomtimes_and_alfven_db_quantities,NRANDTIME=nRandTime,STARTDATE
   defDST_AEFile    = 'idl_ae_dst_data.dat'
                    
   defDBDir         = 'dartdb/saves/'
-  defDBFile        = 'Dartdb_20150611--500-16361_inc_lower_lats--maximus.sav'  
-  defDB_tFile      = 'Dartdb_20150611--500-16361_inc_lower_lats--cdbtime.sav'
+  defDBFile        = 'Dartdb_20150814--500-16361_inc_lower_lats--burst_1000-16361--maximus.sav'
+  defDB_tFile      = 'Dartdb_20150814--500-16361_inc_lower_lats--burst_1000-16361--cdbtime.sav'
                    
   defUse_SYMH      = 0
 
