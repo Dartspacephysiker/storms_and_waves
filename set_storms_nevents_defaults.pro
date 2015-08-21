@@ -7,7 +7,7 @@ PRO SET_STORMS_NEVENTS_DEFAULTS,tBeforeStorm=tBeforeStorm,tAfterStorm=tAfterStor
                                 restrict_charERange=restrict_charERange,restrict_altRange=restrict_altRange, $
                                 MAXIND=maxInd,avg_type_maxInd=avg_type_maxInd,log_DBQuantity=log_DBQuantity, $
                                 neg_and_pos_separ=neg_and_pos_separ,pos_layout=pos_layout,neg_layout=neg_layout, $
-                                use_SYMH=use_SYMH, $
+                                use_SYMH=use_SYMH,USE_AE=use_AE, $
                                 nEvBinsize=nEvBinsize,min_NEVBINSIZE=min_NEVBINSIZE, $
                                 saveFile=saveFile,SAVESTR=saveStr, $
                                 PLOTTITLE=plotTitle,SAVEPLOTNAME=savePlotName, $
@@ -34,6 +34,7 @@ PRO SET_STORMS_NEVENTS_DEFAULTS,tBeforeStorm=tBeforeStorm,tAfterStorm=tAfterStor
   defDB_tFile          = 'Dartdb_20150814--500-16361_inc_lower_lats--burst_1000-16361--cdbtime.sav'
                        
   defUse_SYMH          = 0
+  defUse_AE            = 0
 
   defRestrict_altRange = 0
   defRestrict_charERange = 0
@@ -47,6 +48,8 @@ PRO SET_STORMS_NEVENTS_DEFAULTS,tBeforeStorm=tBeforeStorm,tAfterStorm=tAfterStor
   defNeg_layout= [1,1,1]
 
   defSaveFile          = 0
+
+  defnEvBinsize        = 150.0D                                                                        ;in minutes
 
   defNoPlots = 0 
   defNoMaxPlots = 0
@@ -84,6 +87,7 @@ PRO SET_STORMS_NEVENTS_DEFAULTS,tBeforeStorm=tBeforeStorm,tAfterStorm=tAfterStor
   IF N_ELEMENTS(neg_layout) EQ 0 Then neg_layout=defNeg_layout
 
   IF N_ELEMENTS(use_SYMH) EQ 0 THEN use_SYMH = defUse_SYMH
+  IF N_ELEMENTS(use_AE)   EQ 0 THEN use_AE = defUse_AE
 
   IF N_ELEMENTS(nEvBinsize) EQ 0 THEN nEvBinsize=defnEvBinsize
   ;; nEvBinsize = nEvBinsize/60.0D

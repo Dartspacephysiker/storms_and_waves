@@ -55,7 +55,7 @@ PRO STACKPLOTS_STORMS_NEVENTS_OVERLAID,stormTimeArray_utc, $
                              STORMINDS=stormInds, SSC_TIMES_UTC=ssc_times_utc, $
                              REMOVE_DUPES=remove_dupes, HOURS_AFT_FOR_NO_DUPES=hours_aft_for_no_dupes, $
                              STORMTYPE=stormType, $
-                             USE_SYMH=use_symh, $
+                             USE_SYMH=use_symh,USE_AE=use_AE, $
                              NEVENTHISTS=nEventHists,NEVBINSIZE=nEvBinSize, NEVRANGE=nEvRange, $
                              RETURNED_NEV_TBINS_and_HIST=returned_nEv_tbins_and_Hist, BKGRND_HIST=bkgrnd_hist, $
                              NEG_AND_POS_SEPAR=neg_and_pos_separ, POS_LAYOUT=pos_layout, NEG_LAYOUT=neg_layout, $
@@ -75,20 +75,19 @@ PRO STACKPLOTS_STORMS_NEVENTS_OVERLAID,stormTimeArray_utc, $
 
   ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
   ;defaults
-  plotMargin=[0.13, 0.20, 0.13, 0.15]
+  plotMargin=[0.1, 0.25, 0.1, 0.15]
 
   defSymTransp         = 97
   defLineTransp        = 75
   defLineThick         = 2.5
 
   ;; ;For nEvent histos
-  defnEvBinsize        = 150.0D                                                                        ;in minutes
   defnEvYRange         = [0,5000]
                        
   ;;defs for maxPlots
-  max_xtickfont_size=20
+  max_xtickfont_size=14
   max_xtickfont_style=1
-  max_ytickfont_size=20
+  max_ytickfont_size=14
   max_ytickfont_style=1
   avg_symSize=2.0
   avg_symThick=2.0
@@ -99,7 +98,7 @@ PRO STACKPLOTS_STORMS_NEVENTS_OVERLAID,stormTimeArray_utc, $
   ;; nMajorTicks=5
   ;; nMinorTicks=3
   nMajorTicks=5
-  nMinorTicks=2
+  nMinorTicks=1
 
   defRes = 200
   ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
@@ -114,7 +113,7 @@ PRO STACKPLOTS_STORMS_NEVENTS_OVERLAID,stormTimeArray_utc, $
                               restrict_charERange=restrict_charERange,restrict_altRange=restrict_altRange, $
                               MAXIND=maxInd,avg_type_maxInd=avg_type_maxInd,log_DBQuantity=log_DBQuantity, $
                               neg_and_pos_separ=neg_and_pos_separ,pos_layout=pos_layout,neg_layout=neg_layout, $
-                              use_SYMH=use_SYMH, $
+                              use_SYMH=use_SYMH,use_AE=use_AE, $
                               nEvBinsize=nEvBinsize,min_NEVBINSIZE=min_NEVBINSIZE, $
                               saveFile=saveFile,SAVESTR=saveStr, $
                               noPlots=noPlots,noMaxPlots=noMaxPlots
@@ -148,9 +147,9 @@ PRO STACKPLOTS_STORMS_NEVENTS_OVERLAID,stormTimeArray_utc, $
 
   ENDIF ELSE BEGIN              ;Looks like we're relying on Brett
 
-     totDBStorms=N_ELEMENTS(stormStruct.time)
+     nStorms=N_ELEMENTS(stormStruct.time)
   
-     GET_STORMTIME_UTC,nStorms=totDBStorms,STORMINDS=stormInds,STORMFILE=stormFile, $
+     GET_STORMTIME_UTC,nStorms=nStorms,STORMINDS=stormInds,STORMFILE=stormFile, $
                        MAXIMUS=maximus,STORMSTRUCTURE=stormStruct,USE_DARTDB_START_ENDDATE=use_dartDB_start_endDate, $      ;DBs
                        STORMTYPE=stormType,STARTDATE=startDate,STOPDATE=stopDate,SSC_TIMES_UTC=ssc_times_utc, $          ;extra info
                        CENTERTIME=centerTime, TSTAMPS=tStamps, STORMSTRING=stormString,STORMSTRUCT_INDS=stormStruct_inds ; outs
@@ -185,7 +184,7 @@ PRO STACKPLOTS_STORMS_NEVENTS_OVERLAID,stormTimeArray_utc, $
 
      keep = WHERE(keep_i,nKeep,COMPLEMENT=bad_i,NCOMPLEMENT=nBad,/NULL)
      ;; ;resize everythang
-     IF N_ELEMENTS(bad_i) GT 0 THEN BEGIN
+     IF nBad GT 0 THEN BEGIN
         PRINT,'Losing ' + STRCOMPRESS(N_ELEMENTS(bad_i),/REMOVE_ALL) + ' storms that would otherwise be duplicated in the SEA...'
 
         FOR j=0,N_ELEMENTS(bad_i)-1 DO print,FORMAT='("Storm ",I0,":",TR5,A0)',bad_i(j),tStamps(bad_i(j)) ;show me where!
@@ -207,7 +206,7 @@ PRO STACKPLOTS_STORMS_NEVENTS_OVERLAID,stormTimeArray_utc, $
   ;generate geomag and stuff
 
   generate_geomag_quantities,datStartStop=datStartStop,NSTORMS=nStorms, $
-                             use_SYMH=use_SYMH,DST=dst,SW_DATA=sw_data, $
+                             use_SYMH=use_SYMH,USE_AE=use_AE,DST=dst,SW_DATA=sw_data, $
                              GEOMAG_PLOT_I_LIST=geomag_plot_i_list,GEOMAG_DAT_LIST=geomag_dat_list,GEOMAG_TIME_LIST=geomag_time_list, $
                              GEOMAG_MIN=geomag_min,GEOMAG_MAX=geomag_max
 
@@ -219,12 +218,30 @@ PRO STACKPLOTS_STORMS_NEVENTS_OVERLAID,stormTimeArray_utc, $
                          CHARERANGE=(restrict_charERange) ? [4,300] : !NULL, $
                          DAYSIDE=dayside,NIGHTSIDE=nightside)
   
+  ;; PRINT,FORMAT='("i",T4,"j",T8,"tempClosest (hours)",T33,"centerTime")'
+  ;; FOR i=0,nStorms-1 DO BEGIN
+  ;;    FOR j=0,1 DO BEGIN
+  ;;       tempClosest=MIN(ABS(datStartStop(i,j)-cdbTime(good_i)),tempClosest_ii)
+  ;;       cdb_storm_i(i,j)=good_i(tempClosest_ii)
+  ;;       cdb_storm_t(i,j)=cdbTime(good_i(tempClosest_ii))
+
+  ;;       PRINT,FORMAT='(I0,T4,I0,T8,F0.2,T33,A0)',i,j,tempClosest/3600.,tStamps[i]
+  ;;    ENDFOR
+  ;; ENDFOR
+
+  PRINT,FORMAT='("i",T4,"centerTime",T25,"tempClosest (hours)",T48,"Num events in range")'
   FOR i=0,nStorms-1 DO BEGIN
      FOR j=0,1 DO BEGIN
         tempClosest=MIN(ABS(datStartStop(i,j)-cdbTime(good_i)),tempClosest_ii)
         cdb_storm_i(i,j)=good_i(tempClosest_ii)
         cdb_storm_t(i,j)=cdbTime(good_i(tempClosest_ii))
+
+        ;; PRINT,FORMAT='(I0,T4,I0,T8,A0,T43,F0.2,)',i,j,tStamps[i],tempClosest/3600.,
      ENDFOR
+     plot_i=cgsetintersection(good_i,indgen(cdb_storm_i(i,1)-cdb_storm_i(i,0)+1)+cdb_storm_i(i,0))
+     PRINT,FORMAT='(I0,T4,A0,T25,F0.2,T48,I0)',i,tStamps[i],tempClosest/3600., $
+           (tempClosest/3600. GT tBeforeStorm AND tempClosest/3600. GT tAfterStorm) ? 0 : N_ELEMENTS(plot_i) 
+
   ENDFOR
 
   IF saveFile THEN saveStr+=',nStorms,centerTime,tStamps,stormString,dbFile,tBeforeStorm,tAfterStorm,geomag_min,geomag_max,geomag_plot_i_list,geomag_dat_list,geomag_time_list'
@@ -241,11 +258,27 @@ PRO STACKPLOTS_STORMS_NEVENTS_OVERLAID,stormTimeArray_utc, $
                             tStamps(-1), $
                             DIMENSIONS=[1200,800])
         xTitle=defXTitle
-        yTitle=(~use_SYMH) ? 'DST (nT)' : 'SYM-H (nT)'
+        IF use_SYMH THEN BEGIN
+           yTitle= 'SYM-H (nT)' 
+        ENDIF ELSE BEGIN
+           IF use_AE THEN BEGIN
+              yTitle = 'AE (nT)' 
+           ENDIF ELSE BEGIN
+              yTitle = 'DST (nT)'
+           ENDELSE
+        ENDELSE
         
         xRange=[-tBeforeStorm,tAfterStorm]
         ;; yRange=[geomag_min,geomag_max]
-        yRange=[-300,100]
+        ;; yRange=[-300,100]
+        yRange=(~use_SYMH AND ~ use_AE) ? [-150,50] : !NULL
+        
+        ;try to remove bad storms?
+        FOR i=0,nStorms-1 DO BEGIN
+           IF geomag_time_list(i,0) EQ -1 OR N_ELEMENTS(geomag_time_list(i)) LE 1 THEN BEGIN
+              PRINT,'Losing storm #' + STRCOMPRESS(i,/REMOVE_ALL) + ' on the list! No elements or one element...'
+              ENDIF
+        ENDFOR
         
         FOR i=0,nStorms-1 DO BEGIN
            IF N_ELEMENTS(geomag_time_list(i)) GT 1 AND ~noPlots THEN BEGIN
@@ -254,7 +287,8 @@ PRO STACKPLOTS_STORMS_NEVENTS_OVERLAID,stormTimeArray_utc, $
                         AXIS_STYLE=1, $
                         MARGIN=plotMargin, $
                         ;; XRANGE=[0,7000./60.], $
-                        XTITLE=xTitle, $
+                        ;; XTITLE=xTitle + ', ' + tstamps[i], $
+                        XTITLE='Hours since ' + tstamps[i], $
                         YTITLE=yTitle, $
                         XRANGE=xRange, $
                         YRANGE=yRange, $
@@ -262,11 +296,13 @@ PRO STACKPLOTS_STORMS_NEVENTS_OVERLAID,stormTimeArray_utc, $
                         XTICKFONT_STYLE=max_xtickfont_style, $
                         YTICKFONT_SIZE=max_ytickfont_size, $
                         YTICKFONT_STYLE=max_ytickfont_style, $
+                        YMINOR=nMinorTicks, $
                         ;; LAYOUT=[1,4,i+1], $
-                        /CURRENT,OVERPLOT=(i EQ 0) ? 0 : 1, $
+                        /CURRENT, $
                         SYM_TRANSPARENCY=defSymTransp, $
                         TRANSPARENCY=defLineTransp, $
-                        THICK=defLineThick) 
+                        THICK=defLineThick, $
+                        LAYOUT=[1,nStorms,i+1]) 
               
            ENDIF ELSE PRINT,'Losing storm #' + STRCOMPRESS(i,/REMOVE_ALL) + ' on the list! Only one elem...'
         ENDFOR
@@ -293,7 +329,7 @@ PRO STACKPLOTS_STORMS_NEVENTS_OVERLAID,stormTimeArray_utc, $
 
   GET_RANGES_FOR_PLOTS_AND_GEN_HISTOS,MAXIMUS=maximus,CDBTIME=cdbTime,MAXIND=maxInd,GOOD_I=good_i,CDB_STORM_I=cdb_storm_i,CDB_IND_LIST=cdb_ind_list, $
                                       MINMAXDAT=minMaxDat, NALFSTORMS=nAlfStorms,NSTORMS=nStorms, $
-                                      TSTAMPS=tStamps,tAfterStorm=tAfterStorm,tBeforeStorm=tBeforeStorm, $
+                                      CENTERTIME=centerTime,TSTAMPS=tStamps,tAfterStorm=tAfterStorm,tBeforeStorm=tBeforeStorm, $
                                       nEventHists=nEventHists,avg_type_maxInd=avg_type_maxInd, $
                                       NEG_AND_POS_SEPAR=neg_and_pos_separ, $
                                       tot_plot_i_pos_list=tot_plot_i_pos_list,tot_cdb_t_pos_list=tot_cdb_t_pos_list,tot_cdb_y_pos_list=tot_cdb_y_pos_list, $
@@ -302,306 +338,166 @@ PRO STACKPLOTS_STORMS_NEVENTS_OVERLAID,stormTimeArray_utc, $
                                       nEvHist_pos=nEvHist_pos,nEvHist_neg=nEvHist_neg,all_nevhist=all_nevhist,tBin=tBin, $
                                       MIN_NEVBINSIZE=min_NEVBINSIZE,NEVTOT=nEvTot
 
-  ;; FOR i=0,nStorms-1 DO BEGIN
-     
-  ;;    tempInds=cgsetintersection(good_i,[cdb_storm_i(i,0):cdb_storm_i(i,1):1])
-  ;;    minMaxDat(i,1)=MAX(maximus.(maxInd)(tempInds),MIN=tempMin)
-  ;;    minMaxDat(i,0)=tempMin
 
+  IF do_ScatterPlots THEN   BEGIN
+     KEY_SCATTERPLOTS_POLARPROJ,MAXIMUS=maximus,$
+                                /OVERLAYAURZONE,PLOT_I_LIST=tot_plot_i_list,COLOR_LIST=color_list,STRANS=75, $
+                                ;; OUTFILE='scatterplot--northern--four_storms--Yao_et_al_2008.png'
+                                OUTFILE=!NULL
+
+     KEY_SCATTERPLOTS_POLARPROJ,MAXIMUS=maximus,/SOUTH, $
+                                /OVERLAYAURZONE,PLOT_I_LIST=tot_plot_i_list,COLOR_LIST=color_list,STRANS=75, $
+                                OUTFILE=!NULL
+                                ;; OUTFILE='scatterplot--southern--four_storms--Yao_et_al_2008.png'
+  ENDIF
+  
+
+  ;; IF KEYWORD_SET(nEventHists) THEN BEGIN
   ;;    IF neg_and_pos_separ THEN BEGIN
         
-  ;;       ;; get appropriate indices
-  ;;       plot_i=cgsetintersection(good_i,indgen(cdb_storm_i(i,1)-cdb_storm_i(i,0)+1)+cdb_storm_i(i,0))
-        
-  ;;       IF plot_i[0] EQ -1 THEN BEGIN
-  ;;          PRINT,'No Alfven events for storm #' + STRCOMPRESS(i,/REMOVE_ALL) + '!!!' 
-  ;;          print,FORMAT='("Storm ",I0,":",TR5,A0)',i,tStamps(i) ;show me where!
-  ;;          nAlfStorms--
-  ;;          print,'nAlfStorms is now ' + STRCOMPRESS(nAlfStorms,/REMOVE_ALL) + '...'
-  ;;       END
+  ;;       IF (cdb_ind_list[0])(0) NE -1 THEN BEGIN
 
-  ;;       plot_i_list = LIST(cgsetintersection(plot_i,cdb_ind_list[0])) ;pos and neg
-  ;;       plot_i_list.add,cgsetintersection(plot_i,cdb_ind_list[1])
-        
-  ;;       ;; get relevant time range
-  ;;       cdb_t=LIST( (DOUBLE(cdbTime(plot_i_list[0]))-DOUBLE(centerTime(i)))/3600. )
-  ;;       cdb_t.add,( (DOUBLE(cdbTime(plot_i_list[1]))-DOUBLE(centerTime(i)))/3600. )
-        
-  ;;       ;; get corresponding data
-  ;;       cdb_y=LIST(maximus.(maxInd)(plot_i_list[0]))
-  ;;       cdb_y.add,ABS(maximus.(maxInd)(plot_i_list[1]))
-        
-  ;;       nEVTot = MAKE_ARRAY(2,/INTEGER,VALUE=0)
-        
-  ;;       IF i EQ 0 THEN BEGIN
-  ;;          tot_plot_i_pos_list=LIST(plot_i_list[0])
-  ;;          tot_cdb_t_pos_list=LIST((cdb_t[0]))
-  ;;          tot_cdb_y_pos_list=LIST(cdb_y[0])
-           
-  ;;          tot_plot_i_neg_list=LIST(plot_i_list[1])
-  ;;          tot_cdb_t_neg_list=LIST((cdb_t[1]))
-  ;;          tot_cdb_y_neg_list=LIST(cdb_y[1])
-           
-  ;;       ENDIF ELSE BEGIN
-  ;;          tot_plot_i_pos_list.add,plot_i_list[0]
-  ;;          tot_cdb_t_pos_list.add,(cdb_t[0])
-  ;;          tot_cdb_y_neg_list.add,cdb_y[0]
-           
-  ;;          tot_plot_i_neg_list.add,plot_i_list[1]
-  ;;          tot_cdb_t_neg_list.add,(cdb_t[1])
-  ;;          tot_cdb_y_neg_list.add,cdb_y[1]
-           
-  ;;       ENDELSE 
-        
-  ;;       IF (plot_i_list[0])(0) GT -1 AND N_ELEMENTS(plot_i_list[0]) GT 1 THEN BEGIN
-           
-  ;;          IF KEYWORD_SET(nEventHists) OR (avg_type_maxInd GT 0) THEN BEGIN ;Histos of Alfvén events relative to storm epoch
+  ;;          cNEvHist_pos= TOTAL(nEvHist_pos, /CUMULATIVE) / nEvTot[0]
 
-  ;;             IF N_ELEMENTS(nEvHist_pos) EQ 0 THEN BEGIN
-  ;;                nEvHist_pos=histogram((cdb_t[0]),LOCATIONS=tBin, $
-  ;;                                      ;;MAX=tAfterStorm+min_NEVBINSIZE,MIN=-tBeforeStorm 
-  ;;                                      MAX=tAfterStorm,MIN=-tBeforeStorm, $
-  ;;                                      BINSIZE=min_NEVBINSIZE)
-  ;;                nEvTot[0]=N_ELEMENTS(plot_i_list[0])
-  ;;             ENDIF ELSE BEGIN
-  ;;                nEvHist_pos=histogram((cdb_t[0]),LOCATIONS=tBin, $
-  ;;                                      ;;MAX=tAfterStorm+min_NEVBINSIZE,MIN=-tBeforeStorm 
-  ;;                                      MAX=tAfterStorm,MIN=-tBeforeStorm, $
-  ;;                                      BINSIZE=min_NEVBINSIZE, $
-  ;;                                      INPUT=nEvHist_pos)
-  ;;                nEvTot[0]+=N_ELEMENTS(plot_i_list[0])
-  ;;             ENDELSE
-  ;;          ENDIF                ;end nEventHists
-  ;;       ENDIF
-        
-  ;;       IF (plot_i_list[1])(0) GT -1 AND (N_ELEMENTS(plot_i_list[1]) GT 1) THEN BEGIN
-           
-  ;;          IF KEYWORD_SET(nEventHists) OR (avg_type_maxInd GT 0) THEN BEGIN ;Histos of Alfvén events relative to storm epoch
+  ;;          IF ~noPlots THEN BEGIN
+  ;;             histWindow_pos=WINDOW(WINDOW_TITLE="Histogram of number of Alfven events", $
+  ;;                                   DIMENSIONS=[1200,800])
               
-  ;;             IF N_ELEMENTS(nEvHist_neg) EQ 0 THEN BEGIN
-  ;;                nEvHist_neg=histogram((cdb_t[1]),LOCATIONS=tBin, $
-  ;;                                      ;;MAX=tAfterStorm+min_NEVBINSIZE,MIN=-tBeforeStorm 
-  ;;                                      MAX=tAfterStorm,MIN=-tBeforeStorm, $
-  ;;                                      BINSIZE=min_NEVBINSIZE)
-  ;;                nEvTot[1]=N_ELEMENTS(plot_i_list[1])
-  ;;             ENDIF ELSE BEGIN
-  ;;                nEvHist_neg=histogram((cdb_t[1]),LOCATIONS=tBin, $
-  ;;                                      ;;MAX=tAfterStorm+min_NEVBINSIZE,MIN=-tBeforeStorm 
-  ;;                                      MAX=tAfterStorm,MIN=-tBeforeStorm, $
-  ;;                                      BINSIZE=min_NEVBINSIZE, $
-  ;;                                      INPUT=nEvHist_neg)
-  ;;                nEvTot[1]+=N_ELEMENTS(plot_i_list[1])
-  ;;             ENDELSE
-  ;;          ENDIF                ;end nEventHists
+  ;;             plot_nEv_pos=plot(tBin,nEvHist_pos, $
+  ;;                               ;; /STAIRSTEP, $
+  ;;                               /HISTOGRAM, $
+  ;;                               YRANGE=KEYWORD_SET(nEvRange) ? nEvRange : defNEvYRange, $
+  ;;                               TITLE='Number of Alfvén events relative to storm epoch for ' + stormString + ' storms, ' + $
+  ;;                               tStamps(0) + " - " + $
+  ;;                               tStamps(-1), $
+  ;;                               XTITLE=defXTitle, $
+  ;;                               YTITLE='Number of Alfvén events', $
+  ;;                               /CURRENT, LAYOUT=pos_layout,COLOR='red')
+              
+  ;;             cdf_nEv_pos=plot(tBin,cNEvHist_pos, $
+  ;;                              XTITLE=defXTitle, $
+  ;;                              YTITLE='Cumulative number of Alfvén events', $
+  ;;                              /CURRENT, LAYOUT=pos_layout, AXIS_STYLE=1,COLOR='r')
+              
+              
+  ;;          ENDIF
   ;;       ENDIF
+        
+  ;;       IF (cdb_ind_list[1])(0) NE -1 THEN BEGIN
+
+  ;;          cNEvHist_neg= TOTAL(nEvHist_neg, /CUMULATIVE) / nEvTot[1]
+
+  ;;          IF ~noPlots THEN BEGIN
+  ;;             histWindow_neg=WINDOW(WINDOW_TITLE="Histogram of number of Alfven events", $
+  ;;                                   DIMENSIONS=[1200,800])
+              
+  ;;             plot_nEv_neg=plot(tBin,nEvHist_neg, $
+  ;;                               ;; /STAIRSTEP, $
+  ;;                               /HISTOGRAM, $
+  ;;                               YRANGE=KEYWORD_SET(nEvRange) ? nEvRange : defNEvYRange, $
+  ;;                               TITLE='Number of Alfvén events relative to storm epoch for ' + stormString + ' storms, ' + $
+  ;;                               tStamps(0) + " - " + $
+  ;;                               tStamps(-1), $
+  ;;                               XTITLE=defXTitle, $
+  ;;                               YTITLE='Number of Alfvén events', $
+  ;;                               /CURRENT,/OVERPLOT, LAYOUT=neg_layout,COLOR='b')
+              
+  ;;             cdf_nEv_neg=plot(tBin,cNEvHist_neg, $
+  ;;                              XTITLE=defXTitle, $
+  ;;                              YTITLE='Cumulative number of Alfvén events', $
+  ;;                              /CURRENT, LAYOUT=neg_layout,/OVERPLOT, AXIS_STYLE=1,COLOR='b')
+              
+  ;;             ;; IF saveFile THEN saveStr+=',cNEvHist,cdf_nEv,plot_nEv,nEvHist,tBin,nEvBinsize,min_NEVBINSIZE'
+  ;;          ENDIF
+  ;;       ENDIF
+        
+  ;;       IF saveFile THEN saveStr+=',cNEvHist_pos,nEvHist_pos,cNEvHist_neg,nEvHist_neg,tBin,nEvBinsize,min_NEVBINSIZE,tot_plot_i_pos_list,tot_plot_i_neg_list,maxInd'
         
   ;;    ENDIF ELSE BEGIN
-  ;;       ;; get appropriate indices
-  ;;       plot_i=cgsetintersection(good_i,indgen(cdb_storm_i(i,1)-cdb_storm_i(i,0)+1)+cdb_storm_i(i,0))
-        
 
-  ;;       IF plot_i[0] EQ -1 THEN BEGIN
-  ;;          PRINT,'No Alfven events for storm #' + STRCOMPRESS(i,/REMOVE_ALL) + '!!!' 
-  ;;          print,FORMAT='("Storm ",I0,":",TR5,A0)',i,tStamps(i) ;show me where!
-  ;;          nAlfStorms--
-  ;;          print,'nAlfStorms is now ' + STRCOMPRESS(nStorms,/REMOVE_ALL) + '...'
-  ;;       END
-
-  ;;       ;; get relevant time range
-  ;;       cdb_t=(DOUBLE(cdbTime(plot_i))-DOUBLE(centerTime(i)))/3600.
-        
-  ;;       ;; get corresponding data
-  ;;       cdb_y=maximus.(maxInd)(plot_i)
-        
-  ;;       IF i EQ 0 THEN BEGIN
-  ;;          nEvTot=N_ELEMENTS(plot_i)
+  ;;       IF ~noPlots THEN BEGIN
+  ;;       ;; IF KEYWORD_SET(overplot_hist) THEN BEGIN
+  ;;       ;;    PRINT,'setting geomagwindow as current...'
+  ;;       ;;    geomagWindow.setCurrent
+  ;;       ;; ENDIF ELSE BEGIN
+  ;;       ;;    histWindow=WINDOW(WINDOW_TITLE="Histogram of number of Alfven events", $
+  ;;       ;;                   DIMENSIONS=[1200,800])
+  ;;       ;; ENDELSE
+  ;;          plot_nEv=plot(tBin,all_nEvHist, $
+  ;;                        ;; /STAIRSTEP, $
+  ;;                        /HISTOGRAM, $
+  ;;                        TITLE=plotTitle, $
+  ;;                        ;; TITLE='Number of Alfvén events relative to storm epoch for ' + stormString
+  ;;                        ;; + ' storms, ' + $
+  ;;                        ;; tStamps(0) + " - " + $
+  ;;                        ;; tStamps(-1), $
+  ;;                        YRANGE=KEYWORD_SET(nEvRange) ? nEvRange : defNEvYRange, $
+  ;;                        NAME='Event histogram', $
+  ;;                        ;; YRANGE=[MIN(all_nEvHist),MAX(all_nEvHist)], $
+  ;;                        XRANGE=xRange, $
+  ;;                        AXIS_STYLE=(KEYWORD_SET(overplot_hist)) ? 0 : 1, $
+  ;;                        ;; XTITLE=defXTitle, $
+  ;;                        ;; YTITLE='Number of Alfvén events', $
+  ;;                        ;; /CURRENT, LAYOUT=[1,1,1]
+  ;;                        COLOR='red', $
+  ;;                        MARGIN=plotMargin, $
+  ;;                        THICK=6.5, $ ;OVERPLOT=KEYWORD_SET(overplot_hist),$
+  ;;                        CURRENT=KEYWORD_SET(overplot_hist))
            
-  ;;          tot_plot_i_list=LIST(plot_i)
-  ;;          tot_cdb_t_list=LIST(cdb_t)
+  ;;          yaxis = AXIS('Y', LOCATION='right', TARGET=plot_nEv, $
+  ;;                       TITLE='Number of events', $
+  ;;                       MAJOR=nMajorTicks, $
+  ;;                       MINOR=nMinorTicks, $
+  ;;                       TICKFONT_SIZE=max_ytickfont_size, $
+  ;;                       TICKFONT_STYLE=max_ytickfont_style, $
+  ;;                       TICKFORMAT='(I0)', $
+  ;;                       ;; AXIS_RANGE=[minDat,maxDat], $
+  ;;                       TEXTPOS=1, $
+  ;;                       COLOR='red')
            
-  ;;          tot_cdb_y_list=LIST(cdb_y)
-  ;;          nEvTotList=LIST(nEvTot)
-  ;;       ENDIF ELSE BEGIN
-  ;;          nEvTot+=N_ELEMENTS(plot_i)
-           
-  ;;          tot_plot_i_list.add,plot_i
-  ;;          tot_cdb_t_list.add,cdb_t
-           
-  ;;          tot_cdb_y_list.add,cdb_y
-  ;;          nEvTotList.add,nEvTot
-  ;;       ENDELSE 
-        
-        
-  ;;       IF plot_i(0) GT -1 AND N_ELEMENTS(plot_i) GT 1 THEN BEGIN
-           
-  ;;          IF KEYWORD_SET(nEventHists) OR (avg_type_maxInd GT 0) THEN BEGIN ;Histos of Alfvén events relative to storm epoch
+  ;;          IF KEYWORD_SET(bkgrnd_hist) AND ~noPlots THEN BEGIN
+  ;;             plot_bkgrnd=plot(tBin,bkgrnd_hist, $
+  ;;                              ;; /STAIRSTEP, $
+  ;;                              /HISTOGRAM, $
+  ;;                              YRANGE=KEYWORD_SET(nEvRange) ? nEvRange : [0,7500], $
+  ;;                              NAME='Background histogram (average)', $
+  ;;                              XRANGE=xRange, $
+  ;;                              AXIS_STYLE=0, $
+  ;;                              COLOR='blue', $
+  ;;                              MARGIN=plotMargin, $
+  ;;                              THICK=6.5, $ ;OVERPLOT=KEYWORD_SET(overplot_hist),$
+  ;;                              /CURRENT,TRANSPARENCY=50)
               
-  ;;             IF i EQ 0 THEN BEGIN
-  ;;                all_nEvHist=histogram(cdb_t,LOCATIONS=tBin, $
-  ;;                                  ;;MAX=tAfterStorm+min_NEVBINSIZE,MIN=-tBeforeStorm 
-  ;;                                  MAX=tAfterStorm,MIN=-tBeforeStorm, $
-  ;;                                  BINSIZE=min_NEVBINSIZE)
-  ;;             ENDIF ELSE BEGIN
-  ;;                all_nEvHist=histogram(cdb_t,LOCATIONS=tBin, $
-  ;;                                  ;;MAX=tAfterStorm+min_NEVBINSIZE,MIN=-tBeforeStorm 
-  ;;                                  MAX=tAfterStorm,MIN=-tBeforeStorm, $
-  ;;                                  BINSIZE=min_NEVBINSIZE, $
-  ;;                                  INPUT=all_nEvHist)
-  ;;             ENDELSE
-  ;;          ENDIF                ;end nEventHists
+  ;;             leg = LEGEND(TARGET=[plot_nEv,plot_bkgrnd], $
+  ;;                          POSITION=[0.1,0.1], /NORMAL, $
+  ;;                          /AUTO_TEXT_COLOR)
+  ;;          ENDIF     
+           
+  ;;          ;; xaxis = AXIS('Y', LOCATION='right', TARGET=plot_nEv, $
+  ;;          ;;              TITLE='Number of events', $
+  ;;          ;;              MAJOR=nMajorTicks, $
+  ;;          ;;              MINOR=nMinorTicks, $
+  ;;          ;;              ;; AXIS_RANGE=[minDat,maxDat], $
+  ;;          ;;              TEXTPOS=1, $
+  ;;          ;;              COLOR='red')
+           
+           
+  ;;          ;; cdf_nEv=plot(tBin,cAll_NEvHist, $
+  ;;          ;;              XTITLE=defXTitle, $
+  ;;          ;;              YTITLE='Cumulative number of Alfvén events', $
+  ;;          ;;              /CURRENT, LAYOUT=[2,1,2], AXIS_STYLE=1,COLOR='blue')
+           
+  ;;          ;; IF saveFile THEN saveStr+=',cAll_NEvHist,cdf_nEv,plot_nEv,all_nEvHist,tBin,nEvBinsize,min_NEVBINSIZE'
   ;;       ENDIF
+
+  ;;       cAll_NEvHist = TOTAL(all_nEvHist, /CUMULATIVE) / nEvTot
+  ;;       IF saveFile THEN saveStr+=',cAll_NEvHist,all_nEvHist,tBin,nEvBinsize,min_NEVBINSIZE,tot_plot_i_list,maxInd,nAlfStorms'
         
   ;;    ENDELSE
-     
-  ;; ENDFOR
 
-  ;; PRINT,'Number of storms with Alfven events: ' + STRCOMPRESS(nAlfStorms,/REMOVE_ALL)
-
-  IF KEYWORD_SET(nEventHists) THEN BEGIN
-     IF neg_and_pos_separ THEN BEGIN
-        
-        IF (cdb_ind_list[0])(0) NE -1 THEN BEGIN
-
-           cNEvHist_pos= TOTAL(nEvHist_pos, /CUMULATIVE) / nEvTot[0]
-
-           IF ~noPlots THEN BEGIN
-              histWindow_pos=WINDOW(WINDOW_TITLE="Histogram of number of Alfven events", $
-                                    DIMENSIONS=[1200,800])
-              
-              plot_nEv_pos=plot(tBin,nEvHist_pos, $
-                                ;; /STAIRSTEP, $
-                                /HISTOGRAM, $
-                                YRANGE=KEYWORD_SET(nEvRange) ? nEvRange : defNEvYRange, $
-                                TITLE='Number of Alfvén events relative to storm epoch for ' + stormString + ' storms, ' + $
-                                tStamps(0) + " - " + $
-                                tStamps(-1), $
-                                XTITLE=defXTitle, $
-                                YTITLE='Number of Alfvén events', $
-                                /CURRENT, LAYOUT=pos_layout,COLOR='red')
-              
-              cdf_nEv_pos=plot(tBin,cNEvHist_pos, $
-                               XTITLE=defXTitle, $
-                               YTITLE='Cumulative number of Alfvén events', $
-                               /CURRENT, LAYOUT=pos_layout, AXIS_STYLE=1,COLOR='r')
-              
-              
-           ENDIF
-        ENDIF
-        
-        IF (cdb_ind_list[1])(0) NE -1 THEN BEGIN
-
-           cNEvHist_neg= TOTAL(nEvHist_neg, /CUMULATIVE) / nEvTot[1]
-
-           IF ~noPlots THEN BEGIN
-              histWindow_neg=WINDOW(WINDOW_TITLE="Histogram of number of Alfven events", $
-                                    DIMENSIONS=[1200,800])
-              
-              plot_nEv_neg=plot(tBin,nEvHist_neg, $
-                                ;; /STAIRSTEP, $
-                                /HISTOGRAM, $
-                                YRANGE=KEYWORD_SET(nEvRange) ? nEvRange : defNEvYRange, $
-                                TITLE='Number of Alfvén events relative to storm epoch for ' + stormString + ' storms, ' + $
-                                tStamps(0) + " - " + $
-                                tStamps(-1), $
-                                XTITLE=defXTitle, $
-                                YTITLE='Number of Alfvén events', $
-                                /CURRENT,/OVERPLOT, LAYOUT=neg_layout,COLOR='b')
-              
-              cdf_nEv_neg=plot(tBin,cNEvHist_neg, $
-                               XTITLE=defXTitle, $
-                               YTITLE='Cumulative number of Alfvén events', $
-                               /CURRENT, LAYOUT=neg_layout,/OVERPLOT, AXIS_STYLE=1,COLOR='b')
-              
-              ;; IF saveFile THEN saveStr+=',cNEvHist,cdf_nEv,plot_nEv,nEvHist,tBin,nEvBinsize,min_NEVBINSIZE'
-           ENDIF
-        ENDIF
-        
-        IF saveFile THEN saveStr+=',cNEvHist_pos,nEvHist_pos,cNEvHist_neg,nEvHist_neg,tBin,nEvBinsize,min_NEVBINSIZE,tot_plot_i_pos_list,tot_plot_i_neg_list,maxInd'
-        
-     ENDIF ELSE BEGIN
-
-        IF ~noPlots THEN BEGIN
-        ;; IF KEYWORD_SET(overplot_hist) THEN BEGIN
-        ;;    PRINT,'setting geomagwindow as current...'
-        ;;    geomagWindow.setCurrent
-        ;; ENDIF ELSE BEGIN
-        ;;    histWindow=WINDOW(WINDOW_TITLE="Histogram of number of Alfven events", $
-        ;;                   DIMENSIONS=[1200,800])
-        ;; ENDELSE
-           plot_nEv=plot(tBin,all_nEvHist, $
-                         ;; /STAIRSTEP, $
-                         /HISTOGRAM, $
-                         TITLE=plotTitle, $
-                         ;; TITLE='Number of Alfvén events relative to storm epoch for ' + stormString
-                         ;; + ' storms, ' + $
-                         ;; tStamps(0) + " - " + $
-                         ;; tStamps(-1), $
-                         YRANGE=KEYWORD_SET(nEvRange) ? nEvRange : defNEvYRange, $
-                         NAME='Event histogram', $
-                         ;; YRANGE=[MIN(all_nEvHist),MAX(all_nEvHist)], $
-                         XRANGE=xRange, $
-                         AXIS_STYLE=(KEYWORD_SET(overplot_hist)) ? 0 : 1, $
-                         ;; XTITLE=defXTitle, $
-                         ;; YTITLE='Number of Alfvén events', $
-                         ;; /CURRENT, LAYOUT=[1,1,1]
-                         COLOR='red', $
-                         MARGIN=plotMargin, $
-                         THICK=6.5, $ ;OVERPLOT=KEYWORD_SET(overplot_hist),$
-                         CURRENT=KEYWORD_SET(overplot_hist))
-           
-           yaxis = AXIS('Y', LOCATION='right', TARGET=plot_nEv, $
-                        TITLE='Number of events', $
-                        MAJOR=nMajorTicks, $
-                        MINOR=nMinorTicks, $
-                        TICKFONT_SIZE=max_ytickfont_size, $
-                        TICKFONT_STYLE=max_ytickfont_style, $
-                        TICKFORMAT='(I0)', $
-                        ;; AXIS_RANGE=[minDat,maxDat], $
-                        TEXTPOS=1, $
-                        COLOR='red')
-           
-           IF KEYWORD_SET(bkgrnd_hist) AND ~noPlots THEN BEGIN
-              plot_bkgrnd=plot(tBin,bkgrnd_hist, $
-                               ;; /STAIRSTEP, $
-                               /HISTOGRAM, $
-                               YRANGE=KEYWORD_SET(nEvRange) ? nEvRange : [0,7500], $
-                               NAME='Background histogram (average)', $
-                               XRANGE=xRange, $
-                               AXIS_STYLE=0, $
-                               COLOR='blue', $
-                               MARGIN=plotMargin, $
-                               THICK=6.5, $ ;OVERPLOT=KEYWORD_SET(overplot_hist),$
-                               /CURRENT,TRANSPARENCY=50)
-              
-              leg = LEGEND(TARGET=[plot_nEv,plot_bkgrnd], $
-                           POSITION=[0.1,0.1], /NORMAL, $
-                           /AUTO_TEXT_COLOR)
-           ENDIF     
-           
-           ;; xaxis = AXIS('Y', LOCATION='right', TARGET=plot_nEv, $
-           ;;              TITLE='Number of events', $
-           ;;              MAJOR=nMajorTicks, $
-           ;;              MINOR=nMinorTicks, $
-           ;;              ;; AXIS_RANGE=[minDat,maxDat], $
-           ;;              TEXTPOS=1, $
-           ;;              COLOR='red')
-           
-           
-           ;; cdf_nEv=plot(tBin,cAll_NEvHist, $
-           ;;              XTITLE=defXTitle, $
-           ;;              YTITLE='Cumulative number of Alfvén events', $
-           ;;              /CURRENT, LAYOUT=[2,1,2], AXIS_STYLE=1,COLOR='blue')
-           
-           ;; IF saveFile THEN saveStr+=',cAll_NEvHist,cdf_nEv,plot_nEv,all_nEvHist,tBin,nEvBinsize,min_NEVBINSIZE'
-        ENDIF
-
-        cAll_NEvHist = TOTAL(all_nEvHist, /CUMULATIVE) / nEvTot
-        IF saveFile THEN saveStr+=',cAll_NEvHist,all_nEvHist,tBin,nEvBinsize,min_NEVBINSIZE,tot_plot_i_list,maxInd,nAlfStorms'
-        
-     ENDELSE
-
-     IF KEYWORD_SET(nEventHists) AND KEYWORD_SET(returned_nev_tbins_and_hist) THEN returned_nev_tbins_and_Hist=[[tbin],[all_nEvHist]]
-  ENDIF                         ;end IF nEventHists
+  ;;    IF KEYWORD_SET(nEventHists) AND KEYWORD_SET(returned_nev_tbins_and_hist) THEN returned_nev_tbins_and_Hist=[[tbin],[all_nEvHist]]
+  ;; ENDIF
+                                ;end IF nEventHists
   
   IF KEYWORD_SET(savePlotName) THEN BEGIN
      PRINT,"Saving plot to file: " + savePlotName
@@ -612,8 +508,7 @@ PRO STACKPLOTS_STORMS_NEVENTS_OVERLAID,stormTimeArray_utc, $
 
      mTags=TAG_NAMES(maximus)
      
-     IF ~(noPlots OR noMaxPlots) THEN maximusWindow=WINDOW(WINDOW_TITLE="Maximus plots", $
-                                                           DIMENSIONS=[1200,800])
+     ;; IF ~(noPlots OR noMaxPlots) THEN 
      
      IF ( log_DBQuantity AND (cdb_ind_list[1,0] NE -1)) OR neg_and_pos_separ THEN BEGIN
 
@@ -776,8 +671,9 @@ PRO STACKPLOTS_STORMS_NEVENTS_OVERLAID,stormTimeArray_utc, $
            cdb_y=maximus.(maxInd)(plot_i)
            
            IF plot_i(0) GT -1 AND (N_ELEMENTS(plot_i) GT 1) AND ~(noPlots OR noMaxPlots)  THEN BEGIN
+           ;; IF plot_i(0) GT -1 AND ~(noPlots OR noMaxPlots)  THEN BEGIN
 
-              plot=plot(cdb_t, $
+              plot_cdb=plot(cdb_t, $
                         cdb_y, $
                         ;; (log_DBquantity) ? ALOG10(cdb_y) : cdb_y, $
                         XTITLE=defXTitle, $
@@ -788,16 +684,32 @@ PRO STACKPLOTS_STORMS_NEVENTS_OVERLAID,stormTimeArray_utc, $
                         YRANGE=(KEYWORD_SET(yRange_maxInd)) ? $
                         yRange_maxInd : [minDat,maxDat], $
                         YLOG=(log_DBQuantity) ? 1 : 0, $
+                        AXIS_STYLE=0, $
                         LINESTYLE=' ', $
-                        SYMBOL='+', $
+                        SYMBOL='x', $
                         XTICKFONT_SIZE=max_xtickfont_size, $
                         XTICKFONT_STYLE=max_xtickfont_style, $
                         YTICKFONT_SIZE=max_ytickfont_size, $
                         YTICKFONT_STYLE=max_ytickfont_style, $
+                        LAYOUT=[1,nStorms,i+1], $
+                        MARGIN=plotMargin, $
                         /CURRENT, $
-                        OVERPLOT=(i EQ 0) ? 0: 1, $
                         SYM_TRANSPARENCY=defSymTransp)
               
+              yaxis = AXIS('Y', LOCATION='right', TARGET=plot_cdb, $
+                           TITLE='$J_{\parallel}$ ' + $
+                           ((i GT 0) ? '' : '($\mu A / m^2$)'), $
+                           ;; TICKFONT_SIZE=18, $
+                           ;; TICKFONT_STYLE=1, $
+                           TICKFONT_SIZE=yTickFont_size, $
+                           TICKFONT_STYLE=yTickFont_style, $
+                           MAJOR=5, $
+                           MINOR=3, $
+                           AXIS_RANGE=(KEYWORD_SET(yRange_maxInd)) ? $
+                           yRange_maxInd : [minDat,maxDat], $
+                           TEXTPOS=1) ;, COLOR=color_list(i))
+
+
            ENDIF
            
         ENDELSE                 ;end ~neg_and_pos_separ
@@ -851,9 +763,12 @@ PRO STACKPLOTS_STORMS_NEVENTS_OVERLAID,stormTimeArray_utc, $
                                LINESTYLE='--', $
                                COLOR='MAROON', $
                                SYMBOL='d', $
+                               AXIS_STYLE=0, $
+                               LINESTYLE=' ', $
                                XTICKFONT_SIZE=max_xtickfont_size, $
                                XTICKFONT_STYLE=max_xtickfont_style, $
-                               LAYOUT=pos_layout, $
+                               LAYOUT=[1,nStorms,i+1], $
+                               ;; LAYOUT=pos_layout, $
                                /CURRENT,/OVERPLOT, $
                                SYM_SIZE=1.5, $
                                SYM_COLOR='MAROON') ;, $
@@ -895,9 +810,11 @@ PRO STACKPLOTS_STORMS_NEVENTS_OVERLAID,stormTimeArray_utc, $
                                LINESTYLE='-:', $
                                COLOR='DARK GREEN', $
                                SYMBOL='d', $
+                               AXIS_STYLE=0, $
                                XTICKFONT_SIZE=max_xtickfont_size, $
                                XTICKFONT_STYLE=max_xtickfont_style, $
-                               LAYOUT=neg_layout, $
+                               LAYOUT=[1,nStorms,i+1], $
+                               ;; LAYOUT=neg_layout, $
                                /CURRENT,/OVERPLOT, $
                                SYM_SIZE=1.5, $
                                SYM_COLOR='DARK GREEN') ;, $
@@ -938,6 +855,7 @@ PRO STACKPLOTS_STORMS_NEVENTS_OVERLAID,stormTimeArray_utc, $
                         XRANGE=xRange, $
                         YRANGE=(KEYWORD_SET(yRange_maxInd)) ? $
                         yRange_maxInd : [minDat,maxDat], $
+                        AXIS_STYLE=0, $
                         LINESTYLE='--', $
                         SYMBOL='d', $
                         XTICKFONT_SIZE=max_xtickfont_size, $
@@ -945,6 +863,7 @@ PRO STACKPLOTS_STORMS_NEVENTS_OVERLAID,stormTimeArray_utc, $
                         YTICKFONT_SIZE=max_ytickfont_size, $
                         YTICKFONT_STYLE=max_ytickfont_style, $
                         /CURRENT,/OVERPLOT, $
+                        LAYOUT=[1,nStorms,i+1], $
                         SYM_SIZE=1.5, $
                         SYM_COLOR='g') ;, $
            ENDIF ;end no plots

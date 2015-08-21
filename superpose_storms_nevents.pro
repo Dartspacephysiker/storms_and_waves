@@ -56,7 +56,7 @@ PRO superpose_storms_nevents,stormTimeArray_utc, $
                              STORMINDS=stormInds, SSC_TIMES_UTC=ssc_times_utc, $
                              REMOVE_DUPES=remove_dupes, HOURS_AFT_FOR_NO_DUPES=hours_aft_for_no_dupes, $
                              STORMTYPE=stormType, $
-                             USE_SYMH=use_symh, $
+                             USE_SYMH=use_symh,USE_AE=use_AE, $
                              NEVENTHISTS=nEventHists,NEVBINSIZE=nEvBinSize, NEVRANGE=nEvRange, $
                              RETURNED_NEV_TBINS_and_HIST=returned_nEv_tbins_and_Hist, BKGRND_HIST=bkgrnd_hist, $
                              NEG_AND_POS_SEPAR=neg_and_pos_separ, POS_LAYOUT=pos_layout, NEG_LAYOUT=neg_layout, $
@@ -76,40 +76,20 @@ PRO superpose_storms_nevents,stormTimeArray_utc, $
 
   ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
   ;defaults
-  ;; defTBeforeStorm      = 60.0D                                                                       ;in hours
-  ;; defTAfterStorm       = 60.0D                                                                       ;in hours
-  ;; defStormType         =  2
-                       
-  ;; defswDBDir           = 'sw_omnidata/'
-  ;; defswDBFile          = 'sw_data.dat'
-                       
-  ;; defStormDir          = 'sw_omnidata/'
-  ;; defStormFile         = 'large_and_small_storms--1985-2011--Anderson.sav'
-                       
-  ;; defDST_AEDir         = 'processed/'
-  ;; defDST_AEFile        = 'idl_ae_dst_data.dat'
-                       
-  ;; defDBDir             = 'dartdb/saves/'
-  ;; ;; defDBFile            = 'Dartdb_20150611--500-16361_inc_lower_lats--maximus.sav'  
-  ;; ;; defDB_tFile          = 'Dartdb_20150611--500-16361_inc_lower_lats--cdbtime.sav'
-  ;; defDBFile            = 'Dartdb_20150814--500-16361_inc_lower_lats--burst_1000-16361--maximus.sav'
-  ;; defDB_tFile          = 'Dartdb_20150814--500-16361_inc_lower_lats--burst_1000-16361--cdbtime.sav'
-                       
-  ;; defUse_SYMH          = 0
-                       
-  ;; defMaxInd            = 6
 
-  ;; defRestrict_altRange = 0
-  ;; defRestrict_charERange = 0
-
-  ;; defavg_type_maxInd   = 0
-  ;; defLogDBQuantity     = 0
-
-  ;; defNeg_and_pos_separ = 0
-  ;; defPos_layout= [1,1,1]
-  ;; defNeg_layout= [1,1,1]
-
-  ;; defSaveFile          = 0
+  SET_STORMS_NEVENTS_DEFAULTS,tBeforeStorm=tBeforeStorm,tAfterStorm=tAfterStorm,$
+                              swDBDir=swDBDir,swDBFile=swDBFile, $
+                              stormDir=stormDir,stormFile=stormFile, $
+                              DST_AEDir=DST_AEDir,DST_AEFile=DST_AEFile, $
+                              dbDir=dbDir,dbFile=dbFile,db_tFile=db_tFile, $
+                              dayside=dayside,nightside=nightside, $
+                              restrict_charERange=restrict_charERange,restrict_altRange=restrict_altRange, $
+                              maxInd=maxInd,avg_type_maxInd=avg_type_maxInd,log_DBQuantity=log_DBQuantity, $
+                              neg_and_pos_separ=neg_and_pos_separ,pos_layout=pos_layout,neg_layout=neg_layout, $
+                              use_SYMH=use_SYMH,USE_AE=use_AE, $
+                              nEvBinsize=nEvBinsize,min_NEVBINSIZE=min_NEVBINSIZE, $
+                              saveFile=saveFile,SAVESTR=saveStr, $
+                              noPlots=noPlots,noMaxPlots=noMaxPlots
 
   plotMargin=[0.13, 0.20, 0.13, 0.15]
   defSymTransp         = 97
@@ -137,77 +117,6 @@ PRO superpose_storms_nevents,stormTimeArray_utc, $
   nMinorTicks=2
 
   defRes = 200
-  ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
-  ;Check defaults
-
-  SET_STORMS_NEVENTS_DEFAULTS,tBeforeStorm=tBeforeStorm,tAfterStorm=tAfterStorm,$
-                              swDBDir=swDBDir,swDBFile=swDBFile, $
-                              stormDir=stormDir,stormFile=stormFile, $
-                              DST_AEDir=DST_AEDir,DST_AEFile=DST_AEFile, $
-                              dbDir=dbDir,dbFile=dbFile,db_tFile=db_tFile, $
-                              dayside=dayside,nightside=nightside, $
-                              restrict_charERange=restrict_charERange,restrict_altRange=restrict_altRange, $
-                              maxInd=maxInd,avg_type_maxInd=avg_type_maxInd,log_DBQuantity=log_DBQuantity, $
-                              neg_and_pos_separ=neg_and_pos_separ,pos_layout=pos_layout,neg_layout=neg_layout, $
-                              use_SYMH=use_SYMH, $
-                              nEvBinsize=nEvBinsize,min_NEVBINSIZE=min_NEVBINSIZE, $
-                              saveFile=saveFile,SAVESTR=saveStr, $
-                              noPlots=noPlots,noMaxPlots=noMaxPlots
-
-  ;; IF N_ELEMENTS(tBeforeStorm) EQ 0 THEN tBeforeStorm = defTBeforeStorm
-  ;; IF N_ELEMENTS(tAfterStorm) EQ 0 THEN tAfterStorm = defTAfterStorm
-
-  ;; IF N_ELEMENTS(swDBDir) EQ 0 THEN swDBDir=defswDBDir
-  ;; IF N_ELEMENTS(swDBFile) EQ 0 THEN swDBFile=defswDBFile
-
-  ;; IF N_ELEMENTS(stormDir) EQ 0 THEN stormDir=defStormDir
-  ;; IF N_ELEMENTS(stormFile) EQ 0 THEN stormFile=defStormFile
-
-  ;; IF N_ELEMENTS(DST_AEDir) EQ 0 THEN DST_AEDir=defDST_AEDir
-  ;; IF N_ELEMENTS(DST_AEFile) EQ 0 THEN DST_AEFile=defDST_AEFile
-
-  ;; IF N_ELEMENTS(dbDir) EQ 0 THEN dbDir=defDBDir
-  ;; IF N_ELEMENTS(dbFile) EQ 0 THEN dbFile=defDBFile
-  ;; IF N_ELEMENTS(db_tFile) EQ 0 THEN db_tFile=defDB_tFile
-
-  ;; IF KEYWORD_SET(dayside) THEN print,"Only considering dayside stuff!"
-  ;; IF KEYWORD_SET(nightside) THEN print,"Only considering nightside stuff!"
-
-  ;; IF N_ELEMENTS(restrict_charERange) EQ 0 THEN restrict_charERange = defRestrict_charERange
-  ;; IF N_ELEMENTS(restrict_altRange) EQ 0 THEN restrict_altRange = defRestrict_altRange
-
-  ;; IF N_ELEMENTS(avg_type_maxInd) EQ 0 THEN avg_type_maxInd=defAvg_type_maxInd
-
-  ;; IF N_ELEMENTS(log_DBQuantity) EQ 0 THEN log_DBQuantity=defLogDBQuantity
-
-  ;; IF N_ELEMENTS(neg_and_pos_separ) EQ 0 THEN neg_and_pos_separ=defNeg_and_pos_separ
-  ;; IF N_ELEMENTS(pos_layout) EQ 0 Then pos_layout=defPos_layout
-  ;; IF N_ELEMENTS(neg_layout) EQ 0 Then neg_layout=defNeg_layout
-
-  ;; IF N_ELEMENTS(use_SYMH) EQ 0 THEN use_SYMH = defUse_SYMH
-
-  ;; IF N_ELEMENTS(nEvBinsize) EQ 0 THEN nEvBinsize=defnEvBinsize
-  ;; ;; nEvBinsize = nEvBinsize/60.0D
-  ;; min_NEVBINSIZE = nEvBinsize/60.0D
-
-  ;; IF N_ELEMENTS(saveFile) EQ 0 THEN saveFile=defSaveFile
-
-  ;; IF N_ELEMENTS(noPlots) EQ 0 THEN noPlots=defNoPlots
-  ;; IF N_ELEMENTS(noMaxPlots) EQ 0 THEN noMaxPlots=defNoMaxPlots
-
-  ;; IF saveFile THEN BEGIN 
-  ;;    saveStr='save' 
-  ;;    IF SIZE(saveFile,/TYPE) NE 7 THEN saveFile='superpose_storms_alfven_db_quantities.dat'
-  ;; ENDIF ELSE saveStr=''
-
-  ;; IF KEYWORD_SET(savePlotName) THEN BEGIN
-  ;;    IF SIZE(savePlotName,/TYPE) NE 7 THEN savePlotName="SYM-H_plus_histogram.png"
-  ;; ENDIF
-  
-  ;; IF KEYWORD_SET(returned_nev_tbins_and_hist) AND ~KEYWORD_SET(nEventHists) THEN BEGIN
-  ;;    PRINT,"You've asked for returned_nev_tbins_and_hist, but you haven't set nEventHists! No can do."
-  ;;    RETURN
-  ;; ENDIF
 
   ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
   ;Now restore 'em
@@ -239,73 +148,6 @@ PRO superpose_storms_nevents,stormTimeArray_utc, $
                        STORMTYPE=stormType,STARTDATE=startDate,STOPDATE=stopDate,SSC_TIMES_UTC=ssc_times_utc, $ ;extra info
                        CENTERTIME=centerTime, TSTAMPS=tStamps, STORMSTRING=stormString,STORMSTRUCT_INDS=stormStruct_inds ; outs
 
-     ;; nStorms=N_ELEMENTS(stormStruct.time)
-
-     ;; IF KEYWORD_SET(use_dartdb_start_enddate) THEN BEGIN
-     ;;    startDate=str_to_time(maximus.time(0))
-     ;;    stopDate=str_to_time(maximus.time(-1))
-     ;;    PRINT,'Using start and stop time from Dartmouth/Chaston database.'
-     ;;    PRINT,'Start time: ' + maximus.time(0)
-     ;;    PRINT,'Stop time: ' + maximus.time(-1)
-     ;; ENDIF
-     
-     ;; IF KEYWORD_SET(STARTDATE) THEN BEGIN
-     ;;    IF N_ELEMENTS(STOPDATE) EQ 0 THEN BEGIN
-     ;;       PRINT,"No stop year specified! Plotting data up to a full year after startDate."
-     ;;       stopDate=startDate+86400.*31.*12.
-     ;;    ENDIF
-        
-     ;; ENDIF ELSE BEGIN
-     ;;    PRINT,"No start date provided! Please specify one in UTC time, seconds since Jan 1, 1970."
-     ;;    RETURN
-     ;; ENDELSE
-     
-     ;; stormStruct_inds=WHERE(stormStruct.time GE startDate AND stormStruct.time LE stopDate,/NULL)
-     
-     ;; IF KEYWORD_SET(stormInds) THEN BEGIN
-     ;;    PRINT,'Using provided storm indices (' + STRCOMPRESS(N_ELEMENTS(stormInds),/REMOVE_ALL) + ' storms)...'
-     ;;    PRINT,"Database: " + stormFile
-        
-     ;;    stormStruct_inds = cgsetintersection(stormStruct_inds,stormInds)
-     ;; ENDIF
-     
-     ;; ;; Check storm type
-     ;; IF N_ELEMENTS(stormType) EQ 0 THEN stormType=defStormType
-     
-     ;; IF stormType EQ 1 THEN BEGIN ;Only large storms
-     ;;    stormStruct_inds=cgsetintersection(stormStruct_inds,WHERE(stormStruct.is_largeStorm EQ 1,/NULL))
-     ;;    stormString='large'
-     ;; ENDIF ELSE BEGIN
-     ;;    IF stormType EQ 0 THEN BEGIN
-     ;;       stormStruct_inds=cgsetintersection(stormStruct_inds,WHERE(stormStruct.is_largeStorm EQ 0,/NULL))
-     ;;       stormString='small'
-     ;;    ENDIF ELSE BEGIN
-     ;;       IF stormType EQ 2 THEN BEGIN
-     ;;          stormString='all'
-     ;;       ENDIF
-     ;;    ENDELSE
-     ;; ENDELSE
-     
-     ;; nStorms=N_ELEMENTS(stormStruct_inds)     
-     ;; PRINT,"Storm type: " + stormString 
-     ;; PRINT,STRCOMPRESS(N_ELEMENTS(stormStruct_inds),/REMOVE_ALL)+" storms (out of " + STRCOMPRESS(nStorms,/REMOVE_ALL) + " in the DB) selected"
-     
-     ;; IF nStorms EQ 0 THEN BEGIN
-     ;;    PRINT,"No storms found for given time range:"
-     ;;    PRINT,"Start date: ",time_to_str(startDate)
-     ;;    PRINT,"Stop date: ",time_to_str(stopDate)
-     ;;    PRINT,'Returning...'
-     ;;    RETURN
-     ;; ENDIF
-     
-     ;; IF KEYWORD_SET(ssc_times_utc) THEN BEGIN 
-     ;;    centerTime = ssc_times_utc
-     ;;    tStamps = time_to_str(ssc_times_utc)
-     ;; ENDIF ELSE BEGIN
-     ;;    centerTime = stormStruct.time(stormStruct_inds)
-     ;;    tStamps = stormStruct.tstamp(stormStruct_inds)
-     ;; ENDELSE
-     
      IF saveFile THEN saveStr+=',startDate,stopDate,stormType,stormStruct_inds'
 
   ENDELSE
@@ -336,7 +178,7 @@ PRO superpose_storms_nevents,stormTimeArray_utc, $
 
      keep = WHERE(keep_i,nKeep,COMPLEMENT=bad_i,NCOMPLEMENT=nBad,/NULL)
      ;; ;resize everythang
-     IF N_ELEMENTS(bad_i) GT 0 THEN BEGIN
+     IF nBad GT 0 THEN BEGIN
         PRINT,'Losing ' + STRCOMPRESS(N_ELEMENTS(bad_i),/REMOVE_ALL) + ' storms that would otherwise be duplicated in the SEA...'
 
         FOR j=0,N_ELEMENTS(bad_i)-1 DO print,FORMAT='("Storm ",I0,":",TR5,A0)',bad_i(j),tStamps(bad_i(j)) ;show me where!
@@ -355,67 +197,10 @@ PRO superpose_storms_nevents,stormTimeArray_utc, $
   datStartStop(*,1) = centerTime + tAfterStorm*3600.    ;(*,1) are the times after which we don't want data for each storm
      
   GENERATE_GEOMAG_QUANTITIES,datStartStop=datStartStop,NSTORMS=nStorms, $
-                             use_SYMH=use_SYMH,DST=dst,SW_DATA=sw_data, $
+                             use_SYMH=use_SYMH,USE_AE=use_AE,DST=dst,SW_DATA=sw_data, $
                              GEOMAG_PLOT_I_LIST=geomag_plot_i_list,GEOMAG_DAT_LIST=geomag_dat_list,GEOMAG_TIME_LIST=geomag_time_list, $
                              GEOMAG_MIN=geomag_min,GEOMAG_MAX=geomag_max
 
-  ;; IF ~use_SYMH THEN BEGIN       ;Use DST for plots, not SYM-H
-  ;;    ;; Now get a list of indices for DST data to be plotted for the storms found above
-  ;;    geomag_plot_i_list = LIST(WHERE(DST.time GE datStartStop(0,0) AND $ ;first initialize the list
-  ;;                                    DST.time LE datStartStop(0,1)))
-  ;;    geomag_dat_list = LIST(dst.dst(geomag_plot_i_list(0)))
-     
-  ;;    ;; IF KEYWORD_SET(ssc_times_utc) THEN geomag_time_list = LIST(ssc_times_utc[0]) $
-  ;;    ;; ELSE geomag_time_list = LIST(dst.time(geomag_plot_i_list(0)))
-  ;;    geomag_time_list = LIST(dst.time(geomag_plot_i_list(0)))
-     
-  ;;    geomag_min = MIN(geomag_dat_list(0)) ;For plots, we need the range
-  ;;    geomag_max = MAX(geomag_dat_list(0))
-     
-  ;;    FOR i=1,nStorms-1 DO BEGIN ;Then update it
-  ;;       geomag_plot_i_list.add,WHERE(DST.time GE datStartStop(i,0) AND $
-  ;;                                    DST.time LE datStartStop(i,1))
-  ;;       geomag_dat_list.add,dst.dst(geomag_plot_i_list(i))
-        
-  ;;       ;; IF KEYWORD_SET(ssc_times_utc) THEN geomag_time_list.add,ssc_times_utc[i] $
-  ;;       ;; ELSE geomag_time_list.add,dst.time(geomag_plot_i_list(i))
-  ;;       geomag_time_list.add,dst.time(geomag_plot_i_list(i))
-        
-  ;;       tempMin = MIN(geomag_dat_list(i),MAX=tempMax)
-  ;;       IF tempMin LT geomag_min THEN geomag_min=tempMin
-  ;;       IF tempMax GT geomag_max THEN geomag_max=tempMax
-  ;;    ENDFOR
-  ;; ENDIF ELSE BEGIN              ;Use SYM-H for plots 
-     
-  ;;    swDat_UTC=(sw_data.epoch.dat-62167219200000.0000D)/1000.0D ;For conversion between SW DB and ours
-     
-  ;;    ;; Now get a list of indices for SYM-H data to be plotted for the storms found above
-  ;;    geomag_plot_i_list = LIST(WHERE(swDat_UTC GE datStartStop(0,0) AND $ ;first initialize the list
-  ;;                                    swDat_UTC LE datStartStop(0,1)))
-  ;;    geomag_dat_list = LIST(sw_data.sym_h.dat(geomag_plot_i_list(0)))
-     
-  ;;    ;; IF KEYWORD_SET(ssc_times_utc) THEN geomag_time_list = LIST(ssc_times_utc[0]) $
-  ;;    ;; ELSE geomag_time_list = LIST(swDat_UTC(geomag_plot_i_list(0)))
-  ;;    geomag_time_list = LIST(swDat_UTC(geomag_plot_i_list(0)))
-     
-  ;;    geomag_min = MIN(geomag_dat_list(0)) ;For plots, we need the range
-  ;;    geomag_max = MAX(geomag_dat_list(0))
-     
-  ;;    FOR i=1,nStorms-1 DO BEGIN ;Then update it
-  ;;       geomag_plot_i_list.add,WHERE(swDat_UTC GE datStartStop(i,0) AND $
-  ;;                                    swDat_UTC LE datStartStop(i,1))
-  ;;       geomag_dat_list.add,sw_data.sym_h.dat(geomag_plot_i_list(i))
-        
-  ;;       ;; IF KEYWORD_SET(ssc_times_utc) THEN geomag_time_list.add,ssc_times_utc[i] $
-  ;;       ;; ELSE geomag_time_list.add,swDat_UTC(geomag_plot_i_list(i))
-  ;;       geomag_time_list.add,swDat_UTC(geomag_plot_i_list(i))
-        
-  ;;       tempMin = MIN(geomag_dat_list(i),MAX=tempMax)
-  ;;       IF tempMin LT geomag_min THEN geomag_min=tempMin
-  ;;       IF tempMax GT geomag_max THEN geomag_max=tempMax
-  ;;    ENDFOR
-  ;; ENDELSE
-  
   ;; ;Get nearest events in Chaston DB
   cdb_storm_t=MAKE_ARRAY(nStorms,2,/DOUBLE)
   cdb_storm_i=MAKE_ARRAY(nStorms,2,/L64)
@@ -446,11 +231,20 @@ PRO superpose_storms_nevents,stormTimeArray_utc, $
                             tStamps(-1), $
                             DIMENSIONS=[1200,800])
         xTitle=defXTitle
-        yTitle=(~use_SYMH) ? 'DST (nT)' : 'SYM-H (nT)'
+        IF use_SYMH THEN BEGIN
+           yTitle= 'SYM-H (nT)' 
+        ENDIF ELSE BEGIN
+           IF use_AE THEN BEGIN
+              yTitle = 'AE (nT)' 
+           ENDIF ELSE BEGIN
+              yTitle = 'DST (nT)'
+           ENDELSE
+        ENDELSE
         
         xRange=[-tBeforeStorm,tAfterStorm]
         ;; yRange=[geomag_min,geomag_max]
-        yRange=[-300,100]
+        ;; yRange=[-300,100]
+        yRange=(~use_SYMH AND ~ use_AE) ? [-300,100] : !NULL
         
         FOR i=0,nStorms-1 DO BEGIN
            IF N_ELEMENTS(geomag_time_list(i)) GT 1 AND ~noPlots THEN BEGIN
