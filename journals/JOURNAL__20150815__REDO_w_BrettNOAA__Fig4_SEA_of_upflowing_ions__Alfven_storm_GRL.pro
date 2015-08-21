@@ -9,9 +9,11 @@ PRO JOURNAL__20150815__REDO_w_BrettNOAA__Fig4_SEA_of_upflowing_ions__Alfven_stor
   ;; ;
 
   ;; ;the outs
-  date='20150818'
+  ;; date='20150818'
+  date='20150821'
 
-  outMaxFile='Fig_4--ion_flux_up--no_restriction_on_chare_or_alt--5-HOUR_AVG--proper_storm_commencement_smaller.png'
+  outMaxFile='Fig_4--ion_flux_up--no_restriction_on_chare_or_alt--'+ STRING(FORMAT='(I0)',nEvBinsize/60) + $
+             '-HOUR_AVG--proper_storm_commencement_smaller.png'
 
   DBDIR = '/home/spencerh/Research/Cusp/database/sw_omnidata/'
   DB_BRETT = 'large_and_small_storms--1985-2011--Anderson.sav'

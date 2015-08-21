@@ -11,14 +11,14 @@ PRO JOURNAL__20150815__redo_SEA_with_NOAA_and_random_bkgrnd__Alfven_storm_GRL
   nRandTimes = 2000
   nIterations = 1 
   nStorms = 40. ; I know because I've seen the outcome...
-  nEvRange=[0,15000]
+  nEvRange=[0,12000]
   nEvBinsize=300.D
   ;; BefAft_t=60.0D
 
   ;the outs
   ;; date='20150815'
-  date='20150817'
-  tempOutFile = 'saves_output_etc/superposed_large_storm_output_w_n_Alfven_events--'+date+'.dat'
+  date='20150821'
+  tempOutFile = '/SPENCEdata/Research/Cusp/storms_Alfvens/saves_output_etc/superposed_large_storm_output_w_n_Alfven_events--'+date+'.dat'
 
   DBDIR = '/home/spencerh/Research/Cusp/database/sw_omnidata/'
   DB_BRETT = 'large_and_small_storms--1985-2011--Anderson.sav'
@@ -55,7 +55,7 @@ PRO JOURNAL__20150815__redo_SEA_with_NOAA_and_random_bkgrnd__Alfven_storm_GRL
                            MAXIND=maxInd, $
                            NEVBINSIZE=nEvBinsize, NEVRANGE=nEvRange, $
                            SAVEFILE=tempOutFile, $
-                           RETURNED_NEV_TBINS_AND_HIST=stormtime_returned_tbins_and_nevhist
+                           RETURNED_NEV_TBINS_AND_HIST=stormtime_returned_tbins_and_nevhist,/NOMAXPLOTS
 
   ;Now get a bunch of random time stuff
   superpose_randomtimes_and_alfven_db_quantities,nevbinsize=nEvBinsize,NRANDTIME=nRandTimes,stormfile=tempOutFile,/overlay_neventhists,/neventhists,returned_nev_tbins_and_hist=randtime_returned_tbins_and_nevhist,/SKIPPLOTS

@@ -170,7 +170,7 @@ PRO superpose_randomtimes_and_alfven_db_quantities,NRANDTIME=nRandTime,STARTDATE
   nRandTime=KEYWORD_SET(nRandTime) ? nRandTime : N_ELEMENTS(geomag_plot_i_list)
   tBeforeRandTime=tBeforeStorm
   tAfterRandTime=tAfterStorm
-  nEvBinsizeMin=nEvBinsize/60.
+  min_NEVBINSIZE=nEvBinsize/60.
   ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
   ;Make a randomtimes struct which parallels that of the stormStruct used in the pro superpose_storms[...]
   
@@ -406,7 +406,7 @@ PRO superpose_randomtimes_and_alfven_db_quantities,NRANDTIME=nRandTime,STARTDATE
               IF i EQ 0 THEN BEGIN
                  nEvHist=histogram(cdb_t,LOCATIONS=tBin, $
                                    MAX=tAfterRandTime,MIN=-tBeforeRandTime, $
-                                   BINSIZE=nEvBinsizeMin)
+                                   BINSIZE=min_NEVBINSIZE)
 
                  nEvTot=N_ELEMENTS(plot_i)
 
@@ -415,7 +415,7 @@ PRO superpose_randomtimes_and_alfven_db_quantities,NRANDTIME=nRandTime,STARTDATE
               ENDIF ELSE BEGIN
                  nEvHist=histogram(cdb_t,LOCATIONS=tBin, $
                                    MAX=tAfterRandTime,MIN=-tBeforeRandTime, $
-                                   BINSIZE=nEvBinsizeMin, $
+                                   BINSIZE=min_NEVBINSIZE, $
                                    INPUT=nEvHist)
 
                  nEvTot+=N_ELEMENTS(plot_i) 

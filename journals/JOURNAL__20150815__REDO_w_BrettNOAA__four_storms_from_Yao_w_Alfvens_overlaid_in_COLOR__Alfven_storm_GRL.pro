@@ -19,7 +19,7 @@
 
 ;;make each plot three days long
 
-;run THIS::: JOURNAL__20150715__four_storms_from_Yao_w_Alfvens_overlaid_in_COLOR__Alfven_storm_GRL, $
+;run THIS::: JOURNAL__20150815__four_storms_from_Yao_w_Alfvens_overlaid_in_COLOR__Alfven_storm_GRL, $
 ;OUTFILENAME='Fig_1--four_storms_from_Yao_et_al_2008_smaller.png'
 
 PRO JOURNAL__20150815__four_storms_from_Yao_w_Alfvens_overlaid_in_COLOR__Alfven_storm_GRL,OUTFILENAME=outFileName

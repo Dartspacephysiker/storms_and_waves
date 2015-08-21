@@ -1,5 +1,15 @@
 ;2015/08/18
 ;The idea is to generate some stats like the number of intervals, the number of orbits, etc.
+
+;num orbits at bottom
+;6191
+;date range at bottom
+;1996-10-06/16:26:02.417 through 2000-10-06/00:08:45.188
+;n orbits considered
+;15861
+; avg number of events per orbit
+;17.22
+
 PRO JOURNAL__20150818__generate_stats_for_Alfvens_storms_GRL
 
   dataDir='/SPENCEdata/Research/Cusp/database/'
@@ -46,6 +56,19 @@ PRO JOURNAL__20150818__generate_stats_for_Alfvens_storms_GRL
   PRINT,FORMAT='("#Survey events/Total storm events: ",TR1,I0,"/",I0,TR4,"(",F0.2," %)")',nSurveyStorm,nStormEv,DOUBLE(nSurveyStorm)/DOUBLE(nStormEv)*100.
 
   
+  ;;N unique orbits
+  print,N_ELEMENTS(uniq(maximus.orbit(good_i)))
+  ;;13369
+  
+  ;;n orbits considered
+  print,max(maximus.orbit)-min(maximus.orbit)
 
+  ;tot num orbs considered
+  print,(maximus.time(good_i))[0],(maximus.time(good_i))[-1]
+  ;; 1996-10-06/16:26:02.417 through 2000-10-06/00:08:45.188
+
+  ; avg number of events per orbit
+  ;; print,DOUBLE(n_ELEMENTS(maximus.orbit(good_i)))/15861.
+  print,DOUBLE(n_ELEMENTS(maximus.orbit(good_i)))/6191.
 
 END

@@ -3,19 +3,27 @@
 
 PRO JOURNAL__20150817__commands_for_Chaston_2003_figs4a_c_reproduction__Alfvens_storms_GRL
 
-  date='20150818'
-  dbDate = '20150811'
+  ;; date='20150818'
+  ;; date='20150821'
+
+  dbDate = '20150814'
 
   dirs='all_IMF'
   ;; dirs=['duskward', 'dawnward']
 
-  ;; plotDir="/SPENCEdata/Research/Cusp/storms_Alfvens/plots/20150817__Chaston_2003_fig4a__Alfvens_storms_GRL/"
-  plotDir="/SPENCEdata/Research/Cusp/storms_Alfvens/plots/20150819__Chaston_2003_fig4a__Alfvens_storms_GRL--RELAXED_ALFVEN_DB_CLEANER/"
+  ;; plotDir="/SPENCEdata/Research/Cusp/storms_Alfvens/plots/20150817--Chaston_2003_fig4a__Alfvens_storms_GRL/"
+  ;; plotDir="/SPENCEdata/Research/Cusp/storms_Alfvens/plots/20150819--Chaston_2003_fig4a__Alfvens_storms_GRL--RELAXED_ALFVEN_DB_CLEANER/"
+  plotDir="/SPENCEdata/Research/Cusp/storms_Alfvens/plots/20150820--Chaston_2003_fig4a__Alfvens_storms_GRL--TIGHTENED_DB_CLEANER/"
+
   plotSuff="Dartdb_" + dbDate 
   ;; plotDir="LaBelle_Bin_mtg--02042015/Chaston_2003_fig4a-d/"
 
-  plotLabelFormat='(D0.1)'
+  charEPlotTitle = "Characteristic Energy (eV)"
 
+  plotLabelFormat='(D0.1)'
+  nEvPerOrbLabelFormat='(D0.2)'
+  charELabelFormat='(I0)'
+  
   ;;hemisphere?
   hemi="North"
   ;; hemi="South"
@@ -46,9 +54,10 @@ PRO JOURNAL__20150817__commands_for_Chaston_2003_figs4a_c_reproduction__Alfvens_
                                         ;; neventperorbrange=[0.01,10.0], $
                                         ;; neventperorbrange=[-2.0,1.11394334], $
                                         neventperorbrange=[-2.0,1.07918119], $
+                                        ;; neventperorbrange=[-2.0,1.0], $
                                         nEventsRange=[0,3000], orbFreqRange=[0.0, 0.8], orbcontribrange=[1,200], $
                                         /WHOLECAP,/midnight,DELAY=delay,/noplotintegral,DEL_PS = del_PS, $
-                                        CHARERANGE=charERange, ALTITUDERANGE=altitudeRange,LABELFORMAT=plotLabelFormat
+                                        CHARERANGE=charERange, ALTITUDERANGE=altitudeRange,LABELFORMAT=nEvPerOrbLabelFormat
 
   ;;;;;;;;;;;;;;;
   ;electron plots
@@ -84,6 +93,6 @@ PRO JOURNAL__20150817__commands_for_Chaston_2003_figs4a_c_reproduction__Alfvens_
                                         /chareplot,charetype="lossCone",/logCharEPlot, $ ;chareplotrange=[0,4e3],
                                         /WHOLECAP,/midnight,DELAY=delay,CHAREPLOTRANGE=[4,4000], $
                                         /noplotintegral,DEL_PS = del_PS, CHARERANGE=charERange, ALTITUDERANGE=altitudeRange, $
-                                        LABELFORMAT=plotLabelFormat,/medianplot;                                         /logavgplot,
+                                        PLOTTITLE=charEPlotTitle,LABELFORMAT=charELabelFormat,/medianplot ;/logavgplot,
 
 END

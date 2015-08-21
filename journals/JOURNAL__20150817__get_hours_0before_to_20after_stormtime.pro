@@ -1,6 +1,10 @@
 ;2015/08/17 Man, there's always something else.
 ;I forgot to get updated inds for stormtime when making stormtime histos for Figure 4. Gotta do it here.
 
+;2015/08/21 It occurred to me that while I remove one storm when running JOURNAL__20150815__redo_SEA_with_NOAA_and_random_bkgrnd__Alfven_storm_GRL.pro 
+; because the tBefore and tAfter are 60, here tBefore and tAfter are 0 and 20, respectively, so I don't discard that storm. I
+;need to fix that, so I'm adding a keyword HOURS_AFT_FOR_NO_DUPES to superpose_storms_nevents.pro.
+
 PRO JOURNAL__20150817__GET_HOURS_0BEFORE_TO_20AFTER_STORMTIME
 
   ;;some important vars
@@ -8,11 +12,15 @@ PRO JOURNAL__20150817__GET_HOURS_0BEFORE_TO_20AFTER_STORMTIME
   timeBeforeStorm = 0.0D
   timeAfterStorm = 20.0D
   nEvBinSize=300.0D
-  nEvRange=[0,15000]
+  ;; nEvRange=[0,15000]
+  nEvRange=[0,12000]
+
+  noDupeHours=60 ;added 2015/08/21. See note above.
 
   ;;the file_outs
   outDir='/SPENCEdata/Research/Cusp/'
-  OUTINDSFILE = 'storms_Alfvens/saves_output_etc/superposed_large_storm_output_w_n_Alfven_events--quadrant1--0_to_20_hours--20150817.dat'
+  ;; OUTINDSFILE = 'storms_Alfvens/saves_output_etc/superposed_large_storm_output_w_n_Alfven_events--quadrant1--0_to_20_hours--20150817.dat'
+  OUTINDSFILE = 'storms_Alfvens/saves_output_etc/superposed_large_storm_output_w_n_Alfven_events--quadrant1--0_to_20_hours--20150821.dat'
 
   ;;the file_ins
   dbFile = 'Dartdb_20150814--500-16361_inc_lower_lats--burst_1000-16361--maximus.sav'
@@ -47,7 +55,8 @@ PRO JOURNAL__20150817__GET_HOURS_0BEFORE_TO_20AFTER_STORMTIME
                            MAXIND=maxInd, $
                            NEVBINSIZE=nEvBinsize, NEVRANGE=nEvRange, $
                            SAVEFILE=outDir+outIndsFile, $
-                           RETURNED_NEV_TBINS_AND_HIST=stormtime_returned_tbins_and_nevhist,/NOMAXPLOTS
+                           RETURNED_NEV_TBINS_AND_HIST=stormtime_returned_tbins_and_nevhist,/NOMAXPLOTS, $
+                           HOURS_AFT_FOR_NO_DUPES=noDupeHours
 
 
   PRINT,'Saved ' + outDir+outIndsFile + '...'

@@ -4,7 +4,7 @@
 ;;2015/08/17
 ;;I totally hosed it. I should have redone this with the new stormtimes, for crying out loud, and not grabbed
 ;;all events, but just those corresponding to the biggest stormtimes (i.e., 0 hours before to 20 hours after).
-;;See journal file 'JOURNAL__20150817__get_hours_neg15before_to_5after_stormtime', where I create the appropriate inds
+;;See journal file 'JOURNAL__20150817__get_hours_0before_to_20after_stormtime', where I create the appropriate inds
 
 
 PRO JOURNAL__20150815__REDO_w_BrettNOAA__MLT_and_Lshell_dist_of_stormtime_events_below_73deg_ILAT__Alfven_storm_GRL
@@ -12,10 +12,13 @@ PRO JOURNAL__20150815__REDO_w_BrettNOAA__MLT_and_Lshell_dist_of_stormtime_events
   dataDir='/SPENCEdata/Research/Cusp/database'
   dbFile = 'Dartdb_20150814--500-16361_inc_lower_lats--burst_1000-16361--maximus.sav'
 
-  do_storms_below_73degILAT = 0
+  ;; indsFile = 'superposed_large_storm_output_w_n_Alfven_events--quadrant1--0_to_20_hours--20150817.dat'
+  indsFile = 'superposed_large_storm_output_w_n_Alfven_events--quadrant1--0_to_20_hours--20150821.dat'
+
+  do_storms_below_73degILAT = 1
   ;; do_storms_below_73degILAT = 1
 
-  do_ALL_below_73degILAT = 0
+  do_ALL_below_73degILAT = 1
   ;; do_ALL_below_73degILAT = 1
 
   ;; ;All those storms
@@ -23,8 +26,7 @@ PRO JOURNAL__20150815__REDO_w_BrettNOAA__MLT_and_Lshell_dist_of_stormtime_events
   ;; restore,dataDir+'/../storms_Alfvens/saves_output_etc/' + $
   ;;         'superposed_large_storm_output_w_n_Alfven_events--20150815.dat'
  
-  restore,dataDir+'/../storms_Alfvens/saves_output_etc/' + $
-          'superposed_large_storm_output_w_n_Alfven_events--quadrant1--0_to_20_hours--20150817.dat'
+  restore,dataDir+'/../storms_Alfvens/saves_output_etc/' + indsFile
   
   largeStorm_ind=tot_plot_i_list(0) 
   FOR i=1,N_ELEMENTS(tot_plot_i_list)-1 DO largeStorm_ind=[largeStorm_ind,tot_plot_i_list(i)]
@@ -33,6 +35,10 @@ PRO JOURNAL__20150815__REDO_w_BrettNOAA__MLT_and_Lshell_dist_of_stormtime_events
 
   pos=[0.15,0.15,0.95,0.925]    ;Position of histos in window
   
+  ILAT_legendLoc = [0.565, 0.90]
+  MLT_legendLoc = [0.565, 0.90]
+  lShell_legendLoc = [0.565, 0.90]
+
   ;**************************************************
   ;For overlaid plots
   
@@ -140,9 +146,9 @@ PRO JOURNAL__20150815__REDO_w_BrettNOAA__MLT_and_Lshell_dist_of_stormtime_events
   outFile='MLT' + belowStr + '--large_storms--NOAA_and_Brett--overlaid_w_all_events.png'
   
   OVERLAY_TWO_HISTOS,data_1,data_2,DATA_1_COL=data_1_col,DATA_2_COL=data_2_col, $
-                     DATA_1_TITLE=data_1_title,DATA_2_TITLE=data_2_title, $
+                     DATA_1_TITLE=data_1_title,DATA_2_TITLE=data_2_title,LEGENDLOC=MLT_legendLoc, $
                      BINSIZE=binSize,XRANGE=xRange,YRANGE=yRange,HISTTITLE=histTitle,XTITLE=xTitle, $
-                     OUTFILE=outFile,POS=pos
+                     OUTFILE=outFile,POS=pos,DO_BKCOLOR=do_storms_below_73degILAT OR do_ALL_below_73degILAT
   
   ;just northern
   data_1_ind=CGSETINTERSECTION(largeStorm_ind,WHERE(maximus.ilat GT 0))
@@ -160,9 +166,9 @@ PRO JOURNAL__20150815__REDO_w_BrettNOAA__MLT_and_Lshell_dist_of_stormtime_events
   outFile='MLT--Northern' + belowStr + '--large_storms--NOAA_and_Brett--overlaid_w_all_events.png'
   
   OVERLAY_TWO_HISTOS,data_1,data_2,DATA_1_COL=data_1_col,DATA_2_COL=data_2_col, $
-                     DATA_1_TITLE=data_1_title,DATA_2_TITLE=data_2_title, $
+                     DATA_1_TITLE=data_1_title,DATA_2_TITLE=data_2_title,LEGENDLOC=MLT_legendLoc, $
                      BINSIZE=binSize,XRANGE=xRange,YRANGE=yRange,HISTTITLE=histTitle,XTITLE=xTitle, $
-                     OUTFILE=outFile,POS=pos
+                     OUTFILE=outFile,POS=pos,DO_BKCOLOR=do_storms_below_73degILAT OR do_ALL_below_73degILAT
   
   ;just southern
   data_1_ind=CGSETINTERSECTION(largeStorm_ind,WHERE(maximus.ilat LT 0))
@@ -179,9 +185,9 @@ PRO JOURNAL__20150815__REDO_w_BrettNOAA__MLT_and_Lshell_dist_of_stormtime_events
   
   outFile='MLT--Southern' + belowStr + '--large_storms--NOAA_and_Brett--overlaid_w_all_events.png'
   OVERLAY_TWO_HISTOS,data_1,data_2,DATA_1_COL=data_1_col,DATA_2_COL=data_2_col, $
-                     DATA_1_TITLE=data_1_title,DATA_2_TITLE=data_2_title, $
+                     DATA_1_TITLE=data_1_title,DATA_2_TITLE=data_2_title,LEGENDLOC=MLT_legendLoc, $
                      BINSIZE=binSize,XRANGE=xRange,YRANGE=yRange,HISTTITLE=histTitle,XTITLE=xTitle, $
-                     OUTFILE=outFile,POS=pos
+                     OUTFILE=outFile,POS=pos,DO_BKCOLOR=do_storms_below_73degILAT OR do_ALL_below_73degILAT
   
   ;**************************************************
   ;overlay two L-SHELL plots
@@ -208,7 +214,7 @@ PRO JOURNAL__20150815__REDO_w_BrettNOAA__MLT_and_Lshell_dist_of_stormtime_events
   outFile='L-SHELL' + belowStr + '--large_storms--NOAA_and_Brett--overlaid_w_all_events.png'
   
   OVERLAY_TWO_HISTOS,data_1,data_2,DATA_1_COL=data_1_col,DATA_2_COL=data_2_col, $
-                     DATA_1_TITLE=data_1_title,DATA_2_TITLE=data_2_title, $
+                     DATA_1_TITLE=data_1_title,DATA_2_TITLE=data_2_title,LEGENDLOC=lShell_legendLoc, $
                      BINSIZE=binSize,XRANGE=xRange,YRANGE=yRange,HISTTITLE=histTitle,XTITLE=xTitle, $
                      OUTFILE=outFile,POS=pos
   
@@ -229,7 +235,7 @@ PRO JOURNAL__20150815__REDO_w_BrettNOAA__MLT_and_Lshell_dist_of_stormtime_events
   outFile='L-SHELL--Northern' + belowStr + '--large_storms--NOAA_and_Brett--overlaid_w_all_events.png'
   
   OVERLAY_TWO_HISTOS,data_1,data_2,DATA_1_COL=data_1_col,DATA_2_COL=data_2_col, $
-                     DATA_1_TITLE=data_1_title,DATA_2_TITLE=data_2_title, $
+                     DATA_1_TITLE=data_1_title,DATA_2_TITLE=data_2_title,LEGENDLOC=lShell_legendLoc, $
                      BINSIZE=binSize,XRANGE=xRange,YRANGE=yRange,HISTTITLE=histTitle,XTITLE=xTitle, $
                      OUTFILE=outFile,POS=pos
   
@@ -248,7 +254,7 @@ PRO JOURNAL__20150815__REDO_w_BrettNOAA__MLT_and_Lshell_dist_of_stormtime_events
   
   outFile='L-SHELL--Southern' + belowStr + '--large_storms--NOAA_and_Brett--overlaid_w_all_events.png'
   OVERLAY_TWO_HISTOS,data_1,data_2,DATA_1_COL=data_1_col,DATA_2_COL=data_2_col, $
-                     DATA_1_TITLE=data_1_title,DATA_2_TITLE=data_2_title, $
+                     DATA_1_TITLE=data_1_title,DATA_2_TITLE=data_2_title,LEGENDLOC=lShell_legendLoc, $
                      BINSIZE=binSize,XRANGE=xRange,YRANGE=yRange,HISTTITLE=histTitle,XTITLE=xTitle, $
                      OUTFILE=outFile,POS=pos
   
@@ -277,7 +283,7 @@ PRO JOURNAL__20150815__REDO_w_BrettNOAA__MLT_and_Lshell_dist_of_stormtime_events
   outFile='ILAT' + belowStr + '--large_storms--NOAA_and_Brett--overlaid_w_all_events.png'
   
   OVERLAY_TWO_HISTOS,data_1,data_2,DATA_1_COL=data_1_col,DATA_2_COL=data_2_col, $
-                     DATA_1_TITLE=data_1_title,DATA_2_TITLE=data_2_title, $
+                     DATA_1_TITLE=data_1_title,DATA_2_TITLE=data_2_title,LEGENDLOC=ILAT_legendLoc, $
                      BINSIZE=binSize,XRANGE=xRange,YRANGE=yRange,HISTTITLE=histTitle,XTITLE=xTitle, $
                      OUTFILE=outFile,POS=pos
   
@@ -297,7 +303,7 @@ PRO JOURNAL__20150815__REDO_w_BrettNOAA__MLT_and_Lshell_dist_of_stormtime_events
   outFile='ILAT--Northern' + belowStr + '--large_storms--NOAA_and_Brett--overlaid_w_all_events.png'
   
   OVERLAY_TWO_HISTOS,data_1,data_2,DATA_1_COL=data_1_col,DATA_2_COL=data_2_col, $
-                     DATA_1_TITLE=data_1_title,DATA_2_TITLE=data_2_title, $
+                     DATA_1_TITLE=data_1_title,DATA_2_TITLE=data_2_title,LEGENDLOC=ILAT_legendLoc, $
                      BINSIZE=binSize,XRANGE=xRange,YRANGE=yRange,HISTTITLE=histTitle,XTITLE=xTitle, $
                      OUTFILE=outFile,POS=pos
   
@@ -315,7 +321,7 @@ PRO JOURNAL__20150815__REDO_w_BrettNOAA__MLT_and_Lshell_dist_of_stormtime_events
   
   outFile='ILAT--Southern' + belowStr + '--large_storms--NOAA_and_Brett--overlaid_w_all_events.png'
   OVERLAY_TWO_HISTOS,data_1,data_2,DATA_1_COL=data_1_col,DATA_2_COL=data_2_col, $
-                     DATA_1_TITLE=data_1_title,DATA_2_TITLE=data_2_title, $
+                     DATA_1_TITLE=data_1_title,DATA_2_TITLE=data_2_title,LEGENDLOC=ILAT_legendLoc, $
                      BINSIZE=binSize,XRANGE=xRange,YRANGE=yRange,HISTTITLE=histTitle,XTITLE=xTitle, $
                      OUTFILE=outFile,POS=pos
 
