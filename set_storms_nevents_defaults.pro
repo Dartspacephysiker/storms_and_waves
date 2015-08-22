@@ -11,7 +11,8 @@ PRO SET_STORMS_NEVENTS_DEFAULTS,tBeforeStorm=tBeforeStorm,tAfterStorm=tAfterStor
                                 nEvBinsize=nEvBinsize,min_NEVBINSIZE=min_NEVBINSIZE, $
                                 saveFile=saveFile,SAVESTR=saveStr, $
                                 PLOTTITLE=plotTitle,SAVEPLOTNAME=savePlotName, $
-                                noPlots=noPlots,noMaxPlots=noMaxPlots
+                                noPlots=noPlots,noMaxPlots=noMaxPlots, $
+                                DO_SCATTERPLOTS=do_scatterPlots,SCPLOT_COLORLIST=scPlot_colorList,SCATTEROUTPREFIX=scatterOutPrefix
   
 
   defTBeforeStorm      = 60.0D                                                                       ;in hours
@@ -53,6 +54,10 @@ PRO SET_STORMS_NEVENTS_DEFAULTS,tBeforeStorm=tBeforeStorm,tAfterStorm=tAfterStor
 
   defNoPlots = 0 
   defNoMaxPlots = 0
+
+  defDo_scatterPlots = 0
+  defScatterOutPrefix = 'stackplots_storms_nevents--scatterplot'
+  ;; defScPlot_colorList = ''
 
   ;;set defaults
   IF N_ELEMENTS(tBeforeStorm) EQ 0 THEN tBeforeStorm = defTBeforeStorm
@@ -97,6 +102,13 @@ PRO SET_STORMS_NEVENTS_DEFAULTS,tBeforeStorm=tBeforeStorm,tAfterStorm=tAfterStor
 
   IF N_ELEMENTS(noPlots) EQ 0 THEN noPlots=defNoPlots
   IF N_ELEMENTS(noMaxPlots) EQ 0 THEN noMaxPlots=defNoMaxPlots
+
+  IF N_ELEMENTS(do_scatterPlots) EQ 0 THEN do_scatterPlots = defdo_scatterPlots
+  ;; IF N_ELEMENTS(scPlot_colorList) EQ 0 THEN scPlot_colorList = defscPlot_colorList
+
+  IF KEYWORD_SET(savePlotName) THEN BEGIN
+     IF SIZE(savePlotName,/TYPE) NE 7 THEN scatterOutPrefix=defScatterOutPrefix
+  ENDIF
 
   IF saveFile THEN BEGIN 
      saveStr='save' 

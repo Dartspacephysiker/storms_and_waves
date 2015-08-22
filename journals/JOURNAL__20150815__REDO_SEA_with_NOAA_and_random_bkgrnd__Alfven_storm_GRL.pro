@@ -17,7 +17,11 @@ PRO JOURNAL__20150815__redo_SEA_with_NOAA_and_random_bkgrnd__Alfven_storm_GRL
 
   ;the outs
   ;; date='20150815'
-  date='20150821'
+  date='20150822'
+  ;; outFile = 'Fig_2--Dst_plus_nEventHistos--proper_storm_commencement--PROPER_ALFVEN_DB_SCREENING--20150821.png'
+  outFile = 'Fig_2--SYMH_plus_nEventHistos--PROPER_ALFVEN_DB_SCREENING--'+date+'.png'
+  scPlotPref = 'Fig_2--scatterplots--PROPER_ALFVEN_DB_SCREENING--'+date
+
   tempOutFile = '/SPENCEdata/Research/Cusp/storms_Alfvens/saves_output_etc/superposed_large_storm_output_w_n_Alfven_events--'+date+'.dat'
 
   DBDIR = '/home/spencerh/Research/Cusp/database/sw_omnidata/'
@@ -79,6 +83,7 @@ PRO JOURNAL__20150815__redo_SEA_with_NOAA_and_random_bkgrnd__Alfven_storm_GRL
                            /USE_DARTDB_START_ENDDATE,TBEFORESTORM=60.,TAFTERSTORM=60., $
                            MAXIND=maxInd, $
                            NEVBINSIZE=nEvBinsize, NEVRANGE=nEvRange, $
-                           BKGRND_HIST=sumHist/40.,/NOMAXPLOTS
+                           BKGRND_HIST=sumHist/40.,/NOMAXPLOTS,/DO_SCATTERPLOTS,/USE_SYMH,$
+                           SAVEPLOTNAME=outFile,SCATTEROUTPREFIX=scPlotPref
 
 END

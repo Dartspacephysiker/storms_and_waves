@@ -7,6 +7,16 @@
 
 PRO JOURNAL__20150821__four_storms_NOT_from_Yao__Alfven_storm_GRL
 
+  ;;************************************************************
+  ;;to be outputted
+
+  
+
+  ;scatter plots, N and S Hemi
+  savePlotName='Fig_1--four_storms_from_1998--20150822.png'
+  scOutPref='Fig_1--scatterplots--four_storms_in_1998--20150822'
+  
+
   DBDIR = '/home/spencerh/Research/Cusp/database/sw_omnidata/'
   DB_BRETT = 'large_and_small_storms--1985-2011--Anderson.sav'
   DB_NOAA = 'SSC_dbs--storm2_mods.txt__STORM2_MODS.SSC--idl.sav'
@@ -50,8 +60,11 @@ PRO JOURNAL__20150821__four_storms_NOT_from_Yao__Alfven_storm_GRL
 
   ;; this=this(sort(this))
 
-  this=generate_rands_between_two_values(4,12.,23.,/NO_DUPLICATES,/SORT_PLEASE)
-  print,this
+  ;; this=generate_rands_between_two_values(4,12.,23.,/NO_DUPLICATES,/SORT_PLEASE)
+  ;; print,this
+
+  this=[13,14,17,20]
+
   q1_st=q1_st[this]
   q1_1=q1_1[this]
 
@@ -69,9 +82,14 @@ PRO JOURNAL__20150821__four_storms_NOT_from_Yao__Alfven_storm_GRL
 
   ;;SSC-centered here
   stackplots_storms_nevents_overlaid,STORMTYPE=1,STORMINDS=q1_st,SSC_TIMES_UTC=q1_utc, $
-                           /USE_DARTDB_START_ENDDATE,TBEFORESTORM=15.,TAFTERSTORM=60., $
-                           MAXIND=maxInd, REMOVE_DUPES=rmDupes, $
-                           RETURNED_NEV_TBINS_AND_HIST=stormtime_returned_tbins_and_nevhist,YRANGE_MAXIND=yRange_maxInd
+                                     /USE_DARTDB_START_ENDDATE,TBEFORESTORM=15.,TAFTERSTORM=60., $
+                                     MAXIND=maxInd, REMOVE_DUPES=rmDupes, $
+                                     RETURNED_NEV_TBINS_AND_HIST=stormtime_returned_tbins_and_nevhist,YRANGE_MAXIND=yRange_maxInd, $
+                                     SAVEPLOTNAME=savePlotName, $
+                                     /DO_SCATTERPLOTS,SCPLOT_COLORLIST=['red','blue','green','purple'], $
+                                     SCATTEROUTPREFIX=scOutPref, $
+                                     /USE_SYMH
+
 
 
 

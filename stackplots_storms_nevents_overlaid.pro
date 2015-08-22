@@ -69,17 +69,34 @@ PRO STACKPLOTS_STORMS_NEVENTS_OVERLAID,stormTimeArray_utc, $
                              USE_DARTDB_START_ENDDATE=use_dartdb_start_enddate, $
                              SAVEFILE=saveFile,OVERPLOT_HIST=overplot_hist, $
                              PLOTTITLE=plotTitle,SAVEPLOTNAME=savePlotName, $
-                             SAVEMAXPLOTNAME=saveMaxPlotName
+                             SAVEMAXPLOTNAME=saveMaxPlotName, $
+                             DO_SCATTERPLOTS=do_scatterPlots,SCPLOT_COLORLIST=scPlot_colorList,SCATTEROUTPREFIX=scatterOutPrefix
   
   dataDir='/SPENCEdata/Research/Cusp/database/'
 
   ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
   ;defaults
+
+  SET_STORMS_NEVENTS_DEFAULTS,tBeforeStorm=tBeforeStorm,tAfterStorm=tAfterStorm,$
+                              swDBDir=swDBDir,swDBFile=swDBFile, $
+                              stormDir=stormDir,stormFile=stormFile, $
+                              DST_AEDir=DST_AEDir,DST_AEFile=DST_AEFile, $
+                              dbDir=dbDir,dbFile=dbFile,db_tFile=db_tFile, $
+                              dayside=dayside,nightside=nightside, $
+                              restrict_charERange=restrict_charERange,restrict_altRange=restrict_altRange, $
+                              MAXIND=maxInd,avg_type_maxInd=avg_type_maxInd,log_DBQuantity=log_DBQuantity, $
+                              neg_and_pos_separ=neg_and_pos_separ,pos_layout=pos_layout,neg_layout=neg_layout, $
+                              use_SYMH=use_SYMH,USE_AE=use_AE, $
+                              nEvBinsize=nEvBinsize,min_NEVBINSIZE=min_NEVBINSIZE, $
+                              saveFile=saveFile,SAVESTR=saveStr, $
+                              noPlots=noPlots,noMaxPlots=noMaxPlots, $
+                              DO_SCATTERPLOTS=do_scatterPlots,SCPLOT_COLORLIST=scPlot_colorList,SCATTEROUTPREFIX=scatterOutPrefix
+
   plotMargin=[0.1, 0.25, 0.1, 0.15]
 
-  defSymTransp         = 97
-  defLineTransp        = 75
-  defLineThick         = 2.5
+  defSymTransp         = 95
+  defLineTransp        = 60
+  defLineThick         = 2.0
 
   ;; ;For nEvent histos
   defnEvYRange         = [0,5000]
@@ -101,31 +118,13 @@ PRO STACKPLOTS_STORMS_NEVENTS_OVERLAID,stormTimeArray_utc, $
   nMinorTicks=1
 
   defRes = 200
-  ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
-  ;Check defaults
-  
-  SET_STORMS_NEVENTS_DEFAULTS,tBeforeStorm=tBeforeStorm,tAfterStorm=tAfterStorm,$
-                              swDBDir=swDBDir,swDBFile=swDBFile, $
-                              stormDir=stormDir,stormFile=stormFile, $
-                              DST_AEDir=DST_AEDir,DST_AEFile=DST_AEFile, $
-                              dbDir=dbDir,dbFile=dbFile,db_tFile=db_tFile, $
-                              dayside=dayside,nightside=nightside, $
-                              restrict_charERange=restrict_charERange,restrict_altRange=restrict_altRange, $
-                              MAXIND=maxInd,avg_type_maxInd=avg_type_maxInd,log_DBQuantity=log_DBQuantity, $
-                              neg_and_pos_separ=neg_and_pos_separ,pos_layout=pos_layout,neg_layout=neg_layout, $
-                              use_SYMH=use_SYMH,use_AE=use_AE, $
-                              nEvBinsize=nEvBinsize,min_NEVBINSIZE=min_NEVBINSIZE, $
-                              saveFile=saveFile,SAVESTR=saveStr, $
-                              noPlots=noPlots,noMaxPlots=noMaxPlots
-
-
 
   ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
   ;Now restore 'em
   restore,dataDir+swDBDir+swDBFile
   restore,dataDir+stormDir+stormFile
 
-  IF ~use_SYMH THEN restore,dataDir+DST_AEDir+DST_AEFile
+  IF ~use_SYMH AND ~use_AE THEN restore,dataDir+DST_AEDir+DST_AEFile
 
   restore,dataDir+DBDir+DBFile
   restore,dataDir+DBDir+DB_tFile
@@ -299,6 +298,7 @@ PRO STACKPLOTS_STORMS_NEVENTS_OVERLAID,stormTimeArray_utc, $
                         YMINOR=nMinorTicks, $
                         ;; LAYOUT=[1,4,i+1], $
                         /CURRENT, $
+                        CLIP=0, $
                         SYM_TRANSPARENCY=defSymTransp, $
                         TRANSPARENCY=defLineTransp, $
                         THICK=defLineThick, $
@@ -338,19 +338,6 @@ PRO STACKPLOTS_STORMS_NEVENTS_OVERLAID,stormTimeArray_utc, $
                                       nEvHist_pos=nEvHist_pos,nEvHist_neg=nEvHist_neg,all_nevhist=all_nevhist,tBin=tBin, $
                                       MIN_NEVBINSIZE=min_NEVBINSIZE,NEVTOT=nEvTot
 
-
-  IF do_ScatterPlots THEN   BEGIN
-     KEY_SCATTERPLOTS_POLARPROJ,MAXIMUS=maximus,$
-                                /OVERLAYAURZONE,PLOT_I_LIST=tot_plot_i_list,COLOR_LIST=color_list,STRANS=75, $
-                                ;; OUTFILE='scatterplot--northern--four_storms--Yao_et_al_2008.png'
-                                OUTFILE=!NULL
-
-     KEY_SCATTERPLOTS_POLARPROJ,MAXIMUS=maximus,/SOUTH, $
-                                /OVERLAYAURZONE,PLOT_I_LIST=tot_plot_i_list,COLOR_LIST=color_list,STRANS=75, $
-                                OUTFILE=!NULL
-                                ;; OUTFILE='scatterplot--southern--four_storms--Yao_et_al_2008.png'
-  ENDIF
-  
 
   ;; IF KEYWORD_SET(nEventHists) THEN BEGIN
   ;;    IF neg_and_pos_separ THEN BEGIN
@@ -499,11 +486,6 @@ PRO STACKPLOTS_STORMS_NEVENTS_OVERLAID,stormTimeArray_utc, $
   ;; ENDIF
                                 ;end IF nEventHists
   
-  IF KEYWORD_SET(savePlotName) THEN BEGIN
-     PRINT,"Saving plot to file: " + savePlotName
-     geomagWindow.save,savePlotName,RESOLUTION=defRes
-  ENDIF
-
   IF KEYWORD_SET(maxInd) THEN BEGIN
 
      mTags=TAG_NAMES(maximus)
@@ -618,7 +600,7 @@ PRO STACKPLOTS_STORMS_NEVENTS_OVERLAID,stormTimeArray_utc, $
                             YLOG=(log_DBQuantity) ? 1 : 0, $
                             LINESTYLE=' ', $
                             SYMBOL='+', $
-                            SYM_COLOR='r', $
+                            SYM_COLOR=N_ELEMENTS(scPlot_colorList) GT 0 ? scplot_colorlist[i] :  'r', $
                             XTICKFONT_SIZE=max_xtickfont_size, $
                             XTICKFONT_STYLE=max_xtickfont_style, $
                             YTICKFONT_SIZE=max_ytickfont_size, $
@@ -648,7 +630,7 @@ PRO STACKPLOTS_STORMS_NEVENTS_OVERLAID,stormTimeArray_utc, $
                             YLOG=(log_DBQuantity) ? 1 : 0, $
                             LINESTYLE=' ', $
                             SYMBOL='+', $
-                            SYM_COLOR='SEA GREEN', $
+                            SYM_COLOR=N_ELEMENTS(scPlot_colorList) GT 0 ? scplot_colorlist[i] :  'SEA GREEN', $
                             XTICKFONT_SIZE=max_xtickfont_size, $
                             XTICKFONT_STYLE=max_xtickfont_style, $
                             YTICKFONT_SIZE=max_ytickfont_size, $
@@ -674,27 +656,29 @@ PRO STACKPLOTS_STORMS_NEVENTS_OVERLAID,stormTimeArray_utc, $
            ;; IF plot_i(0) GT -1 AND ~(noPlots OR noMaxPlots)  THEN BEGIN
 
               plot_cdb=plot(cdb_t, $
-                        cdb_y, $
-                        ;; (log_DBquantity) ? ALOG10(cdb_y) : cdb_y, $
-                        XTITLE=defXTitle, $
-                        YTITLE=(KEYWORD_SET(yTitle_maxInd) ? $
-                                yTitle_maxInd : $
-                                mTags(maxInd)), $
-                        XRANGE=xRange, $
-                        YRANGE=(KEYWORD_SET(yRange_maxInd)) ? $
-                        yRange_maxInd : [minDat,maxDat], $
-                        YLOG=(log_DBQuantity) ? 1 : 0, $
-                        AXIS_STYLE=0, $
-                        LINESTYLE=' ', $
-                        SYMBOL='x', $
-                        XTICKFONT_SIZE=max_xtickfont_size, $
-                        XTICKFONT_STYLE=max_xtickfont_style, $
-                        YTICKFONT_SIZE=max_ytickfont_size, $
-                        YTICKFONT_STYLE=max_ytickfont_style, $
-                        LAYOUT=[1,nStorms,i+1], $
-                        MARGIN=plotMargin, $
-                        /CURRENT, $
-                        SYM_TRANSPARENCY=defSymTransp)
+                            cdb_y, $
+                            ;; (log_DBquantity) ? ALOG10(cdb_y) : cdb_y, $
+                            XTITLE=defXTitle, $
+                            YTITLE=(KEYWORD_SET(yTitle_maxInd) ? $
+                                    yTitle_maxInd : $
+                                    mTags(maxInd)), $
+                            XRANGE=xRange, $
+                            YRANGE=(KEYWORD_SET(yRange_maxInd)) ? $
+                            yRange_maxInd : [minDat,maxDat], $
+                            YLOG=(log_DBQuantity) ? 1 : 0, $
+                            AXIS_STYLE=0, $
+                            LINESTYLE=' ', $
+                            SYMBOL='x', $
+                            XTICKFONT_SIZE=max_xtickfont_size, $
+                            XTICKFONT_STYLE=max_xtickfont_style, $
+                            YTICKFONT_SIZE=max_ytickfont_size, $
+                            YTICKFONT_STYLE=max_ytickfont_style, $
+                            LAYOUT=[1,nStorms,i+1], $
+                            MARGIN=plotMargin, $
+                            /CURRENT,CLIP=0, $
+                            SYM_COLOR=N_ELEMENTS(scPlot_colorList) GT 0 ? scplot_colorlist[i] :  !NULL, $
+                            ;; SYM_TRANSPARENCY=(i EQ 2) ? 60 : defSymTransp) ;this line is for making events on plot #3 stand out
+                            SYM_TRANSPARENCY=defSymTransp)
               
               yaxis = AXIS('Y', LOCATION='right', TARGET=plot_cdb, $
                            TITLE='$J_{\parallel}$ ' + $
@@ -704,12 +688,17 @@ PRO STACKPLOTS_STORMS_NEVENTS_OVERLAID,stormTimeArray_utc, $
                            TICKFONT_SIZE=yTickFont_size, $
                            TICKFONT_STYLE=yTickFont_style, $
                            MAJOR=5, $
-                           MINOR=3, $
+                           MINOR=1, $
                            AXIS_RANGE=(KEYWORD_SET(yRange_maxInd)) ? $
                            yRange_maxInd : [minDat,maxDat], $
-                           TEXTPOS=1) ;, COLOR=color_list(i))
+                           TEXTPOS=1,COLOR=N_ELEMENTS(scPlot_colorList) GT 0 ? scplot_colorlist[i] :  !NULL)
 
-
+              t1 = TEXT(xRange[1]*0.75,(KEYWORD_SET(yRange_maxInd) ? yRange_maxInd[1] : maxDat)*0.75, $
+                        'N Alfvén events: ' + STRCOMPRESS(N_ELEMENTS(cdb_t),/REMOVE_ALL), $
+                        /DATA, $
+                        FONT_SIZE=yTickFont_size,FONT_NAME='Helvetica',FONT_STYLE='Bold', $
+                        FONT_COLOR=N_ELEMENTS(scPlot_colorList) GT 0 ? scplot_colorlist[i] :  !NULL, $
+                        CLIP=0,TARGET=plot_cdb)
            ENDIF
            
         ENDELSE                 ;end ~neg_and_pos_separ
@@ -761,7 +750,7 @@ PRO STACKPLOTS_STORMS_NEVENTS_OVERLAID,stormTimeArray_utc, $
                                YRANGE=(KEYWORD_SET(yRange_maxInd)) ? $
                                yRange_maxInd : [minDat[0],maxDat[0]], $
                                LINESTYLE='--', $
-                               COLOR='MAROON', $
+                               COLOR=N_ELEMENTS(scPlot_colorList) GT 0 ? scplot_colorlist[i] :  'MAROON', $
                                SYMBOL='d', $
                                AXIS_STYLE=0, $
                                LINESTYLE=' ', $
@@ -771,7 +760,7 @@ PRO STACKPLOTS_STORMS_NEVENTS_OVERLAID,stormTimeArray_utc, $
                                ;; LAYOUT=pos_layout, $
                                /CURRENT,/OVERPLOT, $
                                SYM_SIZE=1.5, $
-                               SYM_COLOR='MAROON') ;, $
+                               SYM_COLOR=N_ELEMENTS(scPlot_colorList) GT 0 ? scplot_colorlist[i] :  'MAROON')
                  
               ENDIF ;end no plots
 
@@ -808,7 +797,7 @@ PRO STACKPLOTS_STORMS_NEVENTS_OVERLAID,stormTimeArray_utc, $
                                YRANGE=(KEYWORD_SET(yRange_maxInd)) ? $
                                yRange_maxInd : [minDat[1],maxDat[1]], $
                                LINESTYLE='-:', $
-                               COLOR='DARK GREEN', $
+                               COLOR=N_ELEMENTS(scPlot_colorList) GT 0 ? scplot_colorlist[i] : 'DARK GREEN', $
                                SYMBOL='d', $
                                AXIS_STYLE=0, $
                                XTICKFONT_SIZE=max_xtickfont_size, $
@@ -817,7 +806,7 @@ PRO STACKPLOTS_STORMS_NEVENTS_OVERLAID,stormTimeArray_utc, $
                                ;; LAYOUT=neg_layout, $
                                /CURRENT,/OVERPLOT, $
                                SYM_SIZE=1.5, $
-                               SYM_COLOR='DARK GREEN') ;, $
+                               SYM_COLOR=N_ELEMENTS(scPlot_colorList) GT 0 ? scplot_colorlist[i] : 'DARK GREEN')
                  
               ENDIF
 
@@ -865,8 +854,8 @@ PRO STACKPLOTS_STORMS_NEVENTS_OVERLAID,stormTimeArray_utc, $
                         /CURRENT,/OVERPLOT, $
                         LAYOUT=[1,nStorms,i+1], $
                         SYM_SIZE=1.5, $
-                        SYM_COLOR='g') ;, $
-           ENDIF ;end no plots
+                        SYM_COLOR=N_ELEMENTS(scPlot_colorList) GT 0 ? scplot_colorlist[i] : 'g')
+           ENDIF                ;end no plots
 
         ENDELSE
      ENDIF
@@ -878,6 +867,22 @@ PRO STACKPLOTS_STORMS_NEVENTS_OVERLAID,stormTimeArray_utc, $
 
   ENDIF
   
+  IF KEYWORD_SET(savePlotName) THEN BEGIN
+     PRINT,"Saving plot to file: " + savePlotName
+     geomagWindow.save,savePlotName,RESOLUTION=defRes
+  ENDIF
+
+  IF do_ScatterPlots THEN BEGIN
+     KEY_SCATTERPLOTS_POLARPROJ,MAXIMUS=maximus,$
+                                /OVERLAYAURZONE,PLOT_I_LIST=tot_plot_i_list,COLOR_LIST=scPlot_colorList,STRANS=95, $
+                                ;; OUTFILE='scatterplot--northern--four_storms--Yao_et_al_2008.png'
+                                OUTFILE=N_ELEMENTS(scatterOutPrefix) GT 0 ? scatterOutPrefix+'--north.png' : !NULL
+
+     KEY_SCATTERPLOTS_POLARPROJ,MAXIMUS=maximus,/SOUTH, $
+                                /OVERLAYAURZONE,PLOT_I_LIST=tot_plot_i_list,COLOR_LIST=scPlot_colorList,STRANS=95, $
+                                OUTFILE=N_ELEMENTS(scatterOutPrefix) GT 0 ? scatterOutPrefix+'--south.png' : !NULL
+  ENDIF
+
   IF saveFile THEN BEGIN
      saveStr+=',filename='+'"'+saveFile+'"'
      PRINT,"Saving output to " + saveFile

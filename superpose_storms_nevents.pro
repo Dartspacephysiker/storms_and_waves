@@ -70,7 +70,8 @@ PRO superpose_storms_nevents,stormTimeArray_utc, $
                              USE_DARTDB_START_ENDDATE=use_dartdb_start_enddate, $
                              SAVEFILE=saveFile,OVERPLOT_HIST=overplot_hist, $
                              PLOTTITLE=plotTitle,SAVEPLOTNAME=savePlotName, $
-                             SAVEMAXPLOTNAME=saveMaxPlotName
+                             SAVEMAXPLOTNAME=saveMaxPlotName, $
+                             DO_SCATTERPLOTS=do_scatterPlots,SCPLOT_COLORLIST=scPlot_colorList,SCATTEROUTPREFIX=scatterOutPrefix
   
   dataDir='/SPENCEdata/Research/Cusp/database/'
 
@@ -84,12 +85,15 @@ PRO superpose_storms_nevents,stormTimeArray_utc, $
                               dbDir=dbDir,dbFile=dbFile,db_tFile=db_tFile, $
                               dayside=dayside,nightside=nightside, $
                               restrict_charERange=restrict_charERange,restrict_altRange=restrict_altRange, $
-                              maxInd=maxInd,avg_type_maxInd=avg_type_maxInd,log_DBQuantity=log_DBQuantity, $
+                              MAXIND=maxInd,avg_type_maxInd=avg_type_maxInd,log_DBQuantity=log_DBQuantity, $
                               neg_and_pos_separ=neg_and_pos_separ,pos_layout=pos_layout,neg_layout=neg_layout, $
                               use_SYMH=use_SYMH,USE_AE=use_AE, $
                               nEvBinsize=nEvBinsize,min_NEVBINSIZE=min_NEVBINSIZE, $
                               saveFile=saveFile,SAVESTR=saveStr, $
-                              noPlots=noPlots,noMaxPlots=noMaxPlots
+                              noPlots=noPlots,noMaxPlots=noMaxPlots, $
+                              DO_SCATTERPLOTS=do_scatterPlots,SCPLOT_COLORLIST=scPlot_colorList,SCATTEROUTPREFIX=scatterOutPrefix
+
+  plotMargin=[0.1, 0.25, 0.1, 0.15]
 
   plotMargin=[0.13, 0.20, 0.13, 0.15]
   defSymTransp         = 97
@@ -123,7 +127,7 @@ PRO superpose_storms_nevents,stormTimeArray_utc, $
   restore,dataDir+swDBDir+swDBFile
   restore,dataDir+stormDir+stormFile
 
-  IF ~use_SYMH THEN restore,dataDir+DST_AEDir+DST_AEFile
+  IF ~use_SYMH AND ~use_AE THEN restore,dataDir+DST_AEDir+DST_AEFile
 
   restore,dataDir+DBDir+DBFile
   restore,dataDir+DBDir+DB_tFile
@@ -196,7 +200,10 @@ PRO superpose_storms_nevents,stormTimeArray_utc, $
   datStartStop(*,0) = centerTime - tBeforeStorm*3600.   ;(*,0) are the times before which we don't want data for each storm
   datStartStop(*,1) = centerTime + tAfterStorm*3600.    ;(*,1) are the times after which we don't want data for each storm
      
-  GENERATE_GEOMAG_QUANTITIES,datStartStop=datStartStop,NSTORMS=nStorms, $
+  ;**************************************************
+  ;generate geomag and stuff
+
+  generate_geomag_quantities,datStartStop=datStartStop,NSTORMS=nStorms, $
                              use_SYMH=use_SYMH,USE_AE=use_AE,DST=dst,SW_DATA=sw_data, $
                              GEOMAG_PLOT_I_LIST=geomag_plot_i_list,GEOMAG_DAT_LIST=geomag_dat_list,GEOMAG_TIME_LIST=geomag_time_list, $
                              GEOMAG_MIN=geomag_min,GEOMAG_MAX=geomag_max
@@ -209,12 +216,30 @@ PRO superpose_storms_nevents,stormTimeArray_utc, $
                          CHARERANGE=(restrict_charERange) ? [4,300] : !NULL, $
                          DAYSIDE=dayside,NIGHTSIDE=nightside)
   
+  ;; PRINT,FORMAT='("i",T4,"j",T8,"tempClosest (hours)",T33,"centerTime")'
+  ;; FOR i=0,nStorms-1 DO BEGIN
+  ;;    FOR j=0,1 DO BEGIN
+  ;;       tempClosest=MIN(ABS(datStartStop(i,j)-cdbTime(good_i)),tempClosest_ii)
+  ;;       cdb_storm_i(i,j)=good_i(tempClosest_ii)
+  ;;       cdb_storm_t(i,j)=cdbTime(good_i(tempClosest_ii))
+
+  ;;       PRINT,FORMAT='(I0,T4,I0,T8,F0.2,T33,A0)',i,j,tempClosest/3600.,tStamps[i]
+  ;;    ENDFOR
+  ;; ENDFOR
+
+  PRINT,FORMAT='("i",T4,"centerTime",T25,"tempClosest (hours)",T48,"Num events in range")'
   FOR i=0,nStorms-1 DO BEGIN
      FOR j=0,1 DO BEGIN
         tempClosest=MIN(ABS(datStartStop(i,j)-cdbTime(good_i)),tempClosest_ii)
         cdb_storm_i(i,j)=good_i(tempClosest_ii)
         cdb_storm_t(i,j)=cdbTime(good_i(tempClosest_ii))
+
+        ;; PRINT,FORMAT='(I0,T4,I0,T8,A0,T43,F0.2,)',i,j,tStamps[i],tempClosest/3600.,
      ENDFOR
+     plot_i=cgsetintersection(good_i,indgen(cdb_storm_i(i,1)-cdb_storm_i(i,0)+1)+cdb_storm_i(i,0))
+     PRINT,FORMAT='(I0,T4,A0,T25,F0.2,T48,I0)',i,tStamps[i],tempClosest/3600., $
+           (tempClosest/3600. GT tBeforeStorm AND tempClosest/3600. GT tAfterStorm) ? 0 : N_ELEMENTS(plot_i) 
+
   ENDFOR
 
   IF saveFile THEN saveStr+=',nStorms,centerTime,tStamps,stormString,dbFile,tBeforeStorm,tAfterStorm,geomag_min,geomag_max,geomag_plot_i_list,geomag_dat_list,geomag_time_list'
@@ -573,8 +598,8 @@ PRO superpose_storms_nevents,stormTimeArray_utc, $
                                /CURRENT,TRANSPARENCY=50)
               
               leg = LEGEND(TARGET=[plot_nEv,plot_bkgrnd], $
-                           POSITION=[0.1,0.1], /NORMAL, $
-                           /AUTO_TEXT_COLOR)
+                           POSITION=[xRange[1]-10.,((KEYWORD_SET(nEvRange) ? nEvRange : [0,7500])[1])], /DATA, $
+                           /AUTO_TEXT_COLOR,CLIP=0)
            ENDIF     
            
            ;; xaxis = AXIS('Y', LOCATION='right', TARGET=plot_nEv, $
@@ -805,9 +830,9 @@ PRO superpose_storms_nevents,stormTimeArray_utc, $
      ;; Add the legend, if neg_and_pos_separ
      IF neg_and_pos_separ THEN BEGIN
         IF N_ELEMENTS(plot_pos) GT 0 AND N_ELEMENTS(plot_neg) GT 0 THEN BEGIN
-           leg = LEGEND(TARGET=[plot_pos,plot_neg], $
-                        POSITION=[0.1,0.1], /NORMAL, $
-                        /AUTO_TEXT_COLOR)
+              leg = LEGEND(TARGET=[plot_nEv,plot_bkgrnd], $
+                           POSITION=[-20.,((KEYWORD_SET(nEvRange) ? nEvRange : [0,7500])[1])]*0.45, /DATA, $
+                           /AUTO_TEXT_COLOR)
         ENDIF
      ENDIF
 
@@ -958,6 +983,17 @@ PRO superpose_storms_nevents,stormTimeArray_utc, $
 
   ENDIF
   
+  IF do_ScatterPlots THEN BEGIN
+     KEY_SCATTERPLOTS_POLARPROJ,MAXIMUS=maximus,$
+                                /OVERLAYAURZONE,PLOT_I_LIST=tot_plot_i_list,STRANS=98, $
+                                ;; OUTFILE='scatterplot--northern--four_storms--Yao_et_al_2008.png'
+                                OUTFILE=N_ELEMENTS(scatterOutPrefix) GT 0 ? scatterOutPrefix+'--north.png' : !NULL
+
+     KEY_SCATTERPLOTS_POLARPROJ,MAXIMUS=maximus,/SOUTH, $
+                                /OVERLAYAURZONE,PLOT_I_LIST=tot_plot_i_list,STRANS=98, $
+                                OUTFILE=N_ELEMENTS(scatterOutPrefix) GT 0 ? scatterOutPrefix+'--south.png' : !NULL
+  ENDIF
+
   IF saveFile THEN BEGIN
      saveStr+=',filename='+'"'+saveFile+'"'
      PRINT,"Saving output to " + saveFile
