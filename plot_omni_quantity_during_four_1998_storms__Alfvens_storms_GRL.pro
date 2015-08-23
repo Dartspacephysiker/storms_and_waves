@@ -7,7 +7,8 @@
 ;; PROTON_DENSITY T PRESSURE E BETA MACH_NUM MGS_MACH_NUM BSN_X BSN_Y BSN_Z
 ;; AE_INDEX AL_INDEX AU_INDEX SYM_D SYM_H ASY_D ASY_H PC_N_INDEX EPOCH
 
-PRO PLOT_OMNI_QUANTITY_DURING_FOUR_1998_STORMS__ALFVENS_STORMS_GRL,OMNI_QUANTITY=omni_quantity,DATE=date,OUTPUT_PLOTS=output_plots,LOGPLOTS=logPlots
+PRO PLOT_OMNI_QUANTITY_DURING_FOUR_1998_STORMS__ALFVENS_STORMS_GRL,OMNI_QUANTITY=omni_quantity,DATE=date,OUTPUT_PLOTS=output_plots, $
+   LOGPLOTS=logPlots,USE_DATA_MINMAX=use_data_minMax
 
   ;;************************************************************
   ;;to be outputted
@@ -27,7 +28,7 @@ PRO PLOT_OMNI_QUANTITY_DURING_FOUR_1998_STORMS__ALFVENS_STORMS_GRL,OMNI_QUANTITY
 
   ;scatter plots, N and S Hemi
 
-  IF N_ELEMENTS(outputPlots) GT 0 THEN BEGIN
+  IF N_ELEMENTS(output_Plots) GT 0 THEN BEGIN
      savePlotName='four_storms_from_1998--' + omni_quantity + '--' + date + '.png'
      ;; scOutPref='scatterplots--four_storms_in_1998--' + omni_quantity + '--' + date
   ENDIF
@@ -78,9 +79,10 @@ PRO PLOT_OMNI_QUANTITY_DURING_FOUR_1998_STORMS__ALFVENS_STORMS_GRL,OMNI_QUANTITY
                                      /USE_DARTDB_START_ENDDATE,TBEFORESTORM=15.,TAFTERSTORM=60., $
                                      MAXIND=maxInd, REMOVE_DUPES=rmDupes, $
                                      YRANGE_MAXIND=yRange_maxInd, $
+                                     /JUST_ONE_LABEL, $
                                      SAVEPLOTNAME=savePlotName, $
-                                     /DO_SCATTERPLOTS,SCPLOT_COLORLIST=['red','blue','green','purple'], $
-                                     SCATTEROUTPREFIX=scOutPref, $
-                                     OMNI_QUANTITY=omni_quantity,LOG_OMNI_QUANTITY=logPlots
+                                     ;; /DO_SCATTERPLOTS,SCPLOT_COLORLIST=['red','blue','green','purple'], SCATTEROUTPREFIX=scOutPref, $
+                                     SCPLOT_COLORLIST=['red','blue','green','purple'], $                                   
+                                     OMNI_QUANTITY=omni_quantity,LOG_OMNI_QUANTITY=logPlots,USE_DATA_MINMAX=use_data_minMax
 
 END

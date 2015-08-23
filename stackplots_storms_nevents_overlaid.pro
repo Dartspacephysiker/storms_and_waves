@@ -56,7 +56,7 @@ PRO STACKPLOTS_STORMS_NEVENTS_OVERLAID,stormTimeArray_utc, $
                              REMOVE_DUPES=remove_dupes, HOURS_AFT_FOR_NO_DUPES=hours_aft_for_no_dupes, $
                              STORMTYPE=stormType, $
                              USE_SYMH=use_symh,USE_AE=use_AE, $
-                             OMNI_QUANTITY=omni_quantity,LOG_OMNI_QUANTITY=log_omni_quantity, $
+                             OMNI_QUANTITY=omni_quantity,LOG_OMNI_QUANTITY=log_omni_quantity,USE_DATA_MINMAX=use_data_minMax, $
                              NEVENTHISTS=nEventHists,NEVBINSIZE=nEvBinSize, NEVRANGE=nEvRange, $
                              RETURNED_NEV_TBINS_and_HIST=returned_nEv_tbins_and_Hist, BKGRND_HIST=bkgrnd_hist, $
                              NEG_AND_POS_SEPAR=neg_and_pos_separ, POS_LAYOUT=pos_layout, NEG_LAYOUT=neg_layout, $
@@ -71,7 +71,8 @@ PRO STACKPLOTS_STORMS_NEVENTS_OVERLAID,stormTimeArray_utc, $
                              SAVEFILE=saveFile,OVERPLOT_HIST=overplot_hist, $
                              PLOTTITLE=plotTitle,SAVEPLOTNAME=savePlotName, $
                              SAVEMAXPLOTNAME=saveMaxPlotName, $
-                             DO_SCATTERPLOTS=do_scatterPlots,SCPLOT_COLORLIST=scPlot_colorList,SCATTEROUTPREFIX=scatterOutPrefix
+                             DO_SCATTERPLOTS=do_scatterPlots,SCPLOT_COLORLIST=scPlot_colorList,SCATTEROUTPREFIX=scatterOutPrefix, $
+                             JUST_ONE_LABEL=just_One_Label
   
   dataDir='/SPENCEdata/Research/Cusp/database/'
 
@@ -218,7 +219,9 @@ PRO STACKPLOTS_STORMS_NEVENTS_OVERLAID,stormTimeArray_utc, $
                              USE_SYMH=use_SYMH,USE_AE=use_AE,DST=dst,SW_DATA=sw_data, $
                              OMNI_QUANTITY=omni_quantity,LOG_OMNI_QUANTITY=log_omni_quantity, $
                              GEOMAG_PLOT_I_LIST=geomag_plot_i_list,GEOMAG_DAT_LIST=geomag_dat_list,GEOMAG_TIME_LIST=geomag_time_list, $
-                             GEOMAG_MIN=geomag_min,GEOMAG_MAX=geomag_max,DO_DST=do_Dst,YRANGE=yRange,/SET_YRANGE
+                             GEOMAG_MIN=geomag_min,GEOMAG_MAX=geomag_max,DO_DST=do_Dst, $
+                             YRANGE=yRange,/SET_YRANGE,USE_DATA_MINMAX=use_data_minMax, $
+                             DATATITLE=geomagTitle
 
   ;; ;Get nearest events in Chaston DB
   cdb_storm_t=MAKE_ARRAY(nStorms,2,/DOUBLE)
@@ -258,7 +261,7 @@ PRO STACKPLOTS_STORMS_NEVENTS_OVERLAID,stormTimeArray_utc, $
 
   ;; ;Now plot geomag quantities
   IF KEYWORD_SET(no_superpose) THEN BEGIN
-     geomagWindow=WINDOW(WINDOW_TITLE="SYM-H plots", $
+     geomagWindow=WINDOW(WINDOW_TITLE=dataTitle, $
                          DIMENSIONS=[1200,800])
      
   ENDIF ELSE BEGIN              ;Just do a regular superposition of all the plots
@@ -268,15 +271,17 @@ PRO STACKPLOTS_STORMS_NEVENTS_OVERLAID,stormTimeArray_utc, $
                             tStamps(-1), $
                             DIMENSIONS=[1200,800])
         xTitle=defXTitle
-        IF use_SYMH THEN BEGIN
-           yTitle= 'SYM-H (nT)' 
-        ENDIF ELSE BEGIN
-           IF use_AE THEN BEGIN
-              yTitle = 'AE (nT)' 
-           ENDIF ELSE BEGIN
-              IF KEYWORD_SET(omni_quantity) THEN yTitle = omni_quantity ELSE yTitle = 'DST (nT)'
-           ENDELSE
-        ENDELSE
+
+        yTitle = geomagTitle
+        ;; IF use_SYMH THEN BEGIN
+        ;;    yTitle= 'SYM-H (nT)' 
+        ;; ENDIF ELSE BEGIN
+        ;;    IF use_AE THEN BEGIN
+        ;;       yTitle = 'AE (nT)' 
+        ;;    ENDIF ELSE BEGIN
+        ;; IF KEYWORD_SET(omni_quantity) THEN yTitle = omni_quantity ELSE yTitle = 'DST (nT)'
+        ;;    ENDELSE
+        ;; ENDELSE
         
         xRange=[-tBeforeStorm,tAfterStorm]
         ;; yRange=[geomag_min,geomag_max]
@@ -294,13 +299,13 @@ PRO STACKPLOTS_STORMS_NEVENTS_OVERLAID,stormTimeArray_utc, $
         FOR i=0,nStorms-1 DO BEGIN
            IF N_ELEMENTS(geomag_time_list(i)) GT 1 AND ~noPlots THEN BEGIN
               plot=plot((geomag_time_list(i)-centerTime(i))/3600.,geomag_dat_list(i), $
-                        NAME=yTitle, $
+                        NAME=omni_quantity, $
                         AXIS_STYLE=1, $
                         MARGIN=plotMargin, $
                         ;; XRANGE=[0,7000./60.], $
                         ;; XTITLE=xTitle + ', ' + tstamps[i], $
                         XTITLE='Hours since ' + tstamps[i], $
-                        YTITLE=yTitle, $
+                        YTITLE=KEYWORD_SET(just_one_label) ? (i EQ 1 ? yTitle : !NULL ) : yTitle, $
                         XRANGE=xRange, $
                         YRANGE=yRange, $
                         XTICKFONT_SIZE=max_xtickfont_size, $

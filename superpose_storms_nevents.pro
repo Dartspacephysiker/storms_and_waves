@@ -89,7 +89,7 @@ PRO superpose_storms_nevents,stormTimeArray_utc, $
                               MAXIND=maxInd,avg_type_maxInd=avg_type_maxInd,log_DBQuantity=log_DBQuantity, $
                               neg_and_pos_separ=neg_and_pos_separ,pos_layout=pos_layout,neg_layout=neg_layout, $
                               use_SYMH=use_SYMH,USE_AE=use_AE, $
-                              OMNI_QUANTITY=omni_quantity,LOG_OMNI_QUANTITY=log_omni_quantity, $
+                              OMNI_QUANTITY=omni_quantity,LOG_OMNI_QUANTITY=log_omni_quantity,USE_DATA_MINMAX=use_data_minMax, $
                               nEvBinsize=nEvBinsize,min_NEVBINSIZE=min_NEVBINSIZE, $
                               saveFile=saveFile,SAVESTR=saveStr, $
                               noPlots=noPlots,noMaxPlots=noMaxPlots, $
@@ -217,7 +217,9 @@ PRO superpose_storms_nevents,stormTimeArray_utc, $
                              USE_SYMH=use_SYMH,USE_AE=use_AE,DST=dst, $
                              OMNI_QUANTITY=omni_quantity,LOG_OMNI_QUANTITY=log_omni_quantity, $
                              GEOMAG_PLOT_I_LIST=geomag_plot_i_list,GEOMAG_DAT_LIST=geomag_dat_list,GEOMAG_TIME_LIST=geomag_time_list, $
-                             GEOMAG_MIN=geomag_min,GEOMAG_MAX=geomag_max,DO_DST=do_Dst,YRANGE=yRange,/SET_YRANGE
+                             GEOMAG_MIN=geomag_min,GEOMAG_MAX=geomag_max,DO_DST=do_Dst, $
+                             YRANGE=yRange,/SET_YRANGE,USE_DATA_MINMAX=use_data_minMax, $
+                             DATATITLE=geomagTitle
 
   ;; ;Get nearest events in Chaston DB
   cdb_storm_t=MAKE_ARRAY(nStorms,2,/DOUBLE)
@@ -267,15 +269,16 @@ PRO superpose_storms_nevents,stormTimeArray_utc, $
                             tStamps(-1), $
                             DIMENSIONS=[1200,800])
         xTitle=defXTitle
-        IF use_SYMH THEN BEGIN
-           yTitle= 'SYM-H (nT)' 
-        ENDIF ELSE BEGIN
-           IF use_AE THEN BEGIN
-              yTitle = 'AE (nT)' 
-           ENDIF ELSE BEGIN
-              IF KEYWORD_SET(omni_quantity) THEN yTitle = omni_quantity ELSE yTitle = 'DST (nT)'
-           ENDELSE
-        ENDELSE
+        yTitle = geomagTitle
+        ;; IF use_SYMH THEN BEGIN
+        ;;    yTitle= 'SYM-H (nT)' 
+        ;; ENDIF ELSE BEGIN
+        ;;    IF use_AE THEN BEGIN
+        ;;       yTitle = 'AE (nT)' 
+        ;;    ENDIF ELSE BEGIN
+        ;;       IF KEYWORD_SET(omni_quantity) THEN yTitle = omni_quantity ELSE yTitle = 'DST (nT)'
+        ;;    ENDELSE
+        ;; ENDELSE
         
         xRange=[-tBeforeStorm,tAfterStorm]
         ;; yRange=[geomag_min,geomag_max]
@@ -286,7 +289,7 @@ PRO superpose_storms_nevents,stormTimeArray_utc, $
         FOR i=0,nStorms-1 DO BEGIN
            IF N_ELEMENTS(geomag_time_list(i)) GT 1 AND ~noPlots THEN BEGIN
               plot=plot((geomag_time_list(i)-centerTime(i))/3600.,geomag_dat_list(i), $
-                        NAME=yTitle, $
+                        NAME=omni_quantity, $
                         AXIS_STYLE=1, $
                         MARGIN=plotMargin, $
                         ;; XRANGE=[0,7000./60.], $
