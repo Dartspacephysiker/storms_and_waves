@@ -57,6 +57,7 @@ PRO superpose_storms_nevents,stormTimeArray_utc, $
                              REMOVE_DUPES=remove_dupes, HOURS_AFT_FOR_NO_DUPES=hours_aft_for_no_dupes, $
                              STORMTYPE=stormType, $
                              USE_SYMH=use_symh,USE_AE=use_AE, $
+                             OMNI_QUANTITY=omni_quantity,LOG_OMNI_QUANTITY=log_omni_quantity, $
                              NEVENTHISTS=nEventHists,NEVBINSIZE=nEvBinSize, NEVRANGE=nEvRange, $
                              RETURNED_NEV_TBINS_and_HIST=returned_nEv_tbins_and_Hist, BKGRND_HIST=bkgrnd_hist, $
                              NEG_AND_POS_SEPAR=neg_and_pos_separ, POS_LAYOUT=pos_layout, NEG_LAYOUT=neg_layout, $
@@ -88,6 +89,7 @@ PRO superpose_storms_nevents,stormTimeArray_utc, $
                               MAXIND=maxInd,avg_type_maxInd=avg_type_maxInd,log_DBQuantity=log_DBQuantity, $
                               neg_and_pos_separ=neg_and_pos_separ,pos_layout=pos_layout,neg_layout=neg_layout, $
                               use_SYMH=use_SYMH,USE_AE=use_AE, $
+                              OMNI_QUANTITY=omni_quantity,LOG_OMNI_QUANTITY=log_omni_quantity, $
                               nEvBinsize=nEvBinsize,min_NEVBINSIZE=min_NEVBINSIZE, $
                               saveFile=saveFile,SAVESTR=saveStr, $
                               noPlots=noPlots,noMaxPlots=noMaxPlots, $
@@ -127,7 +129,15 @@ PRO superpose_storms_nevents,stormTimeArray_utc, $
   restore,dataDir+swDBDir+swDBFile
   restore,dataDir+stormDir+stormFile
 
-  IF ~use_SYMH AND ~use_AE THEN restore,dataDir+DST_AEDir+DST_AEFile
+  IF ~use_SYMH AND ~use_AE AND ~omni_Quantity THEN BEGIN
+     restore,dataDir+DST_AEDir+DST_AEFile 
+     do_DST = 1 
+  ENDIF ELSE BEGIN
+     IF use_SYMH THEN omni_quantity = 'sym_h'
+     IF use_AE THEN omni_quantity = 'ae_index'
+     do_DST = 0                 ;Use DST for plots, not SYM-H
+     PRINT,'OMNI Quantity: ' + omni_quantity
+  ENDELSE
 
   restore,dataDir+DBDir+DBFile
   restore,dataDir+DBDir+DB_tFile
@@ -203,10 +213,11 @@ PRO superpose_storms_nevents,stormTimeArray_utc, $
   ;**************************************************
   ;generate geomag and stuff
 
-  generate_geomag_quantities,datStartStop=datStartStop,NSTORMS=nStorms, $
-                             use_SYMH=use_SYMH,USE_AE=use_AE,DST=dst,SW_DATA=sw_data, $
+  GENERATE_GEOMAG_QUANTITIES,DATSTARTSTOP=datStartStop,NSTORMS=nStorms,SW_DATA=sw_data, $
+                             USE_SYMH=use_SYMH,USE_AE=use_AE,DST=dst, $
+                             OMNI_QUANTITY=omni_quantity,LOG_OMNI_QUANTITY=log_omni_quantity, $
                              GEOMAG_PLOT_I_LIST=geomag_plot_i_list,GEOMAG_DAT_LIST=geomag_dat_list,GEOMAG_TIME_LIST=geomag_time_list, $
-                             GEOMAG_MIN=geomag_min,GEOMAG_MAX=geomag_max
+                             GEOMAG_MIN=geomag_min,GEOMAG_MAX=geomag_max,DO_DST=do_Dst,YRANGE=yRange,/SET_YRANGE
 
   ;; ;Get nearest events in Chaston DB
   cdb_storm_t=MAKE_ARRAY(nStorms,2,/DOUBLE)
@@ -262,14 +273,15 @@ PRO superpose_storms_nevents,stormTimeArray_utc, $
            IF use_AE THEN BEGIN
               yTitle = 'AE (nT)' 
            ENDIF ELSE BEGIN
-              yTitle = 'DST (nT)'
+              IF KEYWORD_SET(omni_quantity) THEN yTitle = omni_quantity ELSE yTitle = 'DST (nT)'
            ENDELSE
         ENDELSE
         
         xRange=[-tBeforeStorm,tAfterStorm]
         ;; yRange=[geomag_min,geomag_max]
         ;; yRange=[-300,100]
-        yRange=(~use_SYMH AND ~ use_AE) ? [-300,100] : !NULL
+        ;; yRange=(~use_SYMH AND ~ use_AE) ? [-300,100] : !NULL
+        ;; yRange = do_DST ? [-150,50] : [geomag_min,geomag_max]
         
         FOR i=0,nStorms-1 DO BEGIN
            IF N_ELEMENTS(geomag_time_list(i)) GT 1 AND ~noPlots THEN BEGIN
@@ -710,9 +722,6 @@ PRO superpose_storms_nevents,stormTimeArray_utc, $
      xTitle=defXTitle
      ;; yTitle='Maximus:
      
-     xRange=[-tBeforeStorm,tAfterStorm]
-     yRange=[geomag_min,geomag_max]
-
      FOR i=0,nStorms-1 DO BEGIN
         
         IF neg_and_pos_separ THEN BEGIN

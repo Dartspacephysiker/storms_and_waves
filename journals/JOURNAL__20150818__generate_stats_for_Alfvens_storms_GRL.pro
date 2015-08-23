@@ -16,7 +16,8 @@ PRO JOURNAL__20150818__generate_stats_for_Alfvens_storms_GRL
   DBFile='dartdb/saves/Dartdb_20150814--500-16361_inc_lower_lats--burst_1000-16361--maximus.sav'
   DB_tFile='dartdb/saves/Dartdb_20150814--500-16361_inc_lower_lats--burst_1000-16361--cdbtime.sav'
 
-  stormFile='saves_output_etc/superposed_large_storm_output_w_n_Alfven_events--20150817.dat'
+  ;; stormFile='saves_output_etc/superposed_large_storm_output_w_n_Alfven_events--20150817.dat'
+  stormFile='saves_output_etc/superposed_large_storm_output_w_n_Alfven_events--20150822.dat'
 
   print,'Restoring ' + DBFile + '...'
   restore,dataDir+DBFile
