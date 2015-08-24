@@ -2,12 +2,13 @@
 ;I forgot to get updated inds for stormtime when making stormtime histos for Figure 4. Gotta do it here.
 
 ;2015/08/21 It occurred to me that while I remove one storm when running JOURNAL__20150815__redo_SEA_with_NOAA_and_random_bkgrnd__Alfven_storm_GRL.pro 
-; because the tBefore and tAfter are 60, here tBefore and tAfter are 0 and 20, respectively, so I don't discard that storm. I
+; because the tBefore and tAfter are 60, here, the rather, tBefore and tAfter are respectively 0 and 20, and I consequently don't discard that storm. I
 ;need to fix that, so I'm adding a keyword HOURS_AFT_FOR_NO_DUPES to superpose_storms_nevents.pro.
 
 PRO JOURNAL__20150817__GET_HOURS_0BEFORE_TO_20AFTER_STORMTIME
 
   ;;some important vars
+  date='20150824'
   rmDupes = 1
   timeBeforeStorm = 0.0D
   timeAfterStorm = 20.0D
@@ -20,7 +21,8 @@ PRO JOURNAL__20150817__GET_HOURS_0BEFORE_TO_20AFTER_STORMTIME
   ;;the file_outs
   outDir='/SPENCEdata/Research/Cusp/'
   ;; OUTINDSFILE = 'storms_Alfvens/saves_output_etc/superposed_large_storm_output_w_n_Alfven_events--quadrant1--0_to_20_hours--20150817.dat'
-  OUTINDSFILE = 'storms_Alfvens/saves_output_etc/superposed_large_storm_output_w_n_Alfven_events--quadrant1--0_to_20_hours--20150821.dat'
+  ;; OUTINDSFILE = 'storms_Alfvens/saves_output_etc/superposed_large_storm_output_w_n_Alfven_events--quadrant1--0_to_20_hours--20150821.dat'
+  OUTINDSFILE = 'storms_Alfvens/saves_output_etc/superposed_large_storm_output_w_n_Alfven_events--quadrant1--0_to_20_hours--'+date+'.dat'
 
   ;;the file_ins
   dbFile = 'Dartdb_20150814--500-16361_inc_lower_lats--burst_1000-16361--maximus.sav'

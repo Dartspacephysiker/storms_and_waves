@@ -8,7 +8,7 @@ PRO SET_STORMS_NEVENTS_DEFAULTS,tBeforeStorm=tBeforeStorm,tAfterStorm=tAfterStor
                                 MAXIND=maxInd,avg_type_maxInd=avg_type_maxInd,log_DBQuantity=log_DBQuantity, $
                                 neg_and_pos_separ=neg_and_pos_separ,pos_layout=pos_layout,neg_layout=neg_layout, $
                                 use_SYMH=use_SYMH,USE_AE=use_AE, $
-                                OMNI_QUANTITY=omni_quantity,LOG_OMNI_QUANTITY=log_omni_quantity, $
+                                OMNI_QUANTITY=omni_quantity,LOG_OMNI_QUANTITY=log_omni_quantity,USE_DATA_MINMAX=use_data_minmax, $
                                 nEvBinsize=nEvBinsize,min_NEVBINSIZE=min_NEVBINSIZE, $
                                 saveFile=saveFile,SAVESTR=saveStr, $
                                 PLOTTITLE=plotTitle,SAVEPLOTNAME=savePlotName, $
@@ -40,6 +40,7 @@ PRO SET_STORMS_NEVENTS_DEFAULTS,tBeforeStorm=tBeforeStorm,tAfterStorm=tAfterStor
 
   defOmni_Quantity     = 0
   defLog_omni_quantity = 0
+  defUse_data_minmax   = 0
 
   defRestrict_altRange = 0
   defRestrict_charERange = 0
@@ -97,8 +98,10 @@ PRO SET_STORMS_NEVENTS_DEFAULTS,tBeforeStorm=tBeforeStorm,tAfterStorm=tAfterStor
 
   IF N_ELEMENTS(use_SYMH) EQ 0 THEN use_SYMH = defUse_SYMH
   IF N_ELEMENTS(use_AE)   EQ 0 THEN use_AE = defUse_AE
+
   IF N_ELEMENTS(omni_quantity) EQ 0 THEN omni_quantity = defOmni_quantity
   IF N_ELEMENTS(log_omni_quantity) EQ 0 THEN log_omni_quantity = defOmni_quantity
+  IF N_ELEMENTS(use_data_minmax) EQ 0 THEN use_data_minmax = defUse_data_minmax
 
   IF N_ELEMENTS(nEvBinsize) EQ 0 THEN nEvBinsize=defnEvBinsize
   ;; nEvBinsize = nEvBinsize/60.0D

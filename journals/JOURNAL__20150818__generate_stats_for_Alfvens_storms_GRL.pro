@@ -10,14 +10,16 @@
 ; avg number of events per orbit
 ;17.22
 
-PRO JOURNAL__20150818__generate_stats_for_Alfvens_storms_GRL
+PRO JOURNAL__20150818__GENERATE_STATS_FOR_ALFVENS_STORMS_GRL
 
   dataDir='/SPENCEdata/Research/Cusp/database/'
   DBFile='dartdb/saves/Dartdb_20150814--500-16361_inc_lower_lats--burst_1000-16361--maximus.sav'
   DB_tFile='dartdb/saves/Dartdb_20150814--500-16361_inc_lower_lats--burst_1000-16361--cdbtime.sav'
 
   ;; stormFile='saves_output_etc/superposed_large_storm_output_w_n_Alfven_events--20150817.dat'
-  stormFile='saves_output_etc/superposed_large_storm_output_w_n_Alfven_events--20150822.dat'
+  ;; stormFile='saves_output_etc/superposed_large_storm_output_w_n_Alfven_events--20150822.dat'
+
+  stormFile='saves_output_etc/superposed_large_storm_output_w_n_Alfven_events--quadrant1--0_to_20_hours--20150824.dat'
 
   print,'Restoring ' + DBFile + '...'
   restore,dataDir+DBFile
