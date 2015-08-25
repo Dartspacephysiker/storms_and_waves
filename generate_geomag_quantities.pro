@@ -23,7 +23,7 @@ PRO GENERATE_GEOMAG_QUANTITIES,DATSTARTSTOP=datStartStop,NSTORMS=nStorms, $
   defUse_data_minMax = 0
 
   defDo_Dst = 0
-  defDstRange = [-150,50] 
+  defDstRange = [-300,100] 
 
   IF N_ELEMENTS(use_data_minMax) EQ 0 THEN use_data_minMax = defUse_data_minMax
 

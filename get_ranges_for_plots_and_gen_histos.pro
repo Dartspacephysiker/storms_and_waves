@@ -144,7 +144,8 @@ PRO GET_RANGES_FOR_PLOTS_AND_GEN_HISTOS,MAXIMUS=maximus,CDBTIME=cdbTime,MAXIND=m
            
            IF KEYWORD_SET(nEventHists) OR (avg_type_maxInd GT 0) THEN BEGIN ;Histos of Alfvén events relative to storm epoch
               
-              IF i EQ 0 THEN BEGIN
+              ;; IF i EQ 0 THEN BEGIN
+              IF N_ELEMENTS(all_nEvHist) EQ 0 THEN BEGIN
                  all_nEvHist=histogram(cdb_t,LOCATIONS=tBin, $
                                    ;;MAX=tAfterStorm+min_NEVBINSIZE,MIN=-tBeforeStorm 
                                    MAX=tAfterStorm,MIN=-tBeforeStorm, $

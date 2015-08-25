@@ -13,7 +13,8 @@ PRO SET_STORMS_NEVENTS_DEFAULTS,tBeforeStorm=tBeforeStorm,tAfterStorm=tAfterStor
                                 saveFile=saveFile,SAVESTR=saveStr, $
                                 PLOTTITLE=plotTitle,SAVEPLOTNAME=savePlotName, $
                                 noPlots=noPlots,noMaxPlots=noMaxPlots, $
-                                DO_SCATTERPLOTS=do_scatterPlots,SCPLOT_COLORLIST=scPlot_colorList,SCATTEROUTPREFIX=scatterOutPrefix
+                                DO_SCATTERPLOTS=do_scatterPlots,SCPLOT_COLORLIST=scPlot_colorList,SCATTEROUTPREFIX=scatterOutPrefix, $
+                                RANDOMTIMES=randomTimes
   
 
   defTBeforeStorm      = 60.0D                                                                       ;in hours
@@ -64,10 +65,14 @@ PRO SET_STORMS_NEVENTS_DEFAULTS,tBeforeStorm=tBeforeStorm,tAfterStorm=tAfterStor
   defScatterOutPrefix = 'stackplots_storms_nevents--scatterplot'
   ;; defScPlot_colorList = ''
 
+  defRandomTimes = 0
+
   ;;set defaults
   IF N_ELEMENTS(tBeforeStorm) EQ 0 THEN tBeforeStorm = defTBeforeStorm
   IF N_ELEMENTS(tAfterStorm) EQ 0 THEN tAfterStorm = defTAfterStorm
 
+  IF N_ELEMENTS(stormType) EQ 0 THEN stormType=defStormType
+     
   IF N_ELEMENTS(swDBDir) EQ 0 THEN swDBDir=defswDBDir
   IF N_ELEMENTS(swDBFile) EQ 0 THEN swDBFile=defswDBFile
 
@@ -115,9 +120,11 @@ PRO SET_STORMS_NEVENTS_DEFAULTS,tBeforeStorm=tBeforeStorm,tAfterStorm=tAfterStor
   IF N_ELEMENTS(do_scatterPlots) EQ 0 THEN do_scatterPlots = defdo_scatterPlots
   ;; IF N_ELEMENTS(scPlot_colorList) EQ 0 THEN scPlot_colorList = defscPlot_colorList
 
-  IF KEYWORD_SET(savePlotName) THEN BEGIN
-     IF SIZE(savePlotName,/TYPE) NE 7 THEN scatterOutPrefix=defScatterOutPrefix
+  IF KEYWORD_SET(do_scatterPlots) THEN BEGIN
+     IF SIZE(scatterOutPrefix,/TYPE) NE 7 THEN scatterOutPrefix=defScatterOutPrefix
   ENDIF
+
+  IF N_ELEMENTS(randomTimes) EQ 0 THEN randomTimes = defRandomTimes
 
   IF saveFile THEN BEGIN 
      saveStr='save' 

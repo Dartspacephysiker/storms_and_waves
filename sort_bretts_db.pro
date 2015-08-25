@@ -1,7 +1,8 @@
-PRO SORT_BRETTS_DB,stormStruct
+PRO SORT_BRETTS_DB,stormStruct,jd
 
   ;; jd_st = JULDAY(stormstruct.month, stormstruct.day, stormstruct.year, stormstruct.hour, stormstruct.minute)
   si=sort(stormstruct.julday)
+  jd=stormstruct.julday(si)
 
   stormStruct={IS_LARGESTORM:stormstruct.is_largestorm(si), $
                STORM:stormstruct.storm(si), $

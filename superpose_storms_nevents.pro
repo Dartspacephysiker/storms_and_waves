@@ -59,12 +59,14 @@ PRO superpose_storms_nevents,stormTimeArray_utc, $
                              USE_SYMH=use_symh,USE_AE=use_AE, $
                              OMNI_QUANTITY=omni_quantity,LOG_OMNI_QUANTITY=log_omni_quantity, $
                              NEVENTHISTS=nEventHists,NEVBINSIZE=nEvBinSize, NEVRANGE=nEvRange, $
-                             RETURNED_NEV_TBINS_and_HIST=returned_nEv_tbins_and_Hist, BKGRND_HIST=bkgrnd_hist, $
+                             RETURNED_NEV_TBINS_and_HIST=returned_nEv_tbins_and_Hist, $
                              NEG_AND_POS_SEPAR=neg_and_pos_separ, POS_LAYOUT=pos_layout, NEG_LAYOUT=neg_layout, $
                              MAXIND=maxInd, AVG_TYPE_MAXIND=avg_type_maxInd, $
                              RESTRICT_ALTRANGE=restrict_altRange,RESTRICT_CHARERANGE=restrict_charERange, $
                              LOG_DBQUANTITY=log_DBquantity, $
                              YTITLE_MAXIND=yTitle_maxInd, YRANGE_MAXIND=yRange_maxInd, $
+                             BKGRND_HIST=bkgrnd_hist, BKGRND_MAXIND=bkgrnd_maxInd,TBINS=tBins, $
+                             OUT_BKGRND_HIST=out_bkgrnd_hist,OUT_BKGRND_MAXIND=out_bkgrnd_maxind,OUT_TBINS=out_tBins, $
                              DBFILE=dbFile,DB_TFILE=db_tFile, $
                              NO_SUPERPOSE=no_superpose, $
                              NOPLOTS=noPlots, NOMAXPLOTS=noMaxPlots, $
@@ -72,7 +74,8 @@ PRO superpose_storms_nevents,stormTimeArray_utc, $
                              SAVEFILE=saveFile,OVERPLOT_HIST=overplot_hist, $
                              PLOTTITLE=plotTitle,SAVEPLOTNAME=savePlotName, $
                              SAVEMAXPLOTNAME=saveMaxPlotName, $
-                             DO_SCATTERPLOTS=do_scatterPlots,SCPLOT_COLORLIST=scPlot_colorList,SCATTEROUTPREFIX=scatterOutPrefix
+                             DO_SCATTERPLOTS=do_scatterPlots,SCPLOT_COLORLIST=scPlot_colorList,SCATTEROUTPREFIX=scatterOutPrefix, $
+                             RANDOMTIMES=randomTimes
   
   dataDir='/SPENCEdata/Research/Cusp/database/'
 
@@ -93,11 +96,12 @@ PRO superpose_storms_nevents,stormTimeArray_utc, $
                               nEvBinsize=nEvBinsize,min_NEVBINSIZE=min_NEVBINSIZE, $
                               saveFile=saveFile,SAVESTR=saveStr, $
                               noPlots=noPlots,noMaxPlots=noMaxPlots, $
-                              DO_SCATTERPLOTS=do_scatterPlots,SCPLOT_COLORLIST=scPlot_colorList,SCATTEROUTPREFIX=scatterOutPrefix
-
-  plotMargin=[0.1, 0.25, 0.1, 0.15]
+                              DO_SCATTERPLOTS=do_scatterPlots,SCPLOT_COLORLIST=scPlot_colorList,SCATTEROUTPREFIX=scatterOutPrefix, $
+                              RANDOMTIMES=randomTimes
 
   plotMargin=[0.13, 0.20, 0.13, 0.15]
+  plotMargin_max=[0.13, 0.1, 0.07, 0.1]
+
   defSymTransp         = 97
   defLineTransp        = 75
   defLineThick         = 2.5
@@ -155,15 +159,23 @@ PRO superpose_storms_nevents,stormTimeArray_utc, $
 
   ENDIF ELSE BEGIN              ;Looks like we're relying on Brett
 
-     nStorms=N_ELEMENTS(stormStruct.time)
-  
-     GET_STORMTIME_UTC,nStorms=nStorms,STORMINDS=stormInds,STORMFILE=stormFile, $
-                       MAXIMUS=maximus,STORMSTRUCTURE=stormStruct,USE_DARTDB_START_ENDDATE=use_dartDB_start_endDate, $ ;DBs
-                       STORMTYPE=stormType,STARTDATE=startDate,STOPDATE=stopDate,SSC_TIMES_UTC=ssc_times_utc, $ ;extra info
-                       CENTERTIME=centerTime, TSTAMPS=tStamps, STORMSTRING=stormString,STORMSTRUCT_INDS=stormStruct_inds ; outs
-
-     IF saveFile THEN saveStr+=',startDate,stopDate,stormType,stormStruct_inds'
-
+     IF randomTimes GT 1 THEN BEGIN
+        nStorms=randomTimes
+        GET_STORMTIME_UTC,nStorms=nStorms,STORMINDS=stormInds,STORMFILE=stormFile, $
+                          MAXIMUS=maximus,STORMSTRUCTURE=stormStruct,USE_DARTDB_START_ENDDATE=use_dartDB_start_endDate, $      ;DBs
+                          STORMTYPE=stormType,STARTDATE=startDate,STOPDATE=stopDate,SSC_TIMES_UTC=ssc_times_utc, $             ;extra info
+                          CENTERTIME=centerTime, TSTAMPS=tStamps, STORMSTRING=stormString,STORMSTRUCT_INDS=stormStruct_inds, $    ; outs
+                          RANDOMTIMES=randomTimes
+     ENDIF ELSE BEGIN
+        nStorms=N_ELEMENTS(stormStruct.time)
+        
+        GET_STORMTIME_UTC,nStorms=nStorms,STORMINDS=stormInds,STORMFILE=stormFile, $
+                          MAXIMUS=maximus,STORMSTRUCTURE=stormStruct,USE_DARTDB_START_ENDDATE=use_dartDB_start_endDate, $      ;DBs
+                          STORMTYPE=stormType,STARTDATE=startDate,STOPDATE=stopDate,SSC_TIMES_UTC=ssc_times_utc, $             ;extra info
+                          CENTERTIME=centerTime, TSTAMPS=tStamps, STORMSTRING=stormString,STORMSTRUCT_INDS=stormStruct_inds    ; outs
+        
+        IF saveFile THEN saveStr+=',startDate,stopDate,stormType,stormStruct_inds'
+     ENDELSE
   ENDELSE
 
   IF KEYWORD_SET(remove_dupes) THEN BEGIN
@@ -604,7 +616,7 @@ PRO superpose_storms_nevents,stormTimeArray_utc, $
                                ;; /STAIRSTEP, $
                                /HISTOGRAM, $
                                YRANGE=KEYWORD_SET(nEvRange) ? nEvRange : [0,7500], $
-                               NAME='Background histogram (average)', $
+                               NAME='Background histogram', $
                                XRANGE=xRange, $
                                AXIS_STYLE=0, $
                                COLOR='blue', $
@@ -614,7 +626,7 @@ PRO superpose_storms_nevents,stormTimeArray_utc, $
               
               leg = LEGEND(TARGET=[plot_nEv,plot_bkgrnd], $
                            POSITION=[xRange[1]-10.,((KEYWORD_SET(nEvRange) ? nEvRange : [0,7500])[1])], /DATA, $
-                           /AUTO_TEXT_COLOR,CLIP=0)
+                           /AUTO_TEXT_COLOR)
            ENDIF     
            
            ;; xaxis = AXIS('Y', LOCATION='right', TARGET=plot_nEv, $
@@ -826,10 +838,12 @@ PRO superpose_storms_nevents,stormTimeArray_utc, $
                         YLOG=(log_DBQuantity) ? 1 : 0, $
                         LINESTYLE=' ', $
                         SYMBOL='+', $
+                        SYM_COLOR='r', $
                         XTICKFONT_SIZE=max_xtickfont_size, $
                         XTICKFONT_STYLE=max_xtickfont_style, $
                         YTICKFONT_SIZE=max_ytickfont_size, $
                         YTICKFONT_STYLE=max_ytickfont_style, $
+                        MARGIN=KEYWORD_SET(bkgrnd_maxInd) ? plotMargin_max : !NULL, $
                         /CURRENT, $
                         OVERPLOT=(i EQ 0) ? 0: 1, $
                         SYM_TRANSPARENCY=defSymTransp)
@@ -872,6 +886,9 @@ PRO superpose_storms_nevents,stormTimeArray_utc, $
               ENDFOR
 
               safe_i=WHERE(FINITE(Avgs_pos) AND Avgs_pos NE 0.)
+
+              out_bkgrnd_maxInd = Avgs_pos(safe_i)
+              out_tBins=tBin(safe_i)
 
               IF ~(noPlots OR noMaxPlots) THEN BEGIN
                  plot_pos=plot(tBin(safe_i)+0.5*min_NEVBINSIZE, $
@@ -916,7 +933,9 @@ PRO superpose_storms_nevents,stormTimeArray_utc, $
               ENDFOR
 
               safe_i=WHERE(FINITE(Avgs_neg) AND Avgs_neg NE 0.)
-
+              ;; IF N_ELEMENTS(out_bkgrnd_maxInd) GT 0 THEN BEGIN
+              ;;    out_bkgrnd_maxInd = [out_bkgrnd_maxInd,Avgs_neg]
+              ;;    tBin
               IF ~(noPlots OR noMaxPlots) THEN BEGIN
                  plot_neg=plot(tBin(safe_i)+0.5*min_NEVBINSIZE, $
                                (log_DBQuantity) ? 10^Avgs_neg(safe_i) : Avgs_neg(safe_i), $
@@ -962,10 +981,14 @@ PRO superpose_storms_nevents,stormTimeArray_utc, $
 
            safe_i=(log_DBQuantity) ? WHERE(FINITE(Avgs) AND Avgs GT 0.) : WHERE(FINITE(Avgs))
 
+           out_bkgrnd_maxInd = Avgs(safe_i)
+           out_tBins=tBin(safe_i)
+
            IF ~(noPlots OR noMaxPlots) THEN BEGIN
               plot=plot(tBin(safe_i)+0.5*min_NEVBINSIZE, $
                         (log_DBQuantity) ? 10^Avgs(safe_i) : Avgs(safe_i), $
                         ;; Avgs(safe_i), $
+                        NAME='Stormtime Alfvén activity', $
                         TITLE=plotTitle, $
                         XTITLE=defXTitle, $
                         YTITLE=(KEYWORD_SET(yTitle_maxInd) ? $
@@ -974,20 +997,104 @@ PRO superpose_storms_nevents,stormTimeArray_utc, $
                         XRANGE=xRange, $
                         YRANGE=(KEYWORD_SET(yRange_maxInd)) ? $
                         yRange_maxInd : [minDat,maxDat], $
+                        YLOG=(log_DBQuantity) ? 1 : 0, $
+                        AXIS_STYLE=2, $
                         LINESTYLE='--', $
+                        COLOR='MAROON', $
+                        THICK=2.0, $
                         SYMBOL='d', $
+                        SYM_SIZE=2.5, $
+                        SYM_COLOR='MAROON', $ ;, $
                         XTICKFONT_SIZE=max_xtickfont_size, $
                         XTICKFONT_STYLE=max_xtickfont_style, $
                         YTICKFONT_SIZE=max_ytickfont_size, $
                         YTICKFONT_STYLE=max_ytickfont_style, $
                         /CURRENT,/OVERPLOT, $
-                        SYM_SIZE=1.5, $
-                        SYM_COLOR='g') ;, $
+                        MARGIN=KEYWORD_SET(bkgrnd_maxInd) ? plotMargin_max : !NULL)
            ENDIF ;end no plots
 
         ENDELSE
      ENDIF
 
+     IF KEYWORD_SET(bkgrnd_maxInd) AND ~noPlots THEN BEGIN
+
+        safe_i=(log_DBQuantity) ? WHERE(FINITE(bkgrnd_maxInd) AND bkgrnd_maxInd GT 0.) : WHERE(FINITE(bkGrnd_maxInd))
+
+        y_offset = (log_DBQuantity) ? 1. : TOTAL(bkgrnd_maxind(safe_i))*0.1
+        ;; y_offset = 0.
+        IF N_ELEMENTS(tBins) EQ 0 THEN STOP
+        plot_bkgrnd_max=plot(tBins(safe_i)+0.5*min_NEVBINSIZE, $
+                             (log_DBQuantity) ? 10^(bkgrnd_maxInd(safe_i)-y_offset) : bkgrnd_maxInd(safe_i)-y_offset, $
+                             XRANGE=xRange, $
+                             YRANGE=(KEYWORD_SET(yRange_maxInd)) ? $
+                             yRange_maxInd : [minDat,maxDat], $
+                             YLOG=(log_DBQuantity) ? 1 : 0, $
+                             NAME='Background Alfvén activity', $
+                             AXIS_STYLE=0, $
+                             LINESTYLE='--', $
+                             COLOR='blue', $
+                             THICK=2.0, $
+                             SYMBOL='d', $
+                             SYM_SIZE=2.5, $
+                             MARGIN=plotMargin_max, $
+                             /CURRENT)
+        
+        legPosY=(KEYWORD_SET(yRange_maxInd) ? yRange_maxInd : [minDat,maxDat])
+        IF (log_DBQuantity) THEN BEGIN
+           ;; legPosY=10.^MEAN(ALOG10(legPosY))
+           legPosY=10.^(ALOG10(legPosY[1])-ALOG10(5))
+        ENDIF ELSE legPosY=MEAN(legPosY)
+
+        leg = LEGEND(TARGET=[plot,plot_bkgrnd_max], $
+                     POSITION=[-15.,legPosY], /DATA, $
+                     /AUTO_TEXT_COLOR)
+
+        
+        guide_linestyle='__'
+        plot_bkgrnd_8=plot(tBins(safe_i)+0.5*min_NEVBINSIZE, $
+                             MAKE_ARRAY(N_ELEMENTS(safe_i),VALUE=10.^8), $
+                             XRANGE=xRange, $
+                             YRANGE=(KEYWORD_SET(yRange_maxInd)) ? $
+                             yRange_maxInd : [minDat,maxDat], $
+                             YLOG=(log_DBQuantity) ? 1 : 0, $
+                             AXIS_STYLE=0, $
+                             LINESTYLE=guide_linestyle, $
+                             ;; SYMBOL='', $
+                             ;; SYM_SIZE=1.5, $
+                             COLOR='black', $
+                             THICK=1.5, $
+                             MARGIN=plotMargin_max, $
+                             /CURRENT)
+        plot_bkgrnd_7=plot(tBins(safe_i)+0.5*min_NEVBINSIZE, $
+                             MAKE_ARRAY(N_ELEMENTS(safe_i),VALUE=10.^7), $
+                             XRANGE=xRange, $
+                             YRANGE=(KEYWORD_SET(yRange_maxInd)) ? $
+                             yRange_maxInd : [minDat,maxDat], $
+                             YLOG=(log_DBQuantity) ? 1 : 0, $
+                             AXIS_STYLE=0, $
+                             LINESTYLE=guide_linestyle, $
+                             ;; SYMBOL='', $
+                             ;; SYM_SIZE=1.5, $
+                             COLOR='black', $
+                             THICK=1.5, $
+                             MARGIN=plotMargin_max, $
+                             /CURRENT)
+        plot_bkgrnd_6=plot(tBins(safe_i)+0.5*min_NEVBINSIZE, $
+                             MAKE_ARRAY(N_ELEMENTS(safe_i),VALUE=10.^6), $
+                             XRANGE=xRange, $
+                             YRANGE=(KEYWORD_SET(yRange_maxInd)) ? $
+                             yRange_maxInd : [minDat,maxDat], $
+                             YLOG=(log_DBQuantity) ? 1 : 0, $
+                             AXIS_STYLE=0, $
+                             LINESTYLE=guide_linestyle, $
+                             ;; SYMBOL='', $
+                             ;; SYM_SIZE=1.5, $
+                             COLOR='black', $
+                             THICK=1.5, $
+                             MARGIN=plotMargin_max, $
+                             /CURRENT)
+     ENDIF
+     
      IF KEYWORD_SET(saveMaxPlotName) AND ~(noPlots OR noMaxPlots) THEN BEGIN
         PRINT,"Saving maxplot to file: " + saveMaxPlotName
         maximuswindow.save,savemaxplotname,RESOLUTION=defRes

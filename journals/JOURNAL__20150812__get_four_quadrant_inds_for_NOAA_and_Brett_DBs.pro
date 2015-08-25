@@ -78,6 +78,9 @@ PRO JOURNAL__20150812__get_four_quadrant_inds_for_NOAA_and_Brett_DBS
   PRINT,time_to_str(utc_st(st_ii_alom))
   PRINT,""
 
+  PRINT,"BRETT: " + STRCOMPRESS(N_ELEMENTS(cgsetintersection(WHERE(stormStruct.is_largeStorm(ist_7)),[st_ii_alom[0]:st_ii_alom[1]]))) + " large storms in this range"
+  PRINT,"BRETT: " + STRCOMPRESS(N_ELEMENTS(cgsetintersection(WHERE(~stormStruct.is_largeStorm(ist_7)),[st_ii_alom[0]:st_ii_alom[1]]))) + " small storms in this range"
+
   utc_1 = utc_1(ssc1_ii_alom[0]:ssc1_ii_alom[1])
   utc_2 = utc_2(ssc2_ii_alom[0]:ssc2_ii_alom[1])
   utc_st = utc_st(st_ii_alom[0]:st_ii_alom[1])

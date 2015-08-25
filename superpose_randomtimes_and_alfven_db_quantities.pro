@@ -403,7 +403,7 @@ PRO superpose_randomtimes_and_alfven_db_quantities,NRANDTIME=nRandTime,STARTDATE
 
            IF KEYWORD_SET(nEventHists) THEN BEGIN                                                ;Histos of Alfvén events relative to randT epoch
               
-              IF i EQ 0 THEN BEGIN
+              IF N_ELEMENTS(nEvHist) EQ 0 THEN BEGIN
                  nEvHist=histogram(cdb_t,LOCATIONS=tBin, $
                                    MAX=tAfterRandTime,MIN=-tBeforeRandTime, $
                                    BINSIZE=min_NEVBINSIZE)
