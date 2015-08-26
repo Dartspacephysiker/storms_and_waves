@@ -45,6 +45,7 @@
 ; MODIFICATION HISTORY:   2015/06/20 Born on the flight from Boston to Akron, OH en route to DC
 ;                         2015/08/14 Adding STORMINDS keywords so we can hand-pick our storms, and PLOTTITLE
 ;                         2015/08/17 Added NOPLOTS, NOMAXPLOTS keywords, for crying out loud.
+;                         2015/08/25 Added the OUT*PLOT and OUT*WINDOW keywords so I can do rug plots and otherwise fiddle
 ;                           
 ;-
 
@@ -66,7 +67,6 @@ PRO superpose_storms_nevents,stormTimeArray_utc, $
                              LOG_DBQUANTITY=log_DBquantity, $
                              YTITLE_MAXIND=yTitle_maxInd, YRANGE_MAXIND=yRange_maxInd, $
                              BKGRND_HIST=bkgrnd_hist, BKGRND_MAXIND=bkgrnd_maxInd,TBINS=tBins, $
-                             OUT_BKGRND_HIST=out_bkgrnd_hist,OUT_BKGRND_MAXIND=out_bkgrnd_maxind,OUT_TBINS=out_tBins, $
                              DBFILE=dbFile,DB_TFILE=db_tFile, $
                              NO_SUPERPOSE=no_superpose, $
                              NOPLOTS=noPlots, NOMAXPLOTS=noMaxPlots, $
@@ -75,7 +75,10 @@ PRO superpose_storms_nevents,stormTimeArray_utc, $
                              PLOTTITLE=plotTitle,SAVEPLOTNAME=savePlotName, $
                              SAVEMAXPLOTNAME=saveMaxPlotName, $
                              DO_SCATTERPLOTS=do_scatterPlots,SCPLOT_COLORLIST=scPlot_colorList,SCATTEROUTPREFIX=scatterOutPrefix, $
-                             RANDOMTIMES=randomTimes
+                             RANDOMTIMES=randomTimes, $
+                             OUT_BKGRND_HIST=out_bkgrnd_hist,OUT_BKGRND_MAXIND=out_bkgrnd_maxind,OUT_TBINS=out_tBins, $
+                             OUT_MAXPLOT=out_maxPlot,OUT_GEOMAG_PLOT=out_geomag_plot
+  
   
   dataDir='/SPENCEdata/Research/Cusp/database/'
 
@@ -300,7 +303,7 @@ PRO superpose_storms_nevents,stormTimeArray_utc, $
         
         FOR i=0,nStorms-1 DO BEGIN
            IF N_ELEMENTS(geomag_time_list(i)) GT 1 AND ~noPlots THEN BEGIN
-              plot=plot((geomag_time_list(i)-centerTime(i))/3600.,geomag_dat_list(i), $
+              geomagPlot=plot((geomag_time_list(i)-centerTime(i))/3600.,geomag_dat_list(i), $
                         NAME=omni_quantity, $
                         AXIS_STYLE=1, $
                         MARGIN=plotMargin, $
@@ -322,7 +325,7 @@ PRO superpose_storms_nevents,stormTimeArray_utc, $
            ENDIF ELSE PRINT,'Losing storm #' + STRCOMPRESS(i,/REMOVE_ALL) + ' on the list! Only one elem...'
         ENDFOR
         
-        axes=plot.axes
+        axes=geomagPlot.axes
         ;; axes[0].MAJOR=(nMajorTicks EQ 4) ? nMajorTicks -1 : nMajorTicks
         axes[1].MINOR=nMinorTicks+1
         ;; ; Has user requested overlaying DST/SYM-H with the histogram?
@@ -825,7 +828,7 @@ PRO superpose_storms_nevents,stormTimeArray_utc, $
            
            IF plot_i(0) GT -1 AND (N_ELEMENTS(plot_i) GT 1) AND ~(noPlots OR noMaxPlots)  THEN BEGIN
 
-              plot=plot(cdb_t, $
+              maxPlot=plot(cdb_t, $
                         cdb_y, $
                         ;; (log_DBquantity) ? ALOG10(cdb_y) : cdb_y, $
                         XTITLE=defXTitle, $
@@ -848,6 +851,8 @@ PRO superpose_storms_nevents,stormTimeArray_utc, $
                         OVERPLOT=(i EQ 0) ? 0: 1, $
                         SYM_TRANSPARENCY=defSymTransp)
               
+              out_maxPlot = maxPlot
+
            ENDIF
            
         ENDELSE                 ;end ~neg_and_pos_separ
@@ -985,34 +990,35 @@ PRO superpose_storms_nevents,stormTimeArray_utc, $
            out_tBins=tBin(safe_i)
 
            IF ~(noPlots OR noMaxPlots) THEN BEGIN
-              plot=plot(tBin(safe_i)+0.5*min_NEVBINSIZE, $
-                        (log_DBQuantity) ? 10^Avgs(safe_i) : Avgs(safe_i), $
-                        ;; Avgs(safe_i), $
-                        NAME='Stormtime Alfvén activity', $
-                        TITLE=plotTitle, $
-                        XTITLE=defXTitle, $
-                        YTITLE=(KEYWORD_SET(yTitle_maxInd) ? $
-                                yTitle_maxInd : $
-                                mTags(maxInd)), $
-                        XRANGE=xRange, $
-                        YRANGE=(KEYWORD_SET(yRange_maxInd)) ? $
-                        yRange_maxInd : [minDat,maxDat], $
-                        YLOG=(log_DBQuantity) ? 1 : 0, $
-                        AXIS_STYLE=2, $
-                        LINESTYLE='--', $
-                        COLOR='MAROON', $
-                        THICK=2.0, $
-                        SYMBOL='d', $
-                        SYM_SIZE=2.5, $
-                        SYM_COLOR='MAROON', $ ;, $
-                        XTICKFONT_SIZE=max_xtickfont_size, $
-                        XTICKFONT_STYLE=max_xtickfont_style, $
-                        YTICKFONT_SIZE=max_ytickfont_size, $
-                        YTICKFONT_STYLE=max_ytickfont_style, $
-                        /CURRENT,/OVERPLOT, $
-                        MARGIN=KEYWORD_SET(bkgrnd_maxInd) ? plotMargin_max : !NULL)
-           ENDIF ;end no plots
+              avgPlot=plot(tBin(safe_i)+0.5*min_NEVBINSIZE, $
+                           (log_DBQuantity) ? 10^Avgs(safe_i) : Avgs(safe_i), $
+                           ;; Avgs(safe_i), $
+                           NAME='Stormtime Alfvén activity', $
+                           TITLE=plotTitle, $
+                           XTITLE=defXTitle, $
+                           YTITLE=(KEYWORD_SET(yTitle_maxInd) ? $
+                                   yTitle_maxInd : $
+                                   mTags(maxInd)), $
+                           XRANGE=xRange, $
+                           YRANGE=(KEYWORD_SET(yRange_maxInd)) ? $
+                           yRange_maxInd : [minDat,maxDat], $
+                           YLOG=(log_DBQuantity) ? 1 : 0, $
+                           AXIS_STYLE=2, $
+                           LINESTYLE='--', $
+                           COLOR='MAROON', $
+                           THICK=2.0, $
+                           SYMBOL='d', $
+                           SYM_SIZE=2.5, $
+                           SYM_COLOR='MAROON', $ ;, $
+                           XTICKFONT_SIZE=max_xtickfont_size, $
+                           XTICKFONT_STYLE=max_xtickfont_style, $
+                           YTICKFONT_SIZE=max_ytickfont_size, $
+                           YTICKFONT_STYLE=max_ytickfont_style, $
+                           /CURRENT,/OVERPLOT, $
+                           MARGIN=KEYWORD_SET(bkgrnd_maxInd) ? plotMargin_max : !NULL)
 
+           out_maxPlot = avgPlot
+           ENDIF                ;end no plots
         ENDELSE
      ENDIF
 
@@ -1093,6 +1099,9 @@ PRO superpose_storms_nevents,stormTimeArray_utc, $
                              THICK=1.5, $
                              MARGIN=plotMargin_max, $
                              /CURRENT)
+
+        out_maxPlot = plot_bkgrnd_max
+
      ENDIF
      
      IF KEYWORD_SET(saveMaxPlotName) AND ~(noPlots OR noMaxPlots) THEN BEGIN

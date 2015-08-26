@@ -43,7 +43,8 @@
 ; EXAMPLE:
 ;
 ; MODIFICATION HISTORY:   2015/08/21 Ripping this off superpose_storms_nevents so we can do stackplots of storms
-
+;                         2015/08/25 Added the OUT*PLOT and OUT*WINDOW keywords so I can do a rug plot
+;                         2015/08/26 Added SHOW_DATA_AVAILABILITY keyword for gooder rug plot
 ;                           
 ;-
 
@@ -72,28 +73,34 @@ PRO STACKPLOTS_STORMS_NEVENTS_OVERLAID,stormTimeArray_utc, $
                              PLOTTITLE=plotTitle,SAVEPLOTNAME=savePlotName, $
                              SAVEMAXPLOTNAME=saveMaxPlotName, $
                              DO_SCATTERPLOTS=do_scatterPlots,SCPLOT_COLORLIST=scPlot_colorList,SCATTEROUTPREFIX=scatterOutPrefix, $
-                             JUST_ONE_LABEL=just_One_Label
+                             JUST_ONE_LABEL=just_One_Label, $
+                             OUT_MAXPLOTS=out_maxPlots, $ ;OUT_MAXWINDOW=out_maxWindow, $
+                             OUT_GEOMAGPLOTS=out_geomagPlots,OUT_GEOMAGWINDOW=geomagWindow, $
+                             OUT_DATSTARTSTOP=out_datStartStop, $
+                             SHOW_DATA_AVAILABILITY= show_data_availability
+  
   
   dataDir='/SPENCEdata/Research/Cusp/database/'
 
   ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
   ;defaults
 
-  SET_STORMS_NEVENTS_DEFAULTS,tBeforeStorm=tBeforeStorm,tAfterStorm=tAfterStorm,$
-                              swDBDir=swDBDir,swDBFile=swDBFile, $
-                              stormDir=stormDir,stormFile=stormFile, $
-                              DST_AEDir=DST_AEDir,DST_AEFile=DST_AEFile, $
-                              dbDir=dbDir,dbFile=dbFile,db_tFile=db_tFile, $
-                              dayside=dayside,nightside=nightside, $
-                              restrict_charERange=restrict_charERange,restrict_altRange=restrict_altRange, $
-                              MAXIND=maxInd,avg_type_maxInd=avg_type_maxInd,log_DBQuantity=log_DBQuantity, $
-                              neg_and_pos_separ=neg_and_pos_separ,pos_layout=pos_layout,neg_layout=neg_layout, $
-                              use_SYMH=use_SYMH,USE_AE=use_AE, $
+  SET_STORMS_NEVENTS_DEFAULTS,TBEFORESTORM=tBeforeStorm,TAFTERSTORM=tAfterStorm,$
+                              SWDBDIR=swDBDir,SWDBFILE=swDBFile, $
+                              STORMDIR=stormDir,STORMFILE=stormFile, $
+                              DST_AEDIR=DST_AEDir,DST_AEFILE=DST_AEFile, $
+                              DBDIR=dbDir,DBFILE=dbFile,DB_TFILE=db_tFile, $
+                              DAYSIDE=dayside,NIGHTSIDE=nightside, $
+                              RESTRICT_CHARERANGE=restrict_charERange,RESTRICT_ALTRANGE=restrict_altRange, $
+                              MAXIND=maxInd,AVG_TYPE_MAXIND=avg_type_maxInd,LOG_DBQUANTITY=log_DBQuantity, $
+                              NEG_AND_POS_SEPAR=neg_and_pos_separ,POS_LAYOUT=pos_layout,NEG_LAYOUT=neg_layout, $
+                              USE_SYMH=use_SYMH,USE_AE=use_AE, $
                               OMNI_QUANTITY=omni_quantity,LOG_OMNI_QUANTITY=log_omni_quantity, $
-                              nEvBinsize=nEvBinsize,min_NEVBINSIZE=min_NEVBINSIZE, $
-                              saveFile=saveFile,SAVESTR=saveStr, $
-                              noPlots=noPlots,noMaxPlots=noMaxPlots, $
-                              DO_SCATTERPLOTS=do_scatterPlots,SCPLOT_COLORLIST=scPlot_colorList,SCATTEROUTPREFIX=scatterOutPrefix
+                              NEVBINSIZE=nEvBinsize,MIN_NEVBINSIZE=min_NEVBINSIZE, $
+                              SAVEFILE=saveFile,SAVESTR=saveStr, $
+                              NOPLOTS=noPlots,NOMAXPLOTS=noMaxPlots, $
+                              DO_SCATTERPLOTS=do_scatterPlots,SCPLOT_COLORLIST=scPlot_colorList,SCATTEROUTPREFIX=scatterOutPrefix, $
+                              SHOW_DATA_AVAILABILITY=show_data_availability
 
   plotMargin=[0.1, 0.25, 0.1, 0.15]
 
@@ -211,7 +218,8 @@ PRO STACKPLOTS_STORMS_NEVENTS_OVERLAID,stormTimeArray_utc, $
   datStartStop = MAKE_ARRAY(nStorms,2,/DOUBLE)
   datStartStop(*,0) = centerTime - tBeforeStorm*3600.   ;(*,0) are the times before which we don't want data for each storm
   datStartStop(*,1) = centerTime + tAfterStorm*3600.    ;(*,1) are the times after which we don't want data for each storm
-     
+
+  out_datStartStop = datStartStop   
   ;**************************************************
   ;generate geomag and stuff
 
@@ -296,9 +304,11 @@ PRO STACKPLOTS_STORMS_NEVENTS_OVERLAID,stormTimeArray_utc, $
               ENDIF
         ENDFOR
         
+        out_geomagPlots = MAKE_ARRAY(nStorms,/OBJ)
+
         FOR i=0,nStorms-1 DO BEGIN
            IF N_ELEMENTS(geomag_time_list(i)) GT 1 AND ~noPlots THEN BEGIN
-              plot=plot((geomag_time_list(i)-centerTime(i))/3600.,geomag_dat_list(i), $
+              geomagPlot=plot((geomag_time_list(i)-centerTime(i))/3600.,geomag_dat_list(i), $
                         NAME=omni_quantity, $
                         AXIS_STYLE=1, $
                         MARGIN=plotMargin, $
@@ -321,12 +331,14 @@ PRO STACKPLOTS_STORMS_NEVENTS_OVERLAID,stormTimeArray_utc, $
                         THICK=defLineThick, $
                         LAYOUT=[1,nStorms,i+1]) 
               
+              out_geomagPlots[i] = geomagPlot
+
            ENDIF ELSE PRINT,'Losing storm #' + STRCOMPRESS(i,/REMOVE_ALL) + ' on the list! Only one elem...'
         ENDFOR
         
-        axes=plot.axes
+        axes=geomagPlot.axes
         ;; axes[0].MAJOR=(nMajorTicks EQ 4) ? nMajorTicks -1 : nMajorTicks
-        axes[1].MINOR=nMinorTicks+1
+        ;; axes[1].MINOR=nMinorTicks+1
         ;; ; Has user requested overlaying DST/SYM-H with the histogram?
      ENDIF ;end noplots
   ENDELSE
@@ -507,8 +519,11 @@ PRO STACKPLOTS_STORMS_NEVENTS_OVERLAID,stormTimeArray_utc, $
 
      mTags=TAG_NAMES(maximus)
      
+     out_maxPlots = MAKE_ARRAY(nStorms,/OBJ)
      ;; IF ~(noPlots OR noMaxPlots) THEN 
      
+     IF KEYWORD_SET(show_data_availability) THEN avail_i = WHERE(maximus.sample_t LE 0.01) ;use these for deciding if data is avail
+
      IF ( log_DBQuantity AND (cdb_ind_list[1,0] NE -1)) OR neg_and_pos_separ THEN BEGIN
 
         ;Are there negs? Handle, if so
@@ -691,8 +706,8 @@ PRO STACKPLOTS_STORMS_NEVENTS_OVERLAID,stormTimeArray_utc, $
                             MARGIN=plotMargin, $
                             /CURRENT,CLIP=0, $
                             SYM_COLOR=N_ELEMENTS(scPlot_colorList) GT 0 ? scplot_colorlist[i] :  !NULL, $
-                            ;; SYM_TRANSPARENCY=(i EQ 2) ? 60 : defSymTransp) ;this line is for making events on plot #3 stand out
-                            SYM_TRANSPARENCY=defSymTransp)
+                            SYM_TRANSPARENCY=(i EQ 2) ? 0 : defSymTransp) ;this line is for making events on plot #3 stand out
+                            ;; SYM_TRANSPARENCY=defSymTransp)
               
               yaxis = AXIS('Y', LOCATION='right', TARGET=plot_cdb, $
                            TITLE='$J_{\parallel}$ ' + $
@@ -713,6 +728,57 @@ PRO STACKPLOTS_STORMS_NEVENTS_OVERLAID,stormTimeArray_utc, $
                         FONT_SIZE=yTickFont_size,FONT_NAME='Helvetica',FONT_STYLE='Bold', $
                         FONT_COLOR=N_ELEMENTS(scPlot_colorList) GT 0 ? scplot_colorlist[i] :  !NULL, $
                         CLIP=0,TARGET=plot_cdb)
+
+              out_maxPlots[i] = plot_cdb
+
+              IF show_data_availability THEN BEGIN ;we want to show where we had data to begin with
+                 ;;First, find out where we had data
+                 GET_DATA_AVAILABILITY_FOR_UTC_RANGE,T1=datStartStop[i,0],T2=datStartStop[i,1], $
+                                                     CDBTIME=cdbTime,MAXIMUS=maximus, $
+                                                     RESTRICT_W_THESEINDS=avail_i, $
+                                                     TRANGES_ORBS=tRanges_orbs,TSPANS_ORBS=tSpans_orbs, $
+                                                     /PRINT_DATA_AVAILABILITY
+
+                 nOrbs=N_ELEMENTS(tSpans_orbs)
+                 tVals=MAKE_ARRAY(nOrbs,/DOUBLE)
+                 FOR j=0,nOrbs-1 DO BEGIN
+                    tVals[j] = (MEAN(tRanges_orbs[j,*])-centerTime[i])/3600.
+                 ENDFOR
+                 ;; tVals=(tRanges_orbs[*,0]-centerTime[0])/3600.
+                 yVal=(KEYWORD_SET(yRange_maxInd)) ? yRange_maxInd : [minDat,maxDat]
+                 ;; yVal=yVal[0]+(yVal[1]-yVal[0])*0.1
+                 yVals = MAKE_ARRAY(nOrbs,VALUE=yVal[0])
+                 ;;Now plot where we had data, and for what length of time (maybe)
+                  plot_showDat=plot(tVals, $
+                                    yVals, $
+                                    ;; (log_DBquantity) ? ALOG10(cdb_y) : cdb_y, $
+                                    XTITLE=defXTitle, $
+                                    YTITLE=(KEYWORD_SET(yTitle_maxInd) ? $
+                                            yTitle_maxInd : $
+                                            mTags(maxInd)), $
+                                    XRANGE=xRange, $
+                                    YRANGE=(KEYWORD_SET(yRange_maxInd)) ? $
+                                    yRange_maxInd : [minDat,maxDat], $
+                                    YLOG=(log_DBQuantity) ? 1 : 0, $
+                                    AXIS_STYLE=0, $
+                                    LINESTYLE=' ', $
+                                    SYMBOL='tu', $
+                                    SYM_SIZE=2.0, $
+                                    XTICKFONT_SIZE=max_xtickfont_size, $
+                                    XTICKFONT_STYLE=max_xtickfont_style, $
+                                    YTICKFONT_SIZE=max_ytickfont_size, $
+                                    YTICKFONT_STYLE=max_ytickfont_style, $
+                                    LAYOUT=[1,nStorms,i+1], $
+                                    MARGIN=plotMargin, $
+                                    /CURRENT,CLIP=0, $
+                                    SYM_COLOR=N_ELEMENTS(scPlot_colorList) GT 0 ? scplot_colorlist[i] :  !NULL, $
+                                    ;; SYM_TRANSPARENCY=(i EQ 2) ? 60 : defSymTransp) ;this line is for making events on plot #3 stand out
+                                    SYM_TRANSPARENCY=0)
+                  plot_showDat.SYM_FILLED = 1
+                  ;; plot_showDat.SYM_FILL_COLOR = 7
+
+              ENDIF
+
            ENDIF
            
         ENDELSE                 ;end ~neg_and_pos_separ
@@ -847,7 +913,7 @@ PRO STACKPLOTS_STORMS_NEVENTS_OVERLAID,stormTimeArray_utc, $
            safe_i=(log_DBQuantity) ? WHERE(FINITE(Avgs) AND Avgs GT 0.) : WHERE(FINITE(Avgs))
 
            IF ~(noPlots OR noMaxPlots) THEN BEGIN
-              plot=plot(tBin(safe_i)+0.5*min_NEVBINSIZE, $
+              avgPlot=plot(tBin(safe_i)+0.5*min_NEVBINSIZE, $
                         (log_DBQuantity) ? 10^Avgs(safe_i) : Avgs(safe_i), $
                         ;; Avgs(safe_i), $
                         TITLE=plotTitle, $
@@ -869,15 +935,16 @@ PRO STACKPLOTS_STORMS_NEVENTS_OVERLAID,stormTimeArray_utc, $
                         LAYOUT=[1,nStorms,i+1], $
                         SYM_SIZE=1.5, $
                         SYM_COLOR=N_ELEMENTS(scPlot_colorList) GT 0 ? scplot_colorlist[i] : 'g')
+
            ENDIF                ;end no plots
 
         ENDELSE
      ENDIF
 
-     IF KEYWORD_SET(saveMaxPlotName) AND ~(noPlots OR noMaxPlots) THEN BEGIN
-        PRINT,"Saving maxplot to file: " + saveMaxPlotName
-        maximuswindow.save,savemaxplotname,RESOLUTION=defRes
-     ENDIF
+     ;; IF KEYWORD_SET(saveMaxPlotName) AND ~(noPlots OR noMaxPlots) THEN BEGIN
+     ;;    PRINT,"Saving maxplot to file: " + saveMaxPlotName
+     ;;    maximuswindow.save,savemaxplotname,RESOLUTION=defRes
+     ;; ENDIF
 
   ENDIF
   
@@ -885,6 +952,7 @@ PRO STACKPLOTS_STORMS_NEVENTS_OVERLAID,stormTimeArray_utc, $
      PRINT,"Saving plot to file: " + savePlotName
      geomagWindow.save,savePlotName,RESOLUTION=defRes
   ENDIF
+  ;; out_geomagWindow = geomagWindow
 
   IF do_ScatterPlots THEN BEGIN
      KEY_SCATTERPLOTS_POLARPROJ,MAXIMUS=maximus,$

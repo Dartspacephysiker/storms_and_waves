@@ -14,7 +14,8 @@ PRO SET_STORMS_NEVENTS_DEFAULTS,tBeforeStorm=tBeforeStorm,tAfterStorm=tAfterStor
                                 PLOTTITLE=plotTitle,SAVEPLOTNAME=savePlotName, $
                                 noPlots=noPlots,noMaxPlots=noMaxPlots, $
                                 DO_SCATTERPLOTS=do_scatterPlots,SCPLOT_COLORLIST=scPlot_colorList,SCATTEROUTPREFIX=scatterOutPrefix, $
-                                RANDOMTIMES=randomTimes
+                                RANDOMTIMES=randomTimes, $
+                                SHOW_DATA_AVAILABILITY=show_data_availability
   
 
   defTBeforeStorm      = 60.0D                                                                       ;in hours
@@ -66,6 +67,8 @@ PRO SET_STORMS_NEVENTS_DEFAULTS,tBeforeStorm=tBeforeStorm,tAfterStorm=tAfterStor
   ;; defScPlot_colorList = ''
 
   defRandomTimes = 0
+
+  defShow_data_availability = 0
 
   ;;set defaults
   IF N_ELEMENTS(tBeforeStorm) EQ 0 THEN tBeforeStorm = defTBeforeStorm
@@ -125,6 +128,8 @@ PRO SET_STORMS_NEVENTS_DEFAULTS,tBeforeStorm=tBeforeStorm,tAfterStorm=tAfterStor
   ENDIF
 
   IF N_ELEMENTS(randomTimes) EQ 0 THEN randomTimes = defRandomTimes
+
+  IF N_ELEMENTS(show_data_availability) EQ 0 THEN show_data_availability = defShow_data_availability
 
   IF saveFile THEN BEGIN 
      saveStr='save' 
