@@ -1,5 +1,6 @@
 ;2015/08/26
 ;This journal might have just been outmoded by print_data_availability_utc
+;See JOURNAL__20150825__get_data_availability_during_fourstorms_in_1998__Alfvens_storms_GRL, where all the action happens
 
 PRO JOURNAL__20150825__inspect_data_availability_during_fourstorms_in_1998__Alfvens_storms_GRL
 

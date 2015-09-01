@@ -16,7 +16,7 @@ PRO JOURNAL__20150825__get_data_availability_during_fourstorms_in_1998__Alfvens_
 
   load_maximus_and_cdbtime,maximus,cdbTime
 
-  nStorms=N_ELEMENTS(dss[*,0])
+  nStorms=N_ELEMENTS(dss[*,0])    ;dss is dataStartStop, obtained from JOURNAL__20150825__get_startstop_for_four_storms__Alfvens_storms_GRL.pro
 
   ;;only restriction is on mag sampling frequency
   good_i = WHERE(maximus.sample_t LE 0.01)
