@@ -5,7 +5,8 @@ PRO ADD_SMOOTHED_DST_AE_AND_DST_AE_DERIVATIVE_TO_DST_AE_STRUCTS
 
   load_dst_ae_dbs,dst,ae,DST_AE_DIR=dst_AE_dir,DST_AE_FILE=dst_AE_file
 
-  smoothedFile= 'idl_ae_dst_data--smoothed.dat'
+  ;; smoothedFile= 'idl_ae_dst_data--smoothed.dat'
+  smoothedFile= 'idl_ae_dst_data--smoothed_w_deriv.dat'
 
   ;;Let's smooth Dst first
   dst_smoothed_6hr=SMOOTH(dst.dst,6,/EDGE_TRUNCATE)
@@ -19,16 +20,28 @@ PRO ADD_SMOOTHED_DST_AE_AND_DST_AE_DERIVATIVE_TO_DST_AE_STRUCTS
   ;; dstplot=plot(dst.dst[100:199])  
   ;; dstsmoothplot=plot(dst_smooth6hr[100:199])
 
-  dt_dst_sm6hr = SHIFT(dst_smoothed_6hr,-1)-dst_smoothed_6hr
+  ;; dt_dst_sm6hr = SHIFT(dst_smoothed_6hr,-1)-dst_smoothed_6hr
 
-  dt_ae_sm6hr = SHIFT(ae_smoothed_6hr,-1)-ae_smoothed_6hr
-  dt_au_sm6hr = SHIFT(au_smoothed_6hr,-1)-au_smoothed_6hr
-  dt_al_sm6hr = SHIFT(al_smoothed_6hr,-1)-al_smoothed_6hr
-  dt_ao_sm6hr = SHIFT(ao_smoothed_6hr,-1)-ao_smoothed_6hr
+  ;; dt_ae_sm6hr = SHIFT(ae_smoothed_6hr,-1)-ae_smoothed_6hr
+  ;; dt_au_sm6hr = SHIFT(au_smoothed_6hr,-1)-au_smoothed_6hr
+  ;; dt_al_sm6hr = SHIFT(al_smoothed_6hr,-1)-al_smoothed_6hr
+  ;; dt_ao_sm6hr = SHIFT(ao_smoothed_6hr,-1)-ao_smoothed_6hr
 
-  dst_sm_str="Smoothing is performed using 6 Dst points, and dt_dst_sm6hr is obtained by simply subtracting one data point from the other, forward-difference style. See the pro ADD_SMOOTHED_DST_AE_AND_DST_AE_DERIVATIVE_TO_DST_AE_STRUCTS to learn more."
+  dt_dst_sm6hr = DERIV(dst_smoothed_6hr)
 
-  ae_sm_str="Smoothing is performed using 6 {AE,AU,AL,AO} points, and dt_{ae,au,al,ao}_sm6hr is obtained by simply subtracting one data point from the other, forward-difference style. See the pro ADD_SMOOTHED_DST_AE_AND_DST_AE_DERIVATIVE_TO_DST_AE_STRUCTS to learn more."
+  dt_ae_sm6hr = DERIV(ae_smoothed_6hr)
+  dt_au_sm6hr = DERIV(au_smoothed_6hr)
+  dt_al_sm6hr = DERIV(al_smoothed_6hr)
+  dt_ao_sm6hr = DERIV(ao_smoothed_6hr)
+
+
+  ;; dst_sm_str="Smoothing is performed using 6 Dst points, and dt_dst_sm6hr is obtained by simply subtracting one data point from the other, forward-difference style. See the pro ADD_SMOOTHED_DST_AE_AND_DST_AE_DERIVATIVE_TO_DST_AE_STRUCTS to learn more."
+
+  ;; ae_sm_str="Smoothing is performed using 6 {AE,AU,AL,AO} points, and dt_{ae,au,al,ao}_sm6hr is obtained by simply subtracting one data point from the other, forward-difference style. See the pro ADD_SMOOTHED_DST_AE_AND_DST_AE_DERIVATIVE_TO_DST_AE_STRUCTS to learn more."
+
+  dst_sm_str="Smoothing is performed using 6 Dst points, and dt_dst_sm6hr is obtained with the DERIV procedure. See the pro ADD_SMOOTHED_DST_AE_AND_DST_AE_DERIVATIVE_TO_DST_AE_STRUCTS to learn more."
+
+  ae_sm_str="Smoothing is performed using 6 {AE,AU,AL,AO} points, and dt_{ae,au,al,ao}_sm6hr is obtained with the DERIV procedure. See the pro ADD_SMOOTHED_DST_AE_AND_DST_AE_DERIVATIVE_TO_DST_AE_STRUCTS to learn more."
 
 
   dst={date:dst.date, $
