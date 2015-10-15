@@ -32,19 +32,19 @@
 ; MODIFICATION HISTORY:  2015/10/14     BORN
 ;
 ;-
-PRO GET_NONSTORM_MAINPHASE_AND_RECOVERYPHASE_PERIODS,dst,STORM_I=s_i,NONSTORM_I=ns_i,MAINPHASE_I=mp_i,RECOVERYPHASE_I=rp_i, $
+PRO GET_NONSTORM_MAINPHASE_AND_RECOVERYPHASE_PERIODS,dst,STORM_DST_I=s_dst_i,NONSTORM_DST_I=ns_dst_i,MAINPHASE_DST_I=mp_dst_i,RECOVERYPHASE_DST_I=rp_dst_i, $
    N_STORM=n_s,N_NONSTORM=n_ns,N_MAINPHASE=n_mp,N_RECOVERYPHASE=n_rp,LUN=lun
 
   IF N_ELEMENTS(lun) EQ 0 THEN lun = -1 ;stdout
 
-  s_i = WHERE(dst.dst LT -20,n_s,COMPLEMENT=ns_i,NCOMPLEMENT=n_ns)
-  mp_ii = WHERE(dst.dt_dst_sm6hr(s_i) LE 0,n_mp,COMPLEMENT=rp_ii,NCOMPLEMENT=n_rp)
+  s_dst_i = WHERE(dst.dst LT -20,n_s,COMPLEMENT=ns_dst_i,NCOMPLEMENT=n_ns)
+  mp_dst_ii = WHERE(dst.dt_dst_sm6hr[s_dst_i] LE 0,n_mp,COMPLEMENT=rp_dst_ii,NCOMPLEMENT=n_rp)
 
   ;;Make sure these all actually found stuff
-  WHERECHECK,s_i,ns_i,mp_ii,rp_ii
+  WHERECHECK,s_dst_i,ns_dst_i,mp_dst_ii,rp_dst_ii
 
-  mp_i=s_i(mp_ii)
-  rp_i=s_i(rp_ii)
+  mp_dst_i=s_dst_i[mp_dst_ii]
+  rp_dst_i=s_dst_i[rp_dst_ii]
   
   PRINTF,lun,FORMAT='("**GET_NONSTORM_MAINPHASE_AND_RECOVERYPHASE_PERIODS**")'
   PRINTF,lun,FORMAT='("N nonstorm indices            :",T35,I0)',n_ns
