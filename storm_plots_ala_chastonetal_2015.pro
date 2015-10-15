@@ -36,12 +36,12 @@ PRO STORM_PLOTS_ALA_CHASTONETAL_2015
 
   LOAD_DST_AE_DBS,dst,ae
 
-  GET_NONSTORM_MAINPHASE_AND_RECOVERYPHASE_PERIODS,dst,STORM_I=s_i,NONSTORM_I=ns_i,MAINPHASE_I=mp_i,RECOVERYPHASE_I=rp_i, $
+  ;Get all the storm indices. This takes stock of good Alfven DB inds, so the results returned from this pro should be clean.
+  GET_NONSTORM_MAINPHASE_AND_RECOVERYPHASE_FASTDB_INDICES,NONSTORM_I=ns_i,MAINPHASE_I=mp_i,RECOVERYPHASE_I=rp_i, $
+     STORM_DST_I=s_dst_i,NONSTORM_DST_I=ns_dst_i,MAINPHASE_DST_I=mp_dst_i,RECOVERYPHASE_DST_I=rp_dst_i, $
      N_STORM=n_s,N_NONSTORM=n_ns,N_MAINPHASE=n_mp,N_RECOVERYPHASE=n_rp
 
-  GET_STREAKS,mp_i,START_I=start_i,STOP_I=stop_i,SINGLE_I=single_i
+  ;;Now histogram these little fellers, I guess?
   
-  GET_DATA_AVAILABILITY_FOR_ARRAY_OF_UTC_RANGES ;;JUST TEST ER OUT!
   
-
 END

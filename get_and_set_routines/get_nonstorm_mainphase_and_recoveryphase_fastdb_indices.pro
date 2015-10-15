@@ -20,11 +20,11 @@ PRO GET_NONSTORM_MAINPHASE_AND_RECOVERYPHASE_FASTDB_INDICES,NONSTORM_I=ns_i,MAIN
      help,inds
      GET_STREAKS,inds,START_I=start_dst_ii,STOP_I=stop_dst_ii,SINGLE_I=single_dst_ii
   
-     OPENW,this,'/SPENCEdata/Research/Cusp/storms_Alfvens/get_and_set_routines/startstop_'+strings[i],/GET_LUN
-     FOR j=0,N_ELEMENTS(start_dst_ii)-1 DO BEGIN
-        printf,this,FORMAT='(I10,T15,I10)',inds[start_dst_ii[j]],inds[stop_dst_ii[j]]
-     ENDFOR
-     CLOSE,this
+     ;; OPENW,this,'/SPENCEdata/Research/Cusp/storms_Alfvens/get_and_set_routines/startstop_'+strings[i],/GET_LUN
+     ;; FOR j=0,N_ELEMENTS(start_dst_ii)-1 DO BEGIN
+     ;;    printf,this,FORMAT='(I10,T15,I10)',inds[start_dst_ii[j]],inds[stop_dst_ii[j]]
+     ;; ENDFOR
+     ;; CLOSE,this
 
      GET_DATA_AVAILABILITY_FOR_ARRAY_OF_UTC_RANGES,T1_ARR=dst.time[inds[start_dst_ii]],T2_ARR=dst.time[inds[stop_dst_ii]], $
         DBSTRUCT=maximus,DBTIMES=cdbTime, RESTRICT_W_THESEINDS=good_i, $
