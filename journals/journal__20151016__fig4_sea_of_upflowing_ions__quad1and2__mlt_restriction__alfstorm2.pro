@@ -1,18 +1,18 @@
-;2015/08/25
+;2015/10/16
 ;Try this out with all storms, not just large
 
-PRO JOURNAL__20150825__Fig4_SEA_of_upflowing_ions__QUAD1AND2__background_overlaid__Alfvens_storms_GRL
+PRO JOURNAL__20151016__FIG4_SEA_OF_UPFLOWING_IONS__QUAD1AND2__MLT_RESTRICTION__ALFSTORM2
 
   ;; ;the ins
- nEvBinsize=150.D
-  ;; ;
-
+  nEvBinsize=150.D
+  minM = 15
+  maxM = 24
+  
   ;; ;the outs
   ;; date='20150818'
-  date='20150824'
+  date='20151016'
 
-  outMaxFile='Fig_4--all_storms--ion_flux_up--'+ STRING(FORMAT='(I0)',nEvBinsize/60) + $
-             '-HOUR_AVG.png'
+  outMaxFile=STRING(FORMAT='("Fig_4--all_storms--ion_flux_up--",I0,"-HOUR_AVG--",I0,"-",I0,"_MLT--",A0,A0)',nEvBinsize/60,minM,maxM,date,'.png')
 
   LOAD_NOAA_AND_BRETT_DBS_AND_QI,stormStruct,SSC1,SSC2,qi,DBDir=DBDir,DB_BRETT=DB_Brett,DB_NOAA=DB_NOAA,INDS_FILE=inds_file
 
@@ -52,6 +52,7 @@ PRO JOURNAL__20150825__Fig4_SEA_of_upflowing_ions__QUAD1AND2__background_overlai
                            SAVEMAXPLOTNAME=outMaxFile, $
                            /LOG_DBQUANTITY, $
                            YRANGE_MAXIND=[1e5,1e10], $
-                           YTITLE_MAXIND="Maximum upward ion flux (N $cm^{-3} s^{-1}$)"
+                           YTITLE_MAXIND="Maximum upward ion flux (N $cm^{-3} s^{-1}$)", $
+                           MINMLT=minM,maxMLT=maxM
 
 END
