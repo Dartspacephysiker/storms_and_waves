@@ -1,10 +1,11 @@
 ;2015/10/16
 ;Try this out with all storms, not just large
 
+
 PRO JOURNAL__20151016__FIG4_SEA_OF_UPFLOWING_IONS__QUAD1AND2__MLT_RESTRICTION__ALFSTORM2
 
   ;; ;the ins
-  nEvBinsize=150.D
+  nEvBinsize=300.D
   minM = 15
   maxM = 24
   
@@ -38,11 +39,13 @@ PRO JOURNAL__20151016__FIG4_SEA_OF_UPFLOWING_IONS__QUAD1AND2__MLT_RESTRICTION__A
   IF rmDupes THEN sufStr = '--rmDupes' + sufStr
 
   ;get random ion_flux_up
-  superpose_storms_nevents,RANDOMTIMES=65,/NOPLOTS,/NOMAXPLOTS,OUT_BKGRND_MAXIND=bkgrnd_maxInd,OUT_TBINS=tBins,/USE_DARTDB_START_ENDDATE, $
-                           MAXIND=maxInd,NEVBINSIZE=nEvBinsize,TBEFORESTORM=60.0D,TAFTERSTORM=60.0D,AVG_TYPE_MAXIND=1,/LOG_DBQUANTITY
+  SUPERPOSE_STORMS_NEVENTS,RANDOMTIMES=65,/NOPLOTS,/NOMAXPLOTS,OUT_BKGRND_MAXIND=bkgrnd_maxInd,OUT_TBINS=tBins,/USE_DARTDB_START_ENDDATE, $
+                           MAXIND=maxInd,NEVBINSIZE=nEvBinsize,TBEFORESTORM=60.0D,TAFTERSTORM=60.0D,AVG_TYPE_MAXIND=1,/LOG_DBQUANTITY, $
+                           MINMLT=minM,maxMLT=maxM
+
 
   ;ION_FLUX_UP
-  superpose_storms_nevents,STORMTYPE=2,STORMINDS=q12_st,SSC_TIMES_UTC=q12_utc,REMOVE_DUPES=rmDupes, $
+  SUPERPOSE_STORMS_NEVENTS,STORMTYPE=2,STORMINDS=q12_st,SSC_TIMES_UTC=q12_utc,REMOVE_DUPES=rmDupes, $
                            /USE_DARTDB_START_ENDDATE, $
                            TBEFORESTORM=60.0D,TAFTERSTORM=60.0D, $
                            NEVBINSIZE=nEvBinsize, $
@@ -51,7 +54,7 @@ PRO JOURNAL__20151016__FIG4_SEA_OF_UPFLOWING_IONS__QUAD1AND2__MLT_RESTRICTION__A
                            BKGRND_MAXIND=bkgrnd_maxInd, TBINS=tBins, $
                            SAVEMAXPLOTNAME=outMaxFile, $
                            /LOG_DBQUANTITY, $
-                           YRANGE_MAXIND=[1e5,1e10], $
+                           YRANGE_MAXIND=[1e4,1e9], $
                            YTITLE_MAXIND="Maximum upward ion flux (N $cm^{-3} s^{-1}$)", $
                            MINMLT=minM,maxMLT=maxM
 

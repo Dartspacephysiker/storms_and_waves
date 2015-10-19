@@ -1,18 +1,18 @@
-PRO SET_STORMS_NEVENTS_DEFAULTS,tBeforeStorm=tBeforeStorm,tAfterStorm=tAfterStorm,$
-                                swDBDir=swDBDir,swDBFile=swDBFile, $
-                                stormDir=stormDir,stormFile=stormFile, $
-                                DST_AEDir=DST_AEDir,DST_AEFile=DST_AEFile, $
-                                dbDir=dbDir,dbFile=dbFile,db_tFile=db_tFile, $
-                                dayside=dayside,nightside=nightside, $
-                                restrict_charERange=restrict_charERange,restrict_altRange=restrict_altRange, $
-                                MAXIND=maxInd,avg_type_maxInd=avg_type_maxInd,log_DBQuantity=log_DBQuantity, $
-                                neg_and_pos_separ=neg_and_pos_separ,pos_layout=pos_layout,neg_layout=neg_layout, $
-                                use_SYMH=use_SYMH,USE_AE=use_AE, $
+PRO SET_STORMS_NEVENTS_DEFAULTS,TBEFORESTORM=tBeforeStorm,TAFTERSTORM=tAfterStorm,$
+                                SWDBDIR=swDBDir,SWDBFILE=swDBFile, $
+                                STORMDIR=stormDir,STORMFILE=stormFile, $
+                                DST_AEDIR=DST_AEDir,DST_AEFILE=DST_AEFile, $
+                                DBDIR=dbDir,DBFILE=dbFile,DB_TFILE=db_tFile, $
+                                DAYSIDE=dayside,NIGHTSIDE=nightside, $
+                                RESTRICT_CHARERANGE=restrict_charERange,RESTRICT_ALTRANGE=restrict_altRange, $
+                                MAXIND=maxInd,AVG_TYPE_MAXIND=avg_type_maxInd,LOG_DBQUANTITY=log_DBQuantity, $
+                                NEG_AND_POS_SEPAR=neg_and_pos_separ,POS_LAYOUT=pos_layout,NEG_LAYOUT=neg_layout, $
+                                USE_SYMH=use_SYMH,USE_AE=use_AE, $
                                 OMNI_QUANTITY=omni_quantity,LOG_OMNI_QUANTITY=log_omni_quantity,USE_DATA_MINMAX=use_data_minmax, $
-                                nEvBinsize=nEvBinsize,min_NEVBINSIZE=min_NEVBINSIZE, $
-                                saveFile=saveFile,SAVESTR=saveStr, $
+                                NEVBINSIZE=nEvBinsize,MIN_NEVBINSIZE=min_NEVBINSIZE, $
+                                SAVEFILE=saveFile,SAVESTR=saveStr, $
                                 PLOTTITLE=plotTitle,SAVEPLOTNAME=savePlotName, $
-                                noPlots=noPlots,noMaxPlots=noMaxPlots, $
+                                NOPLOTS=noPlots,NOGEOMAGPLOTS=noGeomagPlots,NOMAXPLOTS=noMaxPlots, $
                                 DO_SCATTERPLOTS=do_scatterPlots,SCPLOT_COLORLIST=scPlot_colorList,SCATTEROUTPREFIX=scatterOutPrefix, $
                                 RANDOMTIMES=randomTimes, $
                                 SHOW_DATA_AVAILABILITY=show_data_availability
@@ -60,6 +60,7 @@ PRO SET_STORMS_NEVENTS_DEFAULTS,tBeforeStorm=tBeforeStorm,tAfterStorm=tAfterStor
   defnEvBinsize        = 150.0D                                                                        ;in minutes
 
   defNoPlots = 0 
+  defNoGeomagPlots = 0
   defNoMaxPlots = 0
 
   defDo_scatterPlots = 0
@@ -118,6 +119,7 @@ PRO SET_STORMS_NEVENTS_DEFAULTS,tBeforeStorm=tBeforeStorm,tAfterStorm=tAfterStor
   IF N_ELEMENTS(saveFile) EQ 0 THEN saveFile=defSaveFile
 
   IF N_ELEMENTS(noPlots) EQ 0 THEN noPlots=defNoPlots
+  IF N_ELEMENTS(noGeomagPlots) EQ 0 THEN noGeomagPlots=defNoGeomagPlots
   IF N_ELEMENTS(noMaxPlots) EQ 0 THEN noMaxPlots=defNoMaxPlots
 
   IF N_ELEMENTS(do_scatterPlots) EQ 0 THEN do_scatterPlots = defdo_scatterPlots

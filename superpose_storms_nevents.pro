@@ -47,9 +47,9 @@
 ;                         2015/08/17 Added NOPLOTS, NOMAXPLOTS keywords, for crying out loud.
 ;                         2015/08/25 Added the OUT*PLOT and OUT*WINDOW keywords so I can do rug plots and otherwise fiddle
 ;                         2015/10/16 Added {min,max}{mlt,ilat,lshell}                           
+;                         2015/10/19 Finally suppressed creation of plot of geomagnetic quantity (Dst, SYM-H, etc.) when not desired
+;                                       through NOGEOMAGPLOTS keyword.
 ;-
-
-
 PRO superpose_storms_nevents,stormTimeArray_utc, $
                              TBEFORESTORM=tBeforeStorm,TAFTERSTORM=tAfterStorm, $
                              STARTDATE=startDate, STOPDATE=stopDate, $
@@ -69,7 +69,7 @@ PRO superpose_storms_nevents,stormTimeArray_utc, $
                              BKGRND_HIST=bkgrnd_hist, BKGRND_MAXIND=bkgrnd_maxInd,TBINS=tBins, $
                              DBFILE=dbFile,DB_TFILE=db_tFile, $
                              NO_SUPERPOSE=no_superpose, $
-                             NOPLOTS=noPlots, NOMAXPLOTS=noMaxPlots, $
+                             NOPLOTS=noPlots, NOGEOMAGPLOTS=noGeomagPlots, NOMAXPLOTS=noMaxPlots, $
                              USE_DARTDB_START_ENDDATE=use_dartdb_start_enddate, $
                              SAVEFILE=saveFile,OVERPLOT_HIST=overplot_hist, $
                              PLOTTITLE=plotTitle,SAVEPLOTNAME=savePlotName, $
@@ -87,20 +87,20 @@ PRO superpose_storms_nevents,stormTimeArray_utc, $
   ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
   ;defaults
 
-  SET_STORMS_NEVENTS_DEFAULTS,tBeforeStorm=tBeforeStorm,tAfterStorm=tAfterStorm,$
-                              swDBDir=swDBDir,swDBFile=swDBFile, $
-                              stormDir=stormDir,stormFile=stormFile, $
-                              DST_AEDir=DST_AEDir,DST_AEFile=DST_AEFile, $
-                              dbDir=dbDir,dbFile=dbFile,db_tFile=db_tFile, $
-                              dayside=dayside,nightside=nightside, $
-                              restrict_charERange=restrict_charERange,restrict_altRange=restrict_altRange, $
-                              MAXIND=maxInd,avg_type_maxInd=avg_type_maxInd,log_DBQuantity=log_DBQuantity, $
-                              neg_and_pos_separ=neg_and_pos_separ,pos_layout=pos_layout,neg_layout=neg_layout, $
-                              use_SYMH=use_SYMH,USE_AE=use_AE, $
+  SET_STORMS_NEVENTS_DEFAULTS,TBEFORESTORM=tBeforeStorm,TAFTERSTORM=tAfterStorm,$
+                              SWDBDIR=swDBDir,SWDBFILE=swDBFile, $
+                              STORMDIR=stormDir,STORMFILE=stormFile, $
+                              DST_AEDIR=DST_AEDir,DST_AEFILE=DST_AEFile, $
+                              DBDIR=dbDir,DBFILE=dbFile,DB_TFILE=db_tFile, $
+                              DAYSIDE=dayside,NIGHTSIDE=nightside, $
+                              RESTRICT_CHARERANGE=restrict_charERange,RESTRICT_ALTRANGE=restrict_altRange, $
+                              MAXIND=maxInd,AVG_TYPE_MAXIND=avg_type_maxInd,LOG_DBQUANTITY=log_DBQuantity, $
+                              NEG_AND_POS_SEPAR=neg_and_pos_separ,POS_LAYOUT=pos_layout,NEG_LAYOUT=neg_layout, $
+                              USE_SYMH=use_SYMH,USE_AE=use_AE, $
                               OMNI_QUANTITY=omni_quantity,LOG_OMNI_QUANTITY=log_omni_quantity,USE_DATA_MINMAX=use_data_minMax, $
-                              nEvBinsize=nEvBinsize,min_NEVBINSIZE=min_NEVBINSIZE, $
-                              saveFile=saveFile,SAVESTR=saveStr, $
-                              noPlots=noPlots,noMaxPlots=noMaxPlots, $
+                              NEVBINSIZE=nEvBinsize,MIN_NEVBINSIZE=min_NEVBINSIZE, $
+                              SAVEFILE=saveFile,SAVESTR=saveStr, $
+                              NOPLOTS=noPlots,NOGEOMAGPLOTS=noGeomagPlots,NOMAXPLOTS=noMaxPlots, $
                               DO_SCATTERPLOTS=do_scatterPlots,SCPLOT_COLORLIST=scPlot_colorList,SCATTEROUTPREFIX=scatterOutPrefix, $
                               RANDOMTIMES=randomTimes
 
@@ -278,7 +278,7 @@ PRO superpose_storms_nevents,stormTimeArray_utc, $
 
   ;; ;Now plot geomag quantities
   IF KEYWORD_SET(no_superpose) THEN BEGIN
-     geomagWindow=WINDOW(WINDOW_TITLE="SYM-H plots", $
+     geomagWindow=WINDOW(WINDOW_TITLE=stormString + ' plots', $
                          DIMENSIONS=[1200,800])
      
   ENDIF ELSE BEGIN              ;Just do a regular superposition of all the plots
@@ -306,7 +306,7 @@ PRO superpose_storms_nevents,stormTimeArray_utc, $
         ;; yRange = do_DST ? [-150,50] : [geomag_min,geomag_max]
         
         FOR i=0,nStorms-1 DO BEGIN
-           IF N_ELEMENTS(geomag_time_list[i]) GT 1 AND ~noPlots THEN BEGIN
+           IF N_ELEMENTS(geomag_time_list[i]) GT 1 AND ~noPlots AND ~noGeomagPlots THEN BEGIN
               geomagPlot=plot((geomag_time_list[i]-centerTime[i])/3600.,geomag_dat_list[i], $
                         NAME=omni_quantity, $
                         AXIS_STYLE=1, $
@@ -735,7 +735,7 @@ PRO superpose_storms_nevents,stormTimeArray_utc, $
 
               ;;now loop over histogram bins, perform average
               FOR i=0,nBins-1 DO BEGIN
-                 temp_inds=WHERE(tot_cdb_t_pos GE (tBin[0] + i*Min_NEVBINSIZE) AND tot_cdb_t_pos LT (tBin[0]+[i+1]*min_NEVBINSIZE))
+                 temp_inds=WHERE(tot_cdb_t_pos GE (tBin[0] + i*Min_NEVBINSIZE) AND tot_cdb_t_pos LT (tBin[0]+(i+1)*min_NEVBINSIZE))
                  Avgs_pos[i] = TOTAL(avg_data_pos(temp_inds))/DOUBLE(nEvHist_pos[i])
               ENDFOR
 
@@ -782,7 +782,7 @@ PRO superpose_storms_nevents,stormTimeArray_utc, $
 
               ;;now loop over histogram bins, perform average
               FOR i=0,nBins-1 DO BEGIN
-                 temp_inds=WHERE(tot_cdb_t_neg GE (tBin[0] + i*Min_NEVBINSIZE) AND tot_cdb_t_neg LT (tBin[0]+[i+1]*min_NEVBINSIZE))
+                 temp_inds=WHERE(tot_cdb_t_neg GE (tBin[0] + i*Min_NEVBINSIZE) AND tot_cdb_t_neg LT (tBin[0]+(i+1)*min_NEVBINSIZE))
                  Avgs_neg[i] = TOTAL(avg_data_neg(temp_inds))/DOUBLE(nEvHist_neg[i])
               ENDFOR
 
@@ -829,7 +829,7 @@ PRO superpose_storms_nevents,stormTimeArray_utc, $
            avg_data=log_DBQuantity ? ALOG10(maximus.(maxInd)[tot_plot_i]) : maximus.(maxInd)[tot_plot_i]
            ;now loop over histogram bins, perform average
            FOR i=0,nBins-1 DO BEGIN
-              temp_inds=WHERE(tot_cdb_t GE (tBin[0] + i*Min_NEVBINSIZE) AND tot_cdb_t LT (tBin[0]+[i+1]*min_NEVBINSIZE))
+              temp_inds=WHERE(tot_cdb_t GE (tBin[0] + i*Min_NEVBINSIZE) AND tot_cdb_t LT (tBin[0]+(i+1)*min_NEVBINSIZE))
               Avgs[i] = TOTAL(avg_data(temp_inds))/DOUBLE(all_nEvHist[i])
            ENDFOR
 
