@@ -50,7 +50,7 @@
 ;                         2015/10/19 Finally suppressed creation of plot of geomagnetic quantity (Dst, SYM-H, etc.) when not desired
 ;                                       through NOGEOMAGPLOTS keyword.
 ;-
-PRO superpose_storms_nevents,stormTimeArray_utc, $
+PRO SUPERPOSE_STORMS_NEVENTS,stormTimeArray_utc, $
                              TBEFORESTORM=tBeforeStorm,TAFTERSTORM=tAfterStorm, $
                              STARTDATE=startDate, STOPDATE=stopDate, $
                              DAYSIDE=dayside,NIGHTSIDE=nightside, $
@@ -246,7 +246,7 @@ PRO superpose_storms_nevents,stormTimeArray_utc, $
                          CHARERANGE=(restrict_charERange) ? [4,300] : !NULL, $
                          MINMLT=minM,MAXMLT=maxM,BINM=binM,MINILAT=minI,MAXILAT=maxI,BINI=binI, $
                          DO_LSHELL=do_lshell,MINLSHELL=minL,MAXLSHELL=maxL,BINL=binL, $
-                         DAYSIDE=dayside,NIGHTSIDE=nightside)
+                         DAYSIDE=dayside,NIGHTSIDE=nightside,/PRINT_PARAM_SUMMARY)
   
   ;; PRINT,FORMAT='("i",T4,"j",T8,"tempClosest (hours)",T33,"centerTime")'
   ;; FOR i=0,nStorms-1 DO BEGIN
@@ -282,28 +282,15 @@ PRO superpose_storms_nevents,stormTimeArray_utc, $
                          DIMENSIONS=[1200,800])
      
   ENDIF ELSE BEGIN              ;Just do a regular superposition of all the plots
-     IF ~noPlots THEN BEGIN
+     IF ~noPlots AND ~noGeomagPlots THEN BEGIN
         geomagWindow=WINDOW(WINDOW_TITLE="Superposed plots of " + stormString + " storms: "+ $
                             tStamps[0] + " - " + $
                             tStamps(-1), $
                             DIMENSIONS=[1200,800])
         xTitle=defXTitle
         yTitle = geomagTitle
-        ;; IF use_SYMH THEN BEGIN
-        ;;    yTitle= 'SYM-H (nT)' 
-        ;; ENDIF ELSE BEGIN
-        ;;    IF use_AE THEN BEGIN
-        ;;       yTitle = 'AE (nT)' 
-        ;;    ENDIF ELSE BEGIN
-        ;;       IF KEYWORD_SET(omni_quantity) THEN yTitle = omni_quantity ELSE yTitle = 'DST (nT)'
-        ;;    ENDELSE
-        ;; ENDELSE
         
         xRange=[-tBeforeStorm,tAfterStorm]
-        ;; yRange=[geomag_min,geomag_max]
-        ;; yRange=[-300,100]
-        ;; yRange=(~use_SYMH AND ~ use_AE) ? [-300,100] : !NULL
-        ;; yRange = do_DST ? [-150,50] : [geomag_min,geomag_max]
         
         FOR i=0,nStorms-1 DO BEGIN
            IF N_ELEMENTS(geomag_time_list[i]) GT 1 AND ~noPlots AND ~noGeomagPlots THEN BEGIN

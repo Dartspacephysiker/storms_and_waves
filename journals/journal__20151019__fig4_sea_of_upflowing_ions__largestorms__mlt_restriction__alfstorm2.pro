@@ -6,8 +6,8 @@ PRO JOURNAL__20151019__FIG4_SEA_OF_UPFLOWING_IONS__LARGESTORMS__MLT_RESTRICTION_
 
   ;; ;the ins
   nEvBinsize=600.D
-  minM = 15
-  maxM = 24
+  minM = -7
+  maxM = 3
   maxInd=16                     ;ion_flux_up
   maxStr='--ion_flux_up'
   rmDupes = 1
