@@ -31,10 +31,11 @@ PRO JOURNAL__20151019__FIG5_SEA_OF_PFLUX_AND_ION__ENERGY__LARGESTORMS__MLT_RESTR
                            MINMLT=minM,MAXMLT=maxM
 
   ;ION_FLUX_UP
-  superpose_storms_nevents,/NOGEOMAGPLOTS,STORMTYPE=1,STORMINDS=q1_st,SSC_TIMES_UTC=q1_utc,REMOVE_DUPES=rmDupes, $
+  superpose_storms_nevents,STORMTYPE=1,STORMINDS=q1_st,SSC_TIMES_UTC=q1_utc,REMOVE_DUPES=rmDupes, $
                            /USE_DARTDB_START_ENDDATE, $
                            TBEFORESTORM=60.0D,TAFTERSTORM=60.0D, $
                            NEVBINSIZE=nEvBinsize, $
+                           /NEVENTHISTS, /OVERPLOT_HIST, $
                            MAXIND=maxInd, $
                            AVG_TYPE_MAXIND=1, $
                            BKGRND_MAXIND=bkgrnd_maxInd, $
