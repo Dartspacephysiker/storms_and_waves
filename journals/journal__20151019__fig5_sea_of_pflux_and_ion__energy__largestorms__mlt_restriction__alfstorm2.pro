@@ -2,7 +2,7 @@
 ;A copy of journal__20150824__REDO_w_BrettNOAA__Fig4_SEA_of_upflowing_ions__background_overlaid__Alfvens_storms_GRL.pro
 ;I'm trying to restrict to a given MLT range.
 
-PRO JOURNAL__20151019__FIG4_SEA_OF_UPFLOWING_IONS__LARGESTORMS__MLT_RESTRICTION__ALFSTORM2
+PRO JOURNAL__20151019__FIG5_SEA_OF_PFLUX_AND_ION__ENERGY__LARGESTORMS__MLT_RESTRICTION__ALFSTORM2
 
   ;; ;the ins
   nEvBinsize=600.D
