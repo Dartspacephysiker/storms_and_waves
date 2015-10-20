@@ -62,7 +62,7 @@ PRO GET_RANGES_FOR_ALFSTORM_PLOTS,MAXIMUS=maximus,CDBTIME=cdbTime,MAXIND=maxInd,
         
      ENDIF ELSE BEGIN
         ;; get appropriate indices
-        plot_i=cgsetintersection(good_i,indgen(alf_storm_i(i,1)-alf_storm_i(i,0)+1)+alf_storm_i(i,0))
+        plot_i=cgsetintersection(good_i,indgen(alf_storm_i[i,1]-alf_storm_i[i,0]+1)+alf_storm_i[i,0])
         
 
         IF plot_i[0] EQ -1 THEN BEGIN

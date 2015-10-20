@@ -3,7 +3,8 @@ PRO SETUP_STORMTIMEARRAY_UTC,stormTimeArray_utc,TBEFORESTORM=tBeforeStorm,TAFTER
                              nStorms=nStorms,STORMINDS=stormInds,STORMFILE=stormFile, $
                              MAXIMUS=maximus,STORMSTRUCTURE=stormStruct,USE_DARTDB_START_ENDDATE=use_dartDB_start_endDate, $   ;DBs
                              STORMTYPE=stormType,STARTDATE=startDate,STOPDATE=stopDate,SSC_TIMES_UTC=ssc_times_utc, $          ;extra info
-                             CENTERTIME=centerTime, TSTAMPS=tStamps, STORMSTRING=stormString,STORMSTRUCT_INDS=stormStruct_inds, $ ; outs
+                             CENTERTIME=centerTime, DATSTARTSTOP=datStartStop, TSTAMPS=tStamps, $
+                             STORMSTRING=stormString,STORMSTRUCT_INDS=stormStruct_inds, $ ; outs
                              RANDOMTIMES=randomTimes, $
                              SAVEFILE=saveFile,SAVESTR=saveString
 

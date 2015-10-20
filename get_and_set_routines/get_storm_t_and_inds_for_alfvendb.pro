@@ -1,4 +1,5 @@
-PRO GET_STORM_T_AND_INDS_FOR_ALFVENDB,maximus,cdbTime,NSTORMS=nStorms,DATSTARTSTOP=datStartStop, $
+PRO GET_STORM_T_AND_INDS_FOR_ALFVENDB,maximus,cdbTime,NSTORMS=nStorms,TBEFORESTORM=tBeforeStorm,TAFTERSTORM=tAfterStorm, $
+                                      DATSTARTSTOP=datStartStop,TSTAMPS=tStamps,GOOD_I=good_i, $
                                       ALF_STORM_T=alf_storm_t,ALF_STORM_I=alf_storm_i, $
                                       RESTRICT_ALTRANGE=restrict_altRange,RESTRICT_CHARERANGE=restrict_charERange, $
                                       MINMLT=minM,MAXMLT=maxM,BINM=binM,MINILAT=minI,MAXILAT=maxI,BINI=binI, $
