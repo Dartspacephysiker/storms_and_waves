@@ -281,6 +281,7 @@ PRO SUPERPOSE_STORMS_NEVENTS,stormTimeArray_utc, $
                                  ALF_IND_LIST=alf_ind_list, $
                                  LOG_DBQUANTITY=log_DBQuantity,NEG_AND_POS_SEPAR=neg_and_pos_separ
      
+  FOR i=0,nStorms-1 DO BEGIN
      PLOT_STORM_ALFVENDB_QUANTITY,NEVRANGE=nEvRange, LOG_DBQUANTITY=log_DBQuantity, $
                                   TOT_PLOT_I_POS_LIST=tot_plot_i_pos_list,TOT_ALF_T_POS_LIST=tot_alf_t_pos_list,TOT_ALF_Y_POS_LIST=tot_alf_y_pos_list, $
                                   TOT_PLOT_I_NEG_LIST=tot_plot_i_neg_list,TOT_ALF_T_NEG_LIST=tot_alf_t_neg_list,TOT_ALF_Y_NEG_LIST=tot_alf_y_neg_list, $
@@ -288,8 +289,18 @@ PRO SUPERPOSE_STORMS_NEVENTS,stormTimeArray_utc, $
                                   TOT_PLOT_I_LIST=tot_plot_i_list,TOT_ALF_T_LIST=tot_alf_t_list,TOT_ALF_Y_LIST=tot_alf_y_list, $
                                   PLOTTITLE=plotTitle,XRANGE=xRange,MINDAT=minDat,MAXDAT=maxDat, $
                                   YTITLE_MAXIND=yTitle_maxInd,YRANGE_MAXIND=yRange_maxInd, $
-                                  OUT_MAXPLOT=out_maxPlot, OUT_MAXPLOTPOS=out_maxPlotPos, OUT_MAXPLOTNEG=out_maxPlotNeg
-     
+                                  OUT_MAXPLOTALL=out_maxPlotAll, OUT_MAXPLOTPOS=out_maxPlotPos, OUT_MAXPLOTNEG=out_maxPlotNeg
+
+     ;; Add the legend, if neg_and_pos_separ
+     IF neg_and_pos_separ THEN BEGIN
+        IF N_ELEMENTS(out_maxPlotPos) GT 0 AND N_ELEMENTS(out_maxPlotNeg) GT 0 THEN BEGIN
+           leg = LEGEND(TARGET=[plot_nEv,plot_bkgrnd], $
+                        POSITION=[-20.,((KEYWORD_SET(nEvRange) ? nEvRange : [0,7500])[1])]*0.45, /DATA, $
+                        /AUTO_TEXT_COLOR)
+        ENDIF
+     ENDIF
+  ENDFOR
+
      IF avg_type_maxInd GT 0 THEN BEGIN
 
         IF neg_and_pos_separ THEN BEGIN
@@ -333,7 +344,7 @@ PRO SUPERPOSE_STORMS_NEVENTS,stormTimeArray_utc, $
                                     POS_LAYOUT=pos_layout, NEG_LAYOUT=neg_layout, $
                                     PLOTTITLE=plotTitle,XRANGE=xRange,MINDAT=minDat,MAXDAT=maxDat, $
                                     YTITLE_MAXIND=yTitle_maxInd,YRANGE_MAXIND=yRange_maxInd, $
-                                    OUT_MAXPLOT=out_maxPlot, OUT_MAXPLOTPOS=out_maxPlotPos, OUT_MAXPLOTNEG=out_maxPlotNeg, $
+                                    OUT_MAXPLOTALL=out_maxPlotAll, OUT_MAXPLOTPOS=out_maxPlotPos, OUT_MAXPLOTNEG=out_maxPlotNeg, $
                                     OUT_TBINS=out_tBins,OUT_BKGRND_MAXIND=out_bkgrnd_maxInd
         ENDIF
      ENDIF
@@ -417,7 +428,7 @@ PRO SUPERPOSE_STORMS_NEVENTS,stormTimeArray_utc, $
                              MARGIN=plotMargin_max, $
                              /CURRENT)
 
-        out_maxPlot = plot_bkgrnd_max
+        out_maxPlotAll = plot_bkgrnd_max
 
      ENDIF
      

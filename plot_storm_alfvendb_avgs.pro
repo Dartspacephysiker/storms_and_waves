@@ -4,7 +4,7 @@ PRO PLOT_STORM_ALFVENDB_AVGS,maximus,TBIN=tBin, LOG_DBQUANTITY=log_DBQuantity, $
                              POS_LAYOUT=pos_layout, NEG_LAYOUT=neg_layout, $
                              PLOTTITLE=plotTitle,XRANGE=xRange,MINDAT=minDat,MAXDAT=maxDat, $
                              YTITLE_MAXIND=yTitle_maxInd,YRANGE_MAXIND=yRange_maxInd, $
-                             OUT_MAXPLOT=out_maxPlot, OUT_MAXPLOTPOS=out_maxPlotPos, OUT_MAXPLOTNEG=out_maxPlotNeg, $
+                             OUT_MAXPLOTALL=out_maxPlotAll, OUT_MAXPLOTPOS=out_maxPlotPos, OUT_MAXPLOTNEG=out_maxPlotNeg, $
                              OUT_TBINS=out_tBins,OUT_BKGRND_MAXIND=out_bkgrnd_maxInd
   
   @stormplot_defaults.pro
@@ -88,7 +88,7 @@ PRO PLOT_STORM_ALFVENDB_AVGS,maximus,TBIN=tBin, LOG_DBQUANTITY=log_DBQuantity, $
                   /CURRENT,/OVERPLOT, $
                   MARGIN=KEYWORD_SET(bkgrnd_maxInd) ? plotMargin_max : !NULL)
      
-     out_maxPlot = avgPlot
+     out_maxPlotAll = avgPlot
   ENDELSE
 
 END
