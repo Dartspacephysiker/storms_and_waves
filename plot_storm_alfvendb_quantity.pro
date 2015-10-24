@@ -1,20 +1,23 @@
-PRO PLOT_STORM_ALFVENDB_QUANTITY,NEVRANGE=nEvRange, LOG_DBQUANTITY=log_DBQuantity, $
-                                 TOT_PLOT_I_POS_LIST=tot_plot_i_pos_list,TOT_ALF_T_POS_LIST=tot_alf_t_pos_list,TOT_ALF_Y_POS_LIST=tot_alf_y_pos_list, $
-                                 TOT_PLOT_I_NEG_LIST=tot_plot_i_neg_list,TOT_ALF_T_NEG_LIST=tot_alf_t_neg_list,TOT_ALF_Y_NEG_LIST=tot_alf_y_neg_list, $
+PRO PLOT_STORM_ALFVENDB_QUANTITY,maxInd,mTags,LOOPIDX=loopIdx,NEVRANGE=nEvRange, LOG_DBQUANTITY=log_DBQuantity, $
+                                 NEG_AND_POS_SEPAR=neg_and_pos_separ, $
+                                 PLOT_I_POS=plot_i_pos,ALF_T_POS=alf_t_pos,ALF_Y_POS=alf_y_pos, $
+                                 PLOT_I_NEG=plot_i_neg,ALF_T_NEG=alf_t_neg,ALF_Y_NEG=alf_y_neg, $
                                  POS_LAYOUT=pos_layout, NEG_LAYOUT=neg_layout, $
-                                 TOT_PLOT_I_LIST=tot_plot_i_list,TOT_ALF_T_LIST=tot_alf_t_list,TOT_ALF_Y_LIST=tot_alf_y_list, $
+                                 PLOT_I_ALL=plot_i,ALF_T_ALL=alf_t,ALF_Y_ALL=alf_y, $
                                  PLOTTITLE=plotTitle,XRANGE=xRange,MINDAT=minDat,MAXDAT=maxDat, $
                                  YTITLE_MAXIND=yTitle_maxInd,YRANGE_MAXIND=yRange_maxInd, $
                                  OUT_MAXPLOTALL=out_maxPlotAll, OUT_MAXPLOTPOS=out_maxPlotPos, OUT_MAXPLOTNEG=out_maxPlotNeg
 
   @stormplot_defaults.pro
 
-  IF neg_and_pos_separ THEN BEGIN
+  IF N_ELEMENTS(loopIdx) EQ 0 THEN loopIdx = 0
+
+  IF KEYWORD_SET(neg_and_pos_separ) THEN BEGIN
      
-     IF (tot_plot_i_pos_list[i])[0] GT -1 AND N_ELEMENTS(tot_plot_i_pos_list[i]) GT 1 THEN BEGIN
+     IF (plot_i_pos)[0] GT -1 AND N_ELEMENTS(plot_i_pos) GT 1 THEN BEGIN
         
-        out_maxPlotPos=plot((tot_alf_t_pos_list[i]), $
-                            (tot_alf_y_pos_list[i]), $
+        out_maxPlotPos=plot((alf_t_pos), $
+                            (alf_y_pos), $
                             TITLE=plotTitle, $
                             XTITLE=defXTitle, $
                             YTITLE=(KEYWORD_SET(yTitle_maxInd) ? $
@@ -34,17 +37,17 @@ PRO PLOT_STORM_ALFVENDB_QUANTITY,NEVRANGE=nEvRange, LOG_DBQUANTITY=log_DBQuantit
                             ;; XTICKFONT_SIZE=max_xtickfont_size, $
                             ;; XTICKFONT_STYLE=max_xtickfont_style, $
                             /CURRENT, $
-                            OVERPLOT=(i EQ 0) ? 0: 1, $
+                            OVERPLOT=(loopIdx EQ 0) ? 0: 1, $
                             LAYOUT=pos_layout, $
                             SYM_TRANSPARENCY=defSymTransp)
         
         
      ENDIF
      
-     IF (tot_plot_i_neg_list[i])[0] GT -1 AND (N_ELEMENTS(tot_plot_i_neg_list[i]) GT 1) THEN BEGIN
+     IF (plot_i_neg)[0] GT -1 AND (N_ELEMENTS(plot_i_neg) GT 1) THEN BEGIN
         
-        out_maxPlotNeg=plot((tot_alf_t_neg_list[i]), $
-                            (tot_alf_y_neg_list[i]), $
+        out_maxPlotNeg=plot((alf_t_neg), $
+                            (alf_y_neg), $
                             TITLE=plotTitle, $
                             XTITLE=defXTitle, $
                             YTITLE=(KEYWORD_SET(yTitle_maxInd) ? $
@@ -69,11 +72,11 @@ PRO PLOT_STORM_ALFVENDB_QUANTITY,NEVRANGE=nEvRange, LOG_DBQUANTITY=log_DBQuantit
      ENDIF
      
   ENDIF ELSE BEGIN
-     IF tot_plot_i_list[i,0] GT -1 AND (N_ELEMENTS(tot_plot_i_list[i]) GT 1) THEN BEGIN
+     IF plot_i[0] GT -1 AND (N_ELEMENTS(plot_i) GT 1) THEN BEGIN
         
-        maxPlot=plot(tot_alf_t_list[i], $
-                     tot_alf_y_list[i], $
-                     ;; (log_DBquantity) ? ALOG10(tot_alf_y_list[i]) : tot_alf_y_list[i], $
+        maxPlot=plot(alf_t, $
+                     alf_y, $
+                     ;; (log_DBquantity) ? ALOG10(alf_y) : alf_y, $
                      XTITLE=defXTitle, $
                      YTITLE=(KEYWORD_SET(yTitle_maxInd) ? $
                              yTitle_maxInd : $
@@ -91,7 +94,7 @@ PRO PLOT_STORM_ALFVENDB_QUANTITY,NEVRANGE=nEvRange, LOG_DBQUANTITY=log_DBQuantit
                      YTICKFONT_STYLE=max_ytickfont_style, $
                      MARGIN=KEYWORD_SET(bkgrnd_maxInd) ? plotMargin_max : !NULL, $
                      /CURRENT, $
-                     OVERPLOT=(i EQ 0) ? 0: 1, $
+                     OVERPLOT=(loopIdx EQ 0) ? 0: 1, $
                      SYM_TRANSPARENCY=defSymTransp)
         
         out_maxPlotAll = maxPlot

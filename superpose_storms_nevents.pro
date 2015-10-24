@@ -87,10 +87,10 @@ PRO SUPERPOSE_STORMS_NEVENTS,stormTimeArray_utc, $
   ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
   ;defaults
   SET_STORMS_NEVENTS_DEFAULTS,TBEFORESTORM=tBeforeStorm,TAFTERSTORM=tAfterStorm,$
-                              SWDBDIR=swDBDir,SWDBFILE=swDBFile, $
-                              STORMDIR=stormDir,STORMFILE=stormFile, $
-                              DST_AEDIR=DST_AEDir,DST_AEFILE=DST_AEFile, $
-                              DBDIR=dbDir,DBFILE=dbFile,DB_TFILE=db_tFile, $
+                              ;; SWDBDIR=swDBDir,SWDBFILE=swDBFile, $
+                              ;; STORMDIR=stormDir,STORMFILE=stormFile, $
+                              ;; DST_AEDIR=DST_AEDir,DST_AEFILE=DST_AEFile, $
+                              ;; DBDIR=dbDir,DBFILE=dbFile,DB_TFILE=db_tFile, $
                               DAYSIDE=dayside,NIGHTSIDE=nightside, $
                               RESTRICT_CHARERANGE=restrict_charERange,RESTRICT_ALTRANGE=restrict_altRange, $
                               MAXIND=maxInd,AVG_TYPE_MAXIND=avg_type_maxInd,LOG_DBQUANTITY=log_DBQuantity, $
@@ -103,15 +103,16 @@ PRO SUPERPOSE_STORMS_NEVENTS,stormTimeArray_utc, $
                               DO_SCATTERPLOTS=do_scatterPlots,SCPLOT_COLORLIST=scPlot_colorList,SCATTEROUTPREFIX=scatterOutPrefix, $
                               RANDOMTIMES=randomTimes
 
-  @stormplot_defaults.pro
+  @utcplot_defaults.pro
 
   ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
   ;Now restore 'em
-  restore,dataDir+swDBDir+swDBFile
-  restore,dataDir+stormDir+stormFile
+  LOAD_OMNI_DB,sw_data,SWDBDIR=swDBDir,SWDBFILE=swDBFile
+  LOAD_NOAA_AND_BRETT_DBS_AND_QI,stormStruct,DB_BRETT=stormFile,DBDIR=stormDir
+  LOAD_MAXIMUS_AND_CDBTIME,maximus,cdbTime,DB_TFILE=DB_tFile,DBDIR=DBDir,DBFILE=DBFile
 
   IF ~use_SYMH AND ~use_AE AND ~omni_Quantity THEN BEGIN
-     restore,dataDir+DST_AEDir+DST_AEFile 
+     LOAD_DST_AE_DBS,dst,ae,DST_AE_DIR=DST_AEDir,DST_AE_FILE=DST_AEFile
      do_DST = 1 
   ENDIF ELSE BEGIN
      IF use_SYMH THEN omni_quantity = 'sym_h'
@@ -119,9 +120,6 @@ PRO SUPERPOSE_STORMS_NEVENTS,stormTimeArray_utc, $
      do_DST = 0                 ;Use DST for plots, not SYM-H
      PRINT,'OMNI Quantity: ' + omni_quantity
   ENDELSE
-
-  restore,dataDir+DBDir+DBFile
-  restore,dataDir+DBDir+DB_tFile
 
   ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
   ;Get all storms occuring within specified date range, if an array of times hasn't been provided
@@ -281,28 +279,38 @@ PRO SUPERPOSE_STORMS_NEVENTS,stormTimeArray_utc, $
                                  ALF_IND_LIST=alf_ind_list, $
                                  LOG_DBQUANTITY=log_DBQuantity,NEG_AND_POS_SEPAR=neg_and_pos_separ
      
-  FOR i=0,nStorms-1 DO BEGIN
-     PLOT_STORM_ALFVENDB_QUANTITY,NEVRANGE=nEvRange, LOG_DBQUANTITY=log_DBQuantity, $
-                                  TOT_PLOT_I_POS_LIST=tot_plot_i_pos_list,TOT_ALF_T_POS_LIST=tot_alf_t_pos_list,TOT_ALF_Y_POS_LIST=tot_alf_y_pos_list, $
-                                  TOT_PLOT_I_NEG_LIST=tot_plot_i_neg_list,TOT_ALF_T_NEG_LIST=tot_alf_t_neg_list,TOT_ALF_Y_NEG_LIST=tot_alf_y_neg_list, $
-                                  POS_LAYOUT=pos_layout, NEG_LAYOUT=neg_layout, $
-                                  TOT_PLOT_I_LIST=tot_plot_i_list,TOT_ALF_T_LIST=tot_alf_t_list,TOT_ALF_Y_LIST=tot_alf_y_list, $
-                                  PLOTTITLE=plotTitle,XRANGE=xRange,MINDAT=minDat,MAXDAT=maxDat, $
-                                  YTITLE_MAXIND=yTitle_maxInd,YRANGE_MAXIND=yRange_maxInd, $
-                                  OUT_MAXPLOTALL=out_maxPlotAll, OUT_MAXPLOTPOS=out_maxPlotPos, OUT_MAXPLOTNEG=out_maxPlotNeg
-
-     ;; Add the legend, if neg_and_pos_separ
-     IF neg_and_pos_separ THEN BEGIN
-        IF N_ELEMENTS(out_maxPlotPos) GT 0 AND N_ELEMENTS(out_maxPlotNeg) GT 0 THEN BEGIN
-           leg = LEGEND(TARGET=[plot_nEv,plot_bkgrnd], $
-                        POSITION=[-20.,((KEYWORD_SET(nEvRange) ? nEvRange : [0,7500])[1])]*0.45, /DATA, $
-                        /AUTO_TEXT_COLOR)
+     FOR i=0,nStorms-1 DO BEGIN
+        plot_i_pos = (N_ELEMENTS(tot_plot_i_pos_list) GT 0 ? tot_plot_i_pos_list[i] : !NULL )
+        alf_t_pos = (N_ELEMENTS(tot_alf_t_pos_list) GT 0 ? tot_alf_t_pos_list[i] : !NULL )
+        alf_y_pos = (N_ELEMENTS(tot_alf_y_pos_list) GT 0 ? tot_alf_y_pos_list[i] : !NULL )
+        plot_i_neg = (N_ELEMENTS(tot_plot_i_neg_list) GT 0 ? tot_plot_i_neg_list[i] : !NULL )
+        alf_t_neg = (N_ELEMENTS(tot_alf_t_neg_list) GT 0 ? tot_alf_t_neg_list[i] : !NULL )
+        alf_y_neg = (N_ELEMENTS(tot_alf_y_neg_list) GT 0 ? tot_alf_y_neg_list[i] : !NULL )
+        plot_i = (N_ELEMENTS(tot_plot_i_list) GT 0 ? tot_plot_i_list[i] : !NULL )
+        alf_t = (N_ELEMENTS(tot_alf_t_list) GT 0 ? tot_alf_t_list[i] : !NULL )
+        alf_y = (N_ELEMENTS(tot_alf_y_list) GT 0 ? tot_alf_y_list[i] : !NULL )
+        PLOT_STORM_ALFVENDB_QUANTITY,maxInd,mTags,LOOPIDX=loopIdx,NEVRANGE=nEvRange, LOG_DBQUANTITY=log_DBQuantity, $
+                                     NEG_AND_POS_SEPAR=neg_and_pos_separ, $
+                                     PLOT_I_POS=plot_i_pos,ALF_T_POS=alf_t_pos,ALF_Y_POS=alf_y_pos, $
+                                     PLOT_I_NEG=plot_i_neg,ALF_T_NEG=alf_t_neg,ALF_Y_NEG=alf_y_neg, $
+                                     POS_LAYOUT=pos_layout, NEG_LAYOUT=neg_layout, $
+                                     PLOT_I_ALL=plot_i,ALF_T_ALL=alf_t,ALF_Y_ALL=alf_y, $
+                                     PLOTTITLE=plotTitle,XRANGE=xRange,MINDAT=minDat,MAXDAT=maxDat, $
+                                     YTITLE_MAXIND=yTitle_maxInd,YRANGE_MAXIND=yRange_maxInd, $
+                                     OUT_MAXPLOTALL=out_maxPlotAll, OUT_MAXPLOTPOS=out_maxPlotPos, OUT_MAXPLOTNEG=out_maxPlotNeg
+        
+        ;; Add the legend, if neg_and_pos_separ
+        IF neg_and_pos_separ THEN BEGIN
+           IF N_ELEMENTS(out_maxPlotPos) GT 0 AND N_ELEMENTS(out_maxPlotNeg) GT 0 THEN BEGIN
+              leg = LEGEND(TARGET=[plot_nEv,plot_bkgrnd], $
+                           POSITION=[-20.,((KEYWORD_SET(nEvRange) ? nEvRange : [0,7500])[1])]*0.45, /DATA, $
+                           /AUTO_TEXT_COLOR)
+           ENDIF
         ENDIF
-     ENDIF
-  ENDFOR
-
+     ENDFOR
+     
      IF avg_type_maxInd GT 0 THEN BEGIN
-
+        
         IF neg_and_pos_separ THEN BEGIN
            IF N_ELEMENTS(out_maxPlotPos) GT 0 THEN BEGIN
               tot_plot_i_pos=tot_plot_i_pos_list[0]

@@ -1,8 +1,8 @@
 PRO SET_STORMS_NEVENTS_DEFAULTS,TBEFORESTORM=tBeforeStorm,TAFTERSTORM=tAfterStorm,$
-                                SWDBDIR=swDBDir,SWDBFILE=swDBFile, $
-                                STORMDIR=stormDir,STORMFILE=stormFile, $
-                                DST_AEDIR=DST_AEDir,DST_AEFILE=DST_AEFile, $
-                                DBDIR=dbDir,DBFILE=dbFile,DB_TFILE=db_tFile, $
+                                ;; SWDBDIR=swDBDir,SWDBFILE=swDBFile, $
+                                ;; STORMDIR=stormDir,STORMFILE=stormFile, $
+                                ;; DST_AEDIR=DST_AEDir,DST_AEFILE=DST_AEFile, $
+                                ;; DBDIR=dbDir,DBFILE=dbFile,DB_TFILE=db_tFile, $
                                 DAYSIDE=dayside,NIGHTSIDE=nightside, $
                                 RESTRICT_CHARERANGE=restrict_charERange,RESTRICT_ALTRANGE=restrict_altRange, $
                                 MAXIND=maxInd,AVG_TYPE_MAXIND=avg_type_maxInd,LOG_DBQUANTITY=log_DBQuantity, $
@@ -18,58 +18,56 @@ PRO SET_STORMS_NEVENTS_DEFAULTS,TBEFORESTORM=tBeforeStorm,TAFTERSTORM=tAfterStor
                                 SHOW_DATA_AVAILABILITY=show_data_availability
   
 
-  defTBeforeStorm      = 60.0D                                                                       ;in hours
-  defTAfterStorm       = 60.0D                                                                       ;in hours
-  defStormType         =  2
-                       
-  defswDBDir           = 'sw_omnidata/'
-  defswDBFile          = 'sw_data.dat'
-                       
-  defStormDir          = 'sw_omnidata/'
-  defStormFile         = 'large_and_small_storms--1985-2011--Anderson.sav'
-                       
-  defDST_AEDir         = 'processed/'
-  defDST_AEFile        = 'idl_ae_dst_data.dat'
-                       
-  defDBDir             = 'dartdb/saves/'
-  ;; defDBFile            = 'Dartdb_20150611--500-16361_inc_lower_lats--maximus.sav'  
-  ;; defDB_tFile          = 'Dartdb_20150611--500-16361_inc_lower_lats--cdbtime.sav'
-  defDBFile            = 'Dartdb_20150814--500-16361_inc_lower_lats--burst_1000-16361--maximus.sav'
-  defDB_tFile          = 'Dartdb_20150814--500-16361_inc_lower_lats--burst_1000-16361--cdbtime.sav'
-                       
-  defUse_SYMH          = 0
-  defUse_AE            = 0
-
-  defOmni_Quantity     = 0
-  defLog_omni_quantity = 0
-  defUse_data_minmax   = 0
-
-  defRestrict_altRange = 0
-  defRestrict_charERange = 0
-
-  defMaxInd            = 6
-  defavg_type_maxInd   = 0
-  defLogDBQuantity     = 0
-
-  defNeg_and_pos_separ = 0
-  defPos_layout= [1,1,1]
-  defNeg_layout= [1,1,1]
-
-  defSaveFile          = 0
-
-  defnEvBinsize        = 150.0D                                                                        ;in minutes
-
-  defNoPlots = 0 
-  defNoGeomagPlots = 0
-  defNoMaxPlots = 0
-
-  defDo_scatterPlots = 0
-  defScatterOutPrefix = 'stackplots_storms_nevents--scatterplot'
+  defTBeforeStorm               = 60.0D                                 ;in hours
+  defTAfterStorm                = 60.0D                                 ;in hours
+  defStormType                  =  2
+                                
+  ;; defswDBDir                    = 'sw_omnidata/'
+  ;; defswDBFile                   = 'sw_data.dat'
+                                
+  ;; defStormDir                   = 'sw_omnidata/'
+  ;; defStormFile                  = 'large_and_small_storms--1985-2011--Anderson.sav'
+                                
+  ;; defDST_AEDir                  = 'processed/'
+  ;; defDST_AEFile                 = 'idl_ae_dst_data.dat'
+                                
+  ;; defDBDir                      = 'dartdb/saves/'
+  ;; DefDBFile                     = 'Dartdb_20151014--500-16361_inc_lower_lats--burst_1000-16361--w_Lshell--maximus.sav'
+  ;; defDB_tFile                   = 'Dartdb_20150814--500-16361_inc_lower_lats--burst_1000-16361--cdbtime.sav'
+                                
+  defUse_SYMH                   = 0
+  defUse_AE                     = 0
+                                
+  defOmni_Quantity              = 0
+  defLog_omni_quantity          = 0
+  defUse_data_minmax            = 0
+                                
+  defRestrict_altRange          = 0
+  defRestrict_charERange        = 0
+                                
+  defMaxInd                     = 6
+  defavg_type_maxInd            = 0
+  defLogDBQuantity              = 0
+                                
+  defNeg_and_pos_separ          = 0
+  defPos_layout                 = [1,1,1]
+  defNeg_layout                 = [1,1,1]
+                                
+  defSaveFile                   = 0
+                                
+  defnEvBinsize                 = 150.0D                                                                        ;in minutes
+                                
+  defNoPlots                    = 0 
+  defNoGeomagPlots              = 0
+  defNoMaxPlots                 = 0
+                                
+  defDo_scatterPlots            = 0
+  defScatterOutPrefix           = 'stackplots_storms_nevents--scatterplot'
   ;; defScPlot_colorList = ''
 
-  defRandomTimes = 0
+  defRandomTimes                = 0
 
-  defShow_data_availability = 0
+  defShow_data_availability     = 0
 
   ;;set defaults
   IF N_ELEMENTS(tBeforeStorm) EQ 0 THEN tBeforeStorm = defTBeforeStorm
@@ -77,18 +75,18 @@ PRO SET_STORMS_NEVENTS_DEFAULTS,TBEFORESTORM=tBeforeStorm,TAFTERSTORM=tAfterStor
 
   IF N_ELEMENTS(stormType) EQ 0 THEN stormType=defStormType
      
-  IF N_ELEMENTS(swDBDir) EQ 0 THEN swDBDir=defswDBDir
-  IF N_ELEMENTS(swDBFile) EQ 0 THEN swDBFile=defswDBFile
+  ;; IF N_ELEMENTS(swDBDir) EQ 0 THEN swDBDir=defswDBDir
+  ;; IF N_ELEMENTS(swDBFile) EQ 0 THEN swDBFile=defswDBFile
 
-  IF N_ELEMENTS(stormDir) EQ 0 THEN stormDir=defStormDir
-  IF N_ELEMENTS(stormFile) EQ 0 THEN stormFile=defStormFile
+  ;; IF N_ELEMENTS(stormDir) EQ 0 THEN stormDir=defStormDir
+  ;; IF N_ELEMENTS(stormFile) EQ 0 THEN stormFile=defStormFile
 
-  IF N_ELEMENTS(DST_AEDir) EQ 0 THEN DST_AEDir=defDST_AEDir
-  IF N_ELEMENTS(DST_AEFile) EQ 0 THEN DST_AEFile=defDST_AEFile
+  ;; IF N_ELEMENTS(DST_AEDir) EQ 0 THEN DST_AEDir=defDST_AEDir
+  ;; IF N_ELEMENTS(DST_AEFile) EQ 0 THEN DST_AEFile=defDST_AEFile
 
-  IF N_ELEMENTS(dbDir) EQ 0 THEN dbDir=defDBDir
-  IF N_ELEMENTS(dbFile) EQ 0 THEN dbFile=defDBFile
-  IF N_ELEMENTS(db_tFile) EQ 0 THEN db_tFile=defDB_tFile
+  ;; IF N_ELEMENTS(dbDir) EQ 0 THEN dbDir=defDBDir
+  ;; IF N_ELEMENTS(dbFile) EQ 0 THEN dbFile=defDBFile
+  ;; IF N_ELEMENTS(db_tFile) EQ 0 THEN db_tFile=defDB_tFile
 
   IF KEYWORD_SET(dayside) THEN print,"Only considering dayside stuff!"
   IF KEYWORD_SET(nightside) THEN print,"Only considering nightside stuff!"
