@@ -13,7 +13,7 @@ PRO SET_STORMS_NEVENTS_DEFAULTS,TBEFOREEPOCH=tBeforeEpoch,TAFTEREPOCH=tAfterEpoc
                                 SAVEFILE=saveFile,SAVESTR=saveStr, $
                                 PLOTTITLE=plotTitle,SAVEPLOTNAME=savePlotName, $
                                 NOPLOTS=noPlots,NOGEOMAGPLOTS=noGeomagPlots,NOMAXPLOTS=noMaxPlots, $
-                                DO_SCATTERPLOTS=do_scatterPlots,SCPLOT_COLORLIST=scPlot_colorList,SCATTEROUTPREFIX=scatterOutPrefix, $
+                                DO_SCATTERPLOTS=do_scatterPlots,epochPlot_colorNames=scPlot_colorList,SCATTEROUTPREFIX=scatterOutPrefix, $
                                 RANDOMTIMES=randomTimes, $
                                 SHOW_DATA_AVAILABILITY=show_data_availability
   
@@ -63,7 +63,7 @@ PRO SET_STORMS_NEVENTS_DEFAULTS,TBEFOREEPOCH=tBeforeEpoch,TAFTEREPOCH=tAfterEpoc
                                 
   defDo_scatterPlots            = 0
   defScatterOutPrefix           = 'stackplots_storms_nevents--scatterplot'
-  ;; defScPlot_colorList = ''
+  ;; defepochPlot_colorNames = ''
 
   defRandomTimes                = 0
 
@@ -121,7 +121,7 @@ PRO SET_STORMS_NEVENTS_DEFAULTS,TBEFOREEPOCH=tBeforeEpoch,TAFTEREPOCH=tAfterEpoc
   IF N_ELEMENTS(noMaxPlots) EQ 0 THEN noMaxPlots=defNoMaxPlots
 
   IF N_ELEMENTS(do_scatterPlots) EQ 0 THEN do_scatterPlots = defdo_scatterPlots
-  ;; IF N_ELEMENTS(scPlot_colorList) EQ 0 THEN scPlot_colorList = defscPlot_colorList
+  ;; IF N_ELEMENTS(epochPlot_colorNames) EQ 0 THEN scPlot_colorList = defscPlot_colorList
 
   IF KEYWORD_SET(do_scatterPlots) THEN BEGIN
      IF SIZE(scatterOutPrefix,/TYPE) NE 7 THEN scatterOutPrefix=defScatterOutPrefix

@@ -54,7 +54,7 @@ PRO JOURNAL__20150825__GET_STARTSTOP_FOR_FOUR_STORMS__ALFVENS_STORMS_GRL, $
                                      RETURNED_NEV_TBINS_AND_HIST=stormtime_returned_tbins_and_nevhist, $
                                      YRANGE_MAXIND=yRange_maxInd, $
                                      SAVEPLOTNAME=savePlotName, $
-                                     SCPLOT_COLORLIST=['red','blue','green','purple'], $
+                                     epochPlot_colorNames=['red','blue','green','purple'], $
                                      OUT_GEOMAGWINDOW=geomagWindow,OUT_GEOMAGPLOTS=geomagPlots, $
                                      OUT_MAXPLOTS=maxPlots,OUT_DATSTARTSTOP=dss
 

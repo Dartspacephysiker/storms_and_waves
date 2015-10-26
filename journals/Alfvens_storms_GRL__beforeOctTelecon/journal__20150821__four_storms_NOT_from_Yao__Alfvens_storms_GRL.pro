@@ -86,7 +86,7 @@ PRO JOURNAL__20150821__four_storms_NOT_from_Yao__Alfven_storm_GRL
                                      MAXIND=maxInd, REMOVE_DUPES=rmDupes, $
                                      RETURNED_NEV_TBINS_AND_HIST=stormtime_returned_tbins_and_nevhist,YRANGE_MAXIND=yRange_maxInd, $
                                      SAVEPLOTNAME=savePlotName, $
-                                     /DO_SCATTERPLOTS,SCPLOT_COLORLIST=['red','blue','green','purple'], $
+                                     /DO_SCATTERPLOTS,epochPlot_colorNames=['red','blue','green','purple'], $
                                      SCATTEROUTPREFIX=scOutPref, $
                                      /USE_SYMH
 

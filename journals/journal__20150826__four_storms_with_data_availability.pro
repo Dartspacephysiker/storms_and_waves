@@ -51,7 +51,7 @@ PRO JOURNAL__20150826__FOUR_STORMS_WITH_DATA_AVAILABILITY
                                      MAXIND=maxInd, REMOVE_DUPES=rmDupes, $
                                      YRANGE_MAXIND=yRange_maxInd, $
                                      SAVEPLOTNAME=savePlotName, $
-                                     SCPLOT_COLORLIST=['red','blue','green','purple'], $
+                                     epochPlot_colorNames=['red','blue','green','purple'], $
                                      /USE_SYMH,/SHOW_DATA_AVAILABILITY,/USE_DATA_MINMAX
 
 END

@@ -81,8 +81,8 @@ PRO PLOT_OMNI_QUANTITY_DURING_FOUR_1998_STORMS__ALFVENS_STORMS_GRL,OMNI_QUANTITY
                                      YRANGE_MAXIND=yRange_maxInd, $
                                      /JUST_ONE_LABEL, $
                                      SAVEPLOTNAME=savePlotName, $
-                                     ;; /DO_SCATTERPLOTS,SCPLOT_COLORLIST=['red','blue','green','purple'], SCATTEROUTPREFIX=scOutPref, $
-                                     SCPLOT_COLORLIST=['red','blue','green','purple'], $                                   
+                                     ;; /DO_SCATTERPLOTS,epochPlot_colorNames=['red','blue','green','purple'], SCATTEROUTPREFIX=scOutPref, $
+                                     epochPlot_colorNames=['red','blue','green','purple'], $                                   
                                      OMNI_QUANTITY=omni_quantity,LOG_OMNI_QUANTITY=logPlots,USE_DATA_MINMAX=use_data_minMax
 
 END

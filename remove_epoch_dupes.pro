@@ -19,7 +19,7 @@ PRO REMOVE_EPOCH_DUPES,NEPOCHS=nEpochs,CENTERTIME=centerTime,TSTAMPS=tStamps,$
      
      FOR j=i+1,nEpochs-1 DO BEGIN
         IF keep_i[i] AND keep_i[j] THEN BEGIN
-           IF ( centerTime(j)-centerTime[i] )/3600. LT tAftNoDupes THEN keep_i[j] = 0
+           IF ( centerTime[j]-centerTime[i] )/3600. LT tAftNoDupes THEN keep_i[j] = 0
         ENDIF
      ENDFOR
   ENDFOR

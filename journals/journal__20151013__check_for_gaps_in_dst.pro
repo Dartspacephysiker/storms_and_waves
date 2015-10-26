@@ -15,7 +15,7 @@ PRO JOURNAL__20151013__CHECK_FOR_GAPS_IN_DST
                               nEvBinsize=nEvBinsize,min_NEVBINSIZE=min_NEVBINSIZE, $
                               saveFile=saveFile,SAVESTR=saveStr, $
                               noPlots=noPlots,noMaxPlots=noMaxPlots, $
-                              DO_SCATTERPLOTS=do_scatterPlots,SCPLOT_COLORLIST=scPlot_colorList,SCATTEROUTPREFIX=scatterOutPrefix, $
+                              DO_SCATTERPLOTS=do_scatterPlots,epochPlot_colorNames=scPlot_colorList,SCATTEROUTPREFIX=scatterOutPrefix, $
                               RANDOMTIMES=randomTimes
 
   ;;Load Dst, AE & Co.

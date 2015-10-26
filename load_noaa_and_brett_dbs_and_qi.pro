@@ -1,6 +1,8 @@
 ;;2015/10/16 
 ;;Time to streamline my life
-PRO LOAD_NOAA_AND_BRETT_DBS_AND_QI,stormStruct,SSC1,SSC2,qi,DBDir=DBDir,DB_BRETT=DB_Brett,DB_NOAA=DB_NOAA,INDS_FILE=inds_file
+PRO LOAD_NOAA_AND_BRETT_DBS_AND_QI,stormStruct,SSC1,SSC2,qi,DBDir=DBDir,DB_BRETT=DB_Brett,DB_NOAA=DB_NOAA,INDS_FILE=inds_file,LUN=lun
+
+  IF N_ELEMENTS(lun) EQ 0 THEN lun = -1
 
   DBDIR = '/home/spencerh/Research/Cusp/database/sw_omnidata/'
   DB_Brett = 'large_and_small_storms--1985-2011--Anderson.sav'
