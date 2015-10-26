@@ -51,7 +51,7 @@ PRO JOURNAL__20150815__REDO_w_BrettNOAA__Fig4_SEA_of_upflowing_ions__Alfven_stor
   sscStr='--ssc-centered'
 
   ;ION_FLUX_UP
-  superpose_storms_nevents,STORMTYPE=1,STORMINDS=q1_st,SSC_TIMES_UTC=q1_utc,/OVERPLOT_HIST,/NEVENTHISTS,REMOVE_DUPES=rmDupes, $
+  SUPERPOSE_STORMS_ALFVENDBQUANTITIES,STORMTYPE=1,STORMINDS=q1_st,SSC_TIMES_UTC=q1_utc,/OVERPLOT_HIST,/NEVENTHISTS,REMOVE_DUPES=rmDupes, $
                            /USE_DARTDB_START_ENDDATE, $
                            TBEFORESTORM=60.0D,TAFTERSTORM=60.0D, $
                            NEVBINSIZE=nEvBinsize, $

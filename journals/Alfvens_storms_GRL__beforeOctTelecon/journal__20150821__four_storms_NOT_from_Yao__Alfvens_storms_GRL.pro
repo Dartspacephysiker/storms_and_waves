@@ -81,7 +81,7 @@ PRO JOURNAL__20150821__four_storms_NOT_from_Yao__Alfven_storm_GRL
   rmDupes = 1
 
   ;;SSC-centered here
-  stackplots_storms_nevents_overlaid,STORMTYPE=1,STORMINDS=q1_st,SSC_TIMES_UTC=q1_utc, $
+  STACKPLOTS_STORMS_ALFVENDBQUANTITIES_OVERLAID,STORMTYPE=1,STORMINDS=q1_st,SSC_TIMES_UTC=q1_utc, $
                                      /USE_DARTDB_START_ENDDATE,TBEFORESTORM=15.,TAFTERSTORM=60., $
                                      MAXIND=maxInd, REMOVE_DUPES=rmDupes, $
                                      RETURNED_NEV_TBINS_AND_HIST=stormtime_returned_tbins_and_nevhist,YRANGE_MAXIND=yRange_maxInd, $

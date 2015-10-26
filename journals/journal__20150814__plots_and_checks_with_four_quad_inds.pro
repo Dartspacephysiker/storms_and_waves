@@ -81,39 +81,39 @@ PRO JOURNAL__20150814__PLOTS_AND_CHECKS_WITH_FOUR_QUAD_INDS
   
 
   ;;All dst-centered here
-  superpose_storms_nevents,STORMTYPE=1,STORMINDS=q1_st,MAXIND=maxInd,/OVERPLOT_HIST,/NEVENTHISTS, REMOVE_DUPES=rmDupes, $
+  SUPERPOSE_STORMS_ALFVENDBQUANTITIES,STORMTYPE=1,STORMINDS=q1_st,MAXIND=maxInd,/OVERPLOT_HIST,/NEVENTHISTS, REMOVE_DUPES=rmDupes, $
                            /USE_DARTDB_START_ENDDATE,SAVEPLOTNAME=qStr+'1' + dstStr + sufStr + '.png', $
                            PLOTTITLE="Quadrant 1: 'Large storms' in NOAA SSC DB (Centered on Dst min)", $
                            AVG_TYPE_MAXIND=1,/LOG_DBQUANTITY,YRANGE_MAXIND=[1e5,1e10],SAVEMAXPLOTNAME=qStr+'1' + dstStr + maxStr + sufStr + '.png'
 
-  superpose_storms_nevents,STORMTYPE=0,STORMINDS=q2_st,MAXIND=maxInd,/OVERPLOT_HIST,/NEVENTHISTS, REMOVE_DUPES=rmDupes, $
+  SUPERPOSE_STORMS_ALFVENDBQUANTITIES,STORMTYPE=0,STORMINDS=q2_st,MAXIND=maxInd,/OVERPLOT_HIST,/NEVENTHISTS, REMOVE_DUPES=rmDupes, $
                            /USE_DARTDB_START_ENDDATE,SAVEPLOTNAME=qStr+'2' + dstStr + sufStr + '.png', $
                            PLOTTITLE="Quadrant 2: 'Small storms' in NOAA SSC DB (Centered on NOAA SSC)", $
                            AVG_TYPE_MAXIND=1,/LOG_DBQUANTITY,YRANGE_MAXIND=[1e5,1e10],SAVEMAXPLOTNAME=qStr+'2' + dstStr + maxStr + sufStr + '.png'
 
-  superpose_storms_nevents,STORMTYPE=1,STORMINDS=q3_st,MAXIND=maxInd,/OVERPLOT_HIST,/NEVENTHISTS, REMOVE_DUPES=rmDupes, $
+  SUPERPOSE_STORMS_ALFVENDBQUANTITIES,STORMTYPE=1,STORMINDS=q3_st,MAXIND=maxInd,/OVERPLOT_HIST,/NEVENTHISTS, REMOVE_DUPES=rmDupes, $
                            /USE_DARTDB_START_ENDDATE,SAVEPLOTNAME=qStr+'3' + dstStr + sufStr + '.png', $
                            PLOTTITLE="Quadrant 3: 'Large' storms NOT in NOAA SSC DB (Centered on Dst min)", $
                            AVG_TYPE_MAXIND=1,/LOG_DBQUANTITY,YRANGE_MAXIND=[1e5,1e10],SAVEMAXPLOTNAME=qStr+'3' + dstStr + maxStr + sufStr + '.png'
 
-  superpose_storms_nevents,STORMTYPE=0,STORMINDS=q4_st,MAXIND=maxInd,/OVERPLOT_HIST,/NEVENTHISTS, REMOVE_DUPES=rmDupes, $
+  SUPERPOSE_STORMS_ALFVENDBQUANTITIES,STORMTYPE=0,STORMINDS=q4_st,MAXIND=maxInd,/OVERPLOT_HIST,/NEVENTHISTS, REMOVE_DUPES=rmDupes, $
                            /USE_DARTDB_START_ENDDATE,SAVEPLOTNAME=qStr+'4' + dstStr + sufStr + '.png', $
                            PLOTTITLE="Quadrant 4: 'Small' storms NOT in NOAA SSC DB (Centered on Dst min)", $
                            AVG_TYPE_MAXIND=1,/LOG_DBQUANTITY,YRANGE_MAXIND=[1e5,1e10],SAVEMAXPLOTNAME=qStr+'4' + dstStr + maxStr + sufStr + '.png'
 
   ;;Now SSC-centered
-  superpose_storms_nevents,STORMTYPE=1,STORMINDS=q1_st,MAXIND=maxInd,/OVERPLOT_HIST,/NEVENTHISTS, REMOVE_DUPES=rmDupes,SSC_TIMES_UTC=q1_utc, $
+  SUPERPOSE_STORMS_ALFVENDBQUANTITIES,STORMTYPE=1,STORMINDS=q1_st,MAXIND=maxInd,/OVERPLOT_HIST,/NEVENTHISTS, REMOVE_DUPES=rmDupes,SSC_TIMES_UTC=q1_utc, $
                            /USE_DARTDB_START_ENDDATE,SAVEPLOTNAME=qStr+'1' + sscStr + sufStr + '.png', $
                            PLOTTITLE="Quadrant 1: 'Large storms' in NOAA SSC DB (Centered on NOAA SSC)", $
                            AVG_TYPE_MAXIND=1,/LOG_DBQUANTITY,YRANGE_MAXIND=[1e5,1e10],SAVEMAXPLOTNAME=qStr+'1' + sscStr + maxStr + sufStr + '.png'
 
-  superpose_storms_nevents,STORMTYPE=0,STORMINDS=q2_st,MAXIND=maxInd,/OVERPLOT_HIST,/NEVENTHISTS, REMOVE_DUPES=rmDupes,SSC_TIMES_UTC=q2_utc, $
+  SUPERPOSE_STORMS_ALFVENDBQUANTITIES,STORMTYPE=0,STORMINDS=q2_st,MAXIND=maxInd,/OVERPLOT_HIST,/NEVENTHISTS, REMOVE_DUPES=rmDupes,SSC_TIMES_UTC=q2_utc, $
                            /USE_DARTDB_START_ENDDATE,SAVEPLOTNAME=qStr+'2' + sscStr + sufStr + '.png', $
                            PLOTTITLE="Quadrant 2: 'Small storms' in NOAA SSC DB (Centered on NOAA SSC)", $
                            AVG_TYPE_MAXIND=1,/LOG_DBQUANTITY,YRANGE_MAXIND=[1e5,1e10],SAVEMAXPLOTNAME=qStr+'2' + sscStr + maxStr + sufStr + '.png'
 
   ;;Now 'quadrant 5'
-  superpose_storms_nevents,q5_utc,MAXIND=maxInd,/OVERPLOT_HIST,/NEVENTHISTS,REMOVE_DUPES=rmDupes, $
+  SUPERPOSE_STORMS_ALFVENDBQUANTITIES,q5_utc,MAXIND=maxInd,/OVERPLOT_HIST,/NEVENTHISTS,REMOVE_DUPES=rmDupes, $
                            /USE_DARTDB_START_ENDDATE,SAVEPLOTNAME=qStr+'5' + sscStr + sufStr + '.png', $
                            PLOTTITLE="Quadrant 5: Storms ONLY in NOAA SSC DB ", $
                            AVG_TYPE_MAXIND=1,/LOG_DBQUANTITY,YRANGE_MAXIND=[1e5,1e10],SAVEMAXPLOTNAME=qStr+'5' + sscStr + maxStr + sufStr + '.png'

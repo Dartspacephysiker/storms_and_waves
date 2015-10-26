@@ -57,7 +57,7 @@ PRO JOURNAL__20150824__REDO_SEA_with_NOAA_and_only_40_random_times__Alfven_storm
 
   ;;SSC-centered here
   IF ~FILE_TEST(tempOutFile) THEN BEGIN
-     superpose_storms_nevents,STORMTYPE=1,STORMINDS=q1_st,/OVERPLOT_HIST,/NEVENTHISTS, REMOVE_DUPES=rmDupes,SSC_TIMES_UTC=q1_utc, $
+     SUPERPOSE_STORMS_ALFVENDBQUANTITIES,STORMTYPE=1,STORMINDS=q1_st,/OVERPLOT_HIST,/NEVENTHISTS, REMOVE_DUPES=rmDupes,SSC_TIMES_UTC=q1_utc, $
                               /USE_DARTDB_START_ENDDATE,TBEFORESTORM=60.,TAFTERSTORM=60., $
                               MAXIND=maxInd, $
                               NEVBINSIZE=nEvBinsize, NEVRANGE=nEvRange, $
@@ -94,7 +94,7 @@ PRO JOURNAL__20150824__REDO_SEA_with_NOAA_and_only_40_random_times__Alfven_storm
     RESTORE,sumHistFile
  ENDELSE
 
- superpose_storms_nevents,STORMTYPE=1,STORMINDS=q1_st,/OVERPLOT_HIST,/NEVENTHISTS, REMOVE_DUPES=rmDupes,SSC_TIMES_UTC=q1_utc, $
+ SUPERPOSE_STORMS_ALFVENDBQUANTITIES,STORMTYPE=1,STORMINDS=q1_st,/OVERPLOT_HIST,/NEVENTHISTS, REMOVE_DUPES=rmDupes,SSC_TIMES_UTC=q1_utc, $
                            /USE_DARTDB_START_ENDDATE,TBEFORESTORM=60.,TAFTERSTORM=60., $
                            MAXIND=maxInd, $
                            NEVBINSIZE=nEvBinsize, NEVRANGE=nEvRange, $

@@ -1,5 +1,5 @@
 ;2015/08/21 
-;Stop trying to maintain the various versions of this thing called by superpose_storms_nevents and stackplots_storms_nevents_overlaid
+;Stop trying to maintain the various versions of this thing called by SUPERPOSE_STORMS_ALFVENDBQUANTITIES and STACKPLOTS_STORMS_ALFVENDBQUANTITIES_OVERLAID
 
 PRO GET_STORMTIME_UTC,nStorms=nStorms,STORMINDS=stormInds,STORMFILE=stormFile, $
                       MAXIMUS=maximus,STORMSTRUCTURE=stormStructure,USE_DARTDB_START_ENDDATE=use_dartDB_start_endDate, $      ;DBs

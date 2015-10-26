@@ -54,7 +54,7 @@ PRO JOURNAL__20150815__redo_SEA_with_NOAA_and_random_bkgrnd__Alfven_storm_GRL
   IF rmDupes THEN sufStr = '--rmDupes' + sufStr
 
   ;;SSC-centered here
-  superpose_storms_nevents,STORMTYPE=1,STORMINDS=q1_st,/OVERPLOT_HIST,/NEVENTHISTS, REMOVE_DUPES=rmDupes,SSC_TIMES_UTC=q1_utc, $
+  SUPERPOSE_STORMS_ALFVENDBQUANTITIES,STORMTYPE=1,STORMINDS=q1_st,/OVERPLOT_HIST,/NEVENTHISTS, REMOVE_DUPES=rmDupes,SSC_TIMES_UTC=q1_utc, $
                            /USE_DARTDB_START_ENDDATE,TBEFORESTORM=60.,TAFTERSTORM=60., $
                            MAXIND=maxInd, $
                            NEVBINSIZE=nEvBinsize, NEVRANGE=nEvRange, $
@@ -79,7 +79,7 @@ PRO JOURNAL__20150815__redo_SEA_with_NOAA_and_random_bkgrnd__Alfven_storm_GRL
      FOR i=1,nIterations DO sumHist+=(rt_tbins_and_nevhist_list[i])[*,1]
   ENDIF
      
-  superpose_storms_nevents,STORMTYPE=1,STORMINDS=q1_st,/OVERPLOT_HIST,/NEVENTHISTS, REMOVE_DUPES=rmDupes,SSC_TIMES_UTC=q1_utc, $
+  SUPERPOSE_STORMS_ALFVENDBQUANTITIES,STORMTYPE=1,STORMINDS=q1_st,/OVERPLOT_HIST,/NEVENTHISTS, REMOVE_DUPES=rmDupes,SSC_TIMES_UTC=q1_utc, $
                            /USE_DARTDB_START_ENDDATE,TBEFORESTORM=60.,TAFTERSTORM=60., $
                            MAXIND=maxInd, $
                            NEVBINSIZE=nEvBinsize, NEVRANGE=nEvRange, $

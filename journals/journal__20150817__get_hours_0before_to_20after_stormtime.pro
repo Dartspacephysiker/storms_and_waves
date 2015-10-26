@@ -3,7 +3,7 @@
 
 ;2015/08/21 It occurred to me that while I remove one storm when running JOURNAL__20150815__redo_SEA_with_NOAA_and_random_bkgrnd__Alfven_storm_GRL.pro 
 ; because the tBefore and tAfter are 60, here, the rather, tBefore and tAfter are respectively 0 and 20, and I consequently don't discard that storm. I
-;need to fix that, so I'm adding a keyword HOURS_AFT_FOR_NO_DUPES to superpose_storms_nevents.pro.
+;need to fix that, so I'm adding a keyword HOURS_AFT_FOR_NO_DUPES to SUPERPOSE_STORMS_ALFVENDBQUANTITIES.pro.
 
 PRO JOURNAL__20150817__GET_HOURS_0BEFORE_TO_20AFTER_STORMTIME
 
@@ -52,7 +52,7 @@ PRO JOURNAL__20150817__GET_HOURS_0BEFORE_TO_20AFTER_STORMTIME
   ;; maxStr='--ion_flux_up'
 
   ;;SSC-centered here
-  superpose_storms_nevents,STORMTYPE=1,STORMINDS=q1_st,/OVERPLOT_HIST,/NEVENTHISTS, REMOVE_DUPES=rmDupes,SSC_TIMES_UTC=q1_utc, $
+  SUPERPOSE_STORMS_ALFVENDBQUANTITIES,STORMTYPE=1,STORMINDS=q1_st,/OVERPLOT_HIST,/NEVENTHISTS, REMOVE_DUPES=rmDupes,SSC_TIMES_UTC=q1_utc, $
                            /USE_DARTDB_START_ENDDATE,TBEFORESTORM=timeBeforeStorm,TAFTERSTORM=timeAfterStorm, $
                            MAXIND=maxInd, $
                            NEVBINSIZE=nEvBinsize, NEVRANGE=nEvRange, $

@@ -46,7 +46,7 @@ PRO JOURNAL__20150825__GET_STARTSTOP_FOR_FOUR_STORMS__ALFVENS_STORMS_GRL, $
 
   rmDupes = 1
 
-  stackplots_storms_nevents_overlaid,STORMTYPE=1,STORMINDS=q1_st,SSC_TIMES_UTC=q1_utc, $
+  STACKPLOTS_STORMS_ALFVENDBQUANTITIES_OVERLAID,STORMTYPE=1,STORMINDS=q1_st,SSC_TIMES_UTC=q1_utc, $
                                      /USE_DARTDB_START_ENDDATE,TBEFORESTORM=15.,TAFTERSTORM=60., $
                                      MAXIND=maxInd, REMOVE_DUPES=rmDupes, $
                                      /USE_DATA_MINMAX, $

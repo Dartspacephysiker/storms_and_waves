@@ -10,7 +10,7 @@ PRO JOURNAL__20150620_SUPERPOSED_EPOCH_LARGE_STORMS_FOR_CEDAR2015
                                              /NEVENTHISTS,NEVBINSIZE=60, $
                                              /USE_DARTDB_START_ENDDATE, $
                                              TBEFORESTORM=60,TAFTERSTORM=60,MAXIND=6
-   superpose_storms_nevents,STORMTYPE=1, $
+   SUPERPOSE_STORMS_ALFVENDBQUANTITIES,STORMTYPE=1, $
                             /NEVENTHISTS,NEVBINSIZE=300, $
                             /USE_DARTDB_START_ENDDATE, $
                             TBEFORESTORM=60,TAFTERSTORM=60,MAXIND=6,/OVERPLOT_HIST,/USE_SYMH

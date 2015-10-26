@@ -1,5 +1,5 @@
 ;+
-; NAME:                           STACKPLOTS_STORMS_NEVENTS_OVERLAID
+; NAME:                           STACKPLOTS_STORMS_ALFVENDBQUANTITIES_OVERLAID
 ;
 ; PURPOSE:                        TAKE A LIST OF STORMS, STACK THE PLOTS AND THE RELEVANT ALFVEN EVENTS
 ;
@@ -42,14 +42,14 @@
 ;
 ; EXAMPLE:
 ;
-; MODIFICATION HISTORY:   2015/08/21 Ripping this off superpose_storms_nevents so we can do stackplots of storms
+; MODIFICATION HISTORY:   2015/08/21 Ripping this off SUPERPOSE_STORMS_ALFVENDBQUANTITIES so we can do stackplots of storms
 ;                         2015/08/25 Added the OUT*PLOT and OUT*WINDOW keywords so I can do a rug plot
 ;                         2015/08/26 Added SHOW_DATA_AVAILABILITY keyword for gooder rug plot
 ;                           
 ;-
 
 
-PRO STACKPLOTS_STORMS_NEVENTS_OVERLAID,stormTimeArray_utc, $
+PRO STACKPLOTS_STORMS_ALFVENDBQUANTITIES_OVERLAID,stormTimeArray_utc, $
                              TBEFORESTORM=tBeforeStorm,TAFTERSTORM=tAfterStorm, $
                              STARTDATE=startDate, STOPDATE=stopDate, $
                              DAYSIDE=dayside,NIGHTSIDE=nightside, $

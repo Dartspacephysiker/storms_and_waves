@@ -1,5 +1,5 @@
 ;+
-; NAME:                           SUPERPOSE_STORMS_NEVENTS
+; NAME:                           SUPERPOSE_STORMS_ALFVENDBQUANTITIES
 ;
 ; PURPOSE:                        TAKE A LIST OF STORMS, SUPERPOSE THE STORMS AS WELL AS THE RELEVANT DB QUANTITIES
 ;
@@ -50,7 +50,7 @@
 ;                         2015/10/19 Finally suppressed creation of plot of geomagnetic quantity (Dst, SYM-H, etc.) when not desired
 ;                                       through NOGEOMAGPLOTS keyword.
 ;-
-PRO SUPERPOSE_STORMS_NEVENTS,stormTimeArray_utc, $
+PRO SUPERPOSE_STORMS_ALFVENDBQUANTITIES,stormTimeArray_utc, $
                              TBEFORESTORM=tBeforeStorm,TAFTERSTORM=tAfterStorm, $
                              STARTDATE=startDate, STOPDATE=stopDate, $
                              DAYSIDE=dayside,NIGHTSIDE=nightside, $

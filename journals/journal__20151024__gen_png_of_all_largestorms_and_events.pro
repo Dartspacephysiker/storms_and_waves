@@ -24,7 +24,7 @@ PRO JOURNAL__20151024__GEN_PNG_OF_ALL_LARGESTORMS_AND_EVENTS
      scOutFilePref  = STRING(FORMAT='(A0,I0,".png")',scOutPref,i)
      savePlotFile   = STRING(FORMAT='(A0,I0,".png")',savePlotPref,i)
 ;
-     stackplots_storms_nevents_overlaid,STORMTYPE=1,STORMINDS=q1_st[i],SSC_TIMES_UTC=q1_utc[i], $
+     STACKPLOTS_STORMS_ALFVENDBQUANTITIES_OVERLAID,STORMTYPE=1,STORMINDS=q1_st[i],SSC_TIMES_UTC=q1_utc[i], $
                                         /USE_DARTDB_START_ENDDATE,TBEFORESTORM=15.,TAFTERSTORM=60., $
                                         MAXIND=maxInd, REMOVE_DUPES=rmDupes, $
                                         RETURNED_NEV_TBINS_AND_HIST=stormtime_returned_tbins_and_nevhist,YRANGE_MAXIND=yRange_maxInd, $
