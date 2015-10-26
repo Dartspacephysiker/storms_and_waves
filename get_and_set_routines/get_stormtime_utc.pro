@@ -1,7 +1,7 @@
 ;2015/08/21 
 ;Stop trying to maintain the various versions of this thing called by SUPERPOSE_STORMS_ALFVENDBQUANTITIES and STACKPLOTS_STORMS_ALFVENDBQUANTITIES_OVERLAID
 
-PRO GET_STORMTIME_UTC,nStorms=nStorms,STORMINDS=stormInds,STORMFILE=stormFile, $
+PRO GET_STORMTIME_UTC,nStorms=nStorms,EPOCHINDS=epochInds,STORMFILE=stormFile, $
                       MAXIMUS=maximus,STORMSTRUCTURE=stormStructure,USE_DARTDB_START_ENDDATE=use_dartDB_start_endDate, $      ;DBs
                       STORMTYPE=stormType,STARTDATE=startDate,STOPDATE=stopDate,SSC_TIMES_UTC=ssc_times_utc, $          ;extra info
                       CENTERTIME=centerTime, TSTAMPS=tStamps, STORMSTRING=stormString,STORMSTRUCT_INDS=stormStruct_inds, $ ; outs
@@ -30,14 +30,14 @@ PRO GET_STORMTIME_UTC,nStorms=nStorms,STORMINDS=stormInds,STORMFILE=stormFile, $
      stormStruct_inds = -1
      stormType = 2
      stormString = 'random'
-     centerTime = RANDOMU(seed,nStorms,/DOUBLE)*(stopDate-startDate)+startDate
+     centerTime = RANDOMU(seed,nEpochs,/DOUBLE)*(stopDate-startDate)+startDate
      centerTime = centerTime(SORT(centerTime))
      julDay = conv_utc_to_julday(centerTime,tStamps)
   ENDIF ELSE BEGIN
      stormStruct_inds=WHERE(stormStructure.time GE startDate AND stormStructure.time LE stopDate,/NULL)
      
-     IF KEYWORD_SET(stormInds) THEN BEGIN
-        PRINT,'Using provided storm indices (' + STRCOMPRESS(N_ELEMENTS(stormInds),/REMOVE_ALL) + ' storms)...'
+     IF KEYWORD_SET(epochInds) THEN BEGIN
+        PRINT,'Using provided epoch indices (' + STRCOMPRESS(N_ELEMENTS(epochInds),/REMOVE_ALL) + ' epochs)...'
         PRINT,"Database: " + stormFile
         
         stormStruct_inds = cgsetintersection(stormStruct_inds,stormInds)
@@ -58,11 +58,11 @@ PRO GET_STORMTIME_UTC,nStorms=nStorms,STORMINDS=stormInds,STORMFILE=stormFile, $
         ENDELSE
      ENDELSE
      
-     nStorms=N_ELEMENTS(stormStruct_inds)     
+     nEpochs=N_ELEMENTS(stormStruct_inds)     
      PRINT,"Storm type: " + stormString 
-     PRINT,STRCOMPRESS(N_ELEMENTS(stormStruct_inds),/REMOVE_ALL)+" storms (out of " + STRCOMPRESS(nStorms,/REMOVE_ALL) + " in the DB) selected"
+     PRINT,STRCOMPRESS(N_ELEMENTS(stormStruct_inds),/REMOVE_ALL)+" storms (out of " + STRCOMPRESS(nEpochs,/REMOVE_ALL) + " in the DB) selected"
      
-     IF nStorms EQ 0 THEN BEGIN
+     IF nEpochs EQ 0 THEN BEGIN
         PRINT,"No storms found for given time range:"
         PRINT,"Start date: ",time_to_str(startDate)
         PRINT,"Stop date: ",time_to_str(stopDate)

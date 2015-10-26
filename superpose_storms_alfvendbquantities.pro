@@ -9,13 +9,13 @@
 ;
 ; OPTIONAL INPUTS:
 ;
-; KEYWORD PARAMETERS:          TBEFORESTORM      : Amount of time (hours) to plot before a given DST min
-;                              TAFTERSTORM       : Amount of time (hours) to plot after a given DST min
+; KEYWORD PARAMETERS:          TBEFOREEPOCH      : Amount of time (hours) to plot before a given DST min
+;                              TAFTEREPOCH       : Amount of time (hours) to plot after a given DST min
 ;                              STARTDATE         : Include storms starting with this time (in seconds since Jan 1, 1970)
 ;                              STOPDATE          : Include storms up to this time (in seconds since Jan 1, 1970)
-;                              STORMINDS         : Indices of storms to be included within the given storm DB
+;                              EPOCHINDS         : Indices of epochs to be included within the given storm DB
 ;                              SSC_TIMES_UTC     : Times (in UTC) of sudden commencements
-;                              REMOVE_DUPES      : Remove all duplicate storms falling within [tBeforeStorm,tAfterStorm]
+;                              REMOVE_DUPES      : Remove all duplicate epochs falling within [tBeforeEpoch,tAfterEpoch]
 ;                              STORMTYPE         : '0'=small, '1'=large, '2'=all <-- ONLY APPLICABLE TO BRETT'S DB
 ;                              USE_SYMH          : Use SYM-H geomagnetic index instead of DST for plots of storm epoch.
 ;                              NEVENTHISTS       : Create histogram of number of Alfvén events relative to storm epoch
@@ -43,7 +43,7 @@
 ; EXAMPLE:
 ;
 ; MODIFICATION HISTORY:   2015/06/20 Born on the flight from Boston to Akron, OH en route to DC
-;                         2015/08/14 Adding STORMINDS keywords so we can hand-pick our storms, and PLOTTITLE
+;                         2015/08/14 Adding EPOCHINDS keywords so we can hand-pick our storms, and PLOTTITLE
 ;                         2015/08/17 Added NOPLOTS, NOMAXPLOTS keywords, for crying out loud.
 ;                         2015/08/25 Added the OUT*PLOT and OUT*WINDOW keywords so I can do rug plots and otherwise fiddle
 ;                         2015/10/16 Added {min,max}{mlt,ilat,lshell}                           
@@ -51,10 +51,10 @@
 ;                                       through NOGEOMAGPLOTS keyword.
 ;-
 PRO SUPERPOSE_STORMS_ALFVENDBQUANTITIES,stormTimeArray_utc, $
-                             TBEFORESTORM=tBeforeStorm,TAFTERSTORM=tAfterStorm, $
+                             TBEFOREEPOCH=tBeforeEpoch,TAFTEREPOCH=tAfterEpoch, $
                              STARTDATE=startDate, STOPDATE=stopDate, $
                              DAYSIDE=dayside,NIGHTSIDE=nightside, $
-                             STORMINDS=stormInds, SSC_TIMES_UTC=ssc_times_utc, $
+                             EPOCHINDS=epochInds, SSC_TIMES_UTC=ssc_times_utc, $
                              REMOVE_DUPES=remove_dupes, HOURS_AFT_FOR_NO_DUPES=hours_aft_for_no_dupes, $
                              STORMTYPE=stormType, $
                              USE_SYMH=use_symh,USE_AE=use_AE, $
@@ -86,7 +86,7 @@ PRO SUPERPOSE_STORMS_ALFVENDBQUANTITIES,stormTimeArray_utc, $
 
   ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
   ;defaults
-  SET_STORMS_NEVENTS_DEFAULTS,TBEFORESTORM=tBeforeStorm,TAFTERSTORM=tAfterStorm,$
+  SET_STORMS_NEVENTS_DEFAULTS,TBEFOREEPOCH=tBeforeEpoch,TAFTEREPOCH=tAfterEpoch,$
                               ;; SWDBDIR=swDBDir,SWDBFILE=swDBFile, $
                               ;; STORMDIR=stormDir,STORMFILE=stormFile, $
                               ;; DST_AEDIR=DST_AEDir,DST_AEFILE=DST_AEFile, $
@@ -125,8 +125,8 @@ PRO SUPERPOSE_STORMS_ALFVENDBQUANTITIES,stormTimeArray_utc, $
   ;Get all storms occuring within specified date range, if an array of times hasn't been provided
   
 
-  SETUP_STORMTIMEARRAY_UTC,stormTimeArray_utc,TBEFORESTORM=tBeforeStorm,TAFTERSTORM=tAfterStorm, $
-                             nStorms=nStorms,STORMINDS=stormInds,STORMFILE=stormFile, $
+  SETUP_STORMTIMEARRAY_UTC,stormTimeArray_utc,TBEFOREEPOCH=tBeforeEpoch,TAFTEREPOCH=tAfterEpoch, $
+                             nEpochs=nEpochs,EPOCHINDS=epochInds,STORMFILE=stormFile, $
                              MAXIMUS=maximus,STORMSTRUCTURE=stormStruct,USE_DARTDB_START_ENDDATE=use_dartDB_start_endDate, $   ;DBs
                              STORMTYPE=stormType,STARTDATE=startDate,STOPDATE=stopDate,SSC_TIMES_UTC=ssc_times_utc, $          ;extra info
                              CENTERTIME=centerTime, DATSTARTSTOP=datStartStop, TSTAMPS=tStamps, $
@@ -135,14 +135,14 @@ PRO SUPERPOSE_STORMS_ALFVENDBQUANTITIES,stormTimeArray_utc, $
                              SAVEFILE=saveFile,SAVESTR=saveString
 
   IF KEYWORD_SET(remove_dupes) THEN BEGIN
-     REMOVE_STORM_DUPES,NSTORMS=nStorms,CENTERTIME=centerTime,TSTAMPS=tStamps,$
-                       HOURS_AFT_FOR_NO_DUPES=hours_aft_for_no_dupes,TAFTERSTORM=tAfterStorm
+     REMOVE_EPOCH_DUPES,NEPOCHS=nEpochs,CENTERTIME=centerTime,TSTAMPS=tStamps,$
+                       HOURS_AFT_FOR_NO_DUPES=hours_aft_for_no_dupes,TAFTEREPOCH=tAfterEpoch
   ENDIF
 
   ;**************************************************
   ;generate geomag and stuff
 
-  GENERATE_GEOMAG_QUANTITIES,DATSTARTSTOP=datStartStop,NSTORMS=nStorms,SW_DATA=sw_data, $
+  GENERATE_GEOMAG_QUANTITIES,DATSTARTSTOP=datStartStop,NEPOCHS=nEpochs,SW_DATA=sw_data, $
                              USE_SYMH=use_SYMH,USE_AE=use_AE,DST=dst, $
                              OMNI_QUANTITY=omni_quantity,LOG_OMNI_QUANTITY=log_omni_quantity, $
                              GEOMAG_PLOT_I_LIST=geomag_plot_i_list,GEOMAG_DAT_LIST=geomag_dat_list,GEOMAG_TIME_LIST=geomag_time_list, $
@@ -151,9 +151,9 @@ PRO SUPERPOSE_STORMS_ALFVENDBQUANTITIES,stormTimeArray_utc, $
                              DATATITLE=geomagTitle
 
   ;; ;Get nearest events in Chaston DB
-  GET_STORM_T_AND_INDS_FOR_ALFVENDB,maximus,cdbTime,NSTORMS=nStorms,TBEFORESTORM=tBeforeStorm,TAFTERSTORM=tAfterStorm, $
+  GET_EPOCH_T_AND_INDS_FOR_ALFVENDB,maximus,cdbTime,NEPOCHS=nEpochs,TBEFOREEPOCH=tBeforeEpoch,TAFTEREPOCH=tAfterEpoch, $
                                     DATSTARTSTOP=datStartStop,TSTAMPS=tStamps,GOOD_I=good_i, $
-                                    ALF_STORM_T=alf_storm_t,ALF_STORM_I=alf_storm_i, $
+                                    ALF_EPOCH_T=alf_epoch_t,ALF_EPOCH_I=alf_epoch_i, $
                                     RESTRICT_ALTRANGE=restrict_altRange,RESTRICT_CHARERANGE=restrict_charERange, $
                                     MINMLT=minM,MAXMLT=maxM,BINM=binM,MINILAT=minI,MAXILAT=maxI,BINI=binI, $
                                     DO_LSHELL=do_lshell,MINLSHELL=minL,MAXLSHELL=maxL,BINL=binL, $
@@ -170,7 +170,7 @@ PRO SUPERPOSE_STORMS_ALFVENDBQUANTITIES,stormTimeArray_utc, $
      xTitle=defXTitle
      yTitle = geomagTitle
      
-     xRange=[-tBeforeStorm,tAfterStorm]
+     xRange=[-tBeforeEpoch,tAfterEpoch]
      
      IF ~noPlots AND ~noGeomagPlots THEN BEGIN
         geomagWindow=WINDOW(WINDOW_TITLE="Superposed plots of " + stormString + " storms: "+ $
@@ -178,7 +178,7 @@ PRO SUPERPOSE_STORMS_ALFVENDBQUANTITIES,stormTimeArray_utc, $
                             tStamps(-1), $
                             DIMENSIONS=[1200,800])
         
-        FOR i=0,nStorms-1 DO BEGIN
+        FOR i=0,nEpochs-1 DO BEGIN
            IF N_ELEMENTS(geomag_time_list[i]) GT 1 AND ~noPlots AND ~noGeomagPlots THEN BEGIN
               geomagPlot=plot((geomag_time_list[i]-centerTime[i])/3600.,geomag_dat_list[i], $
                         NAME=omni_quantity, $
@@ -199,7 +199,7 @@ PRO SUPERPOSE_STORMS_ALFVENDBQUANTITIES,stormTimeArray_utc, $
                         TRANSPARENCY=defLineTransp, $
                         THICK=defLineThick) 
               
-           ENDIF ELSE PRINT,'Losing storm #' + STRCOMPRESS(i,/REMOVE_ALL) + ' on the list! Only one elem...'
+           ENDIF ELSE PRINT,'Losing epoch #' + STRCOMPRESS(i,/REMOVE_ALL) + ' on the list! Only one elem...'
         ENDFOR
         
         axes=geomagPlot.axes
@@ -210,7 +210,7 @@ PRO SUPERPOSE_STORMS_ALFVENDBQUANTITIES,stormTimeArray_utc, $
   ENDELSE
 
   ;; Get ranges for plots
-  minMaxDat=MAKE_ARRAY(nStorms,2,/DOUBLE)
+  minMaxDat=MAKE_ARRAY(nEpochs,2,/DOUBLE)
   
   alf_ind_list = LIST(WHERE(maximus.(maxInd) GT 0))
   alf_ind_list.add,WHERE(maximus.(maxInd) LT 0)
@@ -220,11 +220,11 @@ PRO SUPERPOSE_STORMS_ALFVENDBQUANTITIES,stormTimeArray_utc, $
      WAIT,1
   ENDIF
 
-  nAlfStorms = nStorms
-  GET_RANGES_FOR_ALFSTORM_PLOTS,MAXIMUS=maximus,CDBTIME=cdbTime,MAXIND=maxInd,GOOD_I=good_i, $
-                                ALF_STORM_I=alf_storm_i,ALF_IND_LIST=alf_ind_list, $
-                                MINMAXDAT=minMaxDat, NALFSTORMS=nAlfStorms,NSTORMS=nStorms, $
-                                CENTERTIME=centerTime,TSTAMPS=tStamps,tAfterStorm=tAfterStorm,tBeforeStorm=tBeforeStorm, $
+  nAlfEpochs = nEpochs
+  GET_DATA_FOR_ALFVENDB_EPOCH_PLOTS,MAXIMUS=maximus,CDBTIME=cdbTime,MAXIND=maxInd,GOOD_I=good_i, $
+                                ALF_EPOCH_I=alf_epoch_i,ALF_IND_LIST=alf_ind_list, $
+                                MINMAXDAT=minMaxDat, NALFEPOCHS=nAlfEpochs,NEPOCHS=nEpochs, $
+                                CENTERTIME=centerTime,TSTAMPS=tStamps,tAfterEpoch=tAfterEpoch,tBeforeEpoch=tBeforeEpoch, $
                                 NEG_AND_POS_SEPAR=neg_and_pos_separ, $
                                 TOT_PLOT_I_POS_LIST=tot_plot_i_pos_list,TOT_ALF_T_POS_LIST=tot_alf_t_pos_list,TOT_ALF_Y_POS_LIST=tot_alf_y_pos_list, $
                                 TOT_PLOT_I_NEG_LIST=tot_plot_i_neg_list,TOT_ALF_T_NEG_LIST=tot_alf_t_neg_list,TOT_ALF_Y_NEG_LIST=tot_alf_y_neg_list, $
@@ -234,9 +234,9 @@ PRO SUPERPOSE_STORMS_ALFVENDBQUANTITIES,stormTimeArray_utc, $
 
   IF KEYWORD_SET(nEventHists) OR (avg_type_maxInd GT 0) THEN BEGIN ;Histos of Alfvén events relative to storm epoch
      GET_ALFSTORM_HISTOS,MAXIMUS=maximus,CDBTIME=cdbTime,MAXIND=maxInd,GOOD_I=good_i, $
-                         ALF_STORM_I=alf_storm_i,ALF_IND_LIST=alf_ind_list, $
-                         MINMAXDAT=minMaxDat, NALFSTORMS=nAlfStorms,NSTORMS=nStorms, $
-                         CENTERTIME=centerTime,TSTAMPS=tStamps,tAfterStorm=tAfterStorm,tBeforeStorm=tBeforeStorm, $
+                         ALF_EPOCH_I=alf_epoch_i,ALF_IND_LIST=alf_ind_list, $
+                         MINMAXDAT=minMaxDat, NALFEPOCHS=nAlfEpochs,NEPOCHS=nEpochs, $
+                         CENTERTIME=centerTime,TSTAMPS=tStamps,tAfterEpoch=tAfterEpoch,tBeforeEpoch=tBeforeEpoch, $
                          NEG_AND_POS_SEPAR=neg_and_pos_separ, $
                          TOT_PLOT_I_POS_LIST=tot_plot_i_pos_list,TOT_ALF_T_POS_LIST=tot_alf_t_pos_list,TOT_ALF_Y_POS_LIST=tot_alf_y_pos_list, $
                          TOT_PLOT_I_NEG_LIST=tot_plot_i_neg_list,TOT_ALF_T_NEG_LIST=tot_alf_t_neg_list,TOT_ALF_Y_NEG_LIST=tot_alf_y_neg_list, $
@@ -275,11 +275,11 @@ PRO SUPERPOSE_STORMS_ALFVENDBQUANTITIES,stormTimeArray_utc, $
      IF ~(noPlots OR noMaxPlots) THEN maximusWindow=WINDOW(WINDOW_TITLE="Maximus plots", $
                                                            DIMENSIONS=[1200,800])
      
-     PREPARE_ALFVENDB_STORMPLOTS,MINMAXDAT=minMaxDat,MAXDAT=maxDat,MINDAT=minDat, $
+     PREPARE_ALFVENDB_EPOCHPLOTS,MINMAXDAT=minMaxDat,MAXDAT=maxDat,MINDAT=minDat, $
                                  ALF_IND_LIST=alf_ind_list, $
                                  LOG_DBQUANTITY=log_DBQuantity,NEG_AND_POS_SEPAR=neg_and_pos_separ
      
-     FOR i=0,nStorms-1 DO BEGIN
+     FOR i=0,nEpochs-1 DO BEGIN
         plot_i_pos = (N_ELEMENTS(tot_plot_i_pos_list) GT 0 ? tot_plot_i_pos_list[i] : !NULL )
         alf_t_pos = (N_ELEMENTS(tot_alf_t_pos_list) GT 0 ? tot_alf_t_pos_list[i] : !NULL )
         alf_y_pos = (N_ELEMENTS(tot_alf_y_pos_list) GT 0 ? tot_alf_y_pos_list[i] : !NULL )
@@ -289,7 +289,7 @@ PRO SUPERPOSE_STORMS_ALFVENDBQUANTITIES,stormTimeArray_utc, $
         plot_i = (N_ELEMENTS(tot_plot_i_list) GT 0 ? tot_plot_i_list[i] : !NULL )
         alf_t = (N_ELEMENTS(tot_alf_t_list) GT 0 ? tot_alf_t_list[i] : !NULL )
         alf_y = (N_ELEMENTS(tot_alf_y_list) GT 0 ? tot_alf_y_list[i] : !NULL )
-        PLOT_STORM_ALFVENDB_QUANTITY,maxInd,mTags,LOOPIDX=loopIdx,NEVRANGE=nEvRange, LOG_DBQUANTITY=log_DBQuantity, $
+        PLOT_EPOCH_ALFVENDB_QUANTITY,maxInd,mTags,LOOPIDX=loopIdx,NEVRANGE=nEvRange, LOG_DBQUANTITY=log_DBQuantity, $
                                      NEG_AND_POS_SEPAR=neg_and_pos_separ, $
                                      PLOT_I_POS=plot_i_pos,ALF_T_POS=alf_t_pos,ALF_Y_POS=alf_y_pos, $
                                      PLOT_I_NEG=plot_i_neg,ALF_T_NEG=alf_t_neg,ALF_Y_NEG=alf_y_neg, $

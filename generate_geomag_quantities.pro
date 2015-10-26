@@ -11,7 +11,7 @@
 
 ;MOD 2015/08/22 Made this thing able to plot anyone we want in the OMNI dataset ... Pretty rad.
 
-PRO GENERATE_GEOMAG_QUANTITIES,DATSTARTSTOP=datStartStop,NSTORMS=nStorms, $
+PRO GENERATE_GEOMAG_QUANTITIES,DATSTARTSTOP=datStartStop,NEPOCHS=nEpochs, $
                                SW_DATA=sw_data,DST=dst, $
                                USE_SYMH=use_SYMH,USE_AE=use_AE, $
                                OMNI_QUANTITY=omni_quantity,LOG_OMNI_QUANTITY=log_omni_quantity, $
@@ -376,7 +376,7 @@ PRO GENERATE_GEOMAG_QUANTITIES,DATSTARTSTOP=datStartStop,NSTORMS=nStorms, $
   ENDIF
 
      
-  ;; Now get a list of indices for OMNI data to be plotted for the storm start/stop times in datStartStop
+  ;; Now get a list of indices for OMNI data to be plotted for the epoch start/stop times in datStartStop
   geomag_plot_i_list = LIST(WHERE(geomag_time_utc GE datStartStop(0,0) AND $ ;first initialize the list
                                   geomag_time_utc LE datStartStop(0,1)))
   geomag_time_list = LIST(geomag_time_utc(geomag_plot_i_list(0)))
@@ -386,7 +386,7 @@ PRO GENERATE_GEOMAG_QUANTITIES,DATSTARTSTOP=datStartStop,NSTORMS=nStorms, $
   geomag_min = MIN(geomag_dat_list(0)) ;For plots, we need the range
   geomag_max = MAX(geomag_dat_list(0))
   
-  FOR i=1,nStorms-1 DO BEGIN    ;Then update it
+  FOR i=1,nEpochs-1 DO BEGIN    ;Then update it
      geomag_plot_i_list.add,WHERE(geomag_time_utc GE datStartStop(i,0) AND $
                                   geomag_time_utc LE datStartStop(i,1))
      geomag_dat_list.add,geomag_dat(geomag_plot_i_list(i))

@@ -1,6 +1,6 @@
-PRO SET_STORMS_NEVENTS_DEFAULTS,TBEFORESTORM=tBeforeStorm,TAFTERSTORM=tAfterStorm,$
+PRO SET_STORMS_NEVENTS_DEFAULTS,TBEFOREEPOCH=tBeforeEpoch,TAFTEREPOCH=tAfterEpoch,$
                                 ;; SWDBDIR=swDBDir,SWDBFILE=swDBFile, $
-                                ;; STORMDIR=stormDir,STORMFILE=stormFile, $
+                                ;; EPOCHDIR=epochDir,EPOCHFILE=epochFile, $
                                 ;; DST_AEDIR=DST_AEDir,DST_AEFILE=DST_AEFile, $
                                 ;; DBDIR=dbDir,DBFILE=dbFile,DB_TFILE=db_tFile, $
                                 DAYSIDE=dayside,NIGHTSIDE=nightside, $
@@ -9,7 +9,7 @@ PRO SET_STORMS_NEVENTS_DEFAULTS,TBEFORESTORM=tBeforeStorm,TAFTERSTORM=tAfterStor
                                 NEG_AND_POS_SEPAR=neg_and_pos_separ,POS_LAYOUT=pos_layout,NEG_LAYOUT=neg_layout, $
                                 USE_SYMH=use_SYMH,USE_AE=use_AE, $
                                 OMNI_QUANTITY=omni_quantity,LOG_OMNI_QUANTITY=log_omni_quantity,USE_DATA_MINMAX=use_data_minmax, $
-                                NEVBINSIZE=nEvBinsize,MIN_NEVBINSIZE=min_NEVBINSIZE, $
+                                NEVBINSIZE=nEvBinsize,HISTOBINSIZE=histoBinSize, $
                                 SAVEFILE=saveFile,SAVESTR=saveStr, $
                                 PLOTTITLE=plotTitle,SAVEPLOTNAME=savePlotName, $
                                 NOPLOTS=noPlots,NOGEOMAGPLOTS=noGeomagPlots,NOMAXPLOTS=noMaxPlots, $
@@ -18,8 +18,8 @@ PRO SET_STORMS_NEVENTS_DEFAULTS,TBEFORESTORM=tBeforeStorm,TAFTERSTORM=tAfterStor
                                 SHOW_DATA_AVAILABILITY=show_data_availability
   
 
-  defTBeforeStorm               = 60.0D                                 ;in hours
-  defTAfterStorm                = 60.0D                                 ;in hours
+  defTBeforeEpoch               = 60.0D                                 ;in hours
+  defTAfterEpoch                = 60.0D                                 ;in hours
   defStormType                  =  2
                                 
   ;; defswDBDir                    = 'sw_omnidata/'
@@ -45,7 +45,7 @@ PRO SET_STORMS_NEVENTS_DEFAULTS,TBEFORESTORM=tBeforeStorm,TAFTERSTORM=tAfterStor
   defRestrict_altRange          = 0
   defRestrict_charERange        = 0
                                 
-  defMaxInd                     = 6
+  defMaxInd                     = !NULL
   defavg_type_maxInd            = 0
   defLogDBQuantity              = 0
                                 
@@ -70,8 +70,8 @@ PRO SET_STORMS_NEVENTS_DEFAULTS,TBEFORESTORM=tBeforeStorm,TAFTERSTORM=tAfterStor
   defShow_data_availability     = 0
 
   ;;set defaults
-  IF N_ELEMENTS(tBeforeStorm) EQ 0 THEN tBeforeStorm = defTBeforeStorm
-  IF N_ELEMENTS(tAfterStorm) EQ 0 THEN tAfterStorm = defTAfterStorm
+  IF N_ELEMENTS(tBeforeEpoch) EQ 0 THEN tBeforeEpoch = defTBeforeEpoch
+  IF N_ELEMENTS(tAfterEpoch) EQ 0 THEN tAfterEpoch = defTAfterEpoch
 
   IF N_ELEMENTS(stormType) EQ 0 THEN stormType=defStormType
      
@@ -112,7 +112,7 @@ PRO SET_STORMS_NEVENTS_DEFAULTS,TBEFORESTORM=tBeforeStorm,TAFTERSTORM=tAfterStor
 
   IF N_ELEMENTS(nEvBinsize) EQ 0 THEN nEvBinsize=defnEvBinsize
   ;; nEvBinsize = nEvBinsize/60.0D
-  min_NEVBINSIZE = nEvBinsize/60.0D
+  histoBinSize = nEvBinsize/60.0D
 
   IF N_ELEMENTS(saveFile) EQ 0 THEN saveFile=defSaveFile
 
