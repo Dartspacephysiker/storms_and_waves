@@ -32,15 +32,24 @@
 ; MODIFICATION HISTORY:  2015/10/14     BORN
 ;
 ;-
-PRO GET_NONSTORM_MAINPHASE_AND_RECOVERYPHASE_PERIODS,dst, $
+PRO GET_NONSTORM_MAINPHASE_AND_RECOVERYPHASE_PERIODS, $
+   dst, $
+   DSTCUTOFF=DstCutoff, $
    STORM_DST_I=s_dst_i,NONSTORM_DST_I=ns_dst_i,MAINPHASE_DST_I=mp_dst_i,RECOVERYPHASE_DST_I=rp_dst_i, $
    N_STORM=n_s,N_NONSTORM=n_ns,N_MAINPHASE=n_mp,N_RECOVERYPHASE=n_rp, $
    EARLIEST_UTC=earliest_UTC,LATEST_UTC=latest_UTC, $
    LUN=lun
   
+  defDstCutoff = -20
+
   IF N_ELEMENTS(lun) EQ 0 THEN lun = -1 ;stdout
 
-  s_dst_i = WHERE(dst.dst LT -20,n_s,COMPLEMENT=ns_dst_i,NCOMPLEMENT=n_ns)
+  IF N_ELEMENTS(dstCutoff) EQ 0 THEN BEGIN
+     dstCutoff=defDstCutoff
+     PRINTF,lun,FORMAT='("Using default Dst cutoff value: ",I0)',dstCutoff
+  ENDIF
+
+  s_dst_i = WHERE(dst.dst LT dstCutoff,n_s,COMPLEMENT=ns_dst_i,NCOMPLEMENT=n_ns)
 
   IF KEYWORD_SET(earliest_UTC) THEN BEGIN
      early_i = WHERE(dst.time GE earliest_UTC)

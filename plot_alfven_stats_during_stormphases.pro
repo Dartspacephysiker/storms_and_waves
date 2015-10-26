@@ -1,5 +1,6 @@
 ;2015/10/21 This is a wrapper so that we don't have to do the gobbledigook below every time we want to see 'sup with these plots
 PRO PLOT_ALFVEN_STATS_DURING_STORMPHASES,$
+                                 DSTCUTOFF=dstCutoff, $
                                  CLOCKSTR=clockStr, ANGLELIM1=angleLim1, ANGLELIM2=angleLim2, $
                                  ORBRANGE=orbRange, ALTITUDERANGE=altitudeRange, CHARERANGE=charERange, POYNTRANGE=poyntRange, NUMORBLIM=numOrbLim, $
                                  MINMLT=minMLT,MAXMLT=maxMLT,BINMLT=binMLT,MINILAT=minILAT,MAXILAT=maxILAT,BINILAT=binILAT, $
@@ -48,13 +49,16 @@ PRO PLOT_ALFVEN_STATS_DURING_STORMPHASES,$
   earliest_UTC = str_to_time('1996-10-06/16:26:02.417')
   latest_UTC = str_to_time('2000-10-06/00:08:45.188')
 
-  GET_NONSTORM_MAINPHASE_AND_RECOVERYPHASE_PERIODS,dst,STORM_DST_I=s_dst_i,NONSTORM_DST_I=ns_dst_i,MAINPHASE_DST_I=mp_dst_i,RECOVERYPHASE_DST_I=rp_dst_i, $
+  GET_NONSTORM_MAINPHASE_AND_RECOVERYPHASE_PERIODS,dst, $
+     DSTCUTOFF=DstCutoff, $
+     STORM_DST_I=s_dst_i,NONSTORM_DST_I=ns_dst_i,MAINPHASE_DST_I=mp_dst_i,RECOVERYPHASE_DST_I=rp_dst_i, $
      N_STORM=n_s,N_NONSTORM=n_ns,N_MAINPHASE=n_mp,N_RECOVERYPHASE=n_rp, $
      EARLIEST_UTC=earliest_UTC,LATEST_UTC=latest_UTC, $
      LUN=lun
 
   dst_i_list=LIST(ns_dst_i,mp_dst_i,rp_dst_i)
-  strings=["nonstorm","mainphase","recoveryphase"]
+  suff = STRING(FORMAT='("--Dstcutoff_",I0)',dstCutoff)
+  strings=["nonstorm"+suff,"mainphase"+suff,"recoveryphase"+suff]
 
   FOR i=0,2 DO BEGIN
      inds=dst_i_list[i]
