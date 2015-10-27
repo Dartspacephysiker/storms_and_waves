@@ -11,7 +11,7 @@ PRO GET_EPOCH_T_AND_INDS_FOR_ALFVENDB,maximus,cdbTime,NEPOCHS=nEpochs,TBEFOREEPO
   alf_epoch_i=MAKE_ARRAY(nEpochs,2,/L64)
   good_i=get_chaston_ind(maximus,"OMNI",-1,/BOTH_HEMIS, $
                          ALTITUDERANGE=(restrict_altRange) ? [1000,5000] : !NULL, $
-                         CHARERANGE=(restrict_charERange) ? [4,300] : !NULL, $
+                         CHARERANGE=(restrict_charERange) ? [4,4000] : !NULL, $
                          MINMLT=minM,MAXMLT=maxM,BINM=binM,MINILAT=minI,MAXILAT=maxI,BINI=binI, $
                          DO_LSHELL=do_lshell,MINLSHELL=minL,MAXLSHELL=maxL,BINL=binL, $
                          DAYSIDE=dayside,NIGHTSIDE=nightside,/PRINT_PARAM_SUMMARY)

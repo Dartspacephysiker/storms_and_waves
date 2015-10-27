@@ -1,7 +1,7 @@
 ;2015/08/21 
 ;Stop trying to maintain the various versions of this thing called by SUPERPOSE_STORMS_ALFVENDBQUANTITIES and STACKPLOTS_STORMS_ALFVENDBQUANTITIES_OVERLAID
 
-PRO GET_STORMTIME_UTC,nStorms=nStorms,EPOCHINDS=epochInds,STORMFILE=stormFile, $
+PRO GET_STORMTIME_UTC,nEpochs=nEpochs,EPOCHINDS=epochInds,STORMFILE=stormFile, $
                       MAXIMUS=maximus,STORMSTRUCTURE=stormStructure,USE_DARTDB_START_ENDDATE=use_dartDB_start_endDate, $      ;DBs
                       STORMTYPE=stormType,STARTDATE=startDate,STOPDATE=stopDate,SSC_TIMES_UTC=ssc_times_utc, $          ;extra info
                       CENTERTIME=centerTime, TSTAMPS=tStamps, STORMSTRING=stormString,STORMSTRUCT_INDS=stormStruct_inds, $ ; outs

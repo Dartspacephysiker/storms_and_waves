@@ -56,6 +56,7 @@ PRO PLOT_ALFVEN_STATS_DURING_STORMPHASES,$
      EARLIEST_UTC=earliest_UTC,LATEST_UTC=latest_UTC, $
      LUN=lun
 
+  justData = 1
   dst_i_list=LIST(ns_dst_i,mp_dst_i,rp_dst_i)
   suff = STRING(FORMAT='("--Dstcutoff_",I0)',dstCutoff)
   strings=["nonstorm"+suff,"mainphase"+suff,"recoveryphase"+suff]

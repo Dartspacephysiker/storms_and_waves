@@ -91,10 +91,6 @@ PRO STACKPLOTS_STORMS_ALFVENDBQUANTITIES_OVERLAID,stormTimeArray_utc, $
   ;defaults
 
   SET_STORMS_NEVENTS_DEFAULTS,TBEFOREEPOCH=tBeforeEpoch,TAFTEREPOCH=tAfterEpoch,$
-                              ;; SWDBDIR=swDBDir,SWDBFILE=swDBFile, $
-                              ;; STORMDIR=stormDir,STORMFILE=stormFile, $
-                              ;; DST_AEDIR=DST_AEDir,DST_AEFILE=DST_AEFile, $
-                              ;; DBDIR=dbDir,DBFILE=dbFile,DB_TFILE=db_tFile, $
                               DAYSIDE=dayside,NIGHTSIDE=nightside, $
                               RESTRICT_CHARERANGE=restrict_charERange,RESTRICT_ALTRANGE=restrict_altRange, $
                               MAXIND=maxInd,AVG_TYPE_MAXIND=avg_type_maxInd,LOG_DBQUANTITY=log_DBQuantity, $
@@ -108,32 +104,6 @@ PRO STACKPLOTS_STORMS_ALFVENDBQUANTITIES_OVERLAID,stormTimeArray_utc, $
                               SHOW_DATA_AVAILABILITY=show_data_availability
 
   @utcplot_defaults.pro
-  ;; plotMargin=[0.1, 0.25, 0.1, 0.15]
-
-  ;; defSymTransp         = 95
-  ;; defLineTransp        = 60
-  ;; defLineThick         = 2.0
-
-  ;; ;; ;For nEvent histos
-  ;; defnEvYRange         = [0,5000]
-                       
-  ;; ;;defs for maxPlots
-  ;; max_xtickfont_size=14
-  ;; max_xtickfont_style=1
-  ;; max_ytickfont_size=14
-  ;; max_ytickfont_style=1
-  ;; avg_symSize=2.0
-  ;; avg_symThick=2.0
-  ;; avg_Thick=2.5
-
-  ;; defXTitle='Hours since storm commencement'
-
-  ;; ;; nMajorTicks=5
-  ;; ;; nMinorTicks=3
-  ;; nMajorTicks=5
-  ;; nMinorTicks=1
-
-  ;; defRes = 200
 
   ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
   ;Now restore 'em
@@ -179,9 +149,10 @@ PRO STACKPLOTS_STORMS_ALFVENDBQUANTITIES_OVERLAID,stormTimeArray_utc, $
 
   ENDELSE
 
-  REMOVE_EPOCH_DUPES,NEPOCHS=nEpochs,CENTERTIME=centerTime,TSTAMPS=tStamps,$
-                     HOURS_AFT_FOR_NO_DUPES=hours_aft_for_no_dupes,TAFTEREPOCH=tAfterEpoch
-
+  IF KEYWORD_SET(remove_dupes) THEN BEGIN
+     REMOVE_EPOCH_DUPES,NEPOCHS=nEpochs,CENTERTIME=centerTime,TSTAMPS=tStamps,$
+                        HOURS_AFT_FOR_NO_DUPES=hours_aft_for_no_dupes,TAFTEREPOCH=tAfterEpoch
+  ENDIF
 
 
   ;; Generate a list of indices to be plotted from the selected geomagnetic index, either SYM-H or DST, and do dat
@@ -245,9 +216,7 @@ PRO STACKPLOTS_STORMS_ALFVENDBQUANTITIES_OVERLAID,stormTimeArray_utc, $
         ENDFOR
         
         axes=geomagPlot.axes
-        ;; axes[0].MAJOR=(nMajorTicks EQ 4) ? nMajorTicks -1 : nMajorTicks
         ;; axes[1].MINOR=nMinorTicks+1
-        ;; ; Has user requested overlaying DST/SYM-H with the histogram?
      ENDIF ;end noplots
   ENDELSE
 
