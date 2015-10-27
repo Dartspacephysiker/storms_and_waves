@@ -6,7 +6,10 @@ PRO SET_STORMS_NEVENTS_DEFAULTS,TBEFOREEPOCH=tBeforeEpoch,TAFTEREPOCH=tAfterEpoc
                                 DAYSIDE=dayside,NIGHTSIDE=nightside, $
                                 RESTRICT_CHARERANGE=restrict_charERange,RESTRICT_ALTRANGE=restrict_altRange, $
                                 MAXIND=maxInd,AVG_TYPE_MAXIND=avg_type_maxInd,LOG_DBQUANTITY=log_DBQuantity, $
-                                NEG_AND_POS_SEPAR=neg_and_pos_separ,POS_LAYOUT=pos_layout,NEG_LAYOUT=neg_layout, $
+                                NEG_AND_POS_SEPAR=neg_and_pos_separ, $
+                                LAYOUT=layout, $
+                                POS_LAYOUT=pos_layout, $
+                                NEG_LAYOUT=neg_layout, $
                                 USE_SYMH=use_SYMH,USE_AE=use_AE, $
                                 OMNI_QUANTITY=omni_quantity,LOG_OMNI_QUANTITY=log_omni_quantity,USE_DATA_MINMAX=use_data_minmax, $
                                 NEVBINSIZE=nEvBinsize,HISTOBINSIZE=histoBinSize, $
@@ -50,6 +53,7 @@ PRO SET_STORMS_NEVENTS_DEFAULTS,TBEFOREEPOCH=tBeforeEpoch,TAFTEREPOCH=tAfterEpoc
   defLogDBQuantity              = 0
                                 
   defNeg_and_pos_separ          = 0
+  defLayout                     = [1,1,1]
   defPos_layout                 = [1,1,1]
   defNeg_layout                 = [1,1,1]
                                 
@@ -100,8 +104,9 @@ PRO SET_STORMS_NEVENTS_DEFAULTS,TBEFOREEPOCH=tBeforeEpoch,TAFTEREPOCH=tAfterEpoc
   IF N_ELEMENTS(log_DBQuantity) EQ 0 THEN log_DBQuantity=defLogDBQuantity
 
   IF N_ELEMENTS(neg_and_pos_separ) EQ 0 THEN neg_and_pos_separ=defNeg_and_pos_separ
-  IF N_ELEMENTS(pos_layout) EQ 0 Then pos_layout=defPos_layout
-  IF N_ELEMENTS(neg_layout) EQ 0 Then neg_layout=defNeg_layout
+  IF N_ELEMENTS(layout)            EQ 0 THEN layout = deflayout
+  IF N_ELEMENTS(pos_layout) EQ 0 THEN pos_layout=defPos_layout
+  IF N_ELEMENTS(neg_layout) EQ 0 THEN neg_layout=defNeg_layout
 
   IF N_ELEMENTS(use_SYMH) EQ 0 THEN use_SYMH = defUse_SYMH
   IF N_ELEMENTS(use_AE)   EQ 0 THEN use_AE = defUse_AE
