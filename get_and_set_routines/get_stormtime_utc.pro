@@ -40,7 +40,7 @@ PRO GET_STORMTIME_UTC,nEpochs=nEpochs,EPOCHINDS=epochInds,STORMFILE=stormFile, $
         PRINT,'Using provided epoch indices (' + STRCOMPRESS(N_ELEMENTS(epochInds),/REMOVE_ALL) + ' epochs)...'
         PRINT,"Database: " + stormFile
         
-        stormStruct_inds = cgsetintersection(stormStruct_inds,stormInds)
+        stormStruct_inds = cgsetintersection(stormStruct_inds,epochInds)
      ENDIF
      
      ;; Check storm type

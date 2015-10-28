@@ -19,7 +19,7 @@
 ;                              STORMTYPE         : '0'=small, '1'=large, '2'=all <-- ONLY APPLICABLE TO BRETT'S DB
 ;                              USE_SYMH          : Use SYM-H geomagnetic index instead of DST for plots of storm epoch.
 ;                              NEVENTHISTS       : Create histogram of number of Alfvén events relative to storm epoch
-;                              NEVBINSIZE        : Size of histogram bins in hours
+;                              HISTOBINSIZE      : Size of histogram bins in hours
 ;                              NEG_AND_POS_SEPAR : Do plots of negative and positive log numbers separately
 ;                              MAXIND            : Index into maximus structure; plot corresponding quantity as a function of time
 ;                                                    since storm commencement (e.g., MAXIND=6 corresponds to mag current).
@@ -59,7 +59,9 @@ PRO SUPERPOSE_STORMS_ALFVENDBQUANTITIES,stormTimeArray_utc, $
                                         STORMTYPE=stormType, $
                                         USE_SYMH=use_symh,USE_AE=use_AE, $
                                         OMNI_QUANTITY=omni_quantity,LOG_OMNI_QUANTITY=log_omni_quantity, $
-                                        NEVENTHISTS=nEventHists,NEVBINSIZE=nEvBinSize, NEVRANGE=nEvRange, $
+                                        NEVENTHISTS=nEventHists, $
+                                        HISTOBINSIZE=histoBinSize, HISTORANGE=histoRange, $
+                                        PROBOCCURENCE_SEA=probOccurrence_sea, LOG_PROBOCCURRENCE=log_probOccurrence, $
                                         RETURNED_NEV_TBINS_and_HIST=returned_nEv_tbins_and_Hist, $
                                         NEG_AND_POS_SEPAR=neg_and_pos_separ, $
                                         LAYOUT=layout, $
@@ -67,8 +69,9 @@ PRO SUPERPOSE_STORMS_ALFVENDBQUANTITIES,stormTimeArray_utc, $
                                         NEG_LAYOUT=neg_layout, $
                                         MAXIND=maxInd, AVG_TYPE_MAXIND=avg_type_maxInd, $
                                         RESTRICT_ALTRANGE=restrict_altRange,RESTRICT_CHARERANGE=restrict_charERange, $
-                                        LOG_DBQUANTITY=log_DBquantity, $
+                                        LOG_DBQUANTITY=log_DBQuantity, $
                                         YTITLE_MAXIND=yTitle_maxInd, YRANGE_MAXIND=yRange_maxInd, $
+                                        SYMTRANSP_MAXIND=symTransp_maxInd, $
                                         BKGRND_HIST=bkgrnd_hist, BKGRND_MAXIND=bkgrnd_maxInd,TBINS=tBins, $
                                         DBFILE=dbFile,DB_TFILE=db_tFile, $
                                         NO_SUPERPOSE=no_superpose, $
@@ -95,14 +98,18 @@ PRO SUPERPOSE_STORMS_ALFVENDBQUANTITIES,stormTimeArray_utc, $
                               DAYSIDE=dayside,NIGHTSIDE=nightside, $
                               RESTRICT_CHARERANGE=restrict_charERange,RESTRICT_ALTRANGE=restrict_altRange, $
                               MAXIND=maxInd,AVG_TYPE_MAXIND=avg_type_maxInd,LOG_DBQUANTITY=log_DBQuantity, $
+                              YTITLE_MAXIND=yTitle_maxInd, YRANGE_MAXIND=yRange_maxInd, $
                               NEG_AND_POS_SEPAR=neg_and_pos_separ, $
                               LAYOUT=layout, $
                               POS_LAYOUT=pos_layout, $
                               NEG_LAYOUT=neg_layout, $
                               USE_SYMH=use_SYMH,USE_AE=use_AE, $
                               OMNI_QUANTITY=omni_quantity,LOG_OMNI_QUANTITY=log_omni_quantity,USE_DATA_MINMAX=use_data_minMax, $
-                              NEVBINSIZE=nEvBinsize,HISTOBINSIZE=histoBinSize, $
+                              HISTOBINSIZE=histoBinSize, HISTORANGE=histoRange, $
+                              PROBOCCURENCE_SEA=probOccurrence_sea, $
+                              SAVEMAXPLOTNAME=saveMaxPlotName, $
                               SAVEFILE=saveFile,SAVESTR=saveStr, $
+                              PLOTTITLE=plotTitle,SAVEPLOTNAME=savePlotName, $
                               NOPLOTS=noPlots,NOGEOMAGPLOTS=noGeomagPlots,NOMAXPLOTS=noMaxPlots, $
                               DO_SCATTERPLOTS=do_scatterPlots,EPOCHPLOT_COLORNAMES=epochPlot_colorNames,SCATTEROUTPREFIX=scatterOutPrefix, $
                               RANDOMTIMES=randomTimes
@@ -130,7 +137,7 @@ PRO SUPERPOSE_STORMS_ALFVENDBQUANTITIES,stormTimeArray_utc, $
   
 
   SETUP_STORMTIMEARRAY_UTC,stormTimeArray_utc,TBEFOREEPOCH=tBeforeEpoch,TAFTEREPOCH=tAfterEpoch, $
-                             nEpochs=nEpochs,EPOCHINDS=epochInds,STORMFILE=stormFile, $
+                             NEPOCHS=nEpochs,EPOCHINDS=epochInds,STORMFILE=stormFile, $
                              MAXIMUS=maximus,STORMSTRUCTURE=stormStruct,USE_DARTDB_START_ENDDATE=use_dartDB_start_endDate, $   ;DBs
                              STORMTYPE=stormType,STARTDATE=startDate,STOPDATE=stopDate,SSC_TIMES_UTC=ssc_times_utc, $          ;extra info
                              CENTERTIME=centerTime, DATSTARTSTOP=datStartStop, TSTAMPS=tStamps, $
@@ -139,7 +146,10 @@ PRO SUPERPOSE_STORMS_ALFVENDBQUANTITIES,stormTimeArray_utc, $
                              SAVEFILE=saveFile,SAVESTR=saveString
 
   IF KEYWORD_SET(remove_dupes) THEN BEGIN
-     REMOVE_EPOCH_DUPES,NEPOCHS=nEpochs,CENTERTIME=centerTime,TSTAMPS=tStamps,$
+     REMOVE_EPOCH_DUPES,NEPOCHS=nEpochs, $
+                       CENTERTIME=centerTime, $
+                       TSTAMPS=tStamps,$
+                       DATSTARTSTOP=datStartStop, $
                        HOURS_AFT_FOR_NO_DUPES=hours_aft_for_no_dupes,TAFTEREPOCH=tAfterEpoch
   ENDIF
 
@@ -154,69 +164,67 @@ PRO SUPERPOSE_STORMS_ALFVENDBQUANTITIES,stormTimeArray_utc, $
                              YRANGE=yRange,/SET_YRANGE,USE_DATA_MINMAX=use_data_minMax, $
                              DATATITLE=geomagTitle
 
-  ;; ;Now plot geomag quantities
-  IF KEYWORD_SET(no_superpose) THEN BEGIN
+  ;; Need a window?
+  IF KEYWORD_SET(savePlotName) OR KEYWORD_SET(nEventHists) OR KEYWORD_SET(probOccurrence_sea) $
+     AND ~KEYWORD_SET(noPlots) THEN BEGIN
      geomagWindow=WINDOW(WINDOW_TITLE=stormString + ' plots', $
                          DIMENSIONS=[1200,800])
+  ENDIF
+  
+  
+  ;; ;Now plot geomag quantities
+  ;; IF KEYWORD_SET(no_superpose) THEN BEGIN
+  ;; ENDIF ELSE BEGIN              ;Just do a regular superposition of all the plots
+  
+  xTitle='Hours since storm commencement' ; defXTitle
+  xRange=[-tBeforeEpoch,tAfterEpoch]
+  yTitle = geomagTitle
+  
+  IF ~noPlots AND ~noGeomagPlots THEN BEGIN
+     geomagWindow=WINDOW(WINDOW_TITLE="Superposed plots of " + stormString + " storms: "+ $
+                         tStamps[0] + " - " + $
+                         tStamps(-1), $
+                         DIMENSIONS=[1200,800])
      
-  ENDIF ELSE BEGIN              ;Just do a regular superposition of all the plots
-
-     xTitle=defXTitle
-     xRange=[-tBeforeEpoch,tAfterEpoch]
-     yTitle = geomagTitle
+     FOR i=0,nEpochs-1 DO BEGIN
+        IF N_ELEMENTS(geomag_time_list[i]) GT 1 AND ~noPlots AND ~noGeomagPlots THEN BEGIN
+           geomagEpochSeconds = geomag_time_list[i]-centerTime[i]
+           geomagEpochDat = geomag_dat_list[i]
+           PLOT_SW_OR_GEOMAGQUANTITY_TRACE__EPOCH,geomagEpochSeconds,geomagEpochDat, $
+                                                  NAME=omni_quantity, $
+                                                  AXIS_STYLE=1, $
+                                                  PLOTTITLE=plotTitle, $
+                                                  XTITLE=xTitle, $
+                                                  XRANGE=xRange, $
+                                                  YTITLE=yTitle, $
+                                                  YRANGE=yRange, $
+                                                  LOGYPLOT=logYPlot, $
+                                                  LINETHICK=lineThick,LINETRANSP=lineTransp, $
+                                                  OVERPLOT=(i EQ 0) ? 0 : 1, $
+                                                  CURRENT=1, $
+                                                  MARGIN=plotMargin, $
+                                                  LAYOUT=!NULL, $
+                                                  ;; CLIP=0, $
+                                                  OUTPLOT=geomagPlot,ADD_PLOT_TO_PLOT_ARRAY=add_plot_to_plot_array
+           
+           ;; out_geomagPlots[i] = geomagPlot
+           
+        ENDIF ELSE PRINT,'Losing epoch #' + STRCOMPRESS(i,/REMOVE_ALL) + ' on the list! Only one elem...'
+     ENDFOR
      
-     IF ~noPlots AND ~noGeomagPlots THEN BEGIN
-        geomagWindow=WINDOW(WINDOW_TITLE="Superposed plots of " + stormString + " storms: "+ $
-                            tStamps[0] + " - " + $
-                            tStamps(-1), $
-                            DIMENSIONS=[1200,800])
-        
-        FOR i=0,nEpochs-1 DO BEGIN
-           IF N_ELEMENTS(geomag_time_list[i]) GT 1 AND ~noPlots AND ~noGeomagPlots THEN BEGIN
-              geomagEpochSeconds = geomag_time_list[i]-centerTime[i]
-              geomagEpochDat = geomag_dat_list[i]
-              PLOT_SW_OR_GEOMAGQUANTITY_TRACE__EPOCH,geomagEpochSeconds,geomagEpochDat, $
-                                                     NAME=omni_quantity, $
-                                                     AXIS_STYLE=1, $
-                                                     PLOTTITLE=plotTitle, $
-                                                     XTITLE=xTitle, $
-                                                     XRANGE=xRange, $
-                                                     YTITLE=yTitle, $
-                                                     YRANGE=yRange, $
-                                                     LOGYPLOT=logYPlot, $
-                                                     LINETHICK=lineThick,LINETRANSP=lineTransp, $
-                                                     OVERPLOT=(i EQ 0) ? 0 : 1, $
-                                                     CURRENT=1, $
-                                                     MARGIN=plotMargin, $
-                                                     LAYOUT=!NULL, $
-                                                     ;; CLIP=0, $
-                                                     OUTPLOT=geomagPlot,ADD_PLOT_TO_PLOT_ARRAY=add_plot_to_plot_array
-
-              ;; out_geomagPlots[i] = geomagPlot
-
-           ENDIF ELSE PRINT,'Losing epoch #' + STRCOMPRESS(i,/REMOVE_ALL) + ' on the list! Only one elem...'
-        ENDFOR
-        
-        axes=geomagPlot.axes
-        axes[1].MINOR=nMinorTicks+1
-     ENDIF ;end noplots 
-  ENDELSE
-
+     axes=geomagPlot.axes
+     axes[1].MINOR=nMinorTicks+1
+  ENDIF                         ;end noplots 
+  ;; ENDELSE
+  
   ;; Get ranges for plots
-  IF KEYWORD_SET(nEventHists) OR (avg_type_maxInd GT 0) OR KEYWORD_SET(maxInd) THEN BEGIN ;Histos of Alfvén events relative to storm epoch
+  IF    KEYWORD_SET(nEventHists) OR (avg_type_maxInd GT 0) $
+     OR KEYWORD_SET(maxInd)      OR KEYWORD_SET(probOccurrence_sea) THEN BEGIN                    ;Histos of Alfvén events relative to storm epoch
      ;; ;Get nearest events in Chaston DB
-     ;; GET_EPOCH_T_AND_INDS_FOR_ALFVENDB,maximus,cdbTime,NEPOCHS=nEpochs,TBEFOREEPOCH=tBeforeEpoch,TAFTEREPOCH=tAfterEpoch, $
-     ;;                                   DATSTARTSTOP=datStartStop,TSTAMPS=tStamps,GOOD_I=good_i, $
-     ;;                                   ALF_EPOCH_T=alf_epoch_t,ALF_EPOCH_I=alf_epoch_i, $
-     ;;                                   RESTRICT_ALTRANGE=restrict_altRange,RESTRICT_CHARERANGE=restrict_charERange, $
-     ;;                                   MINMLT=minM,MAXMLT=maxM,BINM=binM,MINILAT=minI,MAXILAT=maxI,BINI=binI, $
-     ;;                                   DO_LSHELL=do_lshell,MINLSHELL=minL,MAXLSHELL=maxL,BINL=binL, $
-     ;;                                   DAYSIDE=dayside,NIGHTSIDE=nightside, $
-     ;;                                   SAVEFILE=saveFile,SAVESTR=saveStr
-
      GET_EPOCH_T_AND_INDS_FOR_ALFVENDB,maximus,cdbTime,NEPOCHS=nEpochs,TBEFOREEPOCH=tBeforeEpoch,TAFTEREPOCH=tAfterEpoch, $
+                                       CENTERTIME=centerTime, $
                                        DATSTARTSTOP=datStartStop,TSTAMPS=tStamps,GOOD_I=good_i, $
-                                       ALF_EPOCH_T=alf_epoch_t,ALF_EPOCH_I=alf_epoch_i, $
+                                       NALFEPOCHS=nAlfEpochs,ALF_EPOCH_T=alf_epoch_t,ALF_EPOCH_I=alf_epoch_i, $
                                        RESTRICT_ALTRANGE=restrict_altRange,RESTRICT_CHARERANGE=restrict_charERange, $
                                        MINMLT=minM,MAXMLT=maxM,BINM=binM,MINILAT=minI,MAXILAT=maxI,BINI=binI, $
                                        DO_LSHELL=do_lshell,MINLSHELL=minL,MAXLSHELL=maxL,BINL=binL, $
@@ -225,17 +233,33 @@ PRO SUPERPOSE_STORMS_ALFVENDBQUANTITIES,stormTimeArray_utc, $
      
 
      nAlfEpochs = nEpochs
-     GET_DATA_FOR_ALFVENDB_EPOCH_PLOTS,MAXIMUS=maximus,CDBTIME=cdbTime,MAXIND=maxInd,GOOD_I=good_i, $
+     IF KEYWORD_SET(maxInd) THEN BEGIN
+        GET_DATA_FOR_ALFVENDB_EPOCH_PLOTS,MAXIMUS=maximus,CDBTIME=cdbTime,MAXIND=maxInd,GOOD_I=good_i, $
                                       ALF_EPOCH_I=alf_epoch_i,ALF_IND_LIST=alf_ind_list, $
                                       MINMAXDAT=minMaxDat, NALFEPOCHS=nAlfEpochs,NEPOCHS=nEpochs, $
-                                      LOG_DBQUANTITY=log_dbquantity, $
+                                      LOG_DBQUANTITY=log_DBQuantity, $
                                       CENTERTIME=centerTime,TSTAMPS=tStamps,tAfterEpoch=tAfterEpoch,tBeforeEpoch=tBeforeEpoch, $
                                       NEG_AND_POS_SEPAR=neg_and_pos_separ, $
                                       TOT_PLOT_I_POS_LIST=tot_plot_i_pos_list,TOT_ALF_T_POS_LIST=tot_alf_t_pos_list,TOT_ALF_Y_POS_LIST=tot_alf_y_pos_list, $
                                       TOT_PLOT_I_NEG_LIST=tot_plot_i_neg_list,TOT_ALF_T_NEG_LIST=tot_alf_t_neg_list,TOT_ALF_Y_NEG_LIST=tot_alf_y_neg_list, $
                                       TOT_PLOT_I_LIST=tot_plot_i_list,TOT_ALF_T_LIST=tot_alf_t_list,TOT_ALF_Y_LIST=tot_alf_y_list, $
                                       NEVTOT=nEvTot
-
+     ENDIF ELSE BEGIN
+        IF KEYWORD_SET(probOccurrence_sea) THEN BEGIN
+           ;;use maxInd = 20 here to get current width
+           GET_DATA_FOR_ALFVENDB_EPOCH_PLOTS,MAXIMUS=maximus,CDBTIME=cdbTime,MAXIND=20,GOOD_I=good_i, $
+                                      ALF_EPOCH_I=alf_epoch_i,ALF_IND_LIST=alf_ind_list, $
+                                      MINMAXDAT=minMaxDat, NALFEPOCHS=nAlfEpochs,NEPOCHS=nEpochs, $
+                                      LOG_DBQUANTITY=log_DBQuantity, $
+                                      CENTERTIME=centerTime,TSTAMPS=tStamps,tAfterEpoch=tAfterEpoch,tBeforeEpoch=tBeforeEpoch, $
+                                      NEG_AND_POS_SEPAR=neg_and_pos_separ, $
+                                      TOT_PLOT_I_POS_LIST=tot_plot_i_pos_list,TOT_ALF_T_POS_LIST=tot_alf_t_pos_list,TOT_ALF_Y_POS_LIST=tot_alf_y_pos_list, $
+                                      TOT_PLOT_I_NEG_LIST=tot_plot_i_neg_list,TOT_ALF_T_NEG_LIST=tot_alf_t_neg_list,TOT_ALF_Y_NEG_LIST=tot_alf_y_neg_list, $
+                                      TOT_PLOT_I_LIST=tot_plot_i_list,TOT_ALF_T_LIST=tot_alf_t_list,TOT_ALF_Y_LIST=tot_alf_y_list, $
+                                      NEVTOT=nEvTot
+        ENDIF
+     ENDELSE
+     
      IF KEYWORD_SET(neg_AND_pos_separ) THEN BEGIN
         ;;First pos
         tot_alf_t_pos = LIST_TO_1DARRAY(tot_alf_t_pos_list,/WARN,/SKIP_NEG1_ELEMENTS)
@@ -273,38 +297,88 @@ PRO SUPERPOSE_STORMS_ALFVENDBQUANTITIES,stormTimeArray_utc, $
            TAFTEREPOCH=tafterepoch,TBEFOREEPOCH=tBeforeEpoch, $
            HISTOBINSIZE=histoBinSize,NEVTOT=nEvTot, $
            NONZERO_I=nz_i
+
+        IF KEYWORD_SET(probOccurrence_sea) THEN BEGIN
+
+           GET_FASTLOC_HISTOGRAM__EPOCH_ARRAY, $
+              T1_ARR=datStartStop[*,0], $
+              T2_ARR=datStartStop[*,1], $
+              CENTERTIME=centerTime, $
+              RESTRICT_ALTRANGE=restrict_altRange,RESTRICT_CHARERANGE=restrict_charERange, $
+              MINMLT=minM,MAXMLT=maxM,BINM=binM,MINILAT=minI,MAXILAT=maxI,BINI=binI, $
+              DO_LSHELL=do_lshell,MINLSHELL=minL,MAXLSHELL=maxL,BINL=binL, $
+              HEMI='BOTH', $
+              NEPOCHS=nEpochs, $
+              OUTINDSPREFIX=savePlotMaxName, $
+              HISTDATA=fastLocHistData, $
+              HISTTBINS=fastLocBins, $
+              NEVHISTDATA=fastLoc_nEvHistData, $
+              TAFTEREPOCH=tAfterEpoch,TBEFOREEPOCH=tBeforeEpoch, $
+              HISTOBINSIZE=histoBinSize,NEVTOT=nEvTot_fastLocHist, $
+              FASTLOC_I_LIST=fastLoc_i_list,FASTLOC_T_LIST=fastLoc_t_list,FASTLOC_DT_LIST=fastLoc_dt_list, $
+              NONZERO_I=nz_i_fastLoc, $
+              FASTLOC_STRUCT=fastLoc,FASTLOC_TIMES=fastLoc_times,FASTLOC_DELTA_T=fastLoc_delta_t
+           
+           IF N_ELEMENTS(nz_i_fastLoc) LT N_ELEMENTS(nz_i) THEN BEGIN
+              PRINT,"How does the ephemeris have fewer histo bins than actual data?"
+              STOP
+           ENDIF
+           nz_i_po = CGSETINTERSECTION(nz_i,nz_i_fastLoc)
+           histData[nz_i_po] = histData[nz_i_po]/fastLocHistData[nz_i_po]
+        ENDIF
+
      ENDELSE
   ENDIF
 
   ;;now the plots
-  IF KEYWORD_SET(nEventHists) AND ~noPlots THEN BEGIN
-
-     IF KEYWORD_SET(neg_AND_pos_separ) THEN BEGIN
-        PRINT,"Nevhists not implemented for neg and pos yet..."
-        WAIT,5
-     ENDIF ELSE BEGIN
-        PLOT_ALFVENDBQUANTITY_HISTOGRAM__EPOCH,histTBins,nEvhistData,NAME=name, $
-                                               XRANGE=xRange, $
-                                               HISTORANGE=histoRange, $
-                                               YTITLE=yTitle, $
-                                               MARGIN=plotMargin, $
-                                               PLOTTITLE=plotTitle, $
-                                               OVERPLOT_HIST=overplot_hist, $
-                                               LAYOUT=layout, $
-                                               WINDOW=window,HISTOPLOT=histoPlot, $
-                                               BKGRND_HIST=bkgrnd_hist,BKGRNDHISTOPLOT=bkgrndHistoPlot, $
-                                               OUTPLOT=outPlot,OUTBKGRNDPLOT=outBkgrndPlot, $
-                                               ADD_PLOT_TO_PLOT_ARRAY=add_plot_to_plot_array   
+  IF ~noPlots THEN BEGIN
+     IF KEYWORD_SET(nEventHists) THEN BEGIN
+        
+        IF KEYWORD_SET(neg_AND_pos_separ) THEN BEGIN
+           PRINT,"Nevhists not implemented for neg and pos yet..."
+           WAIT,5
+        ENDIF ELSE BEGIN
+           PLOT_ALFVENDBQUANTITY_HISTOGRAM__EPOCH,histTBins,nEvhistData,NAME=name, $
+                                                  XRANGE=xRange, $
+                                                  HISTORANGE=histoRange, $
+                                                  YTITLE=yTitle, $
+                                                  MARGIN=plotMargin, $
+                                                  PLOTTITLE=plotTitle, $
+                                                  OVERPLOT_HIST=overplot_hist, $
+                                                  CURRENT=current, $
+                                                  LAYOUT=layout, $
+                                                  HISTOPLOT=histoPlot, $
+                                                  BKGRND_HIST=bkgrnd_hist,BKGRNDHISTOPLOT=bkgrndHistoPlot, $
+                                                  OUTPLOT=outPlot,OUTBKGRNDPLOT=outBkgrndPlot, $
+                                                  ADD_PLOT_TO_PLOT_ARRAY=add_plot_to_plot_array   
+        ENDELSE
+        
+     ENDIF ELSE BEGIN                      ;end IF nEventHists
+        IF KEYWORD_SET(probOccurrence_sea) THEN BEGIN
+           PLOT_ALFVENDBQUANTITY_HISTOGRAM__EPOCH,histTBins,histData,NAME=name, $
+                                                  XRANGE=xRange, $
+                                                  HISTORANGE=histoRange, $
+                                                  YTITLE=KEYWORD_SET(yTitle_maxInd) ? yTitle_maxInd : yTitle, $
+                                                  LOGYPLOT=log_probOccurrence, $
+                                                  MARGIN=plotMargin, $
+                                                  PLOTTITLE=plotTitle, $
+                                                  OVERPLOT_HIST=overplot_hist, $
+                                                  CURRENT=1, $
+                                                  LAYOUT=layout, $
+                                                  HISTOPLOT=histoPlot, $
+                                                  BKGRND_HIST=bkgrnd_hist,BKGRNDHISTOPLOT=bkgrndHistoPlot, $
+                                                  OUTPLOT=outPlot,OUTBKGRNDPLOT=outBkgrndPlot, $
+                                                  ADD_PLOT_TO_PLOT_ARRAY=add_plot_to_plot_array   
+        ENDIF
      ENDELSE
+  ENDIF
 
-  ENDIF                         ;end IF nEventHists
-  
   IF KEYWORD_SET(savePlotName) THEN BEGIN
      PRINT,"Saving plot to file: " + savePlotName
      geomagWindow.save,savePlotName,RESOLUTION=defRes
   ENDIF
 
-  IF KEYWORD_SET(maxInd) THEN BEGIN
+  IF KEYWORD_SET(maxInd) AND ~KEYWORD_SET(proOccurrence_sea) THEN BEGIN
 
      mTags=TAG_NAMES(maximus)
      yTitle = (KEYWORD_SET(yTitle_maxInd) ? yTitle_maxInd : mTags[maxInd])
@@ -341,9 +415,9 @@ PRO SUPERPOSE_STORMS_ALFVENDBQUANTITIES,stormTimeArray_utc, $
                  
               ENDELSE
               IF N_ELEMENTS(alf_t) GT 0 AND ~(KEYWORD_SET(noPlots) OR KEYWORD_SET(noMaxPlots)) THEN BEGIN
-                 IF KEYWORD_SET(log_dbquantity) THEN alf_y =  10.0^(alf_y)
+                 IF KEYWORD_SET(log_DBQuantity) THEN alf_y =  10.0^(alf_y)
                  PLOT_ALFVENDBQUANTITY_SCATTER__EPOCH,maxInd,mTags,NAME=name,AXIS_STYLE=axis_Style, $
-                                                      SYMCOLOR=posneg_colors[j],SYMTRANSPARENCY=symTransparency,SYMBOL=symbol, $
+                                                      SYMCOLOR=posneg_colors[j],SYMTRANSPARENCY=symTransp_maxInd,SYMBOL=symbol, $
                                                       ;; ALFDBSTRUCT=maximus,ALFDBTIME=cdbTime,PLOT_I=plot_i,CENTERTIME=centerTime,$
                                                       ALF_T=alf_t,ALF_Y=alf_y, $
                                                       PLOTTITLE=plotTitle, $
@@ -351,7 +425,7 @@ PRO SUPERPOSE_STORMS_ALFVENDBQUANTITIES,stormTimeArray_utc, $
                                                       XRANGE=xRange, $
                                                       YTITLE=yTitle, $
                                                       YRANGE=KEYWORD_SET(yRange_maxInd) ? yRange_maxInd : [minDat[j],maxDat[j]], $
-                                                      LOGYPLOT=logYPlot, $
+                                                      LOGYPLOT=log_DBQuantity, $
                                                       OVERPLOT_ALFVENDBQUANTITY=(j EQ 0) ? 0 : 1, $
                                                       CURRENT=N_ELEMENTS(maximusWindow) GT 0, $
                                                       MARGIN=plotMargin, $
@@ -370,10 +444,10 @@ PRO SUPERPOSE_STORMS_ALFVENDBQUANTITIES,stormTimeArray_utc, $
            alf_y     = tot_alf_y
            symColor = N_ELEMENTS(epochPlot_colorNames) GT 0 ? epochPlot_colorNames[0] : symColor
            IF N_ELEMENTS(alf_t) GT 0 AND ~(KEYWORD_SET(noPlots) OR KEYWORD_SET(noMaxPlots)) THEN BEGIN
-              IF KEYWORD_SET(log_dbquantity) THEN alf_y =  10.0^(alf_y)
+              IF KEYWORD_SET(log_DBQuantity) THEN alf_y =  10.0^(alf_y)
               PLOT_ALFVENDBQUANTITY_SCATTER__EPOCH,maxInd,mTags,NAME=name,AXIS_STYLE=axis_Style, $
                                                    SYMCOLOR=symColor, $
-                                                   SYMTRANSPARENCY=symTransparency, $
+                                                   SYMTRANSPARENCY=symTransp_maxInd, $
                                                    SYMBOL=symbol, $
                                                    ALF_T=alf_t, $
                                                    ALF_Y=alf_y, $
@@ -382,7 +456,7 @@ PRO SUPERPOSE_STORMS_ALFVENDBQUANTITIES,stormTimeArray_utc, $
                                                    XRANGE=xRange, $
                                                    YTITLE=yTitle, $
                                                    YRANGE=KEYWORD_SET(yRange_maxInd) ? yRange_maxInd : [minDat,maxDat], $
-                                                   LOGYPLOT=log_dbquantity, $
+                                                   LOGYPLOT=log_DBQuantity, $
                                                    ;; OVERPLOT_ALFVENDBQUANTITY=(i EQ 0) ? 0 : 1, $
                                                    OVERPLOT_ALFVENDBQUANTITY=0, $
                                                    CURRENT=N_ELEMENTS(maximusWindow) GT 0, $
@@ -397,7 +471,7 @@ PRO SUPERPOSE_STORMS_ALFVENDBQUANTITIES,stormTimeArray_utc, $
         IF neg_and_pos_separ THEN BEGIN
            IF N_ELEMENTS(out_maxPlotPos) GT 0 AND N_ELEMENTS(out_maxPlotNeg) GT 0 THEN BEGIN
               leg = LEGEND(TARGET=[plot_nEv,plot_bkgrnd], $
-                           POSITION=[-20.,((KEYWORD_SET(nEvRange) ? nEvRange : [0,7500])[1])]*0.45, /DATA, $
+                           POSITION=[-20.,((KEYWORD_SET(histoRange) ? histoRange : [0,7500])[1])]*0.45, /DATA, $
                            /AUTO_TEXT_COLOR)
            ENDIF
         ENDIF
@@ -413,27 +487,21 @@ PRO SUPERPOSE_STORMS_ALFVENDBQUANTITIES,stormTimeArray_utc, $
               TAFTEREPOCH=tAfterEpoch,TBEFOREEPOCH=tBeforeEpoch, $
               HISTOBINSIZE=histoBinSize, $
               NONZERO_I=nz_i, $
-              SYMCOLOR=symColor,SYMTRANSPARENCY=symTransparency,SYMBOL=symbol, $
+              SYMBOL=symbol, $
+              SYMCOLOR=symColor, $
+              ;; SYMTRANSPARENCY=symTransparency, $
               PLOTNAME=plotName, $
               PLOTTITLE=plotTitle, $
               XTITLE=xTitle, $
               XRANGE=xRange, $
               YTITLE=yTitle, $
               YRANGE=KEYWORD_SET(yRange_maxInd) ? yRange_maxInd : [minDat,maxDat], $
-              LOGYPLOT=log_dbquantity, $
+              LOGYPLOT=log_DBQuantity, $
               OVERPLOT=overPlot, $
               CURRENT=1, $
               MARGIN=plotMargin, $
               LAYOUT=layout, $
               OUTPLOT=outPlot,ADD_PLOT_TO_PLOT_ARRAY=add_plot_to_plot_array
-           ;; PLOT_STORM_ALFVENDB_AVGS,maximus,TBIN=tBin, LOG_DBQUANTITY=log_DBQuantity, $
-           ;;                          AVGS_POS=avgs_pos,AVGS_NEG=avgs_neg,AVGS=avgs,SAFE_I=safe_i, $
-           ;;                          ALL_NEVHIST=nEvHistData,NEVHISTDATA_POS=nEvHistData_pos,NEVHISTDATA_NEG=nEvHistData_neg,NEVTOT=nEvTot, $
-           ;;                          POS_LAYOUT=pos_layout, NEG_LAYOUT=neg_layout, $
-           ;;                          PLOTTITLE=plotTitle,XRANGE=xRange,MINDAT=minDat,MAXDAT=maxDat, $
-           ;;                          YTITLE_MAXIND=yTitle_maxInd,YRANGE_MAXIND=yRange_maxInd, $
-           ;;                          OUT_MAXPLOTALL=out_maxPlotAll, OUT_MAXPLOTPOS=out_maxPlotPos, OUT_MAXPLOTNEG=out_maxPlotNeg, $
-           ;;                          OUT_TBINS=out_tBins,OUT_BKGRND_MAXIND=out_bkgrnd_maxInd
         ENDIF
      ENDIF
 

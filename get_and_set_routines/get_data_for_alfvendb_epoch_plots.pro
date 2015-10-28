@@ -91,7 +91,7 @@ PRO GET_DATA_FOR_ALFVENDB_EPOCH_PLOTS,MAXIMUS=maximus,CDBTIME=cdbTime,MAXIND=max
            PRINT,'No Alfven events for epoch #' + STRCOMPRESS(i,/REMOVE_ALL) + '!!!' 
            print,FORMAT='("Epoch ",I0,":",TR5,A0)',i,tStamps(i) ;show me where!
            nAlfEpochs--
-           print,'nAlfEpochs is now ' + STRCOMPRESS(nEpochs,/REMOVE_ALL) + '...'
+           print,'nAlfEpochs is now ' + STRCOMPRESS(nAlfEpochs,/REMOVE_ALL) + '...'
         ENDIF ELSE BEGIN
            
            ;; get relevant time range

@@ -6,13 +6,16 @@ PRO SET_STORMS_NEVENTS_DEFAULTS,TBEFOREEPOCH=tBeforeEpoch,TAFTEREPOCH=tAfterEpoc
                                 DAYSIDE=dayside,NIGHTSIDE=nightside, $
                                 RESTRICT_CHARERANGE=restrict_charERange,RESTRICT_ALTRANGE=restrict_altRange, $
                                 MAXIND=maxInd,AVG_TYPE_MAXIND=avg_type_maxInd,LOG_DBQUANTITY=log_DBQuantity, $
+                                YTITLE_MAXIND=yTitle_maxInd, YRANGE_MAXIND=yRange_maxInd, $
                                 NEG_AND_POS_SEPAR=neg_and_pos_separ, $
                                 LAYOUT=layout, $
                                 POS_LAYOUT=pos_layout, $
                                 NEG_LAYOUT=neg_layout, $
                                 USE_SYMH=use_SYMH,USE_AE=use_AE, $
-                                OMNI_QUANTITY=omni_quantity,LOG_OMNI_QUANTITY=log_omni_quantity,USE_DATA_MINMAX=use_data_minmax, $
-                                NEVBINSIZE=nEvBinsize,HISTOBINSIZE=histoBinSize, $
+                                OMNI_QUANTITY=omni_quantity,LOG_OMNI_QUANTITY=log_omni_quantity,USE_DATA_MINMAX=use_data_minMax, $
+                                HISTOBINSIZE=histoBinSize, HISTORANGE=histoRange, $
+                                PROBOCCURENCE_SEA=probOccurrence_sea, $
+                                SAVEMAXPLOTNAME=saveMaxPlotName, $
                                 SAVEFILE=saveFile,SAVESTR=saveStr, $
                                 PLOTTITLE=plotTitle,SAVEPLOTNAME=savePlotName, $
                                 NOPLOTS=noPlots,NOGEOMAGPLOTS=noGeomagPlots,NOMAXPLOTS=noMaxPlots, $
@@ -59,12 +62,15 @@ PRO SET_STORMS_NEVENTS_DEFAULTS,TBEFOREEPOCH=tBeforeEpoch,TAFTEREPOCH=tAfterEpoc
                                 
   defSaveFile                   = 0
                                 
-  defnEvBinsize                 = 150.0D                                                                        ;in minutes
+  defhistoBinSize               = 2.5 ;in hours
                                 
   defNoPlots                    = 0 
   defNoGeomagPlots              = 0
   defNoMaxPlots                 = 0
                                 
+  defProbOccurrencePref         = 'probOccurrence' 
+  defProbOccurrenceHistoRange   = [1e-4,1e0]
+
   defDo_scatterPlots            = 0
   defScatterOutPrefix           = 'stackplots_storms_nevents--scatterplot'
   ;; defepochPlot_colorNames = ''
@@ -115,9 +121,7 @@ PRO SET_STORMS_NEVENTS_DEFAULTS,TBEFOREEPOCH=tBeforeEpoch,TAFTEREPOCH=tAfterEpoc
   IF N_ELEMENTS(log_omni_quantity) EQ 0 THEN log_omni_quantity = defOmni_quantity
   IF N_ELEMENTS(use_data_minmax) EQ 0 THEN use_data_minmax = defUse_data_minmax
 
-  IF N_ELEMENTS(nEvBinsize) EQ 0 THEN nEvBinsize=defnEvBinsize
-  ;; nEvBinsize = nEvBinsize/60.0D
-  histoBinSize = nEvBinsize/60.0D
+  IF N_ELEMENTS(histoBinSize) EQ 0 THEN histoBinSize=defhistoBinSize
 
   IF N_ELEMENTS(saveFile) EQ 0 THEN saveFile=defSaveFile
 
@@ -135,6 +139,13 @@ PRO SET_STORMS_NEVENTS_DEFAULTS,TBEFOREEPOCH=tBeforeEpoch,TAFTEREPOCH=tAfterEpoc
   IF N_ELEMENTS(randomTimes) EQ 0 THEN randomTimes = defRandomTimes
 
   IF N_ELEMENTS(show_data_availability) EQ 0 THEN show_data_availability = defShow_data_availability
+
+  IF KEYWORD_SET(probOccurrence_sea) THEN BEGIN
+     ;; maxInd = 20                ;width_time
+     IF ~KEYWORD_SET(yTitle_maxInd) THEN yTitle_maxInd = "Probability of Occurrence"
+     plotTitle = KEYWORD_SET(savemaxplotname) ? defProbOccurrencePref + '--' + saveMaxPlotName : defProbOccurrencePref + '.png'
+     IF ~KEYWORD_SET(histoRange) THEN histoRange = defProbOccurrenceHistoRange
+  ENDIF
 
   IF saveFile THEN BEGIN 
      saveStr='save' 

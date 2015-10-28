@@ -150,7 +150,10 @@ PRO STACKPLOTS_STORMS_ALFVENDBQUANTITIES_OVERLAID,stormTimeArray_utc, $
   ENDELSE
 
   IF KEYWORD_SET(remove_dupes) THEN BEGIN
-     REMOVE_EPOCH_DUPES,NEPOCHS=nEpochs,CENTERTIME=centerTime,TSTAMPS=tStamps,$
+     REMOVE_EPOCH_DUPES,NEPOCHS=nEpochs, $
+                        CENTERTIME=centerTime, $
+                        TSTAMPS=tStamps,$
+                        DATSTARTSTOP=datStartStop, $
                         HOURS_AFT_FOR_NO_DUPES=hours_aft_for_no_dupes,TAFTEREPOCH=tAfterEpoch
   ENDIF
 
