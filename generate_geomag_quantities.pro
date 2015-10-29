@@ -25,6 +25,10 @@ PRO GENERATE_GEOMAG_QUANTITIES,DATSTARTSTOP=datStartStop,NEPOCHS=nEpochs, $
   defDo_Dst = 0
   defDstRange = [-300,100] 
 
+  IF N_ELEMENTS(sw_data) EQ 0 THEN BEGIN
+     LOAD_OMNI_DB,sw_data,SWDBDIR=swDBDir,SWDBFILE=swDBFile
+  ENDIF
+
   IF N_ELEMENTS(use_data_minMax) EQ 0 THEN use_data_minMax = defUse_data_minMax
 
   IF N_ELEMENTS(do_Dst) EQ 0 THEN do_DST = defDo_Dst

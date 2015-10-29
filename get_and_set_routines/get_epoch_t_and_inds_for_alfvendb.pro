@@ -8,6 +8,7 @@ PRO GET_EPOCH_T_AND_INDS_FOR_ALFVENDB,maximus,cdbTime,NEPOCHS=nEpochs,TBEFOREEPO
                                       DAYSIDE=dayside,NIGHTSIDE=nightside, $
                                       SAVEFILE=saveFile,SAVESTR=saveStr
 
+  include    =MAKE_ARRAY(nEpochs,2,/BYTE,VALUE=0)
   alf_epoch_t=MAKE_ARRAY(nEpochs,2,/DOUBLE)
   alf_epoch_i=MAKE_ARRAY(nEpochs,2,/L64)
   good_i=get_chaston_ind(maximus,"OMNI",-1,/BOTH_HEMIS, $
@@ -38,10 +39,18 @@ PRO GET_EPOCH_T_AND_INDS_FOR_ALFVENDB,maximus,cdbTime,NEPOCHS=nEpochs,TBEFOREEPO
         ;; PRINT,FORMAT='(I0,T4,I0,T8,A0,T43,F0.2,)',i,j,tStamps[i],tempClosest/3600.,
      ENDFOR
      plot_i=cgsetintersection(good_i,indgen(alf_epoch_i[i,1]-alf_epoch_i[i,0]+1)+alf_epoch_i[i,0])
+     include[i] = (tempClosest/3600. LE tBeforeEpoch AND tempClosest/3600. LE tAfterEpoch)
      PRINT,FORMAT='(I0,T4,A0,T25,F0.2,T48,I0)',i,tStamps[i],tempClosest/3600., $
-           (tempClosest/3600. GT tBeforeEpoch AND tempClosest/3600. GT tAfterEpoch) ? 0 : N_ELEMENTS(plot_i)
+           include[i] ? N_ELEMENTS(plot_i) : 0
+
+
 
   ENDFOR
+
+  include_i = WHERE(include)
+  nAlfEpochs = N_ELEMENTS(include_i)
+  alf_epoch_i = alf_epoch_i[include_i,*]
+  alf_epoch_t = alf_epoch_i[include_i,*]
 
   IF saveFile THEN saveStr+=',nEpochs,centerTime,tStamps,epochString,dbFile,tBeforeEpoch,tAfterEpoch,geomag_min,geomag_max,geomag_plot_i_list,geomag_dat_list,geomag_time_list'
 

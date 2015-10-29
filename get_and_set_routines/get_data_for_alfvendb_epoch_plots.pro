@@ -28,7 +28,7 @@ PRO GET_DATA_FOR_ALFVENDB_EPOCH_PLOTS,MAXIMUS=maximus,CDBTIME=cdbTime,MAXIND=max
      WAIT,1
   ENDIF
   
-  FOR i=0,nEpochs-1 DO BEGIN
+  FOR i=0,nAlfEpochs-1 DO BEGIN
      
      tempInds=cgsetintersection(good_i,[alf_epoch_i(i,0):alf_epoch_i(i,1):1])
      minMaxDat(i,1)=MAX(maximus.(maxInd)(tempInds),MIN=tempMin)
