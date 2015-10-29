@@ -50,7 +50,9 @@ PRO GET_EPOCH_T_AND_INDS_FOR_ALFVENDB,maximus,cdbTime,NEPOCHS=nEpochs,TBEFOREEPO
   include_i = WHERE(include)
   nAlfEpochs = N_ELEMENTS(include_i)
   alf_epoch_i = alf_epoch_i[include_i,*]
-  alf_epoch_t = alf_epoch_i[include_i,*]
+  alf_epoch_t = alf_epoch_t[include_i,*]
+  tStamps     = tStamps[include_i]
+  centerTime  = centerTime[include_i]
 
   IF saveFile THEN saveStr+=',nEpochs,centerTime,tStamps,epochString,dbFile,tBeforeEpoch,tAfterEpoch,geomag_min,geomag_max,geomag_plot_i_list,geomag_dat_list,geomag_time_list'
 

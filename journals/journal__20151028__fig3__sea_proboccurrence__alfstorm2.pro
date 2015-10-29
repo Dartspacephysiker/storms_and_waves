@@ -25,12 +25,12 @@ PRO JOURNAL__20151028__FIG3__SEA_PROBOCCURRENCE__ALFSTORM2
                                       MAXMLT=maxM, $
                                       /PROBOCCURENCE_SEA, $
                                       /LOG_PROBOCCURRENCE, $
-                                      SAVEPLOTNAME=probOccurrencePref+'--log'+plotSuff,HISTORANGE=[1e-3,3e-1]
+                                      SAVEPLOTNAME=savePlotPref+'--log'+plotSuff,HISTORANGE=[1e-3,3e-1]
 
   SUPERPOSE_STORMS_ALFVENDBQUANTITIES,EPOCHINDS=q1_st,SSC_TIMES_UTC=q1_utc, $
                                       /USE_DARTDB_START_ENDDATE,STORMTYPE=1,/REMOVE_DUPES,/NOGEOMAGPLOTS, $
                                       MINMLT=minM, $
                                       MAXMLT=maxM, $
                                       /PROBOCCURENCE_SEA, $
-                                      SAVEPLOTNAME=probOccurrencePref+plotSuff,HISTORANGE=[0,0.5]
+                                      SAVEPLOTNAME=savePlotPref+plotSuff,HISTORANGE=[0,0.5]
 END

@@ -166,7 +166,9 @@ PRO SUPERPOSE_STORMS_ALFVENDBQUANTITIES,stormTimeArray_utc, $
   ;; Need a window?
   IF KEYWORD_SET(savePlotName) OR KEYWORD_SET(nEventHists) OR KEYWORD_SET(probOccurrence_sea) $
      AND ~KEYWORD_SET(noPlots) THEN BEGIN
-     geomagWindow=WINDOW(WINDOW_TITLE=stormString + ' plots', $
+     geomagWindow=WINDOW(WINDOW_TITLE="SEA plots for " + stormString + " storms: "+ $
+                         tStamps[0] + " - " + $
+                         tStamps(-1), $
                          DIMENSIONS=[1200,800])
   ENDIF
   
@@ -180,10 +182,6 @@ PRO SUPERPOSE_STORMS_ALFVENDBQUANTITIES,stormTimeArray_utc, $
   yTitle = geomagTitle
   
   IF ~noPlots AND ~noGeomagPlots THEN BEGIN
-     geomagWindow=WINDOW(WINDOW_TITLE="Superposed plots of " + stormString + " storms: "+ $
-                         tStamps[0] + " - " + $
-                         tStamps(-1), $
-                         DIMENSIONS=[1200,800])
      
      FOR i=0,nEpochs-1 DO BEGIN
         IF N_ELEMENTS(geomag_time_list[i]) GT 1 AND ~noPlots AND ~noGeomagPlots THEN BEGIN
@@ -244,7 +242,7 @@ PRO SUPERPOSE_STORMS_ALFVENDBQUANTITIES,stormTimeArray_utc, $
                                       TOT_PLOT_I_LIST=tot_plot_i_list,TOT_ALF_T_LIST=tot_alf_t_list,TOT_ALF_Y_LIST=tot_alf_y_list, $
                                       NEVTOT=nEvTot
      ENDIF ELSE BEGIN
-        IF KEYWORD_SET(probOccurrence_sea) THEN BEGIN
+        IF KEYWORD_SET(probOccurrence_sea) OR KEYWORD_SET(nEventHists) THEN BEGIN
            ;;use maxInd = 20 here to get current width
            GET_DATA_FOR_ALFVENDB_EPOCH_PLOTS,MAXIMUS=maximus,CDBTIME=cdbTime,MAXIND=20,GOOD_I=good_i, $
                                       ALF_EPOCH_I=alf_epoch_i,ALF_IND_LIST=alf_ind_list, $
@@ -340,7 +338,7 @@ PRO SUPERPOSE_STORMS_ALFVENDBQUANTITIES,stormTimeArray_utc, $
            PLOT_ALFVENDBQUANTITY_HISTOGRAM__EPOCH,histTBins,nEvhistData,NAME=name, $
                                                   XRANGE=xRange, $
                                                   HISTORANGE=histoRange, $
-                                                  YTITLE=yTitle, $
+                                                  YTITLE='N events', $
                                                   MARGIN=plotMargin, $
                                                   PLOTTITLE=plotTitle, $
                                                   OVERPLOT_HIST=overplot_hist, $
