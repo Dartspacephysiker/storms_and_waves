@@ -7,7 +7,9 @@ PRO JOURNAL__20151031__GENERATING_STATISTICS_FOR_CHARE_AS_A_FUNCTION_OF_LARGESTO
   date            = '20151103'
   dataName        = 'char_ion_energy'
   unlog           = 0
+  normalize_hists = 1
   histBinsize     = 0.25
+  newLine         = '!C'
 
   ;data in        
   inFile          = 'chare_data_for_72_largestorms_no_NOAA.sav'
@@ -19,28 +21,35 @@ PRO JOURNAL__20151031__GENERATING_STATISTICS_FOR_CHARE_AS_A_FUNCTION_OF_LARGESTO
   ;data out
   genFile         = 'journal__20151031__generating_statistics_for_chare_as_a_function_of_largestorm_epoch_slice__telecon20151028.pro'
   outstats        = date + '--chare_moment_data_for_72_largestorms--no_NOAA_SSC.sav'
-  sPP             = date + '--' + dataName + '--72_largestorms--no_NOAA_SSC'   ;savePlotPrefix
+  SET_PLOT_DIR,plotDir,/FOR_STORMS,/VERBOSE,/ADD_TODAY
+  sPP             = plotDir + dataName + '--72_largestorms--no_NOAA_SSC'   ;savePlotPrefix
+
 
   ;plot array/window setup
   nWindows   = 5
   windowArr  = MAKE_ARRAY(nWindows,/OBJ)
+  plotArr    = MAKE_ARRAY(nSlices,/OBJ)
   plotLayout = [3,2]
+  firstmarg  = [0.1,0.1,0.1,0.1]
+  marg       = [0.01,0.01,0.1,0.01]
   nPPerWind  = plotLayout[0]*plotLayout[1]
 
   ;plot details
   xTitle     = 'Characteristic Ion Energy (eV)'
   yTitle     = "Count"
   ;; xRange     = [histTBins[0],histTBins[-1]]
-  xRange     = [-6,1]
+  xRange     = [-6,0]
   ;; yRange     = [MIN(tot_alf_y),MAX(tot_alf_y)]
-  yRange     = [0,10000]
+  yRange     = [0,1000]
   pHP        = MAKE_HISTOPLOT_PARAM_STRUCT(NAME=dataName, $
                                            XTITLE=xTitle, $
                                            YTITLE=yTitle, $
                                            XRANGE=xRange, $
                                            YRANGE=yRange, $
                                            HISTBINSIZE=histBinsize, $
-                                           XP_ARE_LOGGED=~unlog)
+                                           XP_ARE_LOGGED=~unlog) ;, $
+                                           ;; MARGIN=margin, $
+                                           ;; LAYOUT=layout)
   ;;declare the slice structure array
   ssa = !NULL
 
@@ -86,31 +95,83 @@ PRO JOURNAL__20151031__GENERATING_STATISTICS_FOR_CHARE_AS_A_FUNCTION_OF_LARGESTO
      IF (i MOD nPPerWind) EQ 0 THEN BEGIN
         wInd            = FLOOR(i/FLOAT(nWindows))
         t1              = histTbins[i]
-        t2              = histTbins[i+nPerWind-1]
-        wTitle          = STRING(FORMAT='("Storm epoch hours ",I0,"–",I0)',t1,t2)
-        saveName        = STRING(FORMAT='(A0,"--epoch_",I0,"-",I0,".png")',sPP,t1,t2)
+        t2              = histTbins[i+nPPerWind]
+        wTitle          = STRING(FORMAT='("Storm epoch hours ",F0.2," through ",F0.2)',t1,t2)
+        saveName        = STRING(FORMAT='(A0,"--epoch_",I0,"_through_",I0,".png")',sPP,t1,t2)
 
-        windowArr[wInd] = WINDOW(TITLE=wTitle,DIMENSIONS=[1200,800])
+        windowArr[wInd] = WINDOW(WINDOW_TITLE=wTitle,DIMENSIONS=[1200,800])
         
      ENDIF
 
+     ;get which panel this is
+     layout_i    = (i MOD nPPerWind)+1
      
-     x      = ssa[i].yHistStr.locs[0] + ssa[i].yHistStr.binsize/2.
-     y      = ssa[i].yHistStr.hist[0] 
-     title  = STRING(FORMAT='("Storm epoch hours ",I0,"–",I0)',ssa[i].eStart,ssa[i].eEnd)
+     ;the indata
+     x           = ssa[i].yHistStr.locs[0] + ssa[i].yHistStr.binsize/2.
+     y           = ssa[i].yHistStr.hist[0] 
+
+     integral    = TOTAL(y)
+     IF KEYWORD_SET(normalize_hists) THEN BEGIN
+        y        = y / integral
+        pHP.yRange = [0,0.3]
+        pHP.yTitle = 'Relative Freq.'
+     ENDIF 
+
+     ;; IF layout_i EQ 1 THEN BEGIN
+        title       = STRING(FORMAT='("Storm epoch hours ",I0," through ",I0)',ssa[i].eStart,ssa[i].eEnd)
+        xTitle      = layout_i GT plotLayout[0] ? pHP.xTitle : !NULL
+        yTitle      = pHP.yTitle
+        ;; yMajorTicks = 3
+        ;; yTickName   = REPLICATE(' ',yMajorTicks)
+        margin      = firstMarg
+     ;; ENDIF ELSE BEGIN
+     ;;    title       = STRING(FORMAT='(I0," through ",I0)',ssa[i].eStart,ssa[i].eEnd)
+     ;;    xTitle      = !NULL
+     ;;    yTitle      = !NULL
+     ;;    yMajorTicks = !NULL
+     ;;    yTickName   = !NULL
+     ;;    margin      = marg
+     ;; ENDELSE
      
-     plot   = plot(x,y, $
-                   TITLE=title, $
-                   XTITLE=pHP.xTitle, $
-                   YTITLE=pHP.yTitle, $
-                   XRANGE=pHP.xRange, $
-                   YRANGE=pHP.yRange, $
-                   /HISTOGRAM, $
-                   LAYOUT=[plotLayout,(i MOD nPPerWind)], $
-                   /CURRENT)
-                   
-                 
-     IF (i GT 0) AND ( (i + 1) MOD nPPerWind ) THEN BEGIN
+     plotArr[i]  = plot(x,y, $
+                        TITLE=title, $
+                        XTITLE=xTitle, $
+                        YTITLE=yTitle, $
+                        XRANGE=pHP.xRange, $
+                        YRANGE=pHP.yRange, $
+                        ;; YTICKS=yMajorTicks, $
+                        ;; YTICKNAME=yTickName, $
+                        /HISTOGRAM, $
+                        LAYOUT=[plotLayout,layout_i], $
+                        MARGIN=margin, $
+                        /CURRENT)
+
+     ;;For the integral
+     intString   = STRING(FORMAT='("Integral  : ",I0)',integral)
+     ;; textStr     = intString+ newLine + $
+     ;;               'Mean      : ' + ssa[i].moments.(0) + newLine + $
+     ;;               'Std. dev. : ' + ssa[i].moments.(1) + newLine + $
+     ;;               'Skewness  : ' + ssa[i].moments.(2) + newLine + $
+     ;;               'Kurtosis  : ' + ssa[i].moments.(3) + newLine
+
+     textStr     = STRING(FORMAT='(A0,A0,A0,E0.2,A0,A0,E0.2,A0,A0,E0.2,A0,A0,E0.2,A0)', $
+                          intString,newLine, $
+                          'Mean      : ', ssa[i].moments.(0), newLine, $
+                          'Std. dev. : ', ssa[i].moments.(1), newLine, $
+                          'Skewness  : ', ssa[i].moments.(2), newLine, $
+                          'Kurtosis  : ', ssa[i].moments.(3), newLine)
+     
+
+     int_x       = ( ( (layout_i - 1) MOD plotLayout[0] )) * 1/FLOAT(plotLayout[0]) + 0.05
+     int_y       = 1 - 1/FLOAT(plotLayout[1]*2) - ( ( (layout_i - 1) / plotLayout[0] )) * 1/FLOAT(plotLayout[1]) + 1/FLOAT(plotLayout[1]*8)
+     intText     = text(int_x,int_y,$
+                        textStr, $
+                        FONT_NAME='Courier', $
+                        /NORMAL, $
+                        TARGET=plotArr[i])
+     
+
+     IF (i GT 0) AND ( ( (i + 1) MOD nPPerWind ) EQ 0 ) THEN BEGIN
         windowArr[wInd].save,saveName,RESOLUTION=300
      ENDIF
 
