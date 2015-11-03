@@ -2,15 +2,17 @@ PRO GET_EPOCH_T_AND_INDS_FOR_ALFVENDB,maximus,cdbTime,NEPOCHS=nEpochs,TBEFOREEPO
                                       CENTERTIME=centerTime, $
                                       DATSTARTSTOP=datStartStop,TSTAMPS=tStamps,GOOD_I=good_i, $
                                       NALFEPOCHS=nAlfEpochs,ALF_EPOCH_T=alf_epoch_t,ALF_EPOCH_I=alf_epoch_i, $
+                                      ALF_CENTERTIME=alf_centerTime,ALF_TSTAMPS=alf_tStamps, $
                                       RESTRICT_ALTRANGE=restrict_altRange,RESTRICT_CHARERANGE=restrict_charERange, $
                                       MINMLT=minM,MAXMLT=maxM,BINM=binM,MINILAT=minI,MAXILAT=maxI,BINI=binI, $
                                       DO_LSHELL=do_lshell,MINLSHELL=minL,MAXLSHELL=maxL,BINL=binL, $
                                       DAYSIDE=dayside,NIGHTSIDE=nightside, $
                                       SAVEFILE=saveFile,SAVESTR=saveStr
 
-  include    =MAKE_ARRAY(nEpochs,2,/BYTE,VALUE=0)
-  alf_epoch_t=MAKE_ARRAY(nEpochs,2,/DOUBLE)
-  alf_epoch_i=MAKE_ARRAY(nEpochs,2,/L64)
+  include     = MAKE_ARRAY(nEpochs,2,/BYTE,VALUE=0)
+  alf_epoch_t = MAKE_ARRAY(nEpochs,2,/DOUBLE)
+  alf_epoch_i = MAKE_ARRAY(nEpochs,2,/L64)
+
   good_i=get_chaston_ind(maximus,"OMNI",-1,/BOTH_HEMIS, $
                          ALTITUDERANGE=(restrict_altRange) ? [1000,5000] : !NULL, $
                          CHARERANGE=(restrict_charERange) ? [4,4000] : !NULL, $
@@ -47,12 +49,12 @@ PRO GET_EPOCH_T_AND_INDS_FOR_ALFVENDB,maximus,cdbTime,NEPOCHS=nEpochs,TBEFOREEPO
 
   ENDFOR
 
-  include_i = WHERE(include)
-  nAlfEpochs = N_ELEMENTS(include_i)
-  alf_epoch_i = alf_epoch_i[include_i,*]
-  alf_epoch_t = alf_epoch_t[include_i,*]
-  tStamps     = tStamps[include_i]
-  centerTime  = centerTime[include_i]
+  include_i       = WHERE(include)
+  nAlfEpochs      = N_ELEMENTS(include_i)
+  alf_epoch_i     = alf_epoch_i[include_i,*]
+  alf_epoch_t     = alf_epoch_t[include_i,*]
+  alf_tStamps     = tStamps[include_i]
+  alf_centerTime  = centerTime[include_i]
 
   IF saveFile THEN saveStr+=',nEpochs,centerTime,tStamps,epochString,dbFile,tBeforeEpoch,tAfterEpoch,geomag_min,geomag_max,geomag_plot_i_list,geomag_dat_list,geomag_time_list'
 
