@@ -6,6 +6,7 @@ PRO SET_STORMS_NEVENTS_DEFAULTS,TBEFOREEPOCH=tBeforeEpoch,TAFTEREPOCH=tAfterEpoc
                                 DAYSIDE=dayside,NIGHTSIDE=nightside, $
                                 RESTRICT_CHARERANGE=restrict_charERange,RESTRICT_ALTRANGE=restrict_altRange, $
                                 MAXIND=maxInd,AVG_TYPE_MAXIND=avg_type_maxInd,LOG_DBQUANTITY=log_DBQuantity, $
+                                YLOGSCALE_MAXIND=yLogScale_maxInd, $
                                 YTITLE_MAXIND=yTitle_maxInd, YRANGE_MAXIND=yRange_maxInd, $
                                 NEG_AND_POS_SEPAR=neg_and_pos_separ, $
                                 LAYOUT=layout, $
@@ -28,19 +29,6 @@ PRO SET_STORMS_NEVENTS_DEFAULTS,TBEFOREEPOCH=tBeforeEpoch,TAFTEREPOCH=tAfterEpoc
   defTAfterEpoch                = 60.0D                                 ;in hours
   defStormType                  =  2
                                 
-  ;; defswDBDir                    = 'sw_omnidata/'
-  ;; defswDBFile                   = 'sw_data.dat'
-                                
-  ;; defStormDir                   = 'sw_omnidata/'
-  ;; defStormFile                  = 'large_and_small_storms--1985-2011--Anderson.sav'
-                                
-  ;; defDST_AEDir                  = 'processed/'
-  ;; defDST_AEFile                 = 'idl_ae_dst_data.dat'
-                                
-  ;; defDBDir                      = 'dartdb/saves/'
-  ;; DefDBFile                     = 'Dartdb_20151014--500-16361_inc_lower_lats--burst_1000-16361--w_Lshell--maximus.sav'
-  ;; defDB_tFile                   = 'Dartdb_20150814--500-16361_inc_lower_lats--burst_1000-16361--cdbtime.sav'
-                                
   defUse_SYMH                   = 0
   defUse_AE                     = 0
                                 
@@ -54,6 +42,7 @@ PRO SET_STORMS_NEVENTS_DEFAULTS,TBEFOREEPOCH=tBeforeEpoch,TAFTEREPOCH=tAfterEpoc
   defMaxInd                     = !NULL
   defavg_type_maxInd            = 0
   defLogDBQuantity              = 0
+  defYLogScale_maxInd           = 0
                                 
   defNeg_and_pos_separ          = 0
   defLayout                     = [1,1,1]
@@ -85,19 +74,6 @@ PRO SET_STORMS_NEVENTS_DEFAULTS,TBEFOREEPOCH=tBeforeEpoch,TAFTEREPOCH=tAfterEpoc
 
   IF N_ELEMENTS(stormType) EQ 0 THEN stormType=defStormType
      
-  ;; IF N_ELEMENTS(swDBDir) EQ 0 THEN swDBDir=defswDBDir
-  ;; IF N_ELEMENTS(swDBFile) EQ 0 THEN swDBFile=defswDBFile
-
-  ;; IF N_ELEMENTS(stormDir) EQ 0 THEN stormDir=defStormDir
-  ;; IF N_ELEMENTS(stormFile) EQ 0 THEN stormFile=defStormFile
-
-  ;; IF N_ELEMENTS(DST_AEDir) EQ 0 THEN DST_AEDir=defDST_AEDir
-  ;; IF N_ELEMENTS(DST_AEFile) EQ 0 THEN DST_AEFile=defDST_AEFile
-
-  ;; IF N_ELEMENTS(dbDir) EQ 0 THEN dbDir=defDBDir
-  ;; IF N_ELEMENTS(dbFile) EQ 0 THEN dbFile=defDBFile
-  ;; IF N_ELEMENTS(db_tFile) EQ 0 THEN db_tFile=defDB_tFile
-
   IF KEYWORD_SET(dayside) THEN print,"Only considering dayside stuff!"
   IF KEYWORD_SET(nightside) THEN print,"Only considering nightside stuff!"
 
@@ -108,6 +84,7 @@ PRO SET_STORMS_NEVENTS_DEFAULTS,TBEFOREEPOCH=tBeforeEpoch,TAFTEREPOCH=tAfterEpoc
   IF N_ELEMENTS(avg_type_maxInd) EQ 0 THEN avg_type_maxInd=defAvg_type_maxInd
 
   IF N_ELEMENTS(log_DBQuantity) EQ 0 THEN log_DBQuantity=defLogDBQuantity
+  IF N_ELEMENTS(yLogScale_maxInd) EQ 0 THEN yLogScale_maxInd = defYLogScale_maxInd
 
   IF N_ELEMENTS(neg_and_pos_separ) EQ 0 THEN neg_and_pos_separ=defNeg_and_pos_separ
   IF N_ELEMENTS(layout)            EQ 0 THEN layout = deflayout
@@ -141,7 +118,6 @@ PRO SET_STORMS_NEVENTS_DEFAULTS,TBEFOREEPOCH=tBeforeEpoch,TAFTEREPOCH=tAfterEpoc
   IF N_ELEMENTS(show_data_availability) EQ 0 THEN show_data_availability = defShow_data_availability
 
   IF KEYWORD_SET(probOccurrence_sea) THEN BEGIN
-     ;; maxInd = 20                ;width_time
      IF ~KEYWORD_SET(yTitle_maxInd) THEN yTitle_maxInd = "Probability of Occurrence"
      plotTitle = KEYWORD_SET(savemaxplotname) ? defProbOccurrencePref + '--' + saveMaxPlotName : defProbOccurrencePref + '.png'
      IF ~KEYWORD_SET(histoRange) THEN histoRange = defProbOccurrenceHistoRange

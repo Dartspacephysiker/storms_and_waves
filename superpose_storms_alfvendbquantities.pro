@@ -70,6 +70,7 @@ PRO SUPERPOSE_STORMS_ALFVENDBQUANTITIES,stormTimeArray_utc, $
                                         MAXIND=maxInd, AVG_TYPE_MAXIND=avg_type_maxInd, $
                                         RESTRICT_ALTRANGE=restrict_altRange,RESTRICT_CHARERANGE=restrict_charERange, $
                                         LOG_DBQUANTITY=log_DBQuantity, $
+                                        YLOGSCALE_MAXIND=yLogScale_maxInd, $
                                         YTITLE_MAXIND=yTitle_maxInd, YRANGE_MAXIND=yRange_maxInd, $
                                         SYMTRANSP_MAXIND=symTransp_maxInd, $
                                         BKGRND_HIST=bkgrnd_hist, BKGRND_MAXIND=bkgrnd_maxInd,TBINS=tBins, $
@@ -98,6 +99,8 @@ PRO SUPERPOSE_STORMS_ALFVENDBQUANTITIES,stormTimeArray_utc, $
                               DAYSIDE=dayside,NIGHTSIDE=nightside, $
                               RESTRICT_CHARERANGE=restrict_charERange,RESTRICT_ALTRANGE=restrict_altRange, $
                               MAXIND=maxInd,AVG_TYPE_MAXIND=avg_type_maxInd,LOG_DBQUANTITY=log_DBQuantity, $
+                              YLOGSCALE_MAXIND=yLogScale_maxInd, $
+
                               YTITLE_MAXIND=yTitle_maxInd, YRANGE_MAXIND=yRange_maxInd, $
                               NEG_AND_POS_SEPAR=neg_and_pos_separ, $
                               LAYOUT=layout, $
@@ -163,57 +166,7 @@ PRO SUPERPOSE_STORMS_ALFVENDBQUANTITIES,stormTimeArray_utc, $
                              YRANGE=yRange,/SET_YRANGE,USE_DATA_MINMAX=use_data_minMax, $
                              DATATITLE=geomagTitle
 
-  ;; Need a window?
-  IF KEYWORD_SET(savePlotName) OR KEYWORD_SET(nEventHists) OR KEYWORD_SET(probOccurrence_sea) $
-     AND ~KEYWORD_SET(noPlots) THEN BEGIN
-     geomagWindow=WINDOW(WINDOW_TITLE="SEA plots for " + stormString + " storms: "+ $
-                         tStamps[0] + " - " + $
-                         tStamps(-1), $
-                         DIMENSIONS=[1200,800])
-  ENDIF
-  
-  
-  ;; ;Now plot geomag quantities
-  ;; IF KEYWORD_SET(no_superpose) THEN BEGIN
-  ;; ENDIF ELSE BEGIN              ;Just do a regular superposition of all the plots
-  
-  xTitle='Hours since storm commencement' ; defXTitle
-  xRange=[-tBeforeEpoch,tAfterEpoch]
-  yTitle = geomagTitle
-  
-  IF ~noPlots AND ~noGeomagPlots THEN BEGIN
-     
-     FOR i=0,nEpochs-1 DO BEGIN
-        IF N_ELEMENTS(geomag_time_list[i]) GT 1 AND ~noPlots AND ~noGeomagPlots THEN BEGIN
-           geomagEpochSeconds = geomag_time_list[i]-centerTime[i]
-           geomagEpochDat = geomag_dat_list[i]
-           PLOT_SW_OR_GEOMAGQUANTITY_TRACE__EPOCH,geomagEpochSeconds,geomagEpochDat, $
-                                                  NAME=omni_quantity, $
-                                                  AXIS_STYLE=1, $
-                                                  PLOTTITLE=plotTitle, $
-                                                  XTITLE=xTitle, $
-                                                  XRANGE=xRange, $
-                                                  YTITLE=yTitle, $
-                                                  YRANGE=yRange, $
-                                                  LOGYPLOT=logYPlot, $
-                                                  LINETHICK=lineThick,LINETRANSP=lineTransp, $
-                                                  OVERPLOT=(i EQ 0) ? 0 : 1, $
-                                                  CURRENT=1, $
-                                                  MARGIN=plotMargin, $
-                                                  LAYOUT=!NULL, $
-                                                  ;; CLIP=0, $
-                                                  OUTPLOT=geomagPlot,ADD_PLOT_TO_PLOT_ARRAY=add_plot_to_plot_array
-           
-           ;; out_geomagPlots[i] = geomagPlot
-           
-        ENDIF ELSE PRINT,'Losing epoch #' + STRCOMPRESS(i,/REMOVE_ALL) + ' on the list! Only one elem...'
-     ENDFOR
-     
-     axes=geomagPlot.axes
-     axes[1].MINOR=nMinorTicks+1
-  ENDIF                         ;end noplots 
-  ;; ENDELSE
-  
+
   ;; Get ranges for plots
   IF    KEYWORD_SET(nEventHists) OR (avg_type_maxInd GT 0) $
      OR KEYWORD_SET(maxInd)      OR KEYWORD_SET(probOccurrence_sea) THEN BEGIN                    ;Histos of Alfvén events relative to storm epoch
@@ -241,7 +194,9 @@ PRO SUPERPOSE_STORMS_ALFVENDBQUANTITIES,stormTimeArray_utc, $
                                       TOT_PLOT_I_POS_LIST=tot_plot_i_pos_list,TOT_ALF_T_POS_LIST=tot_alf_t_pos_list,TOT_ALF_Y_POS_LIST=tot_alf_y_pos_list, $
                                       TOT_PLOT_I_NEG_LIST=tot_plot_i_neg_list,TOT_ALF_T_NEG_LIST=tot_alf_t_neg_list,TOT_ALF_Y_NEG_LIST=tot_alf_y_neg_list, $
                                       TOT_PLOT_I_LIST=tot_plot_i_list,TOT_ALF_T_LIST=tot_alf_t_list,TOT_ALF_Y_LIST=tot_alf_y_list, $
-                                      NEVTOT=nEvTot
+                                      NEVTOT=nEvTot, $
+                                      SAVEFILE=saveFile,SAVESTR=saveStr
+                                          
      ENDIF ELSE BEGIN
         IF KEYWORD_SET(probOccurrence_sea) OR KEYWORD_SET(nEventHists) THEN BEGIN
            ;;use maxInd = 20 here to get current width
@@ -328,7 +283,55 @@ PRO SUPERPOSE_STORMS_ALFVENDBQUANTITIES,stormTimeArray_utc, $
      ENDELSE
   ENDIF
 
+  ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
   ;;now the plots
+
+  ;; Need a window?
+  IF KEYWORD_SET(savePlotName) OR KEYWORD_SET(nEventHists) OR KEYWORD_SET(probOccurrence_sea) $
+     AND ~KEYWORD_SET(noPlots) THEN BEGIN
+     geomagWindow=WINDOW(WINDOW_TITLE="SEA plots for " + stormString + " storms: "+ $
+                         tStamps[0] + " - " + $
+                         tStamps(-1), $
+                         DIMENSIONS=[1200,800])
+  ENDIF
+  
+  xTitle='Hours since storm commencement' ; defXTitle
+  xRange=[-tBeforeEpoch,tAfterEpoch]
+  yTitle = geomagTitle
+  
+  IF ~noPlots AND ~noGeomagPlots THEN BEGIN
+     
+     FOR i=0,nEpochs-1 DO BEGIN
+        IF N_ELEMENTS(geomag_time_list[i]) GT 1 AND ~noPlots AND ~noGeomagPlots THEN BEGIN
+           geomagEpochSeconds = geomag_time_list[i]-centerTime[i]
+           geomagEpochDat = geomag_dat_list[i]
+           PLOT_SW_OR_GEOMAGQUANTITY_TRACE__EPOCH,geomagEpochSeconds,geomagEpochDat, $
+                                                  NAME=omni_quantity, $
+                                                  AXIS_STYLE=1, $
+                                                  PLOTTITLE=plotTitle, $
+                                                  XTITLE=xTitle, $
+                                                  XRANGE=xRange, $
+                                                  YTITLE=yTitle, $
+                                                  YRANGE=yRange, $
+                                                  LOGYPLOT=logYPlot, $
+                                                  LINETHICK=lineThick,LINETRANSP=lineTransp, $
+                                                  OVERPLOT=(i EQ 0) ? 0 : 1, $
+                                                  CURRENT=1, $
+                                                  MARGIN=plotMargin, $
+                                                  LAYOUT=!NULL, $
+                                                  ;; CLIP=0, $
+                                                  OUTPLOT=geomagPlot,ADD_PLOT_TO_PLOT_ARRAY=add_plot_to_plot_array
+           
+           ;; out_geomagPlots[i] = geomagPlot
+           
+        ENDIF ELSE PRINT,'Losing epoch #' + STRCOMPRESS(i,/REMOVE_ALL) + ' on the list! Only one elem...'
+     ENDFOR
+     
+     axes=geomagPlot.axes
+     axes[1].MINOR=nMinorTicks+1
+  ENDIF                         ;end noplots 
+  ;; ENDELSE
+  
   IF ~noPlots THEN BEGIN
      IF KEYWORD_SET(nEventHists) THEN BEGIN
         
@@ -424,7 +427,7 @@ PRO SUPERPOSE_STORMS_ALFVENDBQUANTITIES,stormTimeArray_utc, $
                                                       XRANGE=xRange, $
                                                       YTITLE=yTitle, $
                                                       YRANGE=KEYWORD_SET(yRange_maxInd) ? yRange_maxInd : [minDat[j],maxDat[j]], $
-                                                      LOGYPLOT=log_DBQuantity, $
+                                                      LOGYPLOT=yLogScale_maxInd, $
                                                       OVERPLOT_ALFVENDBQUANTITY=(j EQ 0) ? 0 : 1, $
                                                       CURRENT=N_ELEMENTS(maximusWindow) GT 0, $
                                                       MARGIN=plotMargin, $
@@ -435,10 +438,6 @@ PRO SUPERPOSE_STORMS_ALFVENDBQUANTITIES,stormTimeArray_utc, $
               ENDIF
            ENDFOR
         ENDIF ELSE BEGIN
-           ;; plot_i = (N_ELEMENTS(tot_plot_i_list) GT 0 ? tot_plot_i_list[i] : !NULL )
-           ;; alf_t = (N_ELEMENTS(tot_alf_t_list) GT 0 ? tot_alf_t_list[i] : !NULL )
-           ;; alf_y = (N_ELEMENTS(tot_alf_y_list) GT 0 ? tot_alf_y_list[i] : !NULL )
-           ;; symColor = N_ELEMENTS(epochPlot_colorNames) GT 0 ? epochPlot_colorNames[i MOD N_ELEMENTS(epochPlot_colorNames)] : symColor
            alf_t     = tot_alf_t
            alf_y     = tot_alf_y
            symColor = N_ELEMENTS(epochPlot_colorNames) GT 0 ? epochPlot_colorNames[0] : symColor
@@ -455,7 +454,7 @@ PRO SUPERPOSE_STORMS_ALFVENDBQUANTITIES,stormTimeArray_utc, $
                                                    XRANGE=xRange, $
                                                    YTITLE=yTitle, $
                                                    YRANGE=KEYWORD_SET(yRange_maxInd) ? yRange_maxInd : [minDat,maxDat], $
-                                                   LOGYPLOT=log_DBQuantity, $
+                                                   LOGYPLOT=yLogScale_maxInd, $
                                                    ;; OVERPLOT_ALFVENDBQUANTITY=(i EQ 0) ? 0 : 1, $
                                                    OVERPLOT_ALFVENDBQUANTITY=0, $
                                                    CURRENT=N_ELEMENTS(maximusWindow) GT 0, $
@@ -477,11 +476,10 @@ PRO SUPERPOSE_STORMS_ALFVENDBQUANTITIES,stormTimeArray_utc, $
      ;; ENDFOR
      
      IF avg_type_maxInd GT 0 THEN BEGIN
-        ;; histoType = avg_type_maxind
 
         IF ~(noPlots OR noMaxPlots) THEN BEGIN
            
-           PLOT_ALFVENDBQUANTITY_AVERAGES_OR_SUMS__EPOCH,histData,histTBins,HISTOTYPE=histoType,$
+           PLOT_ALFVENDBQUANTITY_AVERAGES_OR_SUMS__EPOCH,histData,histTBins,$
               ;; NEVHISTDATA=nEvHistData, $
               TAFTEREPOCH=tAfterEpoch,TBEFOREEPOCH=tBeforeEpoch, $
               HISTOBINSIZE=histoBinSize, $
@@ -495,7 +493,7 @@ PRO SUPERPOSE_STORMS_ALFVENDBQUANTITIES,stormTimeArray_utc, $
               XRANGE=xRange, $
               YTITLE=yTitle, $
               YRANGE=KEYWORD_SET(yRange_maxInd) ? yRange_maxInd : [minDat,maxDat], $
-              LOGYPLOT=log_DBQuantity, $
+              LOGYPLOT=yLogScale_maxInd, $
               OVERPLOT=overPlot, $
               CURRENT=1, $
               MARGIN=plotMargin, $
@@ -516,7 +514,7 @@ PRO SUPERPOSE_STORMS_ALFVENDBQUANTITIES,stormTimeArray_utc, $
                              XRANGE=xRange, $
                              YRANGE=(KEYWORD_SET(yRange_maxInd)) ? $
                              yRange_maxInd : [minDat,maxDat], $
-                             YLOG=(log_DBQuantity) ? 1 : 0, $
+                             YLOG=(yLogScale_maxInd) ? 1 : 0, $
                              NAME='Background Alfvén activity', $
                              AXIS_STYLE=0, $
                              LINESTYLE='--', $
@@ -545,7 +543,7 @@ PRO SUPERPOSE_STORMS_ALFVENDBQUANTITIES,stormTimeArray_utc, $
         ;;                      XRANGE=xRange, $
         ;;                      YRANGE=(KEYWORD_SET(yRange_maxInd)) ? $
         ;;                      yRange_maxInd : [minDat,maxDat], $
-        ;;                      YLOG=(log_DBQuantity) ? 1 : 0, $
+        ;;                      YLOG=(yLogScale_maxInd) ? 1 : 0, $
         ;;                      AXIS_STYLE=0, $
         ;;                      LINESTYLE=guide_linestyle, $
         ;;                      ;; SYMBOL='', $
@@ -559,7 +557,7 @@ PRO SUPERPOSE_STORMS_ALFVENDBQUANTITIES,stormTimeArray_utc, $
         ;;                      XRANGE=xRange, $
         ;;                      YRANGE=(KEYWORD_SET(yRange_maxInd)) ? $
         ;;                      yRange_maxInd : [minDat,maxDat], $
-        ;;                      YLOG=(log_DBQuantity) ? 1 : 0, $
+        ;;                      YLOG=(yLogScale_maxInd) ? 1 : 0, $
         ;;                      AXIS_STYLE=0, $
         ;;                      LINESTYLE=guide_linestyle, $
         ;;                      ;; SYMBOL='', $
@@ -573,7 +571,7 @@ PRO SUPERPOSE_STORMS_ALFVENDBQUANTITIES,stormTimeArray_utc, $
         ;;                      XRANGE=xRange, $
         ;;                      YRANGE=(KEYWORD_SET(yRange_maxInd)) ? $
         ;;                      yRange_maxInd : [minDat,maxDat], $
-        ;;                      YLOG=(log_DBQuantity) ? 1 : 0, $
+        ;;                      YLOG=(yLogScale_maxInd) ? 1 : 0, $
         ;;                      AXIS_STYLE=0, $
         ;;                      LINESTYLE=guide_linestyle, $
         ;;                      ;; SYMBOL='', $
