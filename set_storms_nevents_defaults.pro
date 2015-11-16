@@ -41,7 +41,7 @@ PRO SET_STORMS_NEVENTS_DEFAULTS,TBEFOREEPOCH=tBeforeEpoch,TAFTEREPOCH=tAfterEpoc
                                 
   defMaxInd                     = !NULL
   defavg_type_maxInd            = 0
-  defLogDBQuantity              = 0
+  defLog_DBQuantity             = 0
   defYLogScale_maxInd           = 0
                                 
   defNeg_and_pos_separ          = 0
@@ -83,7 +83,7 @@ PRO SET_STORMS_NEVENTS_DEFAULTS,TBEFOREEPOCH=tBeforeEpoch,TAFTEREPOCH=tAfterEpoc
   IF N_ELEMENTS(maxInd) EQ 0 THEN maxInd =defMaxInd
   IF N_ELEMENTS(avg_type_maxInd) EQ 0 THEN avg_type_maxInd=defAvg_type_maxInd
 
-  IF N_ELEMENTS(log_DBQuantity) EQ 0 THEN log_DBQuantity=defLogDBQuantity
+  IF N_ELEMENTS(log_DBQuantity) EQ 0 THEN log_DBQuantity=defLog_DBQuantity
   IF N_ELEMENTS(yLogScale_maxInd) EQ 0 THEN yLogScale_maxInd = defYLogScale_maxInd
 
   IF N_ELEMENTS(neg_and_pos_separ) EQ 0 THEN neg_and_pos_separ=defNeg_and_pos_separ

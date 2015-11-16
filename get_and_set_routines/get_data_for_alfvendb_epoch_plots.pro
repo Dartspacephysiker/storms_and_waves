@@ -1,3 +1,10 @@
+;;This pro is called after GET_EPOCH_T_AND_INDS_FOR_ALFVENDB, and can return the following
+;; important lists, elements of which are all arrays of indices:
+;;
+;; tot_plot_i_{pos_,neg_,}list      : A list of arrays of indices into the Alfven DBStruct for
+;;                                     Alfven events that pass screening 
+;; tot_alf_{y,t}_{pos,_neg_,}list   : A list of arrays of {data, UTC time} values for Alfven
+;;                                      events that pass screening
 PRO GET_DATA_FOR_ALFVENDB_EPOCH_PLOTS,MAXIMUS=maximus,CDBTIME=cdbTime,MAXIND=maxInd,GOOD_I=good_i, $
                                       ALF_EPOCH_I=alf_epoch_i,ALF_IND_LIST=alf_ind_list, $
                                       MINMAXDAT=minMaxDat, NALFEPOCHS=nAlfEpochs,NEPOCHS=nEpochs, $

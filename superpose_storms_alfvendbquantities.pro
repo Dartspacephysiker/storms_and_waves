@@ -25,7 +25,7 @@
 ;                                                    since storm commencement (e.g., MAXIND=6 corresponds to mag current).
 ;                              AVG_TYPE_MAXIND   : Type of averaging to perform for events in a particular time bin.
 ;                                                    0: standard averaging; 1: log averaging (if /LOG_DBQUANTITY is set)
-;                              LOG_DB_QUANTITY   : Plot the quantity from the Alfven wave database on a log scale
+;                              LOG_DBQUANTITY    : Plot the quantity from the Alfven wave database on a log scale
 ;                              NO_SUPERPOSE      : Don't superpose Alfven wave DB quantities over Dst/SYM-H 
 ;                              NOPLOTS           : Do not plot anything.
 ;                              NOMAXPLOTS        : Do not plot output from Alfven wave/Chaston DB.

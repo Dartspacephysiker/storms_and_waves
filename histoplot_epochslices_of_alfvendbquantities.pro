@@ -23,7 +23,7 @@
 ;                                                    since storm commencement (e.g., MAXIND=6 corresponds to mag current).
 ;                              AVG_TYPE_MAXIND   : Type of averaging to perform for events in a particular time bin.
 ;                                                    0: standard averaging; 1: log averaging (if /LOG_DBQUANTITY is set)
-;                              LOG_DB_QUANTITY   : Plot the quantity from the Alfven wave database on a log scale
+;                              LOG_DBQUANTITY    : Plot the quantity from the Alfven wave database on a log scale
 ;                              NO_SUPERPOSE      : Don't superpose Alfven wave DB quantities over Dst/SYM-H 
 ;                              NOPLOTS           : Do not plot anything.
 ;                              NOMAXPLOTS        : Do not plot output from Alfven wave/Chaston DB.
@@ -63,7 +63,7 @@ PRO HISTOPLOT_EPOCHSLICES_OF_ALFVENDBQUANTITIES,RESTOREFILE=restoreFile, $
    MAXIND=maxInd, AVG_TYPE_MAXIND=avg_type_maxInd, $
    RESTRICT_ALTRANGE=restrict_altRange,RESTRICT_CHARERANGE=restrict_charERange, $
    LOG_DBQUANTITY=log_DBQuantity, $
-   YTITLE_MAXIND=yTitle_maxInd, YRANGE_MAXIND=yRange_maxInd, $
+   ;; YTITLE_MAXIND=yTitle_maxInd, YRANGE_MAXIND=yRange_maxInd, $
    TBINS=tBins, $
    DBFILE=dbFile,DB_TFILE=db_tFile, $
    NOPLOTS=noPlots, NOGEOMAGPLOTS=noGeomagPlots, NOMAXPLOTS=noMaxPlots, $
@@ -76,7 +76,14 @@ PRO HISTOPLOT_EPOCHSLICES_OF_ALFVENDBQUANTITIES,RESTOREFILE=restoreFile, $
    MINMLT=minM,MAXMLT=maxM,BINM=binM,MINILAT=minI,MAXILAT=maxI,BINI=binI, $
    DO_LSHELL=do_lshell,MINLSHELL=minL,MAXLSHELL=maxL,BINL=binL, $
    NORMALIZE_EPOCHSLICE_HISTS=normalize_epochSlice_hists, $
-   EPOCHSLICE_HISTBINSIZE = epochSlice_histBinsize
+   EPOCHSLICE_HISTBINSIZE = epochSlice_histBinsize, $
+   EPOCHSLICE_XTITLE=epochSlice_xTitle, $
+   EPOCHSLICE_XPLOTRANGE=epochslice_xPlotRange, $
+   EPOCHSLICE_YPLOTRANGE=epochslice_yPlotRange, $
+   MAKE_MOVIE=make_movie, $
+   MOVIE_FRAMERATE=movie_framerate, $
+   PLOTPREFIX=plotPrefix
+   
   
 
   date            = GET_TODAY_STRING(/DO_YYYYMMDD_FMT)
@@ -84,16 +91,6 @@ PRO HISTOPLOT_EPOCHSLICES_OF_ALFVENDBQUANTITIES,RESTOREFILE=restoreFile, $
 
   IF NOT KEYWORD_SET(epochSlice_histBinsize) THEN epochSlice_histBinsize     = 0.25
 
-  IF NOT KEYWORD_SET(dataName) THEN dataName = (TAG_NAMES(maximus))[maxInd] ;;        = 'char_ion_energy'
-
-  ;data out
-  genFile_pref    = date + '--' + dataName + '--from_histoplot_epochslices_of_alfvendbquantities.pro'
-  outstats        = date + '--' + dataName + '_moment_data_for_' + nEpochs + '_' + $
-                    stormString + 'storms--no_NOAA_SSC.sav'
-  SET_PLOT_DIR,plotDir,/FOR_STORMS,/VERBOSE,/ADD_TODAY
-  sPP             = plotDir + dataName + '--' + nEpochs + '_' + $
-                    stormString + 'Storms--no_NOAA_SSC' ;savePlotPrefix
-  
   dataDir='/SPENCEdata/Research/Cusp/database/'
 
   ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
@@ -172,7 +169,7 @@ PRO HISTOPLOT_EPOCHSLICES_OF_ALFVENDBQUANTITIES,RESTOREFILE=restoreFile, $
 
   ;; Get ranges for plots
   IF    KEYWORD_SET(nEventHists) OR (avg_type_maxInd GT 0) $
-     OR KEYWORD_SET(maxInd)      OR KEYWORD_SET(probOccurrence_sea) THEN BEGIN                    ;Histos of Alfvén events relative to storm epoch
+     OR KEYWORD_SET(maxInd)      OR KEYWORD_SET(probOccurrence_sea) THEN BEGIN ;Histos of Alfvén events relative to storm epoch
      ;; ;Get nearest events in Chaston DB
      GET_EPOCH_T_AND_INDS_FOR_ALFVENDB,maximus,cdbTime,NEPOCHS=nEpochs,TBEFOREEPOCH=tBeforeEpoch,TAFTEREPOCH=tAfterEpoch, $
                                        CENTERTIME=centerTime, $
@@ -221,9 +218,9 @@ PRO HISTOPLOT_EPOCHSLICES_OF_ALFVENDBQUANTITIES,RESTOREFILE=restoreFile, $
         tot_alf_y_pos = LIST_TO_1DARRAY(tot_alf_y_pos_list,/WARN,/SKIP_NEG1_ELEMENTS)
         tot_alf_t_neg = LIST_TO_1DARRAY(tot_alf_t_neg_list,/WARN,/SKIP_NEG1_ELEMENTS)
         tot_alf_y_neg = LIST_TO_1DARRAY(tot_alf_y_neg_list,/WARN,/SKIP_NEG1_ELEMENTS)
-
+        
         IF N_ELEMENTS(avg_type_maxInd) GT 0 THEN histoType = avg_type_maxind
-
+        
         GET_ALFVENDBQUANTITY_HISTOGRAM__EPOCH_ARRAY,tot_alf_t_pos,tot_alf_y_pos,HISTOTYPE=histoType, $
            HISTDATA=histData_pos, $
            HISTTBINS=histTBins_pos, $
@@ -242,9 +239,9 @@ PRO HISTOPLOT_EPOCHSLICES_OF_ALFVENDBQUANTITIES,RESTOREFILE=restoreFile, $
      ENDIF ELSE BEGIN
         tot_alf_t = LIST_TO_1DARRAY(tot_alf_t_list,/WARN,/SKIP_NEG1_ELEMENTS)
         tot_alf_y = LIST_TO_1DARRAY(tot_alf_y_list,/WARN,/SKIP_NEG1_ELEMENTS)
-
+        
         IF N_ELEMENTS(avg_type_maxInd) GT 0 THEN histoType = avg_type_maxind
-
+        
         GET_ALFVENDBQUANTITY_HISTOGRAM__EPOCH_ARRAY,tot_alf_t,tot_alf_y,HISTOTYPE=histoType, $
            HISTDATA=histData, $
            HISTTBINS=histTBins, $
@@ -252,9 +249,9 @@ PRO HISTOPLOT_EPOCHSLICES_OF_ALFVENDBQUANTITIES,RESTOREFILE=restoreFile, $
            TAFTEREPOCH=tafterepoch,TBEFOREEPOCH=tBeforeEpoch, $
            HISTOBINSIZE=histoBinSize,NEVTOT=nEvTot, $
            NONZERO_I=nz_i
-
+        
         IF KEYWORD_SET(probOccurrence_sea) THEN BEGIN
-
+           
            GET_FASTLOC_HISTOGRAM__EPOCH_ARRAY, $
               T1_ARR=datStartStop[*,0], $
               T2_ARR=datStartStop[*,1], $
@@ -280,15 +277,22 @@ PRO HISTOPLOT_EPOCHSLICES_OF_ALFVENDBQUANTITIES,RESTOREFILE=restoreFile, $
            nz_i_po = CGSETINTERSECTION(nz_i,nz_i_fastLoc)
            histData[nz_i_po] = histData[nz_i_po]/fastLocHistData[nz_i_po]
         ENDIF
-
+        
      ENDELSE
   ENDIF
-
-  ;data in        
-  tot_alf_t       = LIST_TO_1DARRAY(tot_alf_t_list,/WARN,/SKIP_NEG1_ELEMENTS)
-  tot_alf_y       = LIST_TO_1DARRAY(tot_alf_y_list,/WARN,/SKIP_NEG1_ELEMENTS)
-
-  ;plot array/window setup
+  
+  IF NOT KEYWORD_SET(dataName) THEN dataName = (TAG_NAMES(maximus))[maxInd] ;;        = 'char_ion_energy'
+  IF NOT KEYWORD_SET(plotPrefix) THEN plotPrefix = "" ELSE plotPrefix = plotPrefix + '--'
+  ;;data out
+  genFile_pref    = date + '--' + dataName + '--from_histoplot_epochslices_of_alfvendbquantities.pro'
+  outstats        = date + '--' + dataName + '_moment_data_for_' + STRCOMPRESS(nEpochs,/REMOVE_ALL) + '_' + $
+                    stormString + 'storms--no_NOAA_SSC.sav'
+  SET_PLOT_DIR,plotDir,/FOR_STORMS,/VERBOSE,/ADD_TODAY
+  sPP             = plotDir + dataName + '--' + plotPrefix + STRCOMPRESS(nEpochs,/REMOVE_ALL) + $
+                    '_' + stormString + 'Storms--no_NOAA_SSC' ;savePlotPrefix
+  
+  ;;plot array/window setup
+  nSlices    = N_ELEMENTS(histTBins)
   nWindows   = 5
   windowArr  = MAKE_ARRAY(nWindows,/OBJ)
   plotArr    = MAKE_ARRAY(nSlices,/OBJ)
@@ -299,21 +303,19 @@ PRO HISTOPLOT_EPOCHSLICES_OF_ALFVENDBQUANTITIES,RESTOREFILE=restoreFile, $
   nPPerWind  = plotLayout[0]*plotLayout[1]
 
   ;plot details
-  xTitle     = 'Characteristic Ion Energy (eV)'
+  xTitle     = KEYWORD_SET(epochSlice_xTitle) ? epochSlice_xTitle : dataName
   yTitle     = "Count"
   ;; xRange     = [histTBins[0],histTBins[-1]]
-  xRange     = [-6,0]
-  ;; yRange     = [MIN(tot_alf_y),MAX(tot_alf_y)]
-  yRange     = [0,1000]
+  xRange     = KEYWORD_SET(epochslice_xPlotRange) ? epochslice_xPlotRange : [MIN(tot_alf_y),MAX(tot_alf_y)]
+  yRange     = KEYWORD_SET(epochSlice_yPlotRange) ? epochSlice_yPlotRange : [0,1000]
   pHP        = MAKE_HISTOPLOT_PARAM_STRUCT(NAME=dataName, $
                                            XTITLE=xTitle, $
                                            YTITLE=yTitle, $
                                            XRANGE=xRange, $
                                            YRANGE=yRange, $
-                                           HISTBINSIZE=histBinsize, $
-                                           XP_ARE_LOGGED=log_DBQuantity) ;, $
-                                           ;; MARGIN=margin, $
-                                           ;; LAYOUT=layout)
+                                           HISTBINSIZE=epochSlice_histBinsize, $
+                                           XP_ARE_LOGGED=log_DBQuantity)
+
   ;;declare the slice structure array
   ssa = !NULL
 
@@ -331,11 +333,11 @@ PRO HISTOPLOT_EPOCHSLICES_OF_ALFVENDBQUANTITIES,RESTOREFILE=restoreFile, $
                                          EPOCHSTART=histTBins[i], $
                                          EPOCHEND=histTBins[i+1], $
                                          YDATA=tempData, $
-                                         IS_LOGGED_YDATA=~unlog, $
+                                         IS_LOGGED_YDATA=log_DBQuantity, $
                                          /DO_HIST, $
                                          HISTMIN=pHP.xRange[0], $
                                          HISTMAX=pHP.xRange[1], $
-                                         HISTBINSIZE=histBinsize, $
+                                         HISTBINSIZE=epochSlice_histBinsize, $
                                          TDATA=tot_alf_t[temp_ii], $
                                          MOMENTSTRUCT=MAKE_MOMENT_STRUCT(tempData), $
                                          GENERATING_FILE=genFile)
@@ -354,85 +356,151 @@ PRO HISTOPLOT_EPOCHSLICES_OF_ALFVENDBQUANTITIES,RESTOREFILE=restoreFile, $
   ENDFOR
 
   ;;Now the windows
-  FOR i=0,nSlices-2 DO BEGIN
-     ;set up a new window, if need be
-     IF (i MOD nPPerWind) EQ 0 THEN BEGIN
-        wInd            = FLOOR(i/FLOAT(nWindows))
-        t1              = histTbins[i]
-        t2              = histTbins[i+nPPerWind]
-        wTitle          = STRING(FORMAT='("Storm epoch hours ",F0.2," through ",F0.2)',t1,t2)
-        saveName        = STRING(FORMAT='(A0,"--epoch_",I0,"_through_",I0,".png")',sPP,t1,t2)
+  IF KEYWORD_SET(make_movie) THEN BEGIN
 
-        windowArr[wInd] = WINDOW(WINDOW_TITLE=wTitle,DIMENSIONS=[1200,800])
+     ;set up video--ripped this from http://www.exelisvis.com/Learn/Blogs/IDLDataPointDetail/TabId/902/ArtMID/2926/ArticleID/12944/Making-movies-with-IDL-part-I.aspx
+     video_file = STRING(FORMAT='(A0,"--epoch_",I0,"_through_",I0,".mp4")',sPP,histTBins[0],histTBins[-1])
+     ;;video_file = 'dg_movie_ex.mp4'
+     video      = idlffvideowrite(video_file)
+     framerate  = KEYWORD_SET(movie_framerate) ? movie_framerate : 2
+     framedims  = [640,512]
+     stream     = video.addvideostream(framedims[0], framedims[1], framerate)
+
+     ;;Set up plotting device
+     SET_PLOT, 'z', /copy
+     DEVICE, SET_RESOLUTION=framedims, SET_PIXEL_DEPTH=24, DECOMPOSED=0
+
+     FOR i=0,nSlices-2 DO BEGIN
         
-     ENDIF
+        ;;get which panel this is
+        layout_i    = (i MOD nPPerWind)+1
+        
+        ;;the indata
+        x           = ssa[i].yHistStr.locs[0] + ssa[i].yHistStr.binsize/2.
+        y           = ssa[i].yHistStr.hist[0] 
+        
+        integral    = TOTAL(y)
+        IF KEYWORD_SET(normalize_epochSlice_hists) THEN BEGIN
+           y        = y / integral
+           pHP.yRange = [0,0.3]
+           pHP.yTitle = 'Relative Freq.'
+        ENDIF 
+        
+        title       = STRING(FORMAT='("Storm epoch hours ",I0," through ",I0)',ssa[i].eStart,ssa[i].eEnd)
+        xTitle      = pHP.xTitle
+        yTitle      = pHP.yTitle
+        margin      = firstMarg
+        
+        ;; plotArr[i]  = plot(x,y, $
+        ;;                    TITLE=title, $
+        ;;                    XTITLE=xTitle, $
+        ;;                    YTITLE=yTitle, $
+        ;;                    XRANGE=pHP.xRange, $
+        ;;                    YRANGE=pHP.yRange, $
+        ;;                    /HISTOGRAM, $
+        ;;                    MARGIN=margin, $
+        ;;                    /BUFFER)
+        PLOT,x,y, $
+             TITLE=title, $
+             XTITLE=xTitle, $
+             YTITLE=yTitle, $
+             XRANGE=pHP.xRange, $
+             YRANGE=pHP.yRange, $
+             PSYM=10 ;, $ ;for histo madness
+             ;; MARGIN=margin
+        
+        timestamp = video.put(stream, TVRD(TRUE=1))
 
-     ;get which panel this is
-     layout_i    = (i MOD nPPerWind)+1
-     
-     ;the indata
-     x           = ssa[i].yHistStr.locs[0] + ssa[i].yHistStr.binsize/2.
-     y           = ssa[i].yHistStr.hist[0] 
+     ENDFOR
 
-     integral    = TOTAL(y)
-     IF KEYWORD_SET(normalize_epochSlice_hists) THEN BEGIN
-        y        = y / integral
-        pHP.yRange = [0,0.3]
-        pHP.yTitle = 'Relative Freq.'
-     ENDIF 
+     ;;Close the vidzz
+     DEVICE, /close
+     SET_PLOT, STRLOWCASE(!version.os_family) eq 'windows' ? 'win' : 'x'
+     video.cleanup
+     PRINT, 'File "' + video_file + '" written to current directory.'
 
-     ;; IF layout_i EQ 1 THEN BEGIN
+  ENDIF ELSE BEGIN ;;No video
+
+     FOR i=0,nSlices-2 DO BEGIN
+        ;;set up a new window, if need be
+        IF (i MOD nPPerWind) EQ 0 THEN BEGIN
+           wInd            = FLOOR(i/FLOAT(nWindows))
+           t1              = histTbins[i]
+           t2              = histTbins[i+nPPerWind]
+           wTitle          = STRING(FORMAT='("Storm epoch hours ",F0.2," through ",F0.2)',t1,t2)
+           saveName        = STRING(FORMAT='(A0,"--epoch_",I0,"_through_",I0,".png")',sPP,t1,t2)
+           
+           windowArr[wInd] = WINDOW(WINDOW_TITLE=wTitle,DIMENSIONS=[1200,800])
+           
+        ENDIF
+        
+        ;;get which panel this is
+        layout_i    = (i MOD nPPerWind)+1
+        
+        ;;the indata
+        x           = ssa[i].yHistStr.locs[0] + ssa[i].yHistStr.binsize/2.
+        y           = ssa[i].yHistStr.hist[0] 
+        
+        integral    = TOTAL(y)
+        IF KEYWORD_SET(normalize_epochSlice_hists) THEN BEGIN
+           y        = y / integral
+           pHP.yRange = [0,0.3]
+           pHP.yTitle = 'Relative Freq.'
+        ENDIF 
+        
+        ;; IF layout_i EQ 1 THEN BEGIN
         title       = STRING(FORMAT='("Storm epoch hours ",I0," through ",I0)',ssa[i].eStart,ssa[i].eEnd)
         xTitle      = layout_i GT plotLayout[0] ? pHP.xTitle : !NULL
         yTitle      = pHP.yTitle
         ;; yMajorTicks = 3
         ;; yTickName   = REPLICATE(' ',yMajorTicks)
         margin      = firstMarg
-     ;; ENDIF ELSE BEGIN
-     ;;    title       = STRING(FORMAT='(I0," through ",I0)',ssa[i].eStart,ssa[i].eEnd)
-     ;;    xTitle      = !NULL
-     ;;    yTitle      = !NULL
-     ;;    yMajorTicks = !NULL
-     ;;    yTickName   = !NULL
-     ;;    margin      = marg
-     ;; ENDELSE
-     
-     plotArr[i]  = plot(x,y, $
-                        TITLE=title, $
-                        XTITLE=xTitle, $
-                        YTITLE=yTitle, $
-                        XRANGE=pHP.xRange, $
-                        YRANGE=pHP.yRange, $
-                        ;; YTICKS=yMajorTicks, $
-                        ;; YTICKNAME=yTickName, $
-                        /HISTOGRAM, $
-                        LAYOUT=[plotLayout,layout_i], $
-                        MARGIN=margin, $
-                        /CURRENT)
-
-     ;;For the integral
-     ;; intString   = STRING(FORMAT='("Integral  : ",I0)',integral)
-     textStr     = STRING(FORMAT='(A0,I0,A0,A0,A0,E0.2,A0,A0,E0.2,A0,A0,E0.2,A0,A0,E0.2,A0)', $
-                          'Integral  : ', integral, newLine, $
-                          'Mean      : ', ssa[i].moments.(0), newLine, $
-                          'Std. dev. : ', ssa[i].moments.(1), newLine, $
-                          'Skewness  : ', ssa[i].moments.(2), newLine, $
-                          'Kurtosis  : ', ssa[i].moments.(3), newLine)
-     
-
-     int_x       = ( ( (layout_i - 1) MOD plotLayout[0] )) * 1/FLOAT(plotLayout[0]) + 0.05
-     int_y       = 1 - 1/FLOAT(plotLayout[1]*2) - ( ( (layout_i - 1) / plotLayout[0] )) * 1/FLOAT(plotLayout[1]) + 1/FLOAT(plotLayout[1]*8)
-     intText     = text(int_x,int_y,$
-                        textStr, $
-                        FONT_NAME='Courier', $
-                        /NORMAL, $
-                        TARGET=plotArr[i])
-     
-
-     IF (i GT 0) AND ( ( (i + 1) MOD nPPerWind ) EQ 0 ) THEN BEGIN
-        windowArr[wInd].save,saveName,RESOLUTION=300
-     ENDIF
-
-  ENDFOR
+        ;; ENDIF ELSE BEGIN
+        ;;    title       = STRING(FORMAT='(I0," through ",I0)',ssa[i].eStart,ssa[i].eEnd)
+        ;;    xTitle      = !NULL
+        ;;    yTitle      = !NULL
+        ;;    yMajorTicks = !NULL
+        ;;    yTickName   = !NULL
+        ;;    margin      = marg
+        ;; ENDELSE
+        
+        plotArr[i]  = plot(x,y, $
+                           TITLE=title, $
+                           XTITLE=xTitle, $
+                           YTITLE=yTitle, $
+                           XRANGE=pHP.xRange, $
+                           YRANGE=pHP.yRange, $
+                           ;; YTICKS=yMajorTicks, $
+                           ;; YTICKNAME=yTickName, $
+                           /HISTOGRAM, $
+                           LAYOUT=[plotLayout,layout_i], $
+                           MARGIN=margin, $
+                           /CURRENT)
+        
+        ;;For the integral
+        ;; intString   = STRING(FORMAT='("Integral  : ",I0)',integral)
+        textStr     = STRING(FORMAT='(A0,I0,A0,A0,E0.2,A0,A0,E0.2,A0,A0,E0.2,A0,A0,E0.2,A0)', $
+                             'Integral  : ', integral, newLine, $
+                             'Mean      : ', ssa[i].moments.(0), newLine, $
+                             'Std. dev. : ', ssa[i].moments.(1), newLine, $
+                             'Skewness  : ', ssa[i].moments.(2), newLine, $
+                             'Kurtosis  : ', ssa[i].moments.(3), newLine)
+        
+        
+        int_x       = ( ( (layout_i - 1) MOD plotLayout[0] )) * 1/FLOAT(plotLayout[0]) + 0.05
+        int_y       = 1 - 1/FLOAT(plotLayout[1]*2) - ( ( (layout_i - 1) / plotLayout[0] )) * 1/FLOAT(plotLayout[1]) + 1/FLOAT(plotLayout[1]*8)
+        intText     = text(int_x,int_y,$
+                           textStr, $
+                           FONT_NAME='Courier', $
+                           /NORMAL, $
+                           TARGET=plotArr[i])
+        
+        
+        IF (i GT 0) AND ( ( (i + 1) MOD nPPerWind ) EQ 0 ) THEN BEGIN
+           windowArr[wInd].save,saveName,RESOLUTION=300
+        ENDIF
+        
+     ENDFOR
+  ENDELSE ;end separate windows
 
 END

@@ -1,3 +1,17 @@
+;;This routine, called from a few of the storm plotting procedures, creates 
+;; the following important variables:
+;;
+;; alf_epoch_t        : an NEPOCHSx2 array of UTC times
+;;  alf_epoch_t[*,0]  : start time of the given Alfven epoch
+;;  alf_epoch_t[*,1]  : stop time of the given Alfven epoch
+;;
+;; alf_epoch_i        : an NEPOCHSx2 array of UTC times
+;;  alf_epoch_i[*,0]  : start index into the AlfvenDBStr for the given Alfven epoch
+;;  alf_epoch_t[*,1]  : stop index into the AlfvenDBStr for the given Alfven epoch
+;;
+;; include_i          : Indices of the epochs for which we have data. All others discarded from
+;;                       variables alf_centerTime, alf_tStamps, nAlfEpochs, alf_epoch_t, 
+;;                       and alf_epoch_i
 PRO GET_EPOCH_T_AND_INDS_FOR_ALFVENDB,maximus,cdbTime,NEPOCHS=nEpochs,TBEFOREEPOCH=tBeforeEpoch,TAFTEREPOCH=tAfterEpoch, $
                                       CENTERTIME=centerTime, $
                                       DATSTARTSTOP=datStartStop,TSTAMPS=tStamps,GOOD_I=good_i, $
@@ -20,17 +34,6 @@ PRO GET_EPOCH_T_AND_INDS_FOR_ALFVENDB,maximus,cdbTime,NEPOCHS=nEpochs,TBEFOREEPO
                          DO_LSHELL=do_lshell,MINLSHELL=minL,MAXLSHELL=maxL,BINL=binL, $
                          DAYSIDE=dayside,NIGHTSIDE=nightside,/PRINT_PARAM_SUMMARY)
   
-  ;; PRINT,FORMAT='("i",T4,"j",T8,"tempClosest (hours)",T33,"centerTime")'
-  ;; FOR i=0,nEpochs-1 DO BEGIN
-  ;;    FOR j=0,1 DO BEGIN
-  ;;       tempClosest=MIN(ABS(datStartStop[i,j]-cdbTime(good_i)),tempClosest_ii)
-  ;;       alf_epoch_i[i,j]=good_i(tempClosest_ii)
-  ;;       alf_epoch_t[i,j]=cdbTime(good_i(tempClosest_ii))
-
-  ;;       PRINT,FORMAT='(I0,T4,I0,T8,F0.2,T33,A0)',i,j,tempClosest/3600.,tStamps[i]
-  ;;    ENDFOR
-  ;; ENDFOR
-
   PRINT,FORMAT='("i",T4,"centerTime",T25,"tempClosest (hours)",T48,"Num events in range")'
   FOR i=0,nEpochs-1 DO BEGIN
      FOR j=0,1 DO BEGIN

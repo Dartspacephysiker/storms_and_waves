@@ -1,26 +1,28 @@
 ;2015/10/31 Halloween in Utah!
 ;The save file mentioned here was produced with the following command:
 ;save,tot_alf_t_list,tot_alf_y_list,maxind,good_i,minmaxdat,nalfepochs,nepochs,alf_centertime,alf_tstamps,tbeforeepoch,tafterepoch,alf_epoch_i,alf_ind_list,FILENAME='chare_data_for_72_largestorms_no_NOAA.sav'
-
-PRO JOURNAL__20151031__GENERATING_STATISTICS_FOR_CHARE_AS_A_FUNCTION_OF_LARGESTORM_EPOCH_SLICE__TELECON20151028
+;2015/11/10
+; I am almost certain that I was actually using ion energy flux and not characteristic ion 
+; energy, a conclusion I reached by checking out the ranges of the data
+PRO JOURNAL__20151031__GENERATING_STATISTICS_FOR_ION_EFLUX_AS_A_FUNCTION_OF_LARGESTORM_EPOCH_SLICE__TELECON20151028
 
   date            = '20151103'
-  dataName        = 'char_ion_energy'
+  dataName        = 'ion_energy_flux'
   unlog           = 0
   normalize_hists = 1
   histBinsize     = 0.25
   newLine         = '!C'
 
   ;data in        
-  inFile          = 'chare_data_for_72_largestorms_no_NOAA.sav'
+  inFile          = 'ion_eflux_data_for_72_largestorms_no_NOAA.sav'
   restore,inFile
   nSlices         = N_ELEMENTS(histTBins)
   tot_alf_t       = LIST_TO_1DARRAY(tot_alf_t_list,/WARN,/SKIP_NEG1_ELEMENTS)
   tot_alf_y       = LIST_TO_1DARRAY(tot_alf_y_list,/WARN,/SKIP_NEG1_ELEMENTS)
 
   ;data out
-  genFile         = 'journal__20151031__generating_statistics_for_chare_as_a_function_of_largestorm_epoch_slice__telecon20151028.pro'
-  outstats        = date + '--chare_moment_data_for_72_largestorms--no_NOAA_SSC.sav'
+  genFile         = 'journal__20151031__generating_statistics_for_ion_eflux_as_a_function_of_largestorm_epoch_slice__telecon20151028.pro'
+  outstats        = date + '--ion_eflux__moment_data_for_72_largestorms--no_NOAA_SSC.sav'
   SET_PLOT_DIR,plotDir,/FOR_STORMS,/VERBOSE,/ADD_TODAY
   sPP             = plotDir + dataName + '--72_largestorms--no_NOAA_SSC'   ;savePlotPrefix
 
@@ -35,7 +37,8 @@ PRO JOURNAL__20151031__GENERATING_STATISTICS_FOR_CHARE_AS_A_FUNCTION_OF_LARGESTO
   nPPerWind  = plotLayout[0]*plotLayout[1]
 
   ;plot details
-  xTitle     = 'Characteristic Ion Energy (eV)'
+  ;; xTitle     = 'Characteristic Ion Energy (eV)'
+  xTitle     = 'Ion Energy Flux (units?)'
   yTitle     = "Count"
   ;; xRange     = [histTBins[0],histTBins[-1]]
   xRange     = [-6,0]
