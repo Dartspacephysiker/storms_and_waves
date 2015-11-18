@@ -49,6 +49,8 @@ PRO HISTOPLOT_ALFVENDBQUANTITIES_DURING_STORMPHASES,RESTOREFILE=restoreFile, $
    AVG_TYPE_MAXIND=avg_type_maxInd, $
    RESTRICT_ALTRANGE=restrict_altRange,RESTRICT_CHARERANGE=restrict_charERange, $
    LOG_DBQUANTITY=log_DBQuantity, $
+   DO_UNLOGGED_STATISTICS=unlog_statistics, $
+   DO_LOGGED_STATISTICS=log_statistics, $
    TBINS=tBins, $
    DBFILE=dbFile,DB_TFILE=db_tFile, $
    USE_DARTDB_START_ENDDATE=use_dartdb_start_enddate, $
@@ -58,7 +60,7 @@ PRO HISTOPLOT_ALFVENDBQUANTITIES_DURING_STORMPHASES,RESTOREFILE=restoreFile, $
    RANDOMTIMES=randomTimes, $
    MINMLT=minM,MAXMLT=maxM,BINM=binM,MINILAT=minI,MAXILAT=maxI,BINI=binI, $
    DO_LSHELL=do_lshell,MINLSHELL=minL,MAXLSHELL=maxL,BINL=binL, $
-   PLOTPREFIX=plotPrefix, $
+   PLOTSUFFIX=plotSuffix, $
    OUTPLOTARR=outPlotArr
 
   date            = GET_TODAY_STRING(/DO_YYYYMMDD_FMT)
@@ -93,6 +95,8 @@ PRO HISTOPLOT_ALFVENDBQUANTITIES_DURING_STORMPHASES,RESTOREFILE=restoreFile, $
 EPOCHPLOT_COLORNAMES=epochPlot_colorNames,SCATTEROUTPREFIX=scatterOutPrefix, $
                               RANDOMTIMES=randomTimes
 
+  COMPILE_OPT idl2
+
   @utcplot_defaults.pro
 
   ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
@@ -107,7 +111,8 @@ EPOCHPLOT_COLORNAMES=epochPlot_colorNames,SCATTEROUTPREFIX=scatterOutPrefix, $
                            ORBRANGE=orbRange, ALTITUDERANGE=altitudeRange, CHARERANGE=charERange,POYNTRANGE=poyntRange, $
                            MINMLT=minM,MAXMLT=maxM,BINM=binM,MINILAT=minI,MAXILAT=maxI,BINI=binI, $
                            DO_LSHELL=do_lshell,MINLSHELL=minL,MAXLSHELL=maxL,BINL=binL, $
-                           HWMAUROVAL=HwMAurOval, HWMKPIND=HwMKpInd)
+                           HWMAUROVAL=HwMAurOval, HWMKPIND=HwMKpInd, $
+                           DAYSIDE=dayside,NIGHTSIDE=nightside)
      
   ;;******************************
   ;;Get indices for storm phases
@@ -135,16 +140,18 @@ EPOCHPLOT_COLORNAMES=epochPlot_colorNames,SCATTEROUTPREFIX=scatterOutPrefix, $
   alf_i_list=LIST()
 
   IF NOT KEYWORD_SET(dataName) THEN dataName = (TAG_NAMES(maximus))[maxInd] ;;        = 'char_ion_energy'
-  IF NOT KEYWORD_SET(plotPrefix) THEN plotPrefix = "" ELSE plotPrefix = plotPrefix + '--'
+  IF NOT KEYWORD_SET(plotSuffix) THEN plotSuffix = "" ELSE plotSuffix = '--' + plotSuffix
   ;;data out
   genFile_pref    = date + '--' + dataName + '--from_histoplot_alfvendbquantities_during_stormphases.pro'
   outstats        = date + '--' + dataName + '_moment_data_for_stormphases.sav'
   SET_PLOT_DIR,plotDir,/FOR_STORMS,/VERBOSE,/ADD_TODAY
-  sPP             = plotDir + dataName + '--' + plotPrefix + 'stormphases' ;savePlotPrefix
+  saveName        = plotDir + 'stormphase_histos--' + dataName + plotSuffix + '.png' ;savePlotSuffix
   
 
   ;;declare the slice structure array, null lists
   ssa            = !NULL
+  integralArr    = MAKE_ARRAY(3,/INTEGER)
+
   nFinite        = !NULL
   nTotal         = !NULL
   tot_alf_t_list = LIST()
@@ -180,8 +187,11 @@ EPOCHPLOT_COLORNAMES=epochPlot_colorNames,SCATTEROUTPREFIX=scatterOutPrefix, $
      nFinite = [nFinite,N_ELEMENTS(WHERE(FINITE(tot_alf_y_list[i])))]
      nTotal  = [nTotal,N_ELEMENTS(tot_alf_y_list[i])]
      IF nFinite[i] NE nTotal[i] THEN BEGIN
-        PRINT,FORMAT='(A0,T15,":",T18,I0," finite, ",I0," total!")',strings[i],nFinite[i],nTotal[i]
+        PRINT,FORMAT='(A0,T30,":",T33,I0," finite, ",I0," total!")',strings[i],nFinite[i],nTotal[i]
         PRINT,"Beware ... why do you have negs in these data?"
+        tempData = prompt__conv_quantity_to_pos_neg_or_abs(tot_alf_y_list[i])
+        tot_alf_y_list.remove,i
+        tot_alf_y_list.add,tempData
         WAIT,1
         ENDIF
   ENDFOR
@@ -211,11 +221,24 @@ EPOCHPLOT_COLORNAMES=epochPlot_colorNames,SCATTEROUTPREFIX=scatterOutPrefix, $
 
      ;; tempData   = maximus.(maxInd)[alf_i_list[i]]
      tempData   = tot_alf_y_list[i]
-     ;; IF KEYWORD_SET(unlog) THEN BEGIN
-     ;;    tempData                 = 10^(tempData)
-     ;; ENDIF
+
+     ;;doing logged or unlogged statistics?
+     IF KEYWORD_SET(log_DBQuantity) THEN BEGIN
+        IF KEYWORD_SET(unlog_statistics) THEN BEGIN
+           tempStats = MOMENT(10^tempData)
+        ENDIF ELSE BEGIN
+           tempStats = MOMENT(tempData)
+        ENDELSE
+     ENDIF ELSE BEGIN
+        IF KEYWORD_SET(log_statistics) THEN BEGIN
+           tempStats = MOMENT(ALOG10(tempData))
+        ENDIF ELSE BEGIN
+           tempStats = MOMENT(tempData)
+        ENDELSE
+     ENDELSE
+
      tempStats  = MOMENT(tempData)
-     tempESlice = MAKE_EPOCHSLICE_STRUCT(DATANAME=dataName, $
+     tempESlice = MAKE_EPOCHSLICE_STRUCT(DATANAME=dataName+'--'+strings[i], $
                                          EPOCHSTART=t1_arr[0], $
                                          EPOCHEND=t2_arr[-1], $
                                          YDATA=tempData, $
@@ -233,19 +256,7 @@ EPOCHPLOT_COLORNAMES=epochPlot_colorNames,SCATTEROUTPREFIX=scatterOutPrefix, $
 
 
   ;;print stats
-  PRINT,FORMAT='("Low (hr)",T10,"High (hr)",T20,"N",T30,"Mean",T40,"Std. dev.",T50,"Skewness",T60,"Kurtosis")'
-  FOR i=0,N_ELEMENTS(ssa)-1 DO BEGIN
-     
-     PRINT,FORMAT='(A0,T10,A0,T20,I0,T30,G9.4,T40,G9.4,T50,G9.4,T60,G9.4)', $
-           TIME_TO_STR(ssa[i].eStart), $
-           TIME_TO_STR(ssa[i].eEnd), $
-           N_ELEMENTS(ssa[i].yList[0]), $
-           ssa[i].moments.(0), $
-           SQRT(ssa[i].moments.(1)), $
-           ssa[i].moments.(2), $
-           ssa[i].moments.(3)
-     
-  ENDFOR
+  PRINT_EPOCHSLICE_STRUCT_STATS,ssa
 
   ;; IF KEYWORD_SET(neg_AND_pos_separ) THEN BEGIN
   ;;    ;;First pos
@@ -288,11 +299,13 @@ EPOCHPLOT_COLORNAMES=epochPlot_colorNames,SCATTEROUTPREFIX=scatterOutPrefix, $
 
   FOR i=0,2 DO BEGIN
      ;;the indata
-     x             = ssa[i].yHistStr.locs[0] + ssa[i].yHistStr.binsize/2.
-     y             = ssa[i].yHistStr.hist[0] 
+     x                 = ssa[i].yHistStr.locs[0] + ssa[i].yHistStr.binsize/2.
+     y                 = ssa[i].yHistStr.hist[0] 
      
-     integral      = TOTAL(y)
-     IF KEYWORD_SET(normalize_maxInd_hist) THEN BEGIN
+     integral          = TOTAL(y)
+     integralArr[i]    = integral
+     ;; bs_medianArr[i,*] = bs_median
+IF KEYWORD_SET(normalize_maxInd_hist) THEN BEGIN
         y          = y / integral
         pHP.yRange = KEYWORD_SET(histYRange_maxInd) ? histYRange_maxInd : [0,0.3]
         pHP.yTitle = 'Relative Freq.'
@@ -331,9 +344,16 @@ EPOCHPLOT_COLORNAMES=epochPlot_colorNames,SCATTEROUTPREFIX=scatterOutPrefix, $
      
      ;;For the integral
      ;; intString   = STRING(FORMAT='("Integral  : ",I0)',integral)
-     textStr     = STRING(FORMAT='(A0,I0,A0,A0,E0.2,A0,A0,E0.2,A0,A0,E0.2,A0,A0,E0.2,A0)', $
-                          'Integral  : ', integral, newLine, $
+     textStr     = STRING(FORMAT=$
+                          '(A0,I0,A0,' + $
+                          'A0,E0.2,A0,' + $
+                          'A0,E0.2,A0,' + $
+                          'A0,E0.2,A0,' + $
+                          'A0,E0.2,A0,' + $
+                          'A0,E0.2,A0)', $
+                          'Integral  : ', integral          , newLine, $
                           'Mean      : ', ssa[i].moments.(0), newLine, $
+                          'Median    : ', ssa[i].moments.(4)[1], newLine, $
                           'Std. dev. : ', ssa[i].moments.(1), newLine, $
                           'Skewness  : ', ssa[i].moments.(2), newLine, $
                           'Kurtosis  : ', ssa[i].moments.(3), newLine)
@@ -349,11 +369,15 @@ EPOCHPLOT_COLORNAMES=epochPlot_colorNames,SCATTEROUTPREFIX=scatterOutPrefix, $
      
      
      ;; IF (i GT 0) AND ( ( (i + 1) MOD nPPerWind ) EQ 0 ) THEN BEGIN
-     ;;    windowArr[wInd].save,saveName,RESOLUTION=300
      ;; ENDIF
         
   ENDFOR
-  
+
+  IF KEYWORD_SET(plotSuffix) AND plotSuffix NE "" THEN BEGIN
+     PRINT,'Saving plot to ' + saveName + '...'
+     window.save,saveName,RESOLUTION=300
+  ENDIF
+
   outPlotArr = plotArr
 
 END
