@@ -11,14 +11,12 @@
 ;                              TAFTEREPOCH       : Amount of time (hours) to plot after a given DST min
 ;                              START_UTC         : Include storms starting with this time (in seconds since Jan 1, 1970)
 ;                              STOP_UTC          : Include storms up to this time (in seconds since Jan 1, 1970)
-;                              NEG_AND_POS_SEPAR : Do plots of negative and positive log numbers separately
 ;                              MAXIND            : Index into maximus structure; plot corresponding quantity as a function of time
 ;                                                    since storm commencement (e.g., MAXIND=6 corresponds to mag current).
 ;                              AVG_TYPE_MAXIND   : Type of averaging to perform for events in a particular time bin.
 ;                                                    0: standard averaging; 1: log averaging (if /LOG_DBQUANTITY is set)
 ;                              LOG_DBQUANTITY    : Plot the quantity from the Alfven wave database on a log scale
 ;                              NO_SUPERPOSE      : Don't superpose Alfven wave DB quantities over Dst/SYM-H 
-;                              NEG_AND_POS_LAYOUT: Set to array of plot layout for pos_and_neg_plots
 ;                               
 ;                              PLOTTITLE         : Title of superposed plot
 ;                              SAVEPLOTNAME      : Name of outputted file
@@ -38,7 +36,6 @@ PRO HISTOPLOT_ALFVENDBQUANTITIES_DURING_STORMPHASES,RESTOREFILE=restoreFile, $
    stormTimeArray_utc, $
    START_UTC=start_UTC, STOP_UTC=stop_UTC, $
    DAYSIDE=dayside,NIGHTSIDE=nightside, $
-   NEG_AND_POS_SEPAR=neg_and_pos_separ, $
    LAYOUT=layout, $
    MAXIND=maxInd, $
    NORMALIZE_MAXIND_HIST=normalize_maxInd_hist, $
@@ -46,6 +43,9 @@ PRO HISTOPLOT_ALFVENDBQUANTITIES_DURING_STORMPHASES,RESTOREFILE=restoreFile, $
    HISTYRANGE_MAXIND=histYRange_maxInd, $
    HISTXTITLE_MAXIND=histXTitle_maxInd, $
    HISTBINSIZE_MAXIND=histBinsize_maxInd, $
+   ONLY_POS=only_pos, $
+   ONLY_NEG=only_neg, $
+   ABSVAL=absVal, $
    AVG_TYPE_MAXIND=avg_type_maxInd, $
    RESTRICT_ALTRANGE=restrict_altRange,RESTRICT_CHARERANGE=restrict_charERange, $
    LOG_DBQUANTITY=log_DBQuantity, $
@@ -54,14 +54,18 @@ PRO HISTOPLOT_ALFVENDBQUANTITIES_DURING_STORMPHASES,RESTOREFILE=restoreFile, $
    TBINS=tBins, $
    DBFILE=dbFile,DB_TFILE=db_tFile, $
    USE_DARTDB_START_ENDDATE=use_dartdb_start_enddate, $
-   SAVEFILE=saveFile,OVERPLOT_HIST=overplot_hist, $
+   SAVEFILE=saveFile, $
    PLOTTITLE=plotTitle,SAVEPLOTNAME=savePlotName, $
    SAVEMAXPLOTNAME=saveMaxPlotName, $
    RANDOMTIMES=randomTimes, $
    MINMLT=minM,MAXMLT=maxM,BINM=binM,MINILAT=minI,MAXILAT=maxI,BINI=binI, $
    DO_LSHELL=do_lshell,MINLSHELL=minL,MAXLSHELL=maxL,BINL=binL, $
    PLOTSUFFIX=plotSuffix, $
-   OUTPLOTARR=outPlotArr
+   PLOTCOLOR=plotColor, $
+   OUTPLOTARR=outPlotArr, $
+   HISTOPLOT_PARAM_STRUCT=pHP, $
+   ;; OVERPLOTARR=overplotArr, $
+   CURRENT_WINDOW=window
 
   date            = GET_TODAY_STRING(/DO_YYYYMMDD_FMT)
   newLine         = '!C'
@@ -175,25 +179,61 @@ EPOCHPLOT_COLORNAMES=epochPlot_colorNames,SCATTEROUTPREFIX=scatterOutPrefix, $
         LIST_TO_ARR=1,$
         VERBOSE=verbose, DEBUG=debug, LUN=lun
      
-     alf_i_list.add,alf_i
-     tot_alf_t_list.add,cdbTime[alf_i]
-     IF KEYWORD_SET(log_DBQuantity) THEN BEGIN
-        tot_alf_y_list.add,ALOG10(maximus.(maxInd)[alf_i])
+     IF KEYWORD_SET(only_pos) OR KEYWORD_SET(only_neg) OR KEYWORD_SET(absVal) THEN BEGIN
+        PRINT,"Splitting data..."
+        tempData = CONV_QUANTITY_TO_POS_NEG_OR_ABS(maximus.(maxInd)[alf_i], $
+                   QUANTITY_NAME=dataName, $
+                   ONLY_POS=only_pos, $
+                   ONLY_NEG=only_neg, $
+                   ABSVAL=absVal, $
+                   INDICES=new_ii, $
+                   USER_RESPONSE=user_response, $
+                   ADD_SUFF_TO_THIS_STRING=plotSuffix, $
+                   LUN=lun)
+
+        alf_i = alf_i[new_ii]
      ENDIF ELSE BEGIN
-        tot_alf_y_list.add,maximus.(maxInd)[alf_i]
+        tempData = maximus.(maxInd)[alf_i]
      ENDELSE
-     ;; tot_alf_t = cdbTime[alf_i]
-     ;; tot_alf_y = maximus.(maxInd)[alf_i]
-     nFinite = [nFinite,N_ELEMENTS(WHERE(FINITE(tot_alf_y_list[i])))]
-     nTotal  = [nTotal,N_ELEMENTS(tot_alf_y_list[i])]
+
+     IF KEYWORD_SET(log_DBQuantity) THEN BEGIN
+        PRINT,"Logging these data..."
+        tempData = ALOG10(tempData)
+     ENDIF
+
+     ;;check data to make sure they're safe
+     nFinite = [nFinite,N_ELEMENTS(WHERE(FINITE(tempData)))]
+     nTotal  = [nTotal,N_ELEMENTS(alf_i)]
      IF nFinite[i] NE nTotal[i] THEN BEGIN
         PRINT,FORMAT='(A0,T30,":",T33,I0," finite, ",I0," total!")',strings[i],nFinite[i],nTotal[i]
         PRINT,"Beware ... why do you have negs in these data?"
-        tempData = prompt__conv_quantity_to_pos_neg_or_abs(tot_alf_y_list[i])
-        tot_alf_y_list.remove,i
-        tot_alf_y_list.add,tempData
-        WAIT,1
+        tempData = prompt__conv_quantity_to_pos_neg_or_abs(maximus.(maxInd)[alf_i], $
+                                                           INDICES=new_ii, $
+                                                           ADD_SUFF_TO_THIS_STRING=plotSuffix)
+        IF KEYWORD_SET(log_DBQuantity) THEN BEGIN
+           PRINT,"Logging these data..."
+           tempData = ALOG10(tempData)
         ENDIF
+
+
+        tot_alf_y_list.add,tempData
+        alf_i    = alf_i[new_ii]
+        ;;update savename
+        saveName = plotDir + 'stormphase_histos--' + dataName + plotSuffix + '.png'
+
+     ENDIF ELSE BEGIN
+        ;; IF KEYWORD_SET(log_DBQuantity) THEN BEGIN
+        ;;    tot_alf_y_list.add,ALOG10(maximus.(maxInd)[alf_i])
+        ;; ENDIF ELSE BEGIN
+        ;;    tot_alf_y_list.add,maximus.(maxInd)[alf_i]
+        ;; ENDELSE
+        tot_alf_y_list.add,tempData
+     ENDELSE
+
+     alf_i_list.add,alf_i
+     tot_alf_t_list.add,cdbTime[alf_i]
+
+
   ENDFOR
 
   ;;plot details
@@ -209,14 +249,15 @@ EPOCHPLOT_COLORNAMES=epochPlot_colorNames,SCATTEROUTPREFIX=scatterOutPrefix, $
                 MAX(LIST_TO_1DARRAY(tot_alf_y_list,/WARN))]
   yRange     = KEYWORD_SET(histYRange_maxInd) ? histYRange_maxInd : [0,1000]
   
-  pHP        = MAKE_HISTOPLOT_PARAM_STRUCT(NAME=dataName, $
-                                           XTITLE=xTitle, $
-                                           YTITLE=yTitle, $
-                                           XRANGE=xRange, $
-                                           YRANGE=yRange, $
-                                           HISTBINSIZE=histBinsize_maxInd, $
-                                           XP_ARE_LOGGED=log_DBQuantity)
+  pHP        = N_ELEMENTS(pHP) GT 0 ? pHP : MAKE_HISTOPLOT_PARAM_STRUCT(NAME=dataName, $
+                                                                        XTITLE=xTitle, $
+                                                                        YTITLE=yTitle, $
+                                                                        XRANGE=xRange, $
+                                                                        YRANGE=yRange, $
+                                                                        HISTBINSIZE=histBinsize_maxInd, $
+                                                                        XP_ARE_LOGGED=log_DBQuantity)
 
+  ;;make the structs
   FOR i=0,2 DO BEGIN
 
      ;; tempData   = maximus.(maxInd)[alf_i_list[i]]
@@ -254,40 +295,14 @@ EPOCHPLOT_COLORNAMES=epochPlot_colorNames,SCATTEROUTPREFIX=scatterOutPrefix, $
      ssa        = [ssa,tempESlice]
   ENDFOR
 
-
   ;;print stats
   PRINT_EPOCHSLICE_STRUCT_STATS,ssa
 
-  ;; IF KEYWORD_SET(neg_AND_pos_separ) THEN BEGIN
-  ;;    ;;First pos
-  ;;    alf_i_pos = alf_i[WHERE(maximus.(maxInd)[alf_i] GE 0.0,nPos)]
-  ;;    alf_i_neg = alf_i[WHERE(maximus.(maxInd)[alf_i] LT 0.0,nNeg)]
-     
-  ;;    tot_alf_t_pos = cdbTime[alf_i_pos]
-  ;;    tot_alf_y_pos = maximus.(maxInd)[alf_i_pos]
-  ;;    tot_alf_t_neg = cdbTime[alf_i_neg]
-  ;;    tot_alf_y_neg = maximus.(maxInd)[alf_i_neg]
-     
-  ;;    yHistStr = MAKE_ALFVENDBQUANTITY_HIST_STRUCT(yData, $
-  ;;                                                 MINVAL=hMin, $
-  ;;                                                 MAXVAL=hMax, $
-  ;;                                                 BINSIZE=hBinsize, $
-  ;;                                                 DO_REVERSE_INDS=hDoRI)
-  ;; ENDIF ELSE BEGIN
-  ;;    tot_alf_t = cdbTime[alf_i]
-  ;;    tot_alf_y = maximus.(maxInd)[alf_i]
-     
-  ;;    yHistStr = MAKE_ALFVENDBQUANTITY_HIST_STRUCT(tot_alf_y, $
-  ;;                                                 MINVAL=hMin, $
-  ;;                                                 MAXVAL=hMax, $
-  ;;                                                 BINSIZE=hBinsize, $
-  ;;                                                 DO_REVERSE_INDS=hDoRI)
-     
-  ;; ENDELSE
-
   ;;window setup
-  wTitle        = dataName + ' during storm phases'
-  window        = WINDOW(WINDOW_TITLE=wTitle,DIMENSIONS=[1200,800])
+  IF N_ELEMENTS(window) EQ 0 THEN BEGIN
+     wTitle        = dataName + ' during storm phases'
+     window     = WINDOW(WINDOW_TITLE=wTitle,DIMENSIONS=[1200,800])
+  ENDIF
 
   ;;plot array/window setup
   plotLayout = [3,1]
@@ -339,8 +354,11 @@ IF KEYWORD_SET(normalize_maxInd_hist) THEN BEGIN
                         ;; YTICKNAME=yTickName, $
                         /HISTOGRAM, $
                         LAYOUT=[plotLayout,i+1], $
+                        ;; WINDOW=window, $
                         MARGIN=margin, $
-                        /CURRENT)
+                        CURRENT=window, $
+                        COLOR=plotColor, $
+                        OVERPLOT=N_ELEMENTS(outplotArr) GT 0 ? outplotArr[i] : !NULL)
      
      ;;For the integral
      ;; intString   = STRING(FORMAT='("Integral  : ",I0)',integral)
@@ -360,10 +378,16 @@ IF KEYWORD_SET(normalize_maxInd_hist) THEN BEGIN
      
      
      int_x       = ( ( (i) MOD plotLayout[0] )) * 1/FLOAT(plotLayout[0]) + 0.05
-     int_y       = 1 - 1/FLOAT(plotLayout[1]*2) - ( ( (i) / plotLayout[0] )) * 1/FLOAT(plotLayout[1]) + 1/FLOAT(plotLayout[1]*8)
+     IF N_ELEMENTS(outplotArr) THEN BEGIN
+        int_y    = .75
+        ;; int_y    = 1 - 1/FLOAT(plotLayout[1]*2) - ( ( (i) / plotLayout[0] )) * 1/FLOAT(plotLayout[1]) + 1/FLOAT(plotLayout[1]*8)
+     ENDIF ELSE BEGIN
+        int_y    = .6
+     ENDELSE
      intText     = text(int_x,int_y,$
                         textStr, $
                         FONT_NAME='Courier', $
+                        FONT_COLOR=plotColor, $
                         /NORMAL, $
                         TARGET=plotArr[i])
      
