@@ -51,12 +51,12 @@ PRO HISTOPLOT_ALFVENDBQUANTITIES_DURING_STORMPHASES,RESTOREFILE=restoreFile, $
    LOG_DBQUANTITY=log_DBQuantity, $
    DO_UNLOGGED_STATISTICS=unlog_statistics, $
    DO_LOGGED_STATISTICS=log_statistics, $
+   DO_BOOTSTRAP_MEDIAN=bootstrap_median, $
    TBINS=tBins, $
    DBFILE=dbFile,DB_TFILE=db_tFile, $
    USE_DARTDB_START_ENDDATE=use_dartdb_start_enddate, $
    SAVEFILE=saveFile, $
-   PLOTTITLE=plotTitle,SAVEPLOTNAME=savePlotName, $
-   SAVEMAXPLOTNAME=saveMaxPlotName, $
+   PLOTTITLE=plotTitle,SAVEPLOT=savePlot, $
    RANDOMTIMES=randomTimes, $
    MINMLT=minM,MAXMLT=maxM,BINM=binM,MINILAT=minI,MAXILAT=maxI,BINI=binI, $
    DO_LSHELL=do_lshell,MINLSHELL=minL,MAXLSHELL=maxL,BINL=binL, $
@@ -65,7 +65,10 @@ PRO HISTOPLOT_ALFVENDBQUANTITIES_DURING_STORMPHASES,RESTOREFILE=restoreFile, $
    OUTPLOTARR=outPlotArr, $
    HISTOPLOT_PARAM_STRUCT=pHP, $
    ;; OVERPLOTARR=overplotArr, $
-   CURRENT_WINDOW=window
+   CURRENT_WINDOW=window, $
+   FILL_BACKGROUND=fill_background, $
+   FILL_TRANSPARENCY=fill_transparency, $
+   FILL_COLOR=fill_color
 
   date            = GET_TODAY_STRING(/DO_YYYYMMDD_FMT)
   newLine         = '!C'
@@ -141,6 +144,9 @@ EPOCHPLOT_COLORNAMES=epochPlot_colorNames,SCATTEROUTPREFIX=scatterOutPrefix, $
   dst_i_list=LIST(ns_dst_i,mp_dst_i,rp_dst_i)
   suff = STRING(FORMAT='("--Dstcutoff_",I0)',dstCutoff)
   strings=["nonstorm"+suff,"mainphase"+suff,"recoveryphase"+suff]
+  niceStrings=["Non-storm", $
+               'Main phase (Dst cutoff: ' + STRCOMPRESS(dstCutoff,/REMOVE_ALL) + ' nT)', $
+               "Recovery phase"]
   alf_i_list=LIST()
 
   IF NOT KEYWORD_SET(dataName) THEN dataName = (TAG_NAMES(maximus))[maxInd] ;;        = 'char_ion_energy'
@@ -328,7 +334,7 @@ IF KEYWORD_SET(normalize_maxInd_hist) THEN BEGIN
      
      ;; IF layout_i EQ 1 THEN BEGIN
      ;; title         = STRING(FORMAT='(A0,T15," : ",A0," through ",A0)',strings[i],TIME_TO_STR(ssa[i].eStart),TIME_TO_STR(ssa[i].eEnd))
-     title         = STRING(FORMAT='(A0)',strings[i])
+     title         = STRING(FORMAT='(A0)',niceStrings[i])
      ;; xTitle      = i GT plotLayout[0] ? pHP.xTitle : !NULL
      xTitle      = pHP.xTitle
      yTitle      = pHP.yTitle
@@ -358,32 +364,81 @@ IF KEYWORD_SET(normalize_maxInd_hist) THEN BEGIN
                         MARGIN=margin, $
                         CURRENT=window, $
                         COLOR=plotColor, $
-                        OVERPLOT=N_ELEMENTS(outplotArr) GT 0 ? outplotArr[i] : !NULL)
+                        THICK=N_ELEMENTS(outplotArr) GT 0 ? 1.5 : 2.5, $
+                        OVERPLOT=N_ELEMENTS(outplotArr) GT 0 ? outplotArr[i] : !NULL, $
+                        FILL_BACKGROUND=fill_background, $
+                        FILL_TRANSPARENCY=KEYWORD_SET(fill_transparency) ? fill_transparency : 70, $
+                        FILL_COLOR=KEYWORD_SET(fill_color) ? fill_color : plotColor)
      
      ;;For the integral
      ;; intString   = STRING(FORMAT='("Integral  : ",I0)',integral)
-     textStr     = STRING(FORMAT=$
-                          '(A0,I0,A0,' + $
-                          'A0,E0.2,A0,' + $
-                          'A0,E0.2,A0,' + $
-                          'A0,E0.2,A0,' + $
-                          'A0,E0.2,A0,' + $
-                          'A0,E0.2,A0)', $
-                          'Integral  : ', integral          , newLine, $
-                          'Mean      : ', ssa[i].moments.(0), newLine, $
-                          'Median    : ', ssa[i].moments.(4)[1], newLine, $
-                          'Std. dev. : ', ssa[i].moments.(1), newLine, $
-                          'Skewness  : ', ssa[i].moments.(2), newLine, $
-                          'Kurtosis  : ', ssa[i].moments.(3), newLine)
      
      
-     int_x       = ( ( (i) MOD plotLayout[0] )) * 1/FLOAT(plotLayout[0]) + 0.05
-     IF N_ELEMENTS(outplotArr) THEN BEGIN
-        int_y    = .75
-        ;; int_y    = 1 - 1/FLOAT(plotLayout[1]*2) - ( ( (i) / plotLayout[0] )) * 1/FLOAT(plotLayout[1]) + 1/FLOAT(plotLayout[1]*8)
+     
+     ;;;;;;;;;;;;
+     ;;The old way
+     ;; int_x       = ( ( (i) MOD plotLayout[0] )) * 1/FLOAT(plotLayout[0]) + 0.05
+     ;; IF N_ELEMENTS(outplotArr) GT 0 THEN BEGIN
+     ;;    int_y    = .75
+     ;;    ;; int_y    = 1 - 1/FLOAT(plotLayout[1]*2) - ( ( (i) / plotLayout[0] )) * 1/FLOAT(plotLayout[1]) + 1/FLOAT(plotLayout[1]*8)
+     ;; ENDIF ELSE BEGIN
+     ;;    int_y    = .6
+     ;; ENDELSE
+     ;; textStr     = STRING(FORMAT=$
+     ;;                      '(A0,I0,A0,' + $
+     ;;                      'A0,E0.2,A0,' + $
+     ;;                      'A0,E0.2,A0,' + $
+     ;;                      'A0,E0.2,A0,' + $
+     ;;                      'A0,E0.2,A0,' + $
+     ;;                      'A0,E0.2,A0)', $
+     ;;                      'Integral  : ', integral          , newLine, $
+     ;;                      'Mean      : ', ssa[i].moments.(0), newLine, $
+     ;;                      'Median    : ', ssa[i].moments.(4)[1], newLine, $
+     ;;                      'Std. dev. : ', ssa[i].moments.(1), newLine, $
+     ;;                      'Skewness  : ', ssa[i].moments.(2), newLine, $
+     ;;                      'Kurtosis  : ', ssa[i].moments.(3), newLine)
+
+     ;;;;;;;;;;;;;
+     ;;The new way
+     IF N_ELEMENTS(outplotArr) EQ 0 THEN BEGIN
+        textStr     = STRING(FORMAT=$
+                             '(A0,I0,A0,' + $
+                             'A0,E0.2,A0,' + $
+                             'A0,E0.2,A0,' + $
+                             'A0,E0.2,A0,' + $
+                             'A0,E0.2,A0,' + $
+                             'A0,E0.2,A0)', $
+                             'Integral  : ', integral          , newLine, $
+                             'Mean      : ', ssa[i].moments.(0), newLine, $
+                             'Median    : ', ssa[i].moments.(4)[1], newLine, $
+                             'Std. dev. : ', ssa[i].moments.(1), newLine, $
+                             'Skewness  : ', ssa[i].moments.(2), newLine, $
+                             'Kurtosis  : ', ssa[i].moments.(3), newLine)
+        
+        int_x       = ( ( (i) MOD plotLayout[0] )) * 1/FLOAT(plotLayout[0]) + 0.04
+        
      ENDIF ELSE BEGIN
-        int_y    = .6
+        textStr     = STRING(FORMAT=$
+                             '(I0,A0,' + $
+                             'E0.2,A0,' + $
+                             'E0.2,A0,' + $
+                             'E0.2,A0,' + $
+                             'E0.2,A0,' + $
+                             'E0.2,A0)', $
+                             integral          , newLine, $
+                             ssa[i].moments.(0), newLine, $
+                             ssa[i].moments.(4)[1], newLine, $
+                             ssa[i].moments.(1), newLine, $
+                             ssa[i].moments.(2), newLine, $
+                             ssa[i].moments.(3), newLine)
+        
+        int_x       = ( ( (i) MOD plotLayout[0] )) * 1/FLOAT(plotLayout[0]) + 0.22
+        ;; int_x       = 0.7
+        
      ENDELSE
+     int_y    = .74
+
+
      intText     = text(int_x,int_y,$
                         textStr, $
                         FONT_NAME='Courier', $
@@ -391,13 +446,25 @@ IF KEYWORD_SET(normalize_maxInd_hist) THEN BEGIN
                         /NORMAL, $
                         TARGET=plotArr[i])
      
-     
      ;; IF (i GT 0) AND ( ( (i + 1) MOD nPPerWind ) EQ 0 ) THEN BEGIN
      ;; ENDIF
         
   ENDFOR
 
-  IF KEYWORD_SET(plotSuffix) AND plotSuffix NE "" THEN BEGIN
+  IF KEYWORD_SET(plotTitle) THEN BEGIN
+     titleText = text(0.5,0.96,plotTitle, $
+                      ;; FONT_NAME='Courier', $
+                      FONT_SIZE=14, $
+                      /NORMAL, $
+                      TARGET=window, $
+                      CLIP=0)
+  ENDIF
+
+  ;; IF ~STRCMP(plotSuffix,"",1) THEN BEGIN
+  ;;    PRINT,'Saving plot to ' + saveName + '...'
+  ;;    window.save,saveName,RESOLUTION=300
+  ;; ENDIF
+  IF KEYWORD_SET(savePlot) THEN BEGIN
      PRINT,'Saving plot to ' + saveName + '...'
      window.save,saveName,RESOLUTION=300
   ENDIF
