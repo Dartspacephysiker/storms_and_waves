@@ -1,0 +1,41 @@
+;;2015/11/24 Wowzers
+;;At KSAT in Tromsø
+PRO JOURNAL__20151124__HISTOPLOTS_OF_16_ION_FLUX_UP_DURING_STORMPHASES
+
+  ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+  ;;ION_FLUX_UP
+  
+  ;;normalized dayside
+  HISTOPLOT_ALFVENDBQUANTITIES_DURING_STORMPHASES, $
+     MAXIND=16, $
+     HISTBINSIZE_MAXIND=0.125, $
+     /USE_DARTDB_START_ENDDATE, $
+     HISTXRANGE_MAXIND=[4,11], $
+     HISTYRANGE_MAXIND=[0,0.10], $
+     /LOG_DBQUANTITY, $
+     /DAYSIDE, $
+     /NORMALIZE_MAXIND_HIST, $
+     HISTOPLOT_PARAM_STRUCT=pHP, $
+     CURRENT_WINDOW=window, $
+     OUTPLOTARR=outplotArr
+
+  ;;normalized nightside
+  HISTOPLOT_ALFVENDBQUANTITIES_DURING_STORMPHASES, $
+     MAXIND=16, $
+     HISTBINSIZE_MAXIND=0.125, $
+     /USE_DARTDB_START_ENDDATE, $
+     HISTXRANGE_MAXIND=[4,11], $
+     HISTYRANGE_MAXIND=[0,0.10], $
+     /LOG_DBQUANTITY, $
+     /NIGHTSIDE, $
+     /NORMALIZE_MAXIND_HIST, $
+     PLOTTITLE='Dayside--black Nightside--red', $
+     PLOTSUFFIX='dayside_black--nightside_red', $
+     /SAVEPLOT, $
+     HISTOPLOT_PARAM_STRUCT=pHP, $
+     CURRENT_WINDOW=window, $
+     OUTPLOTARR=outplotArr, $
+     PLOTCOLOR='RED', $
+     /FILL_BACKGROUND
+
+END
