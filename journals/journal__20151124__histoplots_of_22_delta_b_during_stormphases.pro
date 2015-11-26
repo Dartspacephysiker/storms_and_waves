@@ -2,15 +2,15 @@
 PRO JOURNAL__20151124__HISTOPLOTS_OF_22_DELTA_B_DURING_STORMPHASES
 
   ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
-  ;;PFLUXEST
+  ;;DELTA_B
   
   ;;normalized dayside, pos and neg
   histoplot_alfvendbquantities_during_stormphases, $
      MAXIND=22, $
-     HISTBINSIZE_MAXIND=0.125, $
+     HISTBINSIZE_MAXIND=0.05, $
      /USE_DARTDB_START_ENDDATE, $
      HISTXRANGE_MAXIND=[0,3], $
-     HISTYRANGE_MAXIND=[0,0.25], $
+     HISTYRANGE_MAXIND=[0,0.10], $
      /LOG_DBQUANTITY, $
      /DAYSIDE, $
      /NORMALIZE_MAXIND_HIST, $
@@ -21,10 +21,10 @@ PRO JOURNAL__20151124__HISTOPLOTS_OF_22_DELTA_B_DURING_STORMPHASES
   ;;normalized nightside
   histoplot_alfvendbquantities_during_stormphases, $
      MAXIND=22, $
-     HISTBINSIZE_MAXIND=0.125, $
+     HISTBINSIZE_MAXIND=0.05, $
      /USE_DARTDB_START_ENDDATE, $
      HISTXRANGE_MAXIND=[0,3], $
-     HISTYRANGE_MAXIND=[0,0.25], $
+     HISTYRANGE_MAXIND=[0,0.10], $
      /LOG_DBQUANTITY, $
      /NIGHTSIDE, $
      /NORMALIZE_MAXIND_HIST, $

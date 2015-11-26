@@ -155,7 +155,8 @@ EPOCHPLOT_COLORNAMES=epochPlot_colorNames,SCATTEROUTPREFIX=scatterOutPrefix, $
   genFile_pref    = date + '--' + dataName + '--from_histoplot_alfvendbquantities_during_stormphases.pro'
   outstats        = date + '--' + dataName + '_moment_data_for_stormphases.sav'
   SET_PLOT_DIR,plotDir,/FOR_STORMS,/VERBOSE,/ADD_TODAY
-  saveName        = plotDir + 'stormphase_histos--' + dataName + plotSuffix + '.png' ;savePlotSuffix
+  saveName        = plotDir + 'stormphase_histos--' + STRING(FORMAT='(I2)',maxInd) + $
+                    '_' + dataName + plotSuffix + '.png' ;savePlotSuffix
   
 
   ;;declare the slice structure array, null lists

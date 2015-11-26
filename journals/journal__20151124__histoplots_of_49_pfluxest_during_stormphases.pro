@@ -7,10 +7,10 @@ PRO JOURNAL__20151124__HISTOPLOTS_OF_49_PFLUXEST_DURING_STORMPHASES
   ;;normalized dayside, pos and neg
   histoplot_alfvendbquantities_during_stormphases, $
      MAXIND=49, $
-     HISTBINSIZE_MAXIND=0.25, $
+     HISTBINSIZE_MAXIND=0.05, $
      /USE_DARTDB_START_ENDDATE, $
-     HISTXRANGE_MAXIND=[-5,2], $
-     HISTYRANGE_MAXIND=[0,0.20], $
+     HISTXRANGE_MAXIND=[-4.5,0], $
+     HISTYRANGE_MAXIND=[0,0.05], $
      /LOG_DBQUANTITY, $
      /DAYSIDE, $
      /NORMALIZE_MAXIND_HIST, $
@@ -21,10 +21,10 @@ PRO JOURNAL__20151124__HISTOPLOTS_OF_49_PFLUXEST_DURING_STORMPHASES
   ;;normalized nightside
   histoplot_alfvendbquantities_during_stormphases, $
      MAXIND=49, $
-     HISTBINSIZE_MAXIND=0.25, $
+     HISTBINSIZE_MAXIND=0.05, $
      /USE_DARTDB_START_ENDDATE, $
-     HISTXRANGE_MAXIND=[-5,2], $
-     HISTYRANGE_MAXIND=[0,0.20], $
+     HISTXRANGE_MAXIND=[-4.5,0], $
+     HISTYRANGE_MAXIND=[0,0.05], $
      /LOG_DBQUANTITY, $
      /NIGHTSIDE, $
      /NORMALIZE_MAXIND_HIST, $
