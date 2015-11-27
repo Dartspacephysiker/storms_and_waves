@@ -119,7 +119,7 @@ PRO SET_STORMS_NEVENTS_DEFAULTS,TBEFOREEPOCH=tBeforeEpoch,TAFTEREPOCH=tAfterEpoc
 
   IF KEYWORD_SET(probOccurrence_sea) THEN BEGIN
      IF ~KEYWORD_SET(yTitle_maxInd) THEN yTitle_maxInd = "Probability of Occurrence"
-     plotTitle = KEYWORD_SET(savemaxplotname) ? defProbOccurrencePref + '--' + saveMaxPlotName : defProbOccurrencePref + '.png'
+     plotTitle = KEYWORD_SET(plotTitle) ? plotTitle : "Prob Occurrence" ;defProbOccurrencePref + '--' + saveMaxPlotName : defProbOccurrencePref + '.png'
      IF ~KEYWORD_SET(histoRange) THEN histoRange = defProbOccurrenceHistoRange
   ENDIF
 

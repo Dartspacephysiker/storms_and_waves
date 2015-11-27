@@ -32,7 +32,7 @@
 ;                              NEG_AND_POS_LAYOUT: Set to array of plot layout for pos_and_neg_plots
 ;                               
 ;                              PLOTTITLE         : Title of superposed plot
-;                              SAVEPLOTNAME      : Name of outputted file
+;                              SAVEPNAME      : Name of outputted file
 ;
 ; OUTPUTS:                     
 ;
@@ -79,8 +79,11 @@ PRO SUPERPOSE_STORMS_ALFVENDBQUANTITIES,stormTimeArray_utc, $
                                         NOPLOTS=noPlots, NOGEOMAGPLOTS=noGeomagPlots, NOMAXPLOTS=noMaxPlots, $
                                         USE_DARTDB_START_ENDDATE=use_dartdb_start_enddate, $
                                         SAVEFILE=saveFile,OVERPLOT_HIST=overplot_hist, $
-                                        PLOTTITLE=plotTitle,SAVEPLOTNAME=savePlotName, $
-                                        SAVEMAXPLOTNAME=saveMaxPlotName, $
+                                        PLOTTITLE=plotTitle, $
+                                        SAVEPNAME=savePName, $
+                                        SAVEPLOT=savePlot, $
+                                        SAVEMAXPLOT=saveMaxPlot, $
+                                        SAVEMPNAME=saveMPName, $
                                         DO_SCATTERPLOTS=do_scatterPlots, $
                                         EPOCHPLOT_COLORNAMES=epochPlot_colorNames, $
                                         SCATTEROUTPREFIX=scatterOutPrefix, $
@@ -110,7 +113,7 @@ PRO SUPERPOSE_STORMS_ALFVENDBQUANTITIES,stormTimeArray_utc, $
                               OMNI_QUANTITY=omni_quantity,LOG_OMNI_QUANTITY=log_omni_quantity,USE_DATA_MINMAX=use_data_minMax, $
                               HISTOBINSIZE=histoBinSize, HISTORANGE=histoRange, $
                               PROBOCCURENCE_SEA=probOccurrence_sea, $
-                              SAVEMAXPLOTNAME=saveMaxPlotName, $
+                              SAVEMAXPLOT=saveMaxPlot, $
                               SAVEFILE=saveFile,SAVESTR=saveStr, $
                               PLOTTITLE=plotTitle,SAVEPLOTNAME=savePlotName, $
                               NOPLOTS=noPlots,NOGEOMAGPLOTS=noGeomagPlots,NOMAXPLOTS=noMaxPlots, $
@@ -183,7 +186,6 @@ PRO SUPERPOSE_STORMS_ALFVENDBQUANTITIES,stormTimeArray_utc, $
                                        SAVEFILE=saveFile,SAVESTR=saveStr
      
 
-     ;; nAlfEpochs = nEpochs
      IF KEYWORD_SET(maxInd) THEN BEGIN
         GET_DATA_FOR_ALFVENDB_EPOCH_PLOTS,MAXIMUS=maximus,CDBTIME=cdbTime,MAXIND=maxInd,GOOD_I=good_i, $
                                       ALF_EPOCH_I=alf_epoch_i,ALF_IND_LIST=alf_ind_list, $
@@ -287,7 +289,7 @@ PRO SUPERPOSE_STORMS_ALFVENDBQUANTITIES,stormTimeArray_utc, $
   ;;now the plots
 
   ;; Need a window?
-  IF KEYWORD_SET(savePlotName) OR KEYWORD_SET(nEventHists) OR KEYWORD_SET(probOccurrence_sea) $
+  IF KEYWORD_SET(savePlot) OR KEYWORD_SET(nEventHists) OR KEYWORD_SET(probOccurrence_sea) $
      AND ~KEYWORD_SET(noPlots) THEN BEGIN
      geomagWindow=WINDOW(WINDOW_TITLE="SEA plots for " + stormString + " storms: "+ $
                          tStamps[0] + " - " + $
@@ -295,7 +297,7 @@ PRO SUPERPOSE_STORMS_ALFVENDBQUANTITIES,stormTimeArray_utc, $
                          DIMENSIONS=[1200,800])
   ENDIF
   
-  xTitle='Hours since storm commencement' ; defXTitle
+  xTitle=N_ELEMENTS(SSC_times_UTC) GT 0 ? 'Hours since storm commencement' : 'Hours since min DST' ; defXTitle
   xRange=[-tBeforeEpoch,tAfterEpoch]
   yTitle = geomagTitle
   
@@ -375,9 +377,10 @@ PRO SUPERPOSE_STORMS_ALFVENDBQUANTITIES,stormTimeArray_utc, $
      ENDELSE
   ENDIF
 
-  IF KEYWORD_SET(savePlotName) THEN BEGIN
-     PRINT,"Saving plot to file: " + savePlotName
-     geomagWindow.save,savePlotName,RESOLUTION=defRes
+  IF KEYWORD_SET(savePlot) THEN BEGIN
+     SET_PLOT_DIR,plotDir,/FOR_STORMS,/VERBOSE,/ADD_TODAY
+     PRINT,"Saving plot to file: " + plotDir + savePName
+     geomagWindow.save,plotDir + savePName,RESOLUTION=defRes
   ENDIF
 
   IF KEYWORD_SET(maxInd) AND ~KEYWORD_SET(proOccurrence_sea) THEN BEGIN
@@ -585,9 +588,10 @@ PRO SUPERPOSE_STORMS_ALFVENDBQUANTITIES,stormTimeArray_utc, $
 
      ENDIF
      
-     IF KEYWORD_SET(saveMaxPlotName) AND ~(noPlots OR noMaxPlots) THEN BEGIN
-        PRINT,"Saving maxplot to file: " + saveMaxPlotName
-        maximuswindow.save,savemaxplotname,RESOLUTION=defRes
+     IF KEYWORD_SET(saveMaxPlot) AND ~(noPlots OR noMaxPlots) THEN BEGIN
+        SET_PLOT_DIR,plotDir,/FOR_STORMS,/VERBOSE,/ADD_TODAY
+        PRINT,"Saving maxplot to file: " + plotDir + saveMPName
+        maximuswindow.save,plotDir + saveMPName,RESOLUTION=defRes
      ENDIF
 
   ENDIF
