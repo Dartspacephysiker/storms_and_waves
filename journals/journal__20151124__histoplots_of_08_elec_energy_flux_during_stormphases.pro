@@ -4,6 +4,9 @@ PRO JOURNAL__20151124__HISTOPLOTS_OF_08_ELEC_ENERGY_FLUX_DURING_STORMPHASES
 
   ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
   ;;ELEC_ENERGY_FLUX
+  ;;Remember--positive is downwards!! 
+  ;;From alfven_stats_5.pro line 650: "Scale electron energy flux to 100km, pos flux earthward"
+
   
   ;;normalized dayside, pos and neg
   histoplot_alfvendbquantities_during_stormphases, $

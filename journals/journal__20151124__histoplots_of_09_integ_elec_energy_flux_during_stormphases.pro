@@ -4,7 +4,8 @@ PRO JOURNAL__20151124__HISTOPLOTS_OF_09_INTEG_ELEC_ENERGY_FLUX_DURING_STORMPHASE
 
   ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
   ;;INTEG_ELEC_ENERGY_FLUX
-  
+  ;;Remember--positive is downwards!!
+
   ;;normalized dayside, pos
   HISTOPLOT_ALFVENDBQUANTITIES_DURING_STORMPHASES, $
      MAXIND=9, $
