@@ -1,3 +1,9 @@
+;;2015/11/30
+;;Gotta redo 'em because I've made some further corrections so that 
+;;>electrons flowing earthward are positive
+;;>ions flowing outward are positive
+;;>see correct_alfvendb_fluxes.pro for details
+
 ;2015/11/28
 ;Here is what I've come up with after a detailed look at the fluxes calculated in
 ;Alfven Stats 5. See 20151127--why_flux_is_so_weird_in_Alfven_DB.txt for lots of details.

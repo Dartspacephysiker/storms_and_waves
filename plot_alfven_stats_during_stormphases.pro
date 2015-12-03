@@ -1,4 +1,9 @@
 ;2015/10/21 This is a wrapper so that we don't have to do the gobbledigook below every time we want to see 'sup with these plots
+;;mod history
+;;;;;;;
+;;TO DO
+;;2015/11/30 1. Make all stormphase plots appear in one window instead of separating output
+;;
 PRO PLOT_ALFVEN_STATS_DURING_STORMPHASES,$
                                  DSTCUTOFF=dstCutoff, $
                                  CLOCKSTR=clockStr, ANGLELIM1=angleLim1, ANGLELIM2=angleLim2, $
@@ -44,6 +49,8 @@ PRO PLOT_ALFVEN_STATS_DURING_STORMPHASES,$
 
   LOAD_DST_AE_DBS,dst,ae
 
+  SET_PLOT_DIR,plotDir,/FOR_STORMS,/ADD_TODAY
+
   IF NOT KEYWORD_SET(hemi) THEN hemi = 'BOTH'
 
   earliest_UTC = str_to_time('1996-10-06/16:26:02.417')
@@ -56,7 +63,7 @@ PRO PLOT_ALFVEN_STATS_DURING_STORMPHASES,$
      EARLIEST_UTC=earliest_UTC,LATEST_UTC=latest_UTC, $
      LUN=lun
 
-  justData = 1
+  ;; justData = 1
   dst_i_list=LIST(ns_dst_i,mp_dst_i,rp_dst_i)
   suff = STRING(FORMAT='("--Dstcutoff_",I0)',dstCutoff)
   strings=["nonstorm"+suff,"mainphase"+suff,"recoveryphase"+suff]
