@@ -48,7 +48,8 @@ PRO JOURNAL__20151029__COMPARE_NEVENT_SEAS_ON_DAYSIDE_AND_NIGHTSIDE__TELECON2015
                                       HISTOBINSIZE=histoBinSize, $
                                       HISTORANGE=histoRange, $
                                       PLOTTITLE=pT, $
-                                      SAVEPLOTNAME=spn
+                                      /SAVEPLOT, $
+                                      SAVEPNAME=spn
 
   ENDFOR
 

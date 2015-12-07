@@ -20,17 +20,26 @@ PRO JOURNAL__20151028__FIG3__SEA_PROBOCCURRENCE__ALFSTORM2
   q1_utc=conv_julday_to_utc(ssc1.julday[q1_1])
 
   SUPERPOSE_STORMS_ALFVENDBQUANTITIES,EPOCHINDS=q1_st,SSC_TIMES_UTC=q1_utc, $
-                                      /USE_DARTDB_START_ENDDATE,STORMTYPE=1,/REMOVE_DUPES,/NOGEOMAGPLOTS, $
+                                      /USE_DARTDB_START_ENDDATE, $
+                                      STORMTYPE=1, $
+                                      /REMOVE_DUPES, $
+                                      /NOGEOMAGPLOTS, $
                                       MINMLT=minM, $
                                       MAXMLT=maxM, $
                                       /PROBOCCURENCE_SEA, $
                                       /LOG_PROBOCCURRENCE, $
-                                      SAVEPLOTNAME=savePlotPref+'--log'+plotSuff,HISTORANGE=[1e-3,3e-1]
+                                      /SAVEPLOT, $
+                                      SAVEPNAME=savePlotPref+'--log'+plotSuff,HISTORANGE=[1e-3,3e-1]
 
-  SUPERPOSE_STORMS_ALFVENDBQUANTITIES,EPOCHINDS=q1_st,SSC_TIMES_UTC=q1_utc, $
-                                      /USE_DARTDB_START_ENDDATE,STORMTYPE=1,/REMOVE_DUPES,/NOGEOMAGPLOTS, $
+  SUPERPOSE_STORMS_ALFVENDBQUANTITIES,EPOCHINDS=q1_st, $
+                                      SSC_TIMES_UTC=q1_utc, $
+                                      /USE_DARTDB_START_ENDDATE, $
+                                      STORMTYPE=1, $
+                                      /REMOVE_DUPES, $
+                                      /NOGEOMAGPLOTS, $
                                       MINMLT=minM, $
                                       MAXMLT=maxM, $
                                       /PROBOCCURENCE_SEA, $
-                                      SAVEPLOTNAME=savePlotPref+plotSuff,HISTORANGE=[0,0.5]
+                                      /SAVEPLOT, $
+                                      SAVEPNAME=savePlotPref+plotSuff,HISTORANGE=[0,0.5]
 END

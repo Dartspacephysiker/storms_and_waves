@@ -36,7 +36,8 @@ PRO PLOT_ALFVEN_STATS_DURING_STORMPHASES,$
                                  PROBOCCURRENCEPLOT=probOccurrencePlot,PROBOCCURRENCERANGE=probOccurrenceRange,LOGPROBOCCURRENCE=logProbOccurrence, $
                                  MEDIANPLOT=medianPlot, LOGAVGPLOT=logAvgPlot, $
                                  ALL_LOGPLOTS=all_logPlots, $
-                                 SQUAREPLOT=squarePlot, POLARCONTOUR=polarContour, $ ;WHOLECAP=wholeCap, $
+                                 SQUAREPLOT=squarePlot, POLARCONTOUR=polarContour, $ 
+                                 WHOLECAP=wholeCap, $
                                  DBFILE=dbfile, NO_BURSTDATA=no_burstData, DATADIR=dataDir, DO_CHASTDB=do_chastDB, $
                                  NEVENTSPLOTRANGE=nEventsPlotRange, LOGNEVENTSPLOT=logNEventsPlot, $
                                  WRITEASCII=writeASCII, WRITEHDF5=writeHDF5, WRITEPROCESSEDH2D=writeProcessedH2d, $
@@ -45,7 +46,14 @@ PRO PLOT_ALFVEN_STATS_DURING_STORMPHASES,$
                                  PLOTDIR=plotDir, PLOTPREFIX=plotPrefix, PLOTSUFFIX=plotSuffix, $
                                  MEDHISTOUTDATA=medHistOutData, MEDHISTOUTTXT=medHistOutTxt, $
                                  OUTPUTPLOTSUMMARY=outputPlotSummary, DEL_PS=del_PS, $
-                                 LUN=lun, PRINT_DATA_AVAILABILITY=print_data_availability, VERBOSE=verbose, _EXTRA=e
+                                 LUN=lun, PRINT_DATA_AVAILABILITY=print_data_availability, $
+                                 COMBINE_STORMPHASE_PLOTS=combine_stormphase_plots, $
+                                 COMBINED_TO_BUFFER=combined_to_buffer, $
+                                 SAVE_COMBINED_WINDOW=save_combined_window, $
+                                 SAVE_COMBINED_NAME=save_combined_name, $
+                                 NO_COLORBAR=no_colorbar, $
+                                 VERBOSE=verbose, $
+                                 _EXTRA=e
 
   LOAD_DST_AE_DBS,dst,ae
 
@@ -67,6 +75,14 @@ PRO PLOT_ALFVEN_STATS_DURING_STORMPHASES,$
   dst_i_list=LIST(ns_dst_i,mp_dst_i,rp_dst_i)
   suff = STRING(FORMAT='("--Dstcutoff_",I0)',dstCutoff)
   strings=["nonstorm"+suff,"mainphase"+suff,"recoveryphase"+suff]
+  niceStrings=["Non-storm","Main phase","Recovery phase"]
+
+  IF KEYWORD_SET(combine_stormphase_plots) THEN BEGIN
+     outTempFiles = !NULL
+     no_colorbar  = [1,0,1]
+  ENDIF ELSE BEGIN
+     no_colorbar  = [0,0,0]
+  ENDELSE
 
   FOR i=0,2 DO BEGIN
      inds=dst_i_list[i]
@@ -106,7 +122,8 @@ PRO PLOT_ALFVEN_STATS_DURING_STORMPHASES,$
                                   PROBOCCURRENCEPLOT=probOccurrencePlot,PROBOCCURRENCERANGE=probOccurrenceRange,LOGPROBOCCURRENCE=logProbOccurrence, $
                                   MEDIANPLOT=medianPlot, LOGAVGPLOT=logAvgPlot, $
                                   ALL_LOGPLOTS=all_logPlots, $
-                                  SQUAREPLOT=squarePlot, POLARCONTOUR=polarContour, $ ;WHOLECAP=wholeCap, $
+                                  SQUAREPLOT=squarePlot, POLARCONTOUR=polarContour, $ 
+                                  WHOLECAP=wholeCap, $
                                   DBFILE=dbfile, NO_BURSTDATA=no_burstData, DATADIR=dataDir, DO_CHASTDB=do_chastDB, $
                                   NEVENTSPLOTRANGE=nEventsPlotRange, LOGNEVENTSPLOT=logNEventsPlot, $
                                   WRITEASCII=writeASCII, WRITEHDF5=writeHDF5, WRITEPROCESSEDH2D=writeProcessedH2d, $
@@ -115,8 +132,41 @@ PRO PLOT_ALFVEN_STATS_DURING_STORMPHASES,$
                                   PLOTDIR=plotDir, PLOTPREFIX=strings[i], PLOTSUFFIX=plotSuffix, $
                                   MEDHISTOUTDATA=medHistOutData, MEDHISTOUTTXT=medHistOutTxt, $
                                   OUTPUTPLOTSUMMARY=outputPlotSummary, DEL_PS=del_PS, $
+                                  OUT_TEMPFILE=out_tempFile, $
+                                  NO_COLORBAR=no_colorbar[i], $
                                   /PRINT_DATA_AVAILABILITY, _EXTRA = e  
+
+     IF KEYWORD_SET(combine_stormphase_plots) THEN outTempFiles = [outTempFiles,out_tempFile]
               
   ENDFOR
+
+  IF KEYWORD_SET(combine_stormphase_plots) THEN BEGIN
+
+     PRINT,"Combining stormphase plots..."
+
+     plotFileArr = !NULL
+     FOR i=0,2 DO BEGIN
+        RESTORE,outTempFiles[i]
+        plotFileArr = [plotFileArr,plotDir + paramStr+dataNameArr[0]+'.png']
+        ;; imArr[i]    = IMAGE(plotFileArr[i], $
+        ;;                     LAYOUT=[3,1,i+1],$
+        ;;                     MARGIN=0)
+     ENDFOR
+
+     IF ~KEYWORD_SET(save_combined_name) THEN BEGIN
+        ;; hoyDia = GET_TODAY_STRING()
+        save_combined_name = GET_TODAY_STRING() + '--' + dataNameArr[0] + '--combined_phases.png'
+     ENDIF
+
+     TILE_STORMPHASE_PLOTS,plotFileArr,niceStrings, $
+                           OUT_IMGARR=out_imgArr, $
+                           OUT_TITLEOBJS=out_titleObjs, $
+                           COMBINED_TO_BUFFER=combined_to_buffer, $
+                           SAVE_COMBINED_WINDOW=save_combined_window, $
+                           SAVE_COMBINED_NAME=save_combined_name, $
+                           PLOTDIR=plotDir
+
+
+  ENDIF
 
 END

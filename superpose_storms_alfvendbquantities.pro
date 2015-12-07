@@ -349,7 +349,7 @@ PRO SUPERPOSE_STORMS_ALFVENDBQUANTITIES,stormTimeArray_utc, $
                                                   HISTORANGE=histoRange, $
                                                   YTITLE='N events', $
                                                   MARGIN=plotMargin, $
-                                                  PLOTTITLE=plotTitle, $
+                                                  ;; PLOTTITLE=plotTitle, $
                                                   OVERPLOT_HIST=overplot_hist, $
                                                   CURRENT=current, $
                                                   LAYOUT=layout, $
@@ -368,7 +368,7 @@ PRO SUPERPOSE_STORMS_ALFVENDBQUANTITIES,stormTimeArray_utc, $
                                                   LOGYPLOT=log_probOccurrence, $
                                                   ;; YTICKFORMAT=, $
                                                   MARGIN=plotMargin, $
-                                                  PLOTTITLE=plotTitle, $
+                                                  ;; PLOTTITLE=plotTitle, $
                                                   OVERPLOT_HIST=overplot_hist, $
                                                   CURRENT=1, $
                                                   LAYOUT=layout, $
@@ -428,7 +428,7 @@ PRO SUPERPOSE_STORMS_ALFVENDBQUANTITIES,stormTimeArray_utc, $
                                                       SYMCOLOR=posneg_colors[j],SYMTRANSPARENCY=symTransp_maxInd,SYMBOL=symbol, $
                                                       ;; ALFDBSTRUCT=maximus,ALFDBTIME=cdbTime,PLOT_I=plot_i,CENTERTIME=centerTime,$
                                                       ALF_T=alf_t,ALF_Y=alf_y, $
-                                                      PLOTTITLE=plotTitle, $
+                                                      ;; PLOTTITLE=plotTitle, $
                                                       XTITLE=xTitle, $
                                                       XRANGE=xRange, $
                                                       YTITLE=yTitle, $
@@ -455,7 +455,7 @@ PRO SUPERPOSE_STORMS_ALFVENDBQUANTITIES,stormTimeArray_utc, $
                                                    SYMBOL=symbol, $
                                                    ALF_T=alf_t, $
                                                    ALF_Y=alf_y, $
-                                                   PLOTTITLE=plotTitle, $
+                                                   ;; PLOTTITLE=plotTitle, $
                                                    XTITLE=xTitle, $
                                                    XRANGE=xRange, $
                                                    YTITLE=yTitle, $
@@ -494,7 +494,7 @@ PRO SUPERPOSE_STORMS_ALFVENDBQUANTITIES,stormTimeArray_utc, $
               SYMCOLOR=symColor, $
               ;; SYMTRANSPARENCY=symTransparency, $
               PLOTNAME=plotName, $
-              PLOTTITLE=plotTitle, $
+              ;; PLOTTITLE=plotTitle, $
               XTITLE=xTitle, $
               XRANGE=xRange, $
               YTITLE=yTitle, $

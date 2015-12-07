@@ -118,8 +118,9 @@ PRO SET_STORMS_NEVENTS_DEFAULTS,TBEFOREEPOCH=tBeforeEpoch,TAFTEREPOCH=tAfterEpoc
   IF N_ELEMENTS(show_data_availability) EQ 0 THEN show_data_availability = defShow_data_availability
 
   IF KEYWORD_SET(probOccurrence_sea) THEN BEGIN
-     IF ~KEYWORD_SET(yTitle_maxInd) THEN yTitle_maxInd = "Probability of Occurrence"
-     plotTitle = KEYWORD_SET(plotTitle) ? plotTitle : "Prob Occurrence" ;defProbOccurrencePref + '--' + saveMaxPlotName : defProbOccurrencePref + '.png'
+     ;; IF ~KEYWORD_SET(yTitle_maxInd) THEN yTitle_maxInd = "Probability of Occurrence"
+     IF ~KEYWORD_SET(yTitle_maxInd) THEN yTitle_maxInd = "Probability of Alfvén wave observation"
+     ;; plotTitle = KEYWORD_SET(plotTitle) ? plotTitle : "Prob Occurrence" ;defProbOccurrencePref + '--' + saveMaxPlotName : defProbOccurrencePref + '.png'
      IF ~KEYWORD_SET(histoRange) THEN histoRange = defProbOccurrenceHistoRange
   ENDIF
 
