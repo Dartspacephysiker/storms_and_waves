@@ -49,6 +49,7 @@
 ;                         2015/10/16 Added {min,max}{mlt,ilat,lshell}                           
 ;                         2015/10/19 Finally suppressed creation of plot of geomagnetic quantity (Dst, SYM-H, etc.) when not desired
 ;                                       through NOGEOMAGPLOTS keyword.
+;                         2015/12/05 Added ONLY_POS keyword so we can avoid the negs entirely.
 ;-
 PRO SUPERPOSE_STORMS_ALFVENDBQUANTITIES,stormTimeArray_utc, $
                                         TBEFOREEPOCH=tBeforeEpoch,TAFTEREPOCH=tAfterEpoch, $
@@ -63,6 +64,7 @@ PRO SUPERPOSE_STORMS_ALFVENDBQUANTITIES,stormTimeArray_utc, $
                                         HISTOBINSIZE=histoBinSize, HISTORANGE=histoRange, $
                                         PROBOCCURENCE_SEA=probOccurrence_sea, LOG_PROBOCCURRENCE=log_probOccurrence, $
                                         RETURNED_NEV_TBINS_and_HIST=returned_nEv_tbins_and_Hist, $
+                                        ONLY_POS=only_pos, $
                                         NEG_AND_POS_SEPAR=neg_and_pos_separ, $
                                         LAYOUT=layout, $
                                         POS_LAYOUT=pos_layout, $
@@ -193,6 +195,7 @@ PRO SUPERPOSE_STORMS_ALFVENDBQUANTITIES,stormTimeArray_utc, $
                                       LOG_DBQUANTITY=log_DBQuantity, $
                                       CENTERTIME=alf_centerTime,TSTAMPS=alf_tStamps,tAfterEpoch=tAfterEpoch,tBeforeEpoch=tBeforeEpoch, $
                                       NEG_AND_POS_SEPAR=neg_and_pos_separ, $
+                                      ONLY_POS=only_pos, $
                                       TOT_PLOT_I_POS_LIST=tot_plot_i_pos_list,TOT_ALF_T_POS_LIST=tot_alf_t_pos_list,TOT_ALF_Y_POS_LIST=tot_alf_y_pos_list, $
                                       TOT_PLOT_I_NEG_LIST=tot_plot_i_neg_list,TOT_ALF_T_NEG_LIST=tot_alf_t_neg_list,TOT_ALF_Y_NEG_LIST=tot_alf_y_neg_list, $
                                       TOT_PLOT_I_LIST=tot_plot_i_list,TOT_ALF_T_LIST=tot_alf_t_list,TOT_ALF_Y_LIST=tot_alf_y_list, $

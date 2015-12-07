@@ -52,32 +52,50 @@
 
 
 PRO STACKPLOTS_STORMS_ALFVENDBQUANTITIES_OVERLAID,stormTimeArray_utc, $
-                             TBEFOREEPOCH=tBeforeEpoch,TAFTEREPOCH=tAfterEpoch, $
-                             STARTDATE=startDate, STOPDATE=stopDate, $
-                             DAYSIDE=dayside,NIGHTSIDE=nightside, $
-                             EPOCHINDS=epochInds, SSC_TIMES_UTC=ssc_times_utc, $
-                             REMOVE_DUPES=remove_dupes, HOURS_AFT_FOR_NO_DUPES=hours_aft_for_no_dupes, $
+                             TBEFOREEPOCH=tBeforeEpoch, $
+                             TAFTEREPOCH=tAfterEpoch, $
+                             STARTDATE=startDate, $
+                             STOPDATE=stopDate, $
+                             DAYSIDE=dayside, $
+                             NIGHTSIDE=nightside, $
+                             EPOCHINDS=epochInds, $
+                             SSC_TIMES_UTC=ssc_times_utc, $
+                             REMOVE_DUPES=remove_dupes, $
+                             HOURS_AFT_FOR_NO_DUPES=hours_aft_for_no_dupes, $
                              STORMTYPE=stormType, $
-                             USE_SYMH=use_symh,USE_AE=use_AE, $
-                             OMNI_QUANTITY=omni_quantity,LOG_OMNI_QUANTITY=log_omni_quantity,USE_DATA_MINMAX=use_data_minMax, $
-                             NEVENTHISTS=nEventHists,NEVBINSIZE=nEvBinSize, NEVRANGE=nEvRange, $
-                             RETURNED_NEV_TBINS_and_HIST=returned_nEv_tbins_and_Hist, BKGRND_HIST=bkgrnd_hist, $
+                             USE_SYMH=use_symh, $
+                             USE_AE=use_AE, $
+                             OMNI_QUANTITY=omni_quantity, $
+                             LOG_OMNI_QUANTITY=log_omni_quantity, $
+                             USE_DATA_MINMAX=use_data_minMax, $
+                             NEVENTHISTS=nEventHists, $
+                             HISTOBINSIZE=histoBinSize, $
+                             NEVRANGE=nEvRange, $
+                             RETURNED_NEV_TBINS_and_HIST=returned_nEv_tbins_and_Hist, $
+                             BKGRND_HIST=bkgrnd_hist, $
                              NEG_AND_POS_SEPAR=neg_and_pos_separ, $
                              POS_COLOR=pos_color, NEG_COLOR=neg_color, $
                              POS_LAYOUT=pos_layout, NEG_LAYOUT=neg_layout, $
                              MAXIND=maxInd, AVG_TYPE_MAXIND=avg_type_maxInd, $
-                             RESTRICT_ALTRANGE=restrict_altRange,RESTRICT_CHARERANGE=restrict_charERange, $
+                             RESTRICT_ALTRANGE=restrict_altRange, $
+                             RESTRICT_CHARERANGE=restrict_charERange, $
                              LOG_DBQUANTITY=log_DBquantity, $
-                             YTITLE_MAXIND=yTitle_maxInd, YRANGE_MAXIND=yRange_maxInd, $
-                             DBFILE=dbFile,DB_TFILE=db_tFile, $
+                             YTITLE_MAXIND=yTitle_maxInd, $
+                             YRANGE_MAXIND=yRange_maxInd, $
+                             DBFILE=dbFile, $
+                             DB_TFILE=db_tFile, $
                              OVERPLOT_ALFVENDBQUANTITY=overplot_alfvendbquantity, $
                              NO_SUPERPOSE=no_superpose, $
                              NOPLOTS=noPlots, NOMAXPLOTS=noMaxPlots, $
                              USE_DARTDB_START_ENDDATE=use_dartdb_start_enddate, $
-                             SAVEFILE=saveFile,OVERPLOT_HIST=overplot_hist, $
-                             PLOTTITLE=plotTitle,SAVEPLOTNAME=savePlotName, $
+                             SAVEFILE=saveFile, $
+                             OVERPLOT_HIST=overplot_hist, $
+                             PLOTTITLE=plotTitle, $
+                             SAVEPLOTNAME=savePlotName, $
                              SAVEMAXPLOTNAME=saveMaxPlotName, $
-                             DO_SCATTERPLOTS=do_scatterPlots,EPOCHPLOT_COLORNAMES=epochPlot_colorNames,SCATTEROUTPREFIX=scatterOutPrefix, $
+                             DO_SCATTERPLOTS=do_scatterPlots, $
+                             EPOCHPLOT_COLORNAMES=epochPlot_colorNames, $
+                             SCATTEROUTPREFIX=scatterOutPrefix, $
                              JUST_ONE_LABEL=just_One_Label, $
                              OUT_MAXPLOTS=out_maxPlots, $ ;OUT_MAXWINDOW=out_maxWindow, $
                              OUT_GEOMAGPLOTS=out_geomagPlots,OUT_GEOMAGWINDOW=geomagWindow, $
@@ -97,7 +115,7 @@ PRO STACKPLOTS_STORMS_ALFVENDBQUANTITIES_OVERLAID,stormTimeArray_utc, $
                               NEG_AND_POS_SEPAR=neg_and_pos_separ,POS_LAYOUT=pos_layout,NEG_LAYOUT=neg_layout, $
                               USE_SYMH=use_SYMH,USE_AE=use_AE, $
                               OMNI_QUANTITY=omni_quantity,LOG_OMNI_QUANTITY=log_omni_quantity, $
-                              NEVBINSIZE=nEvBinsize,HISTOBINSIZE=histoBinSize, $
+                              HISTOBINSIZE=histoBinSize, $
                               SAVEFILE=saveFile,SAVESTR=saveStr, $
                               NOPLOTS=noPlots,NOMAXPLOTS=noMaxPlots, $
                               DO_SCATTERPLOTS=do_scatterPlots,EPOCHPLOT_COLORNAMES=epochPlot_colorNames,SCATTEROUTPREFIX=scatterOutPrefix, $
@@ -140,7 +158,7 @@ PRO STACKPLOTS_STORMS_ALFVENDBQUANTITIES_OVERLAID,stormTimeArray_utc, $
 
      nEpochs=N_ELEMENTS(stormStruct.time)
   
-     GET_STORMTIME_UTC,nStorms=nEpochs,EPOCHINDS=epochInds,STORMFILE=stormFile, $
+     GET_STORMTIME_UTC,NEPOCHS=nEpochs,EPOCHINDS=epochInds,STORMFILE=stormFile, $
                        MAXIMUS=maximus,STORMSTRUCTURE=stormStruct,USE_DARTDB_START_ENDDATE=use_dartDB_start_endDate, $      ;DBs
                        STORMTYPE=stormType,STARTDATE=startDate,STOPDATE=stopDate,SSC_TIMES_UTC=ssc_times_utc, $          ;extra info
                        CENTERTIME=centerTime, TSTAMPS=tStamps, STORMSTRING=stormString,STORMSTRUCT_INDS=stormStruct_inds ; outs
@@ -205,7 +223,9 @@ PRO STACKPLOTS_STORMS_ALFVENDBQUANTITIES_OVERLAID,stormTimeArray_utc, $
                                                      YTITLE=KEYWORD_SET(just_one_label) ? (i EQ 1 ? yTitle : !NULL ) : yTitle, $
                                                      YRANGE=yRange, $
                                                      LOGYPLOT=logYPlot, $
-                                                     LINETHICK=lineThick,LINETRANSP=lineTransp, $
+                                                     LINETHICK=lineThick, $
+                                                     ;; LINETRANSP=lineTransp, $
+                                                     LINETRANSP=0, $
                                                      OVERPLOT=0, $
                                                      CURRENT=1, $
                                                      MARGIN=plotMargin, $
@@ -226,6 +246,7 @@ PRO STACKPLOTS_STORMS_ALFVENDBQUANTITIES_OVERLAID,stormTimeArray_utc, $
   IF KEYWORD_SET(nEventHists) OR (avg_type_maxInd GT 0) $
      OR KEYWORD_SET(maxInd) OR KEYWORD_SET(show_data_availability) THEN BEGIN ;Histos of Alfvén events relative to storm epoch
      GET_EPOCH_T_AND_INDS_FOR_ALFVENDB,maximus,cdbTime,NEPOCHS=nEpochs,TBEFOREEPOCH=tBeforeEpoch,TAFTEREPOCH=tAfterEpoch, $
+                                       CENTERTIME=centerTime, $
                                        DATSTARTSTOP=datStartStop,TSTAMPS=tStamps,GOOD_I=good_i, $
                                        ALF_EPOCH_T=alf_epoch_t,ALF_EPOCH_I=alf_epoch_i, $
                                        RESTRICT_ALTRANGE=restrict_altRange,RESTRICT_CHARERANGE=restrict_charERange, $
@@ -235,7 +256,7 @@ PRO STACKPLOTS_STORMS_ALFVENDBQUANTITIES_OVERLAID,stormTimeArray_utc, $
                                        SAVEFILE=saveFile,SAVESTR=saveStr
   ENDIF 
 
-  IF KEYWORD_SET(nEventHists) OR (avg_type_maxInd GT 0) OR KEYWORD_SET(maxInd) THEN BEGIN ;Histos of Alfvén events relative to storm epoch
+  IF KEYWORD_SET(maxInd) THEN BEGIN ;Histos of Alfvén events relative to storm epoch
      
      nAlfEpochs = nEpochs
      GET_DATA_FOR_ALFVENDB_EPOCH_PLOTS,MAXIMUS=maximus,CDBTIME=cdbTime,MAXIND=maxInd,GOOD_I=good_i, $
@@ -248,6 +269,10 @@ PRO STACKPLOTS_STORMS_ALFVENDBQUANTITIES_OVERLAID,stormTimeArray_utc, $
                                       TOT_PLOT_I_NEG_LIST=tot_plot_i_neg_list,TOT_ALF_T_NEG_LIST=tot_alf_t_neg_list,TOT_ALF_Y_NEG_LIST=tot_alf_y_neg_list, $
                                       TOT_PLOT_I_LIST=tot_plot_i_list,TOT_ALF_T_LIST=tot_alf_t_list,TOT_ALF_Y_LIST=tot_alf_y_list, $
                                       NEVTOT=nEvTot
+
+  ENDIF
+
+  IF KEYWORD_SET(nEventHists) OR (avg_type_maxInd GT 0) THEN BEGIN ;Histos of Alfvén events relative to storm epoch
 
      IF KEYWORD_SET(neg_AND_pos_separ) THEN BEGIN
         ;;First pos
@@ -334,18 +359,27 @@ PRO STACKPLOTS_STORMS_ALFVENDBQUANTITIES_OVERLAID,stormTimeArray_utc, $
            alf_y = (N_ELEMENTS(tot_alf_y_list) GT 0 ? tot_alf_y_list[i] : !NULL )
            symColor = N_ELEMENTS(epochPlot_colorNames) GT 0 ? epochPlot_colorNames[i MOD N_ELEMENTS(epochPlot_colorNames)] : symColor
            IF N_ELEMENTS(alf_t) GT 0 THEN BEGIN
-              PLOT_ALFVENDBQUANTITY_SCATTER__EPOCH,maxInd,mTags,NAME=name,AXIS_STYLE=axis_Style, $
-                                                      SYMCOLOR=symColor,SYMTRANSPARENCY=symTransparency,SYMBOL=symbol, $
-                                                      ALF_T=alf_t,ALF_Y=alf_y, $
-                                                      PLOTTITLE=plotTitle, $
-                                                      XTITLE=xTitle,XRANGE=xRange, $
-                                                      YTITLE=yTitle_maxInd,YRANGE=[minDat,maxDat],LOGYPLOT=logYPlot, $
-                                                      OVERPLOT_ALFVENDBQUANTITY=overplot_alfvendbquantity, $
-                                                      CURRENT=1, $
-                                                      MARGIN=plotMargin, $
-                                                      LAYOUT=[1,nEpochs,i+1], $
-                                                      CLIP=0, $
-                                                      OUTPLOT=outPlot,ADD_PLOT_TO_PLOT_ARRAY=add_plot_to_plot_array ;; Add the legend, if neg_and_pos_separ
+              PLOT_ALFVENDBQUANTITY_SCATTER__EPOCH,maxInd,mTags, $
+                                                   NAME=name, $
+                                                   AXIS_STYLE=axis_Style, $
+                                                   SYMCOLOR=symColor, $
+                                                   SYMTRANSPARENCY=symTransparency, $
+                                                   SYMBOL=symbol, $
+                                                   ALF_T=alf_t, $
+                                                   ALF_Y=alf_y, $
+                                                   PLOTTITLE=plotTitle, $
+                                                   XTITLE=xTitle, $
+                                                   XRANGE=xRange, $
+                                                   YTITLE=yTitle_maxInd, $
+                                                   YRANGE=KEYWORD_SET(yRange_maxInd) ? yRange_maxInd : [minDat,maxDat], $
+                                                   LOGYPLOT=logYPlot, $
+                                                   OVERPLOT_ALFVENDBQUANTITY=overplot_alfvendbquantity, $
+                                                   CURRENT=1, $
+                                                   MARGIN=plotMargin, $
+                                                   LAYOUT=[1,nEpochs,i+1], $
+                                                   CLIP=0, $
+                                                   OUTPLOT=outPlot, $
+                                                   ADD_PLOT_TO_PLOT_ARRAY=add_plot_to_plot_array ;; Add the legend, if neg_and_pos_separ
            ENDIF
         ENDELSE
      ENDFOR     
@@ -526,7 +560,8 @@ PRO STACKPLOTS_STORMS_ALFVENDBQUANTITIES_OVERLAID,stormTimeArray_utc, $
                                             /PRINT_DATA_AVAILABILITY
         
         PLOT_ALFVENDB_DATA_AVAILABILITY__EPOCH,tRanges_orbs,centerTime[i], $
-                                               BOTTOM_YRANGE=minDat, $
+                                               XRANGE=xRange, $
+                                               BOTTOM_YRANGE=KEYWORD_SET(yRange_maxInd) ? yRange_maxInd[0] : minDat, $
                                                CURRENT=1, $
                                                MARGIN=plotMargin, $
                                                LAYOUT=[1,nEpochs,i+1], $
@@ -536,7 +571,8 @@ PRO STACKPLOTS_STORMS_ALFVENDBQUANTITIES_OVERLAID,stormTimeArray_utc, $
   ENDIF
 
   IF KEYWORD_SET(savePlotName) THEN BEGIN
-     PRINT,"Saving plot to file: " + savePlotName
+     SET_PLOT_DIR,plotDir,/FOR_STORMS,/VERBOSE,/ADD_TODAY
+     PRINT,"Saving plot to file: " + plotDir + savePlotName
      geomagWindow.save,savePlotName,RESOLUTION=defRes
   ENDIF
   ;; out_geomagWindow = geomagWindow

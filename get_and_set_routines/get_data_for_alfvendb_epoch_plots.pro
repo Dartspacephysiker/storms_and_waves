@@ -11,6 +11,8 @@ PRO GET_DATA_FOR_ALFVENDB_EPOCH_PLOTS,MAXIMUS=maximus,CDBTIME=cdbTime,MAXIND=max
                                       LOG_DBQUANTITY=log_dbquantity, $
                                       CENTERTIME=alf_centerTime,TSTAMPS=alf_tStamps,tAfterEpoch=tAfterEpoch,tBeforeEpoch=tBeforeEpoch, $
                                       NEG_AND_POS_SEPAR=neg_and_pos_separ, $
+                                      ONLY_POS=only_pos, $
+                                      ONLY_NEG=only_neg, $
                                       TOT_PLOT_I_POS_LIST=tot_plot_i_pos_list,TOT_ALF_T_POS_LIST=tot_alf_t_pos_list,TOT_ALF_Y_POS_LIST=tot_alf_y_pos_list, $
                                       TOT_PLOT_I_NEG_LIST=tot_plot_i_neg_list,TOT_ALF_T_NEG_LIST=tot_alf_t_neg_list,TOT_ALF_Y_NEG_LIST=tot_alf_y_neg_list, $
                                       TOT_PLOT_I_LIST=tot_plot_i_list,TOT_ALF_T_LIST=tot_alf_t_list,TOT_ALF_Y_LIST=tot_alf_y_list, $
@@ -27,10 +29,15 @@ PRO GET_DATA_FOR_ALFVENDB_EPOCH_PLOTS,MAXIMUS=maximus,CDBTIME=cdbTime,MAXIND=max
   alf_ind_list.add,WHERE(maximus.(maxInd) LT 0)
   IF KEYWORD_SET(log_dbquantity) THEN BEGIN
      PRINTF,lun,'Logging all Alfven DB values for maxInd = ' + STRCOMPRESS(maxInd,/REMOVE_ALL) + '...'
+
      log_i = WHERE(maximus.(maxInd) NE 0.0 AND FINITE(maximus.(maxInd)))
      good_i = CGSETINTERSECTION(good_i,log_i)
   ENDIF
   
+  IF KEYWORD_SET(only_pos) THEN BEGIN
+     good_i = CGSETINTERSECTION(good_i,WHERE(maximus.(maxInd) GT 0.0 AND FINITE(maximus.(maxInd))))
+  ENDIF
+
   IF neg_and_pos_separ OR ( log_DBQuantity AND (alf_ind_list[1,0] NE -1)) THEN BEGIN
      PRINT,'Got some negs here...'
      WAIT,1
