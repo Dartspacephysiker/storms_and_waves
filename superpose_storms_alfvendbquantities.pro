@@ -62,6 +62,12 @@ PRO SUPERPOSE_STORMS_ALFVENDBQUANTITIES,stormTimeArray_utc, $
                                         OMNI_QUANTITY=omni_quantity,LOG_OMNI_QUANTITY=log_omni_quantity, $
                                         NEVENTHISTS=nEventHists, $
                                         HISTOBINSIZE=histoBinSize, HISTORANGE=histoRange, $
+                                        TITLE__HISTO_PLOT=title__histo_plot, $
+                                        SYMCOLOR__HISTO_PLOT=symColor__histo_plot, $
+                                        MAKE_LEGEND__HISTO_PLOT=make_legend__histo_plot, $
+                                        NAME__HISTO_PLOT=name__histo_plot, $
+                                        N__HISTO_PLOTS=n__histo_plots, $
+                                        ACCUMULATE__HISTO_PLOTS=accumulate__histo_plots, $
                                         PROBOCCURENCE_SEA=probOccurrence_sea, LOG_PROBOCCURRENCE=log_probOccurrence, $
                                         RETURNED_NEV_TBINS_and_HIST=returned_nEv_tbins_and_Hist, $
                                         ONLY_POS=only_pos, $
@@ -69,7 +75,15 @@ PRO SUPERPOSE_STORMS_ALFVENDBQUANTITIES,stormTimeArray_utc, $
                                         LAYOUT=layout, $
                                         POS_LAYOUT=pos_layout, $
                                         NEG_LAYOUT=neg_layout, $
-                                        MAXIND=maxInd, AVG_TYPE_MAXIND=avg_type_maxInd, $
+                                        MAXIND=maxInd, $
+                                        AVG_TYPE_MAXIND=avg_type_maxInd, $
+                                        SYMCOLOR__MAX_PLOT=symColor__max_plot, $
+                                        TITLE__AVG_PLOT=title__avg_plot, $
+                                        SYMCOLOR__AVG_PLOT=symColor__avg_plot, $
+                                        MAKE_LEGEND__AVG_PLOT=make_legend__avg_plot, $
+                                        NAME__AVG_PLOT=name__avg_plot, $
+                                        N__AVG_PLOTS=n__avg_plots, $
+                                        ACCUMULATE__AVG_PLOTS=accumulate__avg_plots, $
                                         RESTRICT_ALTRANGE=restrict_altRange,RESTRICT_CHARERANGE=restrict_charERange, $
                                         LOG_DBQUANTITY=log_DBQuantity, $
                                         YLOGSCALE_MAXIND=yLogScale_maxInd, $
@@ -78,7 +92,11 @@ PRO SUPERPOSE_STORMS_ALFVENDBQUANTITIES,stormTimeArray_utc, $
                                         BKGRND_HIST=bkgrnd_hist, BKGRND_MAXIND=bkgrnd_maxInd,TBINS=tBins, $
                                         DBFILE=dbFile,DB_TFILE=db_tFile, $
                                         NO_SUPERPOSE=no_superpose, $
-                                        NOPLOTS=noPlots, NOGEOMAGPLOTS=noGeomagPlots, NOMAXPLOTS=noMaxPlots, $
+                                        WINDOW_GEOMAG=geomagWindow, $
+                                        WINDOW_MAXIMUS=maximusWindow, $
+                                        NOPLOTS=noPlots, NOGEOMAGPLOTS=noGeomagPlots, $
+                                        NOMAXPLOTS=noMaxPlots, $
+                                        NOAVGPLOTS=noAvgPlots, $
                                         USE_DARTDB_START_ENDDATE=use_dartdb_start_enddate, $
                                         SAVEFILE=saveFile,OVERPLOT_HIST=overplot_hist, $
                                         PLOTTITLE=plotTitle, $
@@ -92,8 +110,13 @@ PRO SUPERPOSE_STORMS_ALFVENDBQUANTITIES,stormTimeArray_utc, $
                                         RANDOMTIMES=randomTimes, $
                                         MINMLT=minM,MAXMLT=maxM,BINM=binM,MINILAT=minI,MAXILAT=maxI,BINI=binI, $
                                         DO_LSHELL=do_lshell,MINLSHELL=minL,MAXLSHELL=maxL,BINL=binL, $
-                                        OUT_BKGRND_HIST=out_bkgrnd_hist,OUT_BKGRND_MAXIND=out_bkgrnd_maxind,OUT_TBINS=out_tBins, $
-                                        OUT_MAXPLOT=out_maxPlot,OUT_GEOMAG_PLOT=out_geomag_plot
+                                        OUT_BKGRND_HIST=out_bkgrnd_hist, $
+                                        OUT_BKGRND_MAXIND=out_bkgrnd_maxind, $
+                                        OUT_TBINS=out_tBins, $
+                                        OUT_MAXPLOT=out_maxPlot, $
+                                        OUT_GEOMAG_PLOT=out_geomag_plot, $
+                                        OUT_HISTO_PLOT=out_histo_plot, $
+                                        OUT_AVG_PLOT=out_avg_plot
   
   
   dataDir='/SPENCEdata/Research/Cusp/database/'
@@ -105,7 +128,6 @@ PRO SUPERPOSE_STORMS_ALFVENDBQUANTITIES,stormTimeArray_utc, $
                               RESTRICT_CHARERANGE=restrict_charERange,RESTRICT_ALTRANGE=restrict_altRange, $
                               MAXIND=maxInd,AVG_TYPE_MAXIND=avg_type_maxInd,LOG_DBQUANTITY=log_DBQuantity, $
                               YLOGSCALE_MAXIND=yLogScale_maxInd, $
-
                               YTITLE_MAXIND=yTitle_maxInd, YRANGE_MAXIND=yRange_maxInd, $
                               NEG_AND_POS_SEPAR=neg_and_pos_separ, $
                               LAYOUT=layout, $
@@ -118,7 +140,9 @@ PRO SUPERPOSE_STORMS_ALFVENDBQUANTITIES,stormTimeArray_utc, $
                               SAVEMAXPLOT=saveMaxPlot, $
                               SAVEFILE=saveFile,SAVESTR=saveStr, $
                               PLOTTITLE=plotTitle,SAVEPLOTNAME=savePlotName, $
-                              NOPLOTS=noPlots,NOGEOMAGPLOTS=noGeomagPlots,NOMAXPLOTS=noMaxPlots, $
+                              NOPLOTS=noPlots,NOGEOMAGPLOTS=noGeomagPlots, $
+                              NOMAXPLOTS=noMaxPlots, $
+                              NOAVGPLOTS=noAvgPlots, $
                               DO_SCATTERPLOTS=do_scatterPlots,EPOCHPLOT_COLORNAMES=epochPlot_colorNames,SCATTEROUTPREFIX=scatterOutPrefix, $
                               RANDOMTIMES=randomTimes
 
@@ -293,11 +317,15 @@ PRO SUPERPOSE_STORMS_ALFVENDBQUANTITIES,stormTimeArray_utc, $
 
   ;; Need a window?
   IF KEYWORD_SET(savePlot) OR KEYWORD_SET(nEventHists) OR KEYWORD_SET(probOccurrence_sea) $
-     AND ~KEYWORD_SET(noPlots) THEN BEGIN
-     geomagWindow=WINDOW(WINDOW_TITLE="SEA plots for " + stormString + " storms: "+ $
-                         tStamps[0] + " - " + $
-                         tStamps(-1), $
-                         DIMENSIONS=[1200,800])
+     AND ~KEYWORD_SET(noPlots) AND ~KEYWORD_SET(noGeomagPlots) THEN BEGIN
+     IF N_ELEMENTS(geomagWindow) EQ 0 THEN BEGIN
+        geomagWindow=WINDOW(WINDOW_TITLE="SEA plots for " + stormString + " storms: "+ $
+                            tStamps[0] + " - " + $
+                            tStamps(-1), $
+                            DIMENSIONS=[1200,800])
+     ENDIF ELSE BEGIN
+        geomagWindow.setCurrent
+     ENDELSE
   ENDIF
   
   xTitle=N_ELEMENTS(SSC_times_UTC) GT 0 ? 'Hours since storm commencement' : 'Hours since min DST' ; defXTitle
@@ -325,7 +353,8 @@ PRO SUPERPOSE_STORMS_ALFVENDBQUANTITIES,stormTimeArray_utc, $
                                                   MARGIN=plotMargin, $
                                                   LAYOUT=!NULL, $
                                                   ;; CLIP=0, $
-                                                  OUTPLOT=geomagPlot,ADD_PLOT_TO_PLOT_ARRAY=add_plot_to_plot_array
+                                                  OUTPLOT=geomagPlot, $
+                                                  ADD_PLOT_TO_PLOT_ARRAY=add_plot_to_plot_array
            
            ;; out_geomagPlots[i] = geomagPlot
            
@@ -344,40 +373,59 @@ PRO SUPERPOSE_STORMS_ALFVENDBQUANTITIES,stormTimeArray_utc, $
            PRINT,"Nevhists not implemented for neg and pos yet..."
            WAIT,5
         ENDIF ELSE BEGIN
-           PLOT_ALFVENDBQUANTITY_HISTOGRAM__EPOCH,histTBins,nEvhistData,NAME=name, $
+           PLOT_ALFVENDBQUANTITY_HISTOGRAM__EPOCH,histTBins,nEvhistData, $
+                                                  NAME=name__histo_plot, $
                                                   XRANGE=xRange, $
                                                   HISTORANGE=histoRange, $
                                                   YTITLE='N events', $
                                                   MARGIN=plotMargin, $
-                                                  ;; PLOTTITLE=plotTitle, $
-                                                  OVERPLOT_HIST=overplot_hist, $
+                                                  PLOTTITLE=title__histo_plot, $
+                                                  OVERPLOT_HIST=KEYWORD_SET(overplot_hist) OR N_ELEMENTS(out_histo_plot) GT 0, $
+                                                  COLOR=symColor__histo_plot, $
                                                   CURRENT=current, $
                                                   LAYOUT=layout, $
                                                   HISTOPLOT=histoPlot, $
-                                                  BKGRND_HIST=bkgrnd_hist,BKGRNDHISTOPLOT=bkgrndHistoPlot, $
-                                                  OUTPLOT=outPlot,OUTBKGRNDPLOT=outBkgrndPlot, $
-                                                  ADD_PLOT_TO_PLOT_ARRAY=add_plot_to_plot_array   
+                                                  BKGRND_HIST=bkgrnd_hist, $
+                                                  BKGRNDHISTOPLOT=bkgrndHistoPlot, $
+                                                  OUTPLOT=out_histo_plot, $
+                                                  OUTBKGRNDPLOT=outBkgrndPlot, $
+                                                  ADD_PLOT_TO_PLOT_ARRAY=KEYWORD_SET(accumulate__histo_plots)
         ENDELSE
         
      ENDIF ELSE BEGIN                      ;end IF nEventHists
         IF KEYWORD_SET(probOccurrence_sea) THEN BEGIN
-           PLOT_ALFVENDBQUANTITY_HISTOGRAM__EPOCH,histTBins,histData,NAME=name, $
+           PLOT_ALFVENDBQUANTITY_HISTOGRAM__EPOCH,histTBins,histData, $
+                                                  NAME=name__histo_plot, $
                                                   XRANGE=xRange, $
                                                   HISTORANGE=histoRange, $
                                                   YTITLE=KEYWORD_SET(yTitle_maxInd) ? yTitle_maxInd : yTitle, $
                                                   LOGYPLOT=log_probOccurrence, $
                                                   ;; YTICKFORMAT=, $
                                                   MARGIN=plotMargin, $
-                                                  ;; PLOTTITLE=plotTitle, $
-                                                  OVERPLOT_HIST=overplot_hist, $
+                                                  PLOTTITLE=title__histo_plot, $
+                                                  OVERPLOT_HIST=KEYWORD_SET(overplot_hist) OR N_ELEMENTS(out_histo_plot) GT 0, $
+                                                  COLOR=symColor__histo_plot, $
                                                   CURRENT=1, $
                                                   LAYOUT=layout, $
                                                   HISTOPLOT=histoPlot, $
-                                                  BKGRND_HIST=bkgrnd_hist,BKGRNDHISTOPLOT=bkgrndHistoPlot, $
-                                                  OUTPLOT=outPlot,OUTBKGRNDPLOT=outBkgrndPlot, $
-                                                  ADD_PLOT_TO_PLOT_ARRAY=add_plot_to_plot_array   
+                                                  BKGRND_HIST=bkgrnd_hist, $
+                                                  BKGRNDHISTOPLOT=bkgrndHistoPlot, $
+                                                  OUTPLOT=out_histo_plot, $
+                                                  OUTBKGRNDPLOT=outBkgrndPlot, $
+                                                  ADD_PLOT_TO_PLOT_ARRAY=KEYWORD_SET(accumulate__histo_plots)
+
         ENDIF
      ENDELSE
+  ENDIF
+
+  IF KEYWORD_SET(make_legend__histo_plot) THEN BEGIN
+     IF N_ELEMENTS(out_histo_plot) EQ n__histo_plots THEN BEGIN
+        legend = LEGEND(TARGET=out_histo_plot[0:n__histo_plots-1], $
+                        POSITION=[0.27,0.40], $
+                        /NORMAL, $
+                        /AUTO_TEXT_COLOR)
+        
+     ENDIF
   ENDIF
 
   IF KEYWORD_SET(savePlot) THEN BEGIN
@@ -390,10 +438,13 @@ PRO SUPERPOSE_STORMS_ALFVENDBQUANTITIES,stormTimeArray_utc, $
 
      mTags=TAG_NAMES(maximus)
      yTitle = (KEYWORD_SET(yTitle_maxInd) ? yTitle_maxInd : mTags[maxInd])
-     IF ~(noPlots OR noMaxPlots) THEN BEGIN
-        maximusWindow=WINDOW(WINDOW_TITLE="Maximus plots", $
-                             DIMENSIONS=[1200,800])
-        maximusWindow.setCurrent
+     IF ~(noPlots OR (noMaxPlots AND noAvgPlots)) THEN BEGIN
+        IF N_ELEMENTS(maximusWindow) EQ 0 THEN BEGIN
+           maximusWindow=WINDOW(WINDOW_TITLE="Maximus plots", $
+                                DIMENSIONS=[1200,800])
+        ENDIF ELSE BEGIN
+           maximusWindow.setCurrent
+        ENDELSE
      ENDIF
 
      PREPARE_ALFVENDB_EPOCHPLOTS,MINMAXDAT=minMaxDat,MAXDAT=maxDat,MINDAT=minDat, $
@@ -436,7 +487,7 @@ PRO SUPERPOSE_STORMS_ALFVENDBQUANTITIES,stormTimeArray_utc, $
                                                       LOGYPLOT=yLogScale_maxInd, $
                                                       OVERPLOT_ALFVENDBQUANTITY=(j EQ 0) ? 0 : 1, $
                                                       CURRENT=N_ELEMENTS(maximusWindow) GT 0, $
-                                                      MARGIN=plotMargin, $
+                                                      MARGIN=margin__max_plot, $
                                                       LAYOUT=pn_layout[*,j], $
                                                       CLIP=0, $
                                                       OUTPLOT=(j EQ 0) ? out_maxPlotPos : out_maxPlotNeg, $
@@ -450,7 +501,7 @@ PRO SUPERPOSE_STORMS_ALFVENDBQUANTITIES,stormTimeArray_utc, $
            IF N_ELEMENTS(alf_t) GT 0 AND ~(KEYWORD_SET(noPlots) OR KEYWORD_SET(noMaxPlots)) THEN BEGIN
               IF KEYWORD_SET(log_DBQuantity) THEN alf_y =  10.0^(alf_y)
               PLOT_ALFVENDBQUANTITY_SCATTER__EPOCH,maxInd,mTags,NAME=name,AXIS_STYLE=axis_Style, $
-                                                   SYMCOLOR=symColor, $
+                                                   SYMCOLOR=KEYWORD_SET(symColor__max_plot) ? symColor__max_plot : symColor, $
                                                    SYMTRANSPARENCY=symTransp_maxInd, $
                                                    SYMBOL=symbol, $
                                                    ALF_T=alf_t, $
@@ -464,7 +515,7 @@ PRO SUPERPOSE_STORMS_ALFVENDBQUANTITIES,stormTimeArray_utc, $
                                                    ;; OVERPLOT_ALFVENDBQUANTITY=(i EQ 0) ? 0 : 1, $
                                                    OVERPLOT_ALFVENDBQUANTITY=0, $
                                                    CURRENT=N_ELEMENTS(maximusWindow) GT 0, $
-                                                   MARGIN=plotMargin, $
+                                                   MARGIN=margin__max_plot, $
                                                    LAYOUT=layout, $
                                                    ;; CLIP=0, $
                                                    OUTPLOT=out_maxPlotAll, $
@@ -483,28 +534,40 @@ PRO SUPERPOSE_STORMS_ALFVENDBQUANTITIES,stormTimeArray_utc, $
      
      IF avg_type_maxInd GT 0 THEN BEGIN
 
-        IF ~(noPlots OR noMaxPlots) THEN BEGIN
+        IF ~(noPlots OR noAvgPlots) THEN BEGIN
            
            PLOT_ALFVENDBQUANTITY_AVERAGES_OR_SUMS__EPOCH,histData,histTBins,$
+              
               ;; NEVHISTDATA=nEvHistData, $
               TAFTEREPOCH=tAfterEpoch,TBEFOREEPOCH=tBeforeEpoch, $
               HISTOBINSIZE=histoBinSize, $
               NONZERO_I=nz_i, $
               SYMBOL=symbol, $
-              SYMCOLOR=symColor, $
+              SYMCOLOR=KEYWORD_SET(symColor__avg_plot) ? symColor__avg_plot : symColor, $
               ;; SYMTRANSPARENCY=symTransparency, $
-              PLOTNAME=plotName, $
-              ;; PLOTTITLE=plotTitle, $
+              PLOTNAME=name__avg_plot, $
+              PLOTTITLE=title__avg_plot, $
               XTITLE=xTitle, $
               XRANGE=xRange, $
               YTITLE=yTitle, $
               YRANGE=KEYWORD_SET(yRange_maxInd) ? yRange_maxInd : [minDat,maxDat], $
               LOGYPLOT=yLogScale_maxInd, $
-              OVERPLOT=overPlot, $
+              OVERPLOT=KEYWORD_SET(overPlot) OR N_ELEMENTS(out_avg_plot) GT 0, $
               CURRENT=1, $
-              MARGIN=plotMargin, $
+              MARGIN=margin__avg_plot, $
               LAYOUT=layout, $
-              OUTPLOT=outPlot,ADD_PLOT_TO_PLOT_ARRAY=add_plot_to_plot_array
+              OUTPLOT=out_avg_plot, $
+              ADD_PLOT_TO_PLOT_ARRAY=KEYWORD_SET(accumulate__avg_plots)
+        ENDIF
+     ENDIF
+
+     IF KEYWORD_SET(make_legend__avg_plot) THEN BEGIN
+        IF N_ELEMENTS(out_avg_plot) EQ n__avg_plots THEN BEGIN
+           legend = LEGEND(TARGET=out_avg_plot[0:n__avg_plots-1], $
+                           POSITION=[0.87,0.20], $
+                           /NORMAL, $
+                           /AUTO_TEXT_COLOR)
+           
         ENDIF
      ENDIF
 
@@ -591,7 +654,7 @@ PRO SUPERPOSE_STORMS_ALFVENDBQUANTITIES,stormTimeArray_utc, $
 
      ENDIF
      
-     IF KEYWORD_SET(saveMaxPlot) AND ~(noPlots OR noMaxPlots) THEN BEGIN
+     IF KEYWORD_SET(saveMaxPlot) AND ~(noPlots OR (noMaxPlots AND noAvgPlots)) THEN BEGIN
         SET_PLOT_DIR,plotDir,/FOR_STORMS,/VERBOSE,/ADD_TODAY
         PRINT,"Saving maxplot to file: " + plotDir + saveMPName
         maximuswindow.save,plotDir + saveMPName,RESOLUTION=defRes

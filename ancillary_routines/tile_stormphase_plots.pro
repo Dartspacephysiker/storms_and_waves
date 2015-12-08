@@ -1,11 +1,16 @@
+;2015/12/07
+;It's way better to see all plots together, of course
 PRO TILE_STORMPHASE_PLOTS,filenames,titles, $
                           OUT_IMGARR=out_imgArr, $
                           OUT_TITLEOBJS=out_titleObjs, $
                           COMBINED_TO_BUFFER=combined_to_buffer, $
                           SAVE_COMBINED_WINDOW=save_combined_window, $
                           SAVE_COMBINED_NAME=save_combined_name, $
-                          PLOTDIR=plotDir
+                          PLOTDIR=plotDir, $
+                          DELETE_PLOTS_WHEN_FINISHED=delete_plots, $
+                          LUN=lun
 
+  IF N_ELEMENTS(lun) EQ 0 THEN lun = -1 ;stdout
                           
 
   imHDim         = 800
@@ -83,5 +88,12 @@ PRO TILE_STORMPHASE_PLOTS,filenames,titles, $
   out_imgArr    = imArr
   out_titleObjs = titleObjs
 
+  IF KEYWORD_SET(delete_plots) THEN BEGIN
+     PRINTF,lun,"Deleting plots after tiling..."
+     FOR i = 0,2 DO BEGIN
+        PRINTF,lun,'Removing ' + filenames[i] + '...'
+        SPAWN,'rm ' + filenames[i]
+     ENDFOR
+  ENDIF
 
 END

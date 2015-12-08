@@ -10,7 +10,7 @@ PRO JOURNAL__20151205__SEAS__18_INTEG_ION_FLUX_UP_ON_DAYSIDE_AND_NIGHTSIDE
   ;; do_these_plots    = [0]
 
   ;;histo stuff
-  histoBinSize      =  5 ;in hrs
+  histoBinSize      =  10 ;in hrs
 
   ;;strings 'n' things
   probOccPref = 'journal_20151205--SEA--18-INTEG_ION_FLUX_UP--with_NOAA--'
@@ -47,13 +47,14 @@ PRO JOURNAL__20151205__SEAS__18_INTEG_ION_FLUX_UP_ON_DAYSIDE_AND_NIGHTSIDE
         SSC_TIMES_UTC=q1_utc, $
         /USE_DARTDB_START_ENDDATE, $
         STORMTYPE=1, $
-        ;; /REMOVE_DUPES, $
+        /REMOVE_DUPES, $
+        HOURS_AFT_FOR_NO_DUPES=60, $
         MAXIND=maxInd, $
         YTITLE_MAXIND=yTitle, $
         AVG_TYPE_MAXIND=2, $
         ;; /LOG_DBQUANTITY, $
         /ONLY_POS, $
-        YRANGE_MAXIND=[1e7,1e14], $
+        YRANGE_MAXIND=[2e8,2e13], $
         /YLOGSCALE_MAXIND, $
         /NOGEOMAGPLOTS, $
         MINMLT=minM[i], $

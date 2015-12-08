@@ -19,7 +19,10 @@ PRO SET_STORMS_NEVENTS_DEFAULTS,TBEFOREEPOCH=tBeforeEpoch,TAFTEREPOCH=tAfterEpoc
                                 SAVEMAXPLOTNAME=saveMaxPlotName, $
                                 SAVEFILE=saveFile,SAVESTR=saveStr, $
                                 PLOTTITLE=plotTitle,SAVEPLOTNAME=savePlotName, $
-                                NOPLOTS=noPlots,NOGEOMAGPLOTS=noGeomagPlots,NOMAXPLOTS=noMaxPlots, $
+                                NOPLOTS=noPlots, $
+                                NOGEOMAGPLOTS=noGeomagPlots, $
+                                NOMAXPLOTS=noMaxPlots, $
+                                NOAVGPLOTS=noAvgPlots, $
                                 DO_SCATTERPLOTS=do_scatterPlots,epochPlot_colorNames=scPlot_colorList,SCATTEROUTPREFIX=scatterOutPrefix, $
                                 RANDOMTIMES=randomTimes, $
                                 SHOW_DATA_AVAILABILITY=show_data_availability
@@ -56,6 +59,7 @@ PRO SET_STORMS_NEVENTS_DEFAULTS,TBEFOREEPOCH=tBeforeEpoch,TAFTEREPOCH=tAfterEpoc
   defNoPlots                    = 0 
   defNoGeomagPlots              = 0
   defNoMaxPlots                 = 0
+  defNoAvgPlots                 = 0
                                 
   defProbOccurrencePref         = 'probOccurrence' 
   defProbOccurrenceHistoRange   = [1e-4,1e0]
@@ -105,6 +109,7 @@ PRO SET_STORMS_NEVENTS_DEFAULTS,TBEFOREEPOCH=tBeforeEpoch,TAFTEREPOCH=tAfterEpoc
   IF N_ELEMENTS(noPlots) EQ 0 THEN noPlots=defNoPlots
   IF N_ELEMENTS(noGeomagPlots) EQ 0 THEN noGeomagPlots=defNoGeomagPlots
   IF N_ELEMENTS(noMaxPlots) EQ 0 THEN noMaxPlots=defNoMaxPlots
+  IF N_ELEMENTS(noAvgPlots) EQ 0 THEN noAvgPlots=defNoAvgPlots
 
   IF N_ELEMENTS(do_scatterPlots) EQ 0 THEN do_scatterPlots = defdo_scatterPlots
   ;; IF N_ELEMENTS(epochPlot_colorNames) EQ 0 THEN scPlot_colorList = defscPlot_colorList

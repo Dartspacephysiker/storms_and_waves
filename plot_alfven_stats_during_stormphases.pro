@@ -155,7 +155,8 @@ PRO PLOT_ALFVEN_STATS_DURING_STORMPHASES,$
 
      IF ~KEYWORD_SET(save_combined_name) THEN BEGIN
         ;; hoyDia = GET_TODAY_STRING()
-        save_combined_name = GET_TODAY_STRING() + '--' + dataNameArr[0] + '--combined_phases.png'
+        save_combined_name = GET_TODAY_STRING() + '--' + dataNameArr[0] + $
+                             (KEYWORD_SET(plotSuffix) ? plotSuffix : '') + '--combined_phases.png'
      ENDIF
 
      TILE_STORMPHASE_PLOTS,plotFileArr,niceStrings, $
@@ -164,7 +165,8 @@ PRO PLOT_ALFVEN_STATS_DURING_STORMPHASES,$
                            COMBINED_TO_BUFFER=combined_to_buffer, $
                            SAVE_COMBINED_WINDOW=save_combined_window, $
                            SAVE_COMBINED_NAME=save_combined_name, $
-                           PLOTDIR=plotDir
+                           PLOTDIR=plotDir, $
+                           /DELETE_PLOTS_WHEN_FINISHED
 
 
   ENDIF

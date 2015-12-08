@@ -16,7 +16,7 @@ PRO JOURNAL__20151207__SEAS__18_INTEG_ION_FLUX_UP_ON_DAYSIDE_AND_NIGHTSIDE__LIMI
   histoBinSize      =  5 ;in hrs
 
   ;;strings 'n' things
-  probOccPref = 'journal_20151205--SEA--18-INTEG_ION_FLUX_UP--with_NOAA--'
+  probOccPref       = 'journal_20151207--SEA--18-INTEG_ION_FLUX_UP--with_NOAA--'
   ptPref            = ''
   plotSuff          = '.png'
 
