@@ -421,7 +421,7 @@ PRO SUPERPOSE_STORMS_ALFVENDBQUANTITIES,stormTimeArray_utc, $
   IF KEYWORD_SET(make_legend__histo_plot) THEN BEGIN
      IF N_ELEMENTS(out_histo_plot) EQ n__histo_plots THEN BEGIN
         legend = LEGEND(TARGET=out_histo_plot[0:n__histo_plots-1], $
-                        POSITION=[0.27,0.40], $
+                        POSITION=[0.29,0.40], $
                         /NORMAL, $
                         /AUTO_TEXT_COLOR)
         
@@ -564,7 +564,7 @@ PRO SUPERPOSE_STORMS_ALFVENDBQUANTITIES,stormTimeArray_utc, $
      IF KEYWORD_SET(make_legend__avg_plot) THEN BEGIN
         IF N_ELEMENTS(out_avg_plot) EQ n__avg_plots THEN BEGIN
            legend = LEGEND(TARGET=out_avg_plot[0:n__avg_plots-1], $
-                           POSITION=[0.87,0.20], $
+                           POSITION=[0.87,0.35], $
                            /NORMAL, $
                            /AUTO_TEXT_COLOR)
            

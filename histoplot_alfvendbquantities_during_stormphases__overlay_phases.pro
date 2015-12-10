@@ -309,7 +309,7 @@ EPOCHPLOT_COLORNAMES=epochPlot_colorNames,SCATTEROUTPREFIX=scatterOutPrefix, $
   plotLayout = KEYWORD_SET(layout) ? layout : [1,1,1]
   nPPerWind  = plotLayout[0]*plotLayout[1]*3
   plotArr    = N_ELEMENTS(outPlotArr) EQ 0 ? MAKE_ARRAY(nPPerWind,/OBJ) : outPlotArr
-  firstmarg  = [0.1,0.1,0.1,0.1]
+  firstmarg  = [0.18,0.09,0.08,0.09]
   marg       = [0.01,0.01,0.1,0.01]
 
   IF KEYWORD_SET(histYRange_maxInd) THEN php.yRange = histYRange_maxInd ELSE BEGIN
@@ -418,15 +418,15 @@ EPOCHPLOT_COLORNAMES=epochPlot_colorNames,SCATTEROUTPREFIX=scatterOutPrefix, $
            int_x       = (plotLayout[2]-1)/FLOAT(plotLayout[0]) + 0.08 + 0.28
         ENDELSE
      ENDELSE
-     int_y    = .72
+     int_y             = .75
 
 
-     intText     = text(int_x,int_y,$
-                        textStr, $
-                        FONT_NAME='Courier', $
-                        FONT_COLOR=stormColors[i], $
-                        /NORMAL, $
-                        TARGET=plotArr[plot_i])
+     intText           = text(int_x,int_y,$
+                              textStr, $
+                              FONT_NAME='Courier', $
+                              FONT_COLOR=stormColors[i], $
+                              /NORMAL, $
+                              TARGET=plotArr[plot_i])
      
   ENDFOR
 

@@ -96,6 +96,7 @@ PRO STACKPLOTS_STORMS_ALFVENDBQUANTITIES_OVERLAID,stormTimeArray_utc, $
                              DO_SCATTERPLOTS=do_scatterPlots, $
                              EPOCHPLOT_COLORNAMES=epochPlot_colorNames, $
                              SCATTEROUTPREFIX=scatterOutPrefix, $
+                             SYMTRANSPARENCY=symTransparency, $
                              JUST_ONE_LABEL=just_One_Label, $
                              OUT_MAXPLOTS=out_maxPlots, $ ;OUT_MAXWINDOW=out_maxWindow, $
                              OUT_GEOMAGPLOTS=out_geomagPlots,OUT_GEOMAGWINDOW=geomagWindow, $
@@ -147,25 +148,39 @@ PRO STACKPLOTS_STORMS_ALFVENDBQUANTITIES_OVERLAID,stormTimeArray_utc, $
   ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
   ;Get all storms occuring within specified date range, if an array of times hasn't been provided
 
-  IF N_ELEMENTS(stormTimeArray_utc) NE 0 THEN BEGIN
+  SETUP_STORMTIMEARRAY_UTC,stormTimeArray_utc,TBEFOREEPOCH=tBeforeEpoch,TAFTEREPOCH=tAfterEpoch, $
+                           NEPOCHS=nEpochs,EPOCHINDS=epochInds,STORMFILE=stormFile, $
+                           MAXIMUS=maximus,STORMSTRUCTURE=stormStruct,USE_DARTDB_START_ENDDATE=use_dartDB_start_endDate, $ ;DBs
+                           STORMTYPE=stormType,STARTDATE=startDate,STOPDATE=stopDate,SSC_TIMES_UTC=ssc_times_utc, $        ;extra info
+                           CENTERTIME=centerTime, DATSTARTSTOP=datStartStop, TSTAMPS=tStamps, $
+                           STORMSTRING=stormString,STORMSTRUCT_INDS=stormStruct_inds, $ ; outs
+                           SAVEFILE=saveFile,SAVESTR=saveString
 
-     nEpochs = N_ELEMENTS(stormTimeArray_utc)
-     centerTime = stormTimeArray_utc
-     tStamps = TIME_TO_STR(stormTimeArray_utc)
-     stormString = 'user-provided'
 
-  ENDIF ELSE BEGIN              ;Looks like we're relying on Brett
+  ;; IF N_ELEMENTS(stormTimeArray_utc) NE 0 THEN BEGIN
 
-     nEpochs=N_ELEMENTS(stormStruct.time)
+  ;;    nEpochs = N_ELEMENTS(stormTimeArray_utc)
+  ;;    centerTime = stormTimeArray_utc
+  ;;    tStamps = TIME_TO_STR(stormTimeArray_utc)
+  ;;    stormString = 'user-provided'
+
+  ;; ENDIF ELSE BEGIN              ;Looks like we're relying on Brett
+
+  ;;    nEpochs=N_ELEMENTS(stormStruct.time)
   
-     GET_STORMTIME_UTC,NEPOCHS=nEpochs,EPOCHINDS=epochInds,STORMFILE=stormFile, $
-                       MAXIMUS=maximus,STORMSTRUCTURE=stormStruct,USE_DARTDB_START_ENDDATE=use_dartDB_start_endDate, $      ;DBs
-                       STORMTYPE=stormType,STARTDATE=startDate,STOPDATE=stopDate,SSC_TIMES_UTC=ssc_times_utc, $          ;extra info
-                       CENTERTIME=centerTime, TSTAMPS=tStamps, STORMSTRING=stormString,STORMSTRUCT_INDS=stormStruct_inds ; outs
+  ;;    GET_STORMTIME_UTC,NEPOCHS=nEpochs,EPOCHINDS=epochInds,STORMFILE=stormFile, $
+  ;;                      MAXIMUS=maximus,STORMSTRUCTURE=stormStruct,USE_DARTDB_START_ENDDATE=use_dartDB_start_endDate, $      ;DBs
+  ;;                      STORMTYPE=stormType,STARTDATE=startDate,STOPDATE=stopDate,SSC_TIMES_UTC=ssc_times_utc, $          ;extra info
+  ;;                      CENTERTIME=centerTime, TSTAMPS=tStamps, STORMSTRING=stormString,STORMSTRUCT_INDS=stormStruct_inds ; outs
      
-     IF saveFile THEN saveStr+=',startDate,stopDate,stormType,stormStruct_inds'
+  ;;    IF saveFile THEN saveStr+=',startDate,stopDate,stormType,stormStruct_inds'
 
-  ENDELSE
+  ;; ENDELSE
+
+  ;; ;; Generate a list of indices to be plotted from the selected geomagnetic index, either SYM-H or DST, and do dat
+  ;; datStartStop = MAKE_ARRAY(nEpochs,2,/DOUBLE)
+  ;; datStartStop(*,0) = centerTime - tBeforeEpoch*3600.   ;(*,0) are the times before which we don't want data for each epoch
+  ;; datStartStop(*,1) = centerTime + tAfterEpoch*3600.    ;(*,1) are the times after which we don't want data for each storm
 
   IF KEYWORD_SET(remove_dupes) THEN BEGIN
      REMOVE_EPOCH_DUPES,NEPOCHS=nEpochs, $
@@ -174,12 +189,6 @@ PRO STACKPLOTS_STORMS_ALFVENDBQUANTITIES_OVERLAID,stormTimeArray_utc, $
                         DATSTARTSTOP=datStartStop, $
                         HOURS_AFT_FOR_NO_DUPES=hours_aft_for_no_dupes,TAFTEREPOCH=tAfterEpoch
   ENDIF
-
-
-  ;; Generate a list of indices to be plotted from the selected geomagnetic index, either SYM-H or DST, and do dat
-  datStartStop = MAKE_ARRAY(nEpochs,2,/DOUBLE)
-  datStartStop(*,0) = centerTime - tBeforeEpoch*3600.   ;(*,0) are the times before which we don't want data for each epoch
-  datStartStop(*,1) = centerTime + tAfterEpoch*3600.    ;(*,1) are the times after which we don't want data for each storm
 
   out_datStartStop = datStartStop   
   ;**************************************************
@@ -248,7 +257,8 @@ PRO STACKPLOTS_STORMS_ALFVENDBQUANTITIES_OVERLAID,stormTimeArray_utc, $
      GET_EPOCH_T_AND_INDS_FOR_ALFVENDB,maximus,cdbTime,NEPOCHS=nEpochs,TBEFOREEPOCH=tBeforeEpoch,TAFTEREPOCH=tAfterEpoch, $
                                        CENTERTIME=centerTime, $
                                        DATSTARTSTOP=datStartStop,TSTAMPS=tStamps,GOOD_I=good_i, $
-                                       ALF_EPOCH_T=alf_epoch_t,ALF_EPOCH_I=alf_epoch_i, $
+                                       NALFEPOCHS=nAlfEpochs,ALF_EPOCH_T=alf_epoch_t,ALF_EPOCH_I=alf_epoch_i, $
+                                       ALF_CENTERTIME=alf_centerTime,ALF_TSTAMPS=alf_tStamps, $
                                        RESTRICT_ALTRANGE=restrict_altRange,RESTRICT_CHARERANGE=restrict_charERange, $
                                        MINMLT=minM,MAXMLT=maxM,BINM=binM,MINILAT=minI,MAXILAT=maxI,BINI=binI, $
                                        DO_LSHELL=do_lshell,MINLSHELL=minL,MAXLSHELL=maxL,BINL=binL, $
@@ -257,13 +267,11 @@ PRO STACKPLOTS_STORMS_ALFVENDBQUANTITIES_OVERLAID,stormTimeArray_utc, $
   ENDIF 
 
   IF KEYWORD_SET(maxInd) THEN BEGIN ;Histos of Alfvén events relative to storm epoch
-     
-     nAlfEpochs = nEpochs
      GET_DATA_FOR_ALFVENDB_EPOCH_PLOTS,MAXIMUS=maximus,CDBTIME=cdbTime,MAXIND=maxInd,GOOD_I=good_i, $
                                       ALF_EPOCH_I=alf_epoch_i,ALF_IND_LIST=alf_ind_list, $
                                       MINMAXDAT=minMaxDat, NALFEPOCHS=nAlfEpochs,NEPOCHS=nEpochs, $
                                       LOG_DBQUANTITY=log_dbquantity, $
-                                      CENTERTIME=centerTime,TSTAMPS=tStamps,tAfterEpoch=tAfterEpoch,tBeforeEpoch=tBeforeEpoch, $
+                                      CENTERTIME=alf_centerTime,TSTAMPS=alf_tStamps,tAfterEpoch=tAfterEpoch,tBeforeEpoch=tBeforeEpoch, $
                                       NEG_AND_POS_SEPAR=neg_and_pos_separ, $
                                       TOT_PLOT_I_POS_LIST=tot_plot_i_pos_list,TOT_ALF_T_POS_LIST=tot_alf_t_pos_list,TOT_ALF_Y_POS_LIST=tot_alf_y_pos_list, $
                                       TOT_PLOT_I_NEG_LIST=tot_plot_i_neg_list,TOT_ALF_T_NEG_LIST=tot_alf_t_neg_list,TOT_ALF_Y_NEG_LIST=tot_alf_y_neg_list, $
@@ -322,7 +330,7 @@ PRO STACKPLOTS_STORMS_ALFVENDBQUANTITIES_OVERLAID,stormTimeArray_utc, $
                          DIMENSIONS=[1200,800])
      ENDIF
 
-     FOR i=0,nEpochs-1 DO BEGIN
+     FOR i=0,nAlfEpochs-1 DO BEGIN
         IF KEYWORD_SET(neg_and_pos_separ) THEN BEGIN
            posneg_colors = MAKE_ARRAY(2,/STRING)
            IF KEYWORD_SET(pos_color) THEN posneg_colors[0] = pos_color ELSE posneg_colors[0] = defPosColor
@@ -573,7 +581,7 @@ PRO STACKPLOTS_STORMS_ALFVENDBQUANTITIES_OVERLAID,stormTimeArray_utc, $
   IF KEYWORD_SET(savePlotName) THEN BEGIN
      SET_PLOT_DIR,plotDir,/FOR_STORMS,/VERBOSE,/ADD_TODAY
      PRINT,"Saving plot to file: " + plotDir + savePlotName
-     geomagWindow.save,savePlotName,RESOLUTION=defRes
+     geomagWindow.save,plotDir + savePlotName,RESOLUTION=defRes
   ENDIF
   ;; out_geomagWindow = geomagWindow
 

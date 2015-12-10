@@ -17,7 +17,7 @@ PRO JOURNAL__20151207__PLOTS_OF_10_11_INTEG_E_STORMFLUXES_DURING_STORMPHASES_WIT
                                        /NONEGENUMFL, $ ;Because we're not interested in upflowing electrons
                                        /LOGENUMFLPLOT, $
                                        ;; ENUMFLPLOTRANGE=[0,6], $
-                                       ENUMFLPLOTRANGE=[1.5e1,5e4], $
+                                       ENUMFLPLOTRANGE=[10^(1.75),10^(4.25)], $
                                        /LOGAVGPLOT, $
                                        BINMLT=1.5, $
                                        ;; BINILAT=2.0, $
