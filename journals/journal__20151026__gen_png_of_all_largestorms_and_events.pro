@@ -27,7 +27,8 @@ PRO JOURNAL__20151026__GEN_PNG_OF_ALL_LARGESTORMS_AND_EVENTS
   yRange_maxInd     = [-200,200]
   symTransparency   = 92
   ;; FOR i = 0, N_ELEMENTS(q1_st)-1,nPlotsPerWindow DO BEGIN
-  FOR i = 0, N_ELEMENTS(q1_st)-1,nPlotsPerWindow DO BEGIN
+  ;; FOR i = 0, N_ELEMENTS(q1_st)-1,nPlotsPerWindow DO BEGIN
+  FOR i = 0, 3,nPlotsPerWindow DO BEGIN
   ;;SSC-centered here
      iFirst         = i
      iLast          = i + nPlotsPerWindow - 1
@@ -43,6 +44,7 @@ PRO JOURNAL__20151026__GEN_PNG_OF_ALL_LARGESTORMS_AND_EVENTS
         TAFTEREPOCH=60., $
         MAXIND=maxInd, $
         YRANGE_MAXIND=yRange_maxInd, $
+        YTITLE_MAXIND='Current density ($\muA/m^2$)', $
         REMOVE_DUPES=rmDupes, $
         ;; RETURNED_NEV_TBINS_AND_HIST=stormtime_returned_tbins_and_nevhist, $
         SAVEPLOTNAME=savePlotFile, $

@@ -38,6 +38,7 @@ PRO HISTOPLOT_ALFVENDBQUANTITIES_DURING_STORMPHASES__OVERLAY_PHASES, $
    stormTimeArray_utc, $
    START_UTC=start_UTC, STOP_UTC=stop_UTC, $
    DAYSIDE=dayside,NIGHTSIDE=nightside, $
+   HEMI=hemi, $
    LAYOUT=layout, $
    MAXIND=maxInd, $
    NORMALIZE_MAXIND_HIST=normalize_maxInd_hist, $
@@ -66,6 +67,7 @@ PRO HISTOPLOT_ALFVENDBQUANTITIES_DURING_STORMPHASES__OVERLAY_PHASES, $
    PLOTCOLOR=plotColor, $
    OUTPLOTARR=outPlotArr, $
    HISTOPLOT_PARAM_STRUCT=pHP, $
+   NO_STATISTICS_TEXT=no_statistics_text, $
    ;; OVERPLOTARR=overplotArr, $
    CURRENT_WINDOW=window, $
    FILL_BACKGROUND=fill_background, $
@@ -376,58 +378,60 @@ EPOCHPLOT_COLORNAMES=epochPlot_colorNames,SCATTEROUTPREFIX=scatterOutPrefix, $
      ;;;;;;;;;;;;;
      ;;The new way
      ;; IF N_ELEMENTS(outplotArr) EQ 0 THEN BEGIN
-     IF i EQ 0 THEN BEGIN
-        textStr     = STRING(FORMAT=$
-                             '(A0,I0,A0,' + $
-                             'A0,E0.2,A0,' + $
-                             'A0,E0.2,A0,' + $
-                             'A0,E0.2,A0,' + $
-                             'A0,E0.2,A0,' + $
-                             'A0,E0.2,A0)', $
-                             'Integral  : ', integral          , newLine, $
-                             'Mean      : ', ssa[i].moments.(0), newLine, $
-                             'Median    : ', ssa[i].moments.(4)[1], newLine, $
-                             'Std. dev. : ', ssa[i].moments.(1), newLine, $
-                             'Skewness  : ', ssa[i].moments.(2), newLine, $
-                             'Kurtosis  : ', ssa[i].moments.(3), newLine)
-        
-        ;; int_x       = 1/FLOAT(plotLayout[0]) + 0.14/plotLayout[0]
-        int_x       = (plotLayout[2]-1)/FLOAT(plotLayout[0]) + 0.08
-        
-     ENDIF ELSE BEGIN
-        textStr     = STRING(FORMAT=$
-                             '(I0,A0,' + $
-                             'E0.2,A0,' + $
-                             'E0.2,A0,' + $
-                             'E0.2,A0,' + $
-                             'E0.2,A0,' + $
-                             'E0.2,A0)', $
-                             integral          , newLine, $
-                             ssa[i].moments.(0), newLine, $
-                             ssa[i].moments.(4)[1], newLine, $
-                             ssa[i].moments.(1), newLine, $
-                             ssa[i].moments.(2), newLine, $
-                             ssa[i].moments.(3), newLine)
-        
-        ;; int_x       = ( ( (i) MOD plotLayout[0] )) * 1/FLOAT(plotLayout[0]) + 0.22
-        IF i EQ 1 THEN BEGIN
-           ;; int_x       = ( ( (i) MOD plotLayout[0] )) * 1/FLOAT(plotLayout[0]) + 0.14/plotLayout[0] + 0.19/plotLayout[0]
-           int_x       = (plotLayout[2]-1)/FLOAT(plotLayout[0]) + 0.08 + 0.19
+     IF ~KEYWORD_SET(no_statistics_text) THEN BEGIN
+        IF i EQ 0 THEN BEGIN
+           textStr     = STRING(FORMAT=$
+                                '(A0,I0,A0,' + $
+                                'A0,E0.2,A0,' + $
+                                'A0,E0.2,A0,' + $
+                                'A0,E0.2,A0,' + $
+                                'A0,E0.2,A0,' + $
+                                'A0,E0.2,A0)', $
+                                'Integral  : ', integral          , newLine, $
+                                'Mean      : ', ssa[i].moments.(0), newLine, $
+                                'Median    : ', ssa[i].moments.(4)[1], newLine, $
+                                'Std. dev. : ', ssa[i].moments.(1), newLine, $
+                                'Skewness  : ', ssa[i].moments.(2), newLine, $
+                                'Kurtosis  : ', ssa[i].moments.(3), newLine)
+           
+           ;; int_x       = 1/FLOAT(plotLayout[0]) + 0.14/plotLayout[0]
+           int_x       = (plotLayout[2]-1)/FLOAT(plotLayout[0]) + 0.08
+           
         ENDIF ELSE BEGIN
-           ;; int_x       = ( ( (i) MOD plotLayout[0] )) * 1/FLOAT(plotLayout[0]) + 0.14/plotLayout[0] + 0.28/plotLayout[0]
-           int_x       = (plotLayout[2]-1)/FLOAT(plotLayout[0]) + 0.08 + 0.28
+           textStr     = STRING(FORMAT=$
+                                '(I0,A0,' + $
+                                'E0.2,A0,' + $
+                                'E0.2,A0,' + $
+                                'E0.2,A0,' + $
+                                'E0.2,A0,' + $
+                                'E0.2,A0)', $
+                                integral          , newLine, $
+                                ssa[i].moments.(0), newLine, $
+                                ssa[i].moments.(4)[1], newLine, $
+                                ssa[i].moments.(1), newLine, $
+                                ssa[i].moments.(2), newLine, $
+                                ssa[i].moments.(3), newLine)
+           
+           ;; int_x       = ( ( (i) MOD plotLayout[0] )) * 1/FLOAT(plotLayout[0]) + 0.22
+           IF i EQ 1 THEN BEGIN
+              ;; int_x       = ( ( (i) MOD plotLayout[0] )) * 1/FLOAT(plotLayout[0]) + 0.14/plotLayout[0] + 0.19/plotLayout[0]
+              int_x       = (plotLayout[2]-1)/FLOAT(plotLayout[0]) + 0.08 + 0.19
+           ENDIF ELSE BEGIN
+              ;; int_x       = ( ( (i) MOD plotLayout[0] )) * 1/FLOAT(plotLayout[0]) + 0.14/plotLayout[0] + 0.28/plotLayout[0]
+              int_x       = (plotLayout[2]-1)/FLOAT(plotLayout[0]) + 0.08 + 0.28
+           ENDELSE
         ENDELSE
-     ENDELSE
-     int_y             = .75
-
-
-     intText           = text(int_x,int_y,$
-                              textStr, $
-                              FONT_NAME='Courier', $
-                              FONT_COLOR=stormColors[i], $
-                              /NORMAL, $
-                              TARGET=plotArr[plot_i])
-     
+        int_y             = .75
+        
+        
+        intText           = text(int_x,int_y,$
+                                 textStr, $
+                                 FONT_NAME='Courier', $
+                                 FONT_COLOR=stormColors[i], $
+                                 /NORMAL, $
+                                 TARGET=plotArr[plot_i])
+     ENDIF
+        
   ENDFOR
 
   IF plot_i EQ 2 THEN BEGIN

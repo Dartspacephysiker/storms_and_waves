@@ -1,0 +1,48 @@
+;;2015/12/11 Wowzers
+;;The statistics text is distracting and too small for the poster
+PRO JOURNAL__20151211__HISTOPLOTS_OF_10_EFLUX_LOSSCONE_INTEG_DURING_STORMPHASES__NO_NORM_OR_STATS_TEXT
+
+  ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+  ;;10-EFLUX_LOSSCONE_INTEG
+  
+  ;;normalized dayside
+  HISTOPLOT_ALFVENDBQUANTITIES_DURING_STORMPHASES__OVERLAY_PHASES, $
+     MAXIND=10, $
+     HISTBINSIZE_MAXIND=0.20, $
+     /USE_DARTDB_START_ENDDATE, $
+     PLOTTITLE='Dayside', $
+     HISTXRANGE_MAXIND=[0.5,5.5], $
+     HISTYRANGE_MAXIND=[0,2e4], $
+     /LOG_DBQUANTITY, $
+     /DAYSIDE, $
+     LAYOUT=[2,1,1], $
+     ;; /NORMALIZE_MAXIND_HIST, $
+     /ONLY_POS, $
+     HISTOPLOT_PARAM_STRUCT=pHP, $
+     /NO_STATISTICS_TEXT, $
+     CURRENT_WINDOW=window, $
+     OUTPLOTARR=outplotArr
+
+  ;;normalized nightside
+  pHP.yRange = [0,4e3]
+  HISTOPLOT_ALFVENDBQUANTITIES_DURING_STORMPHASES__OVERLAY_PHASES, $
+     MAXIND=10, $
+     HISTBINSIZE_MAXIND=0.20, $
+     /USE_DARTDB_START_ENDDATE, $
+     PLOTTITLE='Nightside', $
+     HISTXRANGE_MAXIND=[0.5,5.5], $
+     HISTYRANGE_MAXIND=pHP.yRange, $
+     /LOG_DBQUANTITY, $
+     /NIGHTSIDE, $
+     LAYOUT=[2,1,2], $
+     ;; /NORMALIZE_MAXIND_HIST, $
+     /ONLY_POS, $
+     /SAVEPLOT, $
+     PLOTSUFFIX='dayside--nightside', $
+     HISTOPLOT_PARAM_STRUCT=pHP, $
+     /NO_STATISTICS_TEXT, $
+     CURRENT_WINDOW=window, $
+     OUTPLOTARR=outplotArr
+
+ 
+END
