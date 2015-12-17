@@ -48,10 +48,10 @@ PRO JOURNAL__20151026__GEN_PNG_OF_ALL_LARGESTORMS_AND_EVENTS
         REMOVE_DUPES=rmDupes, $
         ;; RETURNED_NEV_TBINS_AND_HIST=stormtime_returned_tbins_and_nevhist, $
         SAVEPLOTNAME=savePlotFile, $
-        ;; /DO_SCATTERPLOTS, $
+        /DO_SCATTERPLOTS, $
         EPOCHPLOT_COLORNAMES=colors, $
         SYMTRANSPARENCY=symTransparency, $
-        ;; SCATTEROUTPREFIX=scOutFilePref, $
+        SCATTEROUTPREFIX=scOutFilePref, $
         /SHOW_DATA_AVAILABILITY, $
         /JUST_ONE_LABEL, $
         /OVERPLOT_ALFVENDBQUANTITY
