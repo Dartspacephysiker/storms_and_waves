@@ -38,6 +38,7 @@ PRO HISTOPLOT_ALFVENDBQUANTITIES_DURING_STORMPHASES__OVERLAY_PHASES, $
    stormTimeArray_utc, $
    START_UTC=start_UTC, STOP_UTC=stop_UTC, $
    DAYSIDE=dayside,NIGHTSIDE=nightside, $
+   HEMI=hemi, $
    LAYOUT=layout, $
    MAXIND=maxInd, $
    NORMALIZE_MAXIND_HIST=normalize_maxInd_hist, $

@@ -237,7 +237,7 @@ PRO STACKPLOTS_STORMS_ALFVENDBQUANTITIES_OVERLAID,stormTimeArray_utc, $
                                                      LINETRANSP=0, $
                                                      OVERPLOT=0, $
                                                      CURRENT=1, $
-                                                     MARGIN=plotMargin, $
+                                                     MARGIN=stackplotMargin, $
                                                      LAYOUT=[1,nEpochs,i+1], $
                                                      CLIP=0, $
                                                      OUTPLOT=geomagPlot,ADD_PLOT_TO_PLOT_ARRAY=add_plot_to_plot_array
@@ -352,10 +352,12 @@ PRO STACKPLOTS_STORMS_ALFVENDBQUANTITIES_OVERLAID,stormTimeArray_utc, $
                                                       ALF_T=alf_t,ALF_Y=alf_y, $
                                                       PLOTTITLE=plotTitle, $
                                                       XTITLE=xTitle,XRANGE=xRange, $
-                                                      YTITLE=yTitle_maxInd,YRANGE=[minDat[j],maxDat[j]],LOGYPLOT=logYPlot, $
+                                                      YTITLE=KEYWORD_SET(just_one_label) ? (i EQ 1 ? yTitle_maxInd : !NULL ) : !NULL, $
+                                                      YRANGE=[minDat[j],maxDat[j]], $
+                                                      LOGYPLOT=logYPlot, $
                                                       OVERPLOT_ALFVENDBQUANTITY=overplot_alfvendbquantity, $
                                                       CURRENT=1, $
-                                                      MARGIN=plotMargin, $
+                                                      MARGIN=stackplotMargin, $
                                                       LAYOUT=[1,nEpochs,i+1], $
                                                       CLIP=0, $
                                                       OUTPLOT=outPlot,ADD_PLOT_TO_PLOT_ARRAY=add_plot_to_plot_array ;; Add the legend, if neg_and_pos_separ
@@ -378,12 +380,12 @@ PRO STACKPLOTS_STORMS_ALFVENDBQUANTITIES_OVERLAID,stormTimeArray_utc, $
                                                    PLOTTITLE=plotTitle, $
                                                    XTITLE=xTitle, $
                                                    XRANGE=xRange, $
-                                                   YTITLE=yTitle_maxInd, $
+                                                   YTITLE=KEYWORD_SET(just_one_label) ? (i EQ 1 ? yTitle_maxInd : !NULL ) : !NULL, $
                                                    YRANGE=KEYWORD_SET(yRange_maxInd) ? yRange_maxInd : [minDat,maxDat], $
                                                    LOGYPLOT=logYPlot, $
                                                    OVERPLOT_ALFVENDBQUANTITY=overplot_alfvendbquantity, $
                                                    CURRENT=1, $
-                                                   MARGIN=plotMargin, $
+                                                   MARGIN=stackplotMargin, $
                                                    LAYOUT=[1,nEpochs,i+1], $
                                                    CLIP=0, $
                                                    OUTPLOT=outPlot, $
@@ -571,7 +573,7 @@ PRO STACKPLOTS_STORMS_ALFVENDBQUANTITIES_OVERLAID,stormTimeArray_utc, $
                                                XRANGE=xRange, $
                                                BOTTOM_YRANGE=KEYWORD_SET(yRange_maxInd) ? yRange_maxInd[0] : minDat, $
                                                CURRENT=1, $
-                                               MARGIN=plotMargin, $
+                                               MARGIN=stackplotMargin, $
                                                LAYOUT=[1,nEpochs,i+1], $
                                                SYM_COLOR=sym_color, $
                                                DATAAVAILPLOT=dataAvailPlot
