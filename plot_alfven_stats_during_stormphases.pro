@@ -154,11 +154,23 @@ PRO PLOT_ALFVEN_STATS_DURING_STORMPHASES,$
      ENDFOR
 
      IF ~KEYWORD_SET(save_combined_name) THEN BEGIN
+        IF KEYWORD_SET(logAvgPlot) THEN BEGIN
+           statType = 'log_avg'
+        ENDIF ELSE BEGIN
+           IF KEYWORD_SET(medianPlot) THEN BEGIN
+              statType = 'median'
+           ENDIF ELSE BEGIN
+              statType = 'avg'
+           ENDELSE
+        ENDELSE
+
         ;; hoyDia = GET_TODAY_STRING()
         save_combined_name = GET_TODAY_STRING() + '--' + dataNameArr[0] + $
-                             (KEYWORD_SET(plotSuffix) ? plotSuffix : '') + '--combined_phases.png'
+                             (KEYWORD_SET(plotSuffix) ? plotSuffix : '') + $
+                             '--' + statType + '--combined_phases.png'
      ENDIF
 
+     PRINT,"Saving to " + save_combined_name + "..."
      TILE_STORMPHASE_PLOTS,plotFileArr,niceStrings, $
                            OUT_IMGARR=out_imgArr, $
                            OUT_TITLEOBJS=out_titleObjs, $

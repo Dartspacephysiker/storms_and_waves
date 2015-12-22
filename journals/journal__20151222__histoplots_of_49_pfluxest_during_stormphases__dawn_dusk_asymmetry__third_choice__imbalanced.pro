@@ -1,13 +1,12 @@
 ;2015/12/22
-;Well, the plots of Poynting flux during stormphases seem to show a dawn/dusk line of 
-; asymmetry. It's time to look at the distributions along that line of asymmetry.
-PRO JOURNAL__20151222__HISTOPLOTS_OF_49_PFLUXEST_DURING_STORMPHASES__DAWN_DUSK_ASYMMETRY
+;Checking out the mainphase h2d plot makes me want to try a different line of asymmetry
+PRO JOURNAL__20151222__HISTOPLOTS_OF_49_PFLUXEST_DURING_STORMPHASES__DAWN_DUSK_ASYMMETRY__THIRD_CHOICE__IMBALANCED
 
   ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
   ;;PFLUXEST
   
-  night_mlt = [-4.5,7.5]
-  day_mlt   = [7.5,19.5]
+  night_mlt = [-4,9]
+  day_mlt   = [9,20]
 
   ;;normalized dayside, pos and neg
   histoplot_alfvendbquantities_during_stormphases, $
@@ -17,7 +16,7 @@ PRO JOURNAL__20151222__HISTOPLOTS_OF_49_PFLUXEST_DURING_STORMPHASES__DAWN_DUSK_A
      HISTXRANGE_MAXIND=[-1.5,3], $
      HISTYRANGE_MAXIND=[0,0.1], $
      /LOG_DBQUANTITY, $
-     ;; /DAYSIDE, $
+     ;; /DAYSIDE, $pp
      MINMLT=day_mlt[0], $
      MAXMLT=day_mlt[1], $
      HEMI="NORTH", $
@@ -41,8 +40,8 @@ PRO JOURNAL__20151222__HISTOPLOTS_OF_49_PFLUXEST_DURING_STORMPHASES__DAWN_DUSK_A
      HEMI="NORTH", $
      /NORMALIZE_MAXIND_HIST, $
      ;; PLOTSUFFIX='nightside', $
-     PLOTTITLE='7.5-19.5 MLT (black) 19.5-7.5 MLT (red)', $
-     PLOTSUFFIX='7.5-19.5MLT_black--19.5-7.5MLT_red', $
+     PLOTTITLE='9-20 MLT (black) 20-9 MLT (red)', $
+     PLOTSUFFIX='9-20MLT_black--20-9MLT_red', $
      /SAVEPLOT, $
      HISTOPLOT_PARAM_STRUCT=pHP, $
      /NO_STATISTICS_TEXT, $
