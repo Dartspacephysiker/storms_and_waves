@@ -30,12 +30,14 @@
 ; EXAMPLE:
 ;
 ; MODIFICATION HISTORY:   2015/11/09 Born en route a Oslo de Paris
+;                         2015/12/22 Added NO_STATISTICS_TEXT keyword
 ;-
 
 PRO HISTOPLOT_ALFVENDBQUANTITIES_DURING_STORMPHASES,RESTOREFILE=restoreFile, $
    stormTimeArray_utc, $
    START_UTC=start_UTC, STOP_UTC=stop_UTC, $
    DAYSIDE=dayside,NIGHTSIDE=nightside, $
+   HEMI=hemi, $
    LAYOUT=layout, $
    MAXIND=maxInd, $
    NORMALIZE_MAXIND_HIST=normalize_maxInd_hist, $
@@ -64,6 +66,7 @@ PRO HISTOPLOT_ALFVENDBQUANTITIES_DURING_STORMPHASES,RESTOREFILE=restoreFile, $
    PLOTCOLOR=plotColor, $
    OUTPLOTARR=outPlotArr, $
    HISTOPLOT_PARAM_STRUCT=pHP, $
+   NO_STATISTICS_TEXT=no_statistics_text, $
    ;; OVERPLOTARR=overplotArr, $
    CURRENT_WINDOW=window, $
    FILL_BACKGROUND=fill_background, $
@@ -401,55 +404,58 @@ IF KEYWORD_SET(normalize_maxInd_hist) THEN BEGIN
 
      ;;;;;;;;;;;;;
      ;;The new way
-     IF N_ELEMENTS(outplotArr) EQ 0 THEN BEGIN
-        textStr     = STRING(FORMAT=$
-                             '(A0,I0,A0,' + $
-                             'A0,E0.2,A0,' + $
-                             'A0,E0.2,A0,' + $
-                             'A0,E0.2,A0,' + $
-                             'A0,E0.2,A0,' + $
-                             'A0,E0.2,A0)', $
-                             'Integral  : ', integral          , newLine, $
-                             'Mean      : ', ssa[i].moments.(0), newLine, $
-                             'Median    : ', ssa[i].moments.(4)[1], newLine, $
-                             'Std. dev. : ', ssa[i].moments.(1), newLine, $
-                             'Skewness  : ', ssa[i].moments.(2), newLine, $
-                             'Kurtosis  : ', ssa[i].moments.(3), newLine)
-        
-        int_x       = ( ( (i) MOD plotLayout[0] )) * 1/FLOAT(plotLayout[0]) + 0.04
-        
-     ENDIF ELSE BEGIN
-        textStr     = STRING(FORMAT=$
-                             '(I0,A0,' + $
-                             'E0.2,A0,' + $
-                             'E0.2,A0,' + $
-                             'E0.2,A0,' + $
-                             'E0.2,A0,' + $
-                             'E0.2,A0)', $
-                             integral          , newLine, $
-                             ssa[i].moments.(0), newLine, $
-                             ssa[i].moments.(4)[1], newLine, $
-                             ssa[i].moments.(1), newLine, $
-                             ssa[i].moments.(2), newLine, $
-                             ssa[i].moments.(3), newLine)
-        
-        int_x       = ( ( (i) MOD plotLayout[0] )) * 1/FLOAT(plotLayout[0]) + 0.22
-        ;; int_x       = 0.7
-        
-     ENDELSE
-     int_y    = .74
+     IF ~KEYWORD_SET(no_statistics_text) THEN BEGIN
 
-
-     intText     = text(int_x,int_y,$
-                        textStr, $
-                        FONT_NAME='Courier', $
-                        FONT_COLOR=plotColor, $
-                        /NORMAL, $
-                        TARGET=plotArr[i])
-     
+        IF N_ELEMENTS(outplotArr) EQ 0 THEN BEGIN
+           textStr     = STRING(FORMAT=$
+                                '(A0,I0,A0,' + $
+                                'A0,E0.2,A0,' + $
+                                'A0,E0.2,A0,' + $
+                                'A0,E0.2,A0,' + $
+                                'A0,E0.2,A0,' + $
+                                'A0,E0.2,A0)', $
+                                'Integral  : ', integral          , newLine, $
+                                'Mean      : ', ssa[i].moments.(0), newLine, $
+                                'Median    : ', ssa[i].moments.(4)[1], newLine, $
+                                'Std. dev. : ', ssa[i].moments.(1), newLine, $
+                                'Skewness  : ', ssa[i].moments.(2), newLine, $
+                                'Kurtosis  : ', ssa[i].moments.(3), newLine)
+           
+           int_x       = ( ( (i) MOD plotLayout[0] )) * 1/FLOAT(plotLayout[0]) + 0.04
+           
+        ENDIF ELSE BEGIN
+           textStr     = STRING(FORMAT=$
+                                '(I0,A0,' + $
+                                'E0.2,A0,' + $
+                                'E0.2,A0,' + $
+                                'E0.2,A0,' + $
+                                'E0.2,A0,' + $
+                                'E0.2,A0)', $
+                                integral          , newLine, $
+                                ssa[i].moments.(0), newLine, $
+                                ssa[i].moments.(4)[1], newLine, $
+                                ssa[i].moments.(1), newLine, $
+                                ssa[i].moments.(2), newLine, $
+                                ssa[i].moments.(3), newLine)
+           
+           int_x       = ( ( (i) MOD plotLayout[0] )) * 1/FLOAT(plotLayout[0]) + 0.22
+           ;; int_x       = 0.7
+           
+        ENDELSE
+        int_y    = .74
+        
+        
+        intText     = text(int_x,int_y,$
+                           textStr, $
+                           FONT_NAME='Courier', $
+                           FONT_COLOR=plotColor, $
+                           /NORMAL, $
+                           TARGET=plotArr[i])
+        
+     ENDIF
      ;; IF (i GT 0) AND ( ( (i + 1) MOD nPPerWind ) EQ 0 ) THEN BEGIN
      ;; ENDIF
-        
+     
   ENDFOR
 
   IF KEYWORD_SET(plotTitle) THEN BEGIN
