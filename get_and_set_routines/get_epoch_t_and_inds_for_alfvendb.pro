@@ -20,6 +20,10 @@ PRO GET_EPOCH_T_AND_INDS_FOR_ALFVENDB,maximus,cdbTime,NEPOCHS=nEpochs,TBEFOREEPO
                                       RESTRICT_ALTRANGE=restrict_altRange,RESTRICT_CHARERANGE=restrict_charERange, $
                                       MINMLT=minM,MAXMLT=maxM,BINM=binM,MINILAT=minI,MAXILAT=maxI,BINI=binI, $
                                       DO_LSHELL=do_lshell,MINLSHELL=minL,MAXLSHELL=maxL,BINL=binL, $
+                                      BOTH_HEMIS=both_hemis, $
+                                      NORTH=north, $
+                                      SOUTH=south, $
+                                      HEMI=hemi, $
                                       DAYSIDE=dayside,NIGHTSIDE=nightside, $
                                       SAVEFILE=saveFile,SAVESTR=saveStr
 
@@ -27,7 +31,11 @@ PRO GET_EPOCH_T_AND_INDS_FOR_ALFVENDB,maximus,cdbTime,NEPOCHS=nEpochs,TBEFOREEPO
   alf_epoch_t = MAKE_ARRAY(nEpochs,2,/DOUBLE)
   alf_epoch_i = MAKE_ARRAY(nEpochs,2,/L64)
 
-  good_i=get_chaston_ind(maximus,"OMNI",-1,/BOTH_HEMIS, $
+  good_i=get_chaston_ind(maximus,"OMNI",-1, $
+                         BOTH_HEMIS=both_hemis, $
+                         NORTH=north, $
+                         SOUTH=south, $
+                         HEMI=hemi, $ ;/BOTH_HEMIS, $
                          ALTITUDERANGE=(restrict_altRange) ? [1000,5000] : !NULL, $
                          CHARERANGE=(restrict_charERange) ? [4,4000] : !NULL, $
                          MINMLT=minM,MAXMLT=maxM,BINM=binM,MINILAT=minI,MAXILAT=maxI,BINI=binI, $

@@ -25,6 +25,7 @@
 ;                                                    since storm commencement (e.g., MAXIND=6 corresponds to mag current).
 ;                              AVG_TYPE_MAXIND   : Type of averaging to perform for events in a particular time bin.
 ;                                                    0: standard averaging; 1: log averaging (if /LOG_DBQUANTITY is set)
+;                              RUNNING_AVG       : Length of running avg window in hours (automatically calculated for every binsize increment)
 ;                              LOG_DBQUANTITY    : Plot the quantity from the Alfven wave database on a log scale
 ;                              NO_SUPERPOSE      : Don't superpose Alfven wave DB quantities over Dst/SYM-H 
 ;                              NOPLOTS           : Do not plot anything.
@@ -32,7 +33,7 @@
 ;                              NEG_AND_POS_LAYOUT: Set to array of plot layout for pos_and_neg_plots
 ;                               
 ;                              PLOTTITLE         : Title of superposed plot
-;                              SAVEPNAME      : Name of outputted file
+;                              SAVEPNAME         : Name of outputted file
 ;
 ; OUTPUTS:                     
 ;
@@ -50,6 +51,9 @@
 ;                         2015/10/19 Finally suppressed creation of plot of geomagnetic quantity (Dst, SYM-H, etc.) when not desired
 ;                                       through NOGEOMAGPLOTS keyword.
 ;                         2015/12/05 Added ONLY_POS keyword so we can avoid the negs entirely.
+;                         2015/12/22 Beginning construction on running average
+;                         2015/12/23 Default is no longer both hemis. Running average is nice.
+;                         2015/12/23 Also added running median.
 ;-
 PRO SUPERPOSE_STORMS_ALFVENDBQUANTITIES,stormTimeArray_utc, $
                                         TBEFOREEPOCH=tBeforeEpoch,TAFTEREPOCH=tAfterEpoch, $
@@ -77,6 +81,8 @@ PRO SUPERPOSE_STORMS_ALFVENDBQUANTITIES,stormTimeArray_utc, $
                                         NEG_LAYOUT=neg_layout, $
                                         MAXIND=maxInd, $
                                         AVG_TYPE_MAXIND=avg_type_maxInd, $
+                                        RUNNING_AVERAGE=running_average, $
+                                        RUNNING_MEDIAN=running_median, $
                                         SYMCOLOR__MAX_PLOT=symColor__max_plot, $
                                         TITLE__AVG_PLOT=title__avg_plot, $
                                         SYMCOLOR__AVG_PLOT=symColor__avg_plot, $
@@ -110,6 +116,10 @@ PRO SUPERPOSE_STORMS_ALFVENDBQUANTITIES,stormTimeArray_utc, $
                                         RANDOMTIMES=randomTimes, $
                                         MINMLT=minM,MAXMLT=maxM,BINM=binM,MINILAT=minI,MAXILAT=maxI,BINI=binI, $
                                         DO_LSHELL=do_lshell,MINLSHELL=minL,MAXLSHELL=maxL,BINL=binL, $
+                                        BOTH_HEMIS=both_hemis, $
+                                        NORTH=north, $
+                                        SOUTH=south, $
+                                        HEMI=hemi, $
                                         OUT_BKGRND_HIST=out_bkgrnd_hist, $
                                         OUT_BKGRND_MAXIND=out_bkgrnd_maxind, $
                                         OUT_TBINS=out_tBins, $
@@ -208,6 +218,10 @@ PRO SUPERPOSE_STORMS_ALFVENDBQUANTITIES,stormTimeArray_utc, $
                                        RESTRICT_ALTRANGE=restrict_altRange,RESTRICT_CHARERANGE=restrict_charERange, $
                                        MINMLT=minM,MAXMLT=maxM,BINM=binM,MINILAT=minI,MAXILAT=maxI,BINI=binI, $
                                        DO_LSHELL=do_lshell,MINLSHELL=minL,MAXLSHELL=maxL,BINL=binL, $
+                                       BOTH_HEMIS=both_hemis, $
+                                       NORTH=north, $
+                                       SOUTH=south, $
+                                       HEMI=hemi, $
                                        DAYSIDE=dayside,NIGHTSIDE=nightside, $
                                        SAVEFILE=saveFile,SAVESTR=saveStr
      
@@ -254,6 +268,11 @@ PRO SUPERPOSE_STORMS_ALFVENDBQUANTITIES,stormTimeArray_utc, $
         GET_ALFVENDBQUANTITY_HISTOGRAM__EPOCH_ARRAY,tot_alf_t_pos,tot_alf_y_pos,HISTOTYPE=histoType, $
            HISTDATA=histData_pos, $
            HISTTBINS=histTBins_pos, $
+           RUNNING_AVERAGE=running_average, $
+           RA_T=ra_t_pos, $
+           RA_Y=ra_y_pos, $
+           RA_NONZERO_I=ra_nz_i_pos, $
+           RA_ZERO_I=ra_z_i_pos, $
            NEVHISTDATA=nEvHistData_pos, $
            TAFTEREPOCH=tafterepoch,TBEFOREEPOCH=tBeforeEpoch, $
            HISTOBINSIZE=histoBinSize,NEVTOT=nEvTot_pos, $
@@ -262,6 +281,11 @@ PRO SUPERPOSE_STORMS_ALFVENDBQUANTITIES,stormTimeArray_utc, $
         GET_ALFVENDBQUANTITY_HISTOGRAM__EPOCH_ARRAY,tot_alf_t_neg,tot_alf_y_neg,HISTOTYPE=histoType, $
            HISTDATA=histData_neg, $
            HISTTBINS=histTBins_neg, $
+           RUNNING_AVERAGE=running_average, $
+           RA_T=ra_t_neg, $
+           RA_Y=ra_y_neg, $
+           RA_NONZERO_I=ra_nz_i_neg, $
+           RA_ZERO_I=ra_z_i_neg, $
            NEVHISTDATA=nEvHistData_neg, $
            TAFTEREPOCH=tafterepoch,TBEFOREEPOCH=tBeforeEpoch, $
            HISTOBINSIZE=histoBinSize,NEVTOT=nEvTot_neg, $
@@ -275,6 +299,16 @@ PRO SUPERPOSE_STORMS_ALFVENDBQUANTITIES,stormTimeArray_utc, $
         GET_ALFVENDBQUANTITY_HISTOGRAM__EPOCH_ARRAY,tot_alf_t,tot_alf_y,HISTOTYPE=histoType, $
            HISTDATA=histData, $
            HISTTBINS=histTBins, $
+           RUNNING_AVERAGE=running_average, $
+           RA_T=ra_t, $
+           RA_Y=ra_y, $
+           RA_NONZERO_I=ra_nz_i, $
+           RA_ZERO_I=ra_z_i, $
+           RUNNING_MEDIAN=running_median, $
+           RM_T=rm_t, $
+           RM_Y=rm_y, $
+           RM_NONZERO_I=rm_nz_i, $
+           RM_ZERO_I=rm_z_i, $
            NEVHISTDATA=nEvHistData, $
            TAFTEREPOCH=tafterepoch,TBEFOREEPOCH=tBeforeEpoch, $
            HISTOBINSIZE=histoBinSize,NEVTOT=nEvTot, $
@@ -289,7 +323,10 @@ PRO SUPERPOSE_STORMS_ALFVENDBQUANTITIES,stormTimeArray_utc, $
               RESTRICT_ALTRANGE=restrict_altRange,RESTRICT_CHARERANGE=restrict_charERange, $
               MINMLT=minM,MAXMLT=maxM,BINM=binM,MINILAT=minI,MAXILAT=maxI,BINI=binI, $
               DO_LSHELL=do_lshell,MINLSHELL=minL,MAXLSHELL=maxL,BINL=binL, $
-              HEMI='BOTH', $
+              BOTH_HEMIS=both_hemis, $
+              NORTH=north, $
+              SOUTH=south, $
+              HEMI=hemi, $;'BOTH', $
               NEPOCHS=nEpochs, $
               OUTINDSPREFIX=savePlotMaxName, $
               HISTDATA=fastLocHistData, $
@@ -532,76 +569,115 @@ PRO SUPERPOSE_STORMS_ALFVENDBQUANTITIES,stormTimeArray_utc, $
         ENDIF
      ;; ENDFOR
      
-     IF avg_type_maxInd GT 0 THEN BEGIN
+        IF avg_type_maxInd GT 0 THEN BEGIN
+           IF ~(noPlots OR noAvgPlots) THEN BEGIN
+              IF KEYWORD_SET(running_average) OR KEYWORD_SET(running_median) THEN BEGIN
+                 IF KEYWORD_SET(running_average) THEN BEGIN
+                    r_y      = ra_y
+                    r_t      = ra_t
+                    r_nz_i   = ra_nz_i
+                    rBinsize = running_average
+                    rTitleSuff = ' (Running average)'
+                 ENDIF ELSE BEGIN
+                    r_y      = rm_y
+                    r_t      = rm_t
+                    r_nz_i   = rm_nz_i
+                    rBinsize = running_median
+                    rTitleSuff = ' (Running median)'
+                 ENDELSE
 
-        IF ~(noPlots OR noAvgPlots) THEN BEGIN
-           
-           PLOT_ALFVENDBQUANTITY_AVERAGES_OR_SUMS__EPOCH,histData,histTBins,$
+                 PLOT_ALFVENDBQUANTITY_AVERAGES_OR_SUMS__EPOCH,r_y,r_t,$
+                    TAFTEREPOCH=tAfterEpoch,TBEFOREEPOCH=tBeforeEpoch, $
+                    HISTOBINSIZE=rBinsize, $
+                    NONZERO_I=r_nz_i, $
+                    /NO_AVG_SYMBOL, $
+                    LINESTYLE='-', $
+                    LINETHICKNESS=2, $
+                    ;; SYMBOL=symbol, $
+                    SYMCOLOR=KEYWORD_SET(symColor__avg_plot) ? symColor__avg_plot : symColor, $
+                    ;; SYMTRANSPARENCY=symTransparency, $
+                    PLOTNAME=name__avg_plot, $
+                    PLOTTITLE=title__avg_plot+rTitleSuff, $
+                    XTITLE=xTitle, $
+                    XRANGE=xRange, $
+                    YTITLE=yTitle, $
+                    YRANGE=KEYWORD_SET(yRange_maxInd) ? yRange_maxInd : [minDat,maxDat], $
+                    LOGYPLOT=yLogScale_maxInd, $
+                    OVERPLOT=KEYWORD_SET(overPlot) OR N_ELEMENTS(out_avg_plot) GT 0, $
+                    CURRENT=1, $
+                    MARGIN=margin__avg_plot, $
+                    LAYOUT=layout, $
+                    OUTPLOT=out_avg_plot, $
+                    ADD_PLOT_TO_PLOT_ARRAY=KEYWORD_SET(accumulate__avg_plots)
+                 
+              ENDIF ELSE BEGIN
+                 PLOT_ALFVENDBQUANTITY_AVERAGES_OR_SUMS__EPOCH, $
+                    histData, $
+                    histTBins+histoBinsize*0.5,$
+                    TAFTEREPOCH=tAfterEpoch,TBEFOREEPOCH=tBeforeEpoch, $
+                    HISTOBINSIZE=histoBinSize, $
+                    NONZERO_I=nz_i, $
+                    SYMBOL=symbol, $
+                    SYMCOLOR=KEYWORD_SET(symColor__avg_plot) ? symColor__avg_plot : symColor, $
+                    ;; SYMTRANSPARENCY=symTransparency, $
+                    PLOTNAME=name__avg_plot, $
+                    PLOTTITLE=title__avg_plot, $
+                    XTITLE=xTitle, $
+                    XRANGE=xRange, $
+                    YTITLE=yTitle, $
+                    YRANGE=KEYWORD_SET(yRange_maxInd) ? yRange_maxInd : [minDat,maxDat], $
+                    LOGYPLOT=yLogScale_maxInd, $
+                    OVERPLOT=KEYWORD_SET(overPlot) OR N_ELEMENTS(out_avg_plot) GT 0, $
+                    CURRENT=1, $
+                    MARGIN=margin__avg_plot, $
+                    LAYOUT=layout, $
+                    OUTPLOT=out_avg_plot, $
+                    ADD_PLOT_TO_PLOT_ARRAY=KEYWORD_SET(accumulate__avg_plots)
+              ENDELSE
               
-              ;; NEVHISTDATA=nEvHistData, $
-              TAFTEREPOCH=tAfterEpoch,TBEFOREEPOCH=tBeforeEpoch, $
-              HISTOBINSIZE=histoBinSize, $
-              NONZERO_I=nz_i, $
-              SYMBOL=symbol, $
-              SYMCOLOR=KEYWORD_SET(symColor__avg_plot) ? symColor__avg_plot : symColor, $
-              ;; SYMTRANSPARENCY=symTransparency, $
-              PLOTNAME=name__avg_plot, $
-              PLOTTITLE=title__avg_plot, $
-              XTITLE=xTitle, $
-              XRANGE=xRange, $
-              YTITLE=yTitle, $
-              YRANGE=KEYWORD_SET(yRange_maxInd) ? yRange_maxInd : [minDat,maxDat], $
-              LOGYPLOT=yLogScale_maxInd, $
-              OVERPLOT=KEYWORD_SET(overPlot) OR N_ELEMENTS(out_avg_plot) GT 0, $
-              CURRENT=1, $
-              MARGIN=margin__avg_plot, $
-              LAYOUT=layout, $
-              OUTPLOT=out_avg_plot, $
-              ADD_PLOT_TO_PLOT_ARRAY=KEYWORD_SET(accumulate__avg_plots)
+              IF KEYWORD_SET(make_legend__avg_plot) THEN BEGIN
+                 IF N_ELEMENTS(out_avg_plot) EQ n__avg_plots THEN BEGIN
+                    legend = LEGEND(TARGET=out_avg_plot[0:n__avg_plots-1], $
+                                    POSITION=[0.87,0.35], $
+                                    /NORMAL, $
+                                    /AUTO_TEXT_COLOR)
+                    
+                 ENDIF
+              ENDIF
+           ENDIF
         ENDIF
-     ENDIF
 
-     IF KEYWORD_SET(make_legend__avg_plot) THEN BEGIN
-        IF N_ELEMENTS(out_avg_plot) EQ n__avg_plots THEN BEGIN
-           legend = LEGEND(TARGET=out_avg_plot[0:n__avg_plots-1], $
-                           POSITION=[0.87,0.35], $
-                           /NORMAL, $
-                           /AUTO_TEXT_COLOR)
+        IF KEYWORD_SET(bkgrnd_maxInd) AND ~noPlots THEN BEGIN
+
+           safe_i=(log_DBQuantity) ? WHERE(FINITE(bkgrnd_maxInd) AND bkgrnd_maxInd GT 0.) : WHERE(FINITE(bkGrnd_maxInd))
            
-        ENDIF
-     ENDIF
-
-     IF KEYWORD_SET(bkgrnd_maxInd) AND ~noPlots THEN BEGIN
-
-        safe_i=(log_DBQuantity) ? WHERE(FINITE(bkgrnd_maxInd) AND bkgrnd_maxInd GT 0.) : WHERE(FINITE(bkGrnd_maxInd))
-
-        y_offset = (log_DBQuantity) ? 1. : TOTAL(bkgrnd_maxind[safe_i])*0.1
-        ;; y_offset = 0.
-        IF N_ELEMENTS(tBins) EQ 0 THEN STOP
-        plot_bkgrnd_max=plot(tBins[safe_i]+0.5*histoBinSize, $
-                             (log_DBQuantity) ? 10^(bkgrnd_maxInd[safe_i]-y_offset) : bkgrnd_maxInd[safe_i]-y_offset, $
-                             XRANGE=xRange, $
-                             YRANGE=(KEYWORD_SET(yRange_maxInd)) ? $
-                             yRange_maxInd : [minDat,maxDat], $
-                             YLOG=(yLogScale_maxInd) ? 1 : 0, $
-                             NAME='Background Alfvén activity', $
-                             AXIS_STYLE=0, $
-                             LINESTYLE='--', $
-                             COLOR='blue', $
-                             THICK=2.0, $
-                             SYMBOL='d', $
-                             SYM_SIZE=2.5, $
-                             MARGIN=plotMargin_max, $
-                             /CURRENT)
-        
-        legPosY=(KEYWORD_SET(yRange_maxInd) ? yRange_maxInd : [minDat,maxDat])
-        IF (log_DBQuantity) THEN BEGIN
-           ;; legPosY=10.^MEAN(ALOG10(legPosY))
-           legPosY=10.^(ALOG10(legPosY[1])-ALOG10(5))
-        ENDIF ELSE legPosY=MEAN(legPosY)
-
-        leg = LEGEND(TARGET=[avgplot,plot_bkgrnd_max], $
-                     POSITION=[-15.,legPosY], /DATA, $
+           y_offset = (log_DBQuantity) ? 1. : TOTAL(bkgrnd_maxind[safe_i])*0.1
+           ;; y_offset = 0.
+           IF N_ELEMENTS(tBins) EQ 0 THEN STOP
+           plot_bkgrnd_max=plot(tBins[safe_i]+0.5*histoBinSize, $
+                                (log_DBQuantity) ? 10^(bkgrnd_maxInd[safe_i]-y_offset) : bkgrnd_maxInd[safe_i]-y_offset, $
+                                XRANGE=xRange, $
+                                YRANGE=(KEYWORD_SET(yRange_maxInd)) ? $
+                                yRange_maxInd : [minDat,maxDat], $
+                                YLOG=(yLogScale_maxInd) ? 1 : 0, $
+                                NAME='Background Alfvén activity', $
+                                AXIS_STYLE=0, $
+                                LINESTYLE='--', $
+                                COLOR='blue', $
+                                THICK=2.0, $
+                                SYMBOL='d', $
+                                SYM_SIZE=2.5, $
+                                MARGIN=plotMargin_max, $
+                                /CURRENT)
+           
+           legPosY=(KEYWORD_SET(yRange_maxInd) ? yRange_maxInd : [minDat,maxDat])
+           IF (log_DBQuantity) THEN BEGIN
+              ;; legPosY=10.^MEAN(ALOG10(legPosY))
+              legPosY=10.^(ALOG10(legPosY[1])-ALOG10(5))
+           ENDIF ELSE legPosY=MEAN(legPosY)
+           
+           leg = LEGEND(TARGET=[avgplot,plot_bkgrnd_max], $
+                        POSITION=[-15.,legPosY], /DATA, $
                      /AUTO_TEXT_COLOR)
 
         
