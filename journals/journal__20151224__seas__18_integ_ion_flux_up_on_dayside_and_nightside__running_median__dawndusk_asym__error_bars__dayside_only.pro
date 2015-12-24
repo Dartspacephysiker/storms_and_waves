@@ -1,5 +1,5 @@
 ;2015/12/24 Now with error bars! Newfangled running median, too!
-PRO JOURNAL__20151224__SEAS__18_INTEG_ION_FLUX_UP_ON_DAYSIDE_AND_NIGHTSIDE__RUNNING_MEDIAN__DAWNDUSK_ASYM__ERROR_BARS
+PRO JOURNAL__20151224__SEAS__18_INTEG_ION_FLUX_UP_ON_DAYSIDE_AND_NIGHTSIDE__RUNNING_MEDIAN__DAWNDUSK_ASYM__ERROR_BARS__DAYSIDE_ONLY
 
   ;;MLT params and stuff
   minM              = [0,7.5,-4.5]
@@ -7,20 +7,22 @@ PRO JOURNAL__20151224__SEAS__18_INTEG_ION_FLUX_UP_ON_DAYSIDE_AND_NIGHTSIDE__RUNN
   ptRegion          = ['All MLTs','Dayside','Nightside']
   psRegion          = ['all_MLTs','dayside','nightside']
                               
-  do_these_plots    = [1,2]
+  do_these_plots    = [1]
   symColor          = ['black','red','blue']
 
   ;;histo stuff
   ;; histoBinSize      =  15 ;in hrs
 
-  ;;Do a running median window
+  ;;Do a running median window 10 hours wide
   running_median    = 10
   running_binspace  = 2
+  eb_nBoot          = 1000
 
   ;;strings 'n' things
-  probOccPref       = 'journal_20151224--SEA_largestorms--18-INTEG_ION_FLUX_UP--with_NOAA--running_median--dawndusk_asym--error_bars'
+  probOccPref       = 'journal_20151224--SEA_largestorms--18-INTEG_ION_FLUX_UP--with_NOAA--running_median--dawndusk_asym--error_bars'+STRCOMPRESS(eb_nBoot,/REMOVE_ALL)
   ptPref            = ''
-  plotSuff          = '--all_MLT_day_night.png'
+  ;; plotSuff          = '--all_MLT_day_night.png'
+  plotSuff          = '--day.png'
 
   maxInd            = 18
   yTitle            = "Integrated upward ion flux (N $cm^{-3}$)"
@@ -51,6 +53,7 @@ PRO JOURNAL__20151224__SEAS__18_INTEG_ION_FLUX_UP_ON_DAYSIDE_AND_NIGHTSIDE__RUNN
         RUNNING_MEDIAN=running_median, $
         RUNNING_BIN_SPACING=running_binspace, $
         /MAKE_ERROR_BARS__AVG_PLOT, $
+        ERROR_BAR_NBOOT=eb_nBoot, $
         STORMTYPE=1, $
         /REMOVE_DUPES, $
         HOURS_AFT_FOR_NO_DUPES=120, $
