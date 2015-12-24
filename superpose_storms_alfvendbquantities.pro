@@ -54,6 +54,7 @@
 ;                         2015/12/22 Beginning construction on running average
 ;                         2015/12/23 Default is no longer both hemis. Running average is nice.
 ;                         2015/12/23 Also added running median.
+;                         2015/12/24 … And error bar stuff.
 ;-
 PRO SUPERPOSE_STORMS_ALFVENDBQUANTITIES,stormTimeArray_utc, $
                                         TBEFOREEPOCH=tBeforeEpoch,TAFTEREPOCH=tAfterEpoch, $
@@ -83,10 +84,13 @@ PRO SUPERPOSE_STORMS_ALFVENDBQUANTITIES,stormTimeArray_utc, $
                                         AVG_TYPE_MAXIND=avg_type_maxInd, $
                                         RUNNING_AVERAGE=running_average, $
                                         RUNNING_MEDIAN=running_median, $
+                                        RUNNING_BIN_SPACING=running_bin_spacing, $
                                         SYMCOLOR__MAX_PLOT=symColor__max_plot, $
                                         TITLE__AVG_PLOT=title__avg_plot, $
                                         SYMCOLOR__AVG_PLOT=symColor__avg_plot, $
                                         MAKE_LEGEND__AVG_PLOT=make_legend__avg_plot, $
+                                        MAKE_ERROR_BARS__AVG_PLOT=make_error_bars__avg_plot, $
+                                        ERROR_BAR_NBOOT=error_bar_nBoot, $
                                         NAME__AVG_PLOT=name__avg_plot, $
                                         N__AVG_PLOTS=n__avg_plots, $
                                         ACCUMULATE__AVG_PLOTS=accumulate__avg_plots, $
@@ -273,6 +277,7 @@ PRO SUPERPOSE_STORMS_ALFVENDBQUANTITIES,stormTimeArray_utc, $
            RA_Y=ra_y_pos, $
            RA_NONZERO_I=ra_nz_i_pos, $
            RA_ZERO_I=ra_z_i_pos, $
+           RUNNING_BIN_SPACING=running_bin_spacing, $
            NEVHISTDATA=nEvHistData_pos, $
            TAFTEREPOCH=tafterepoch,TBEFOREEPOCH=tBeforeEpoch, $
            HISTOBINSIZE=histoBinSize,NEVTOT=nEvTot_pos, $
@@ -286,6 +291,7 @@ PRO SUPERPOSE_STORMS_ALFVENDBQUANTITIES,stormTimeArray_utc, $
            RA_Y=ra_y_neg, $
            RA_NONZERO_I=ra_nz_i_neg, $
            RA_ZERO_I=ra_z_i_neg, $
+           RUNNING_BIN_SPACING=running_bin_spacing, $
            NEVHISTDATA=nEvHistData_neg, $
            TAFTEREPOCH=tafterepoch,TBEFOREEPOCH=tBeforeEpoch, $
            HISTOBINSIZE=histoBinSize,NEVTOT=nEvTot_neg, $
@@ -309,6 +315,10 @@ PRO SUPERPOSE_STORMS_ALFVENDBQUANTITIES,stormTimeArray_utc, $
            RM_Y=rm_y, $
            RM_NONZERO_I=rm_nz_i, $
            RM_ZERO_I=rm_z_i, $
+           RUNNING_BIN_SPACING=running_bin_spacing, $
+           MAKE_ERROR_BARS=make_error_bars__avg_plot, $
+           ERROR_BAR_NBOOT=error_bar_nBoot, $
+           OUT_ERROR_BARS=out_error_bars, $
            NEVHISTDATA=nEvHistData, $
            TAFTEREPOCH=tafterepoch,TBEFOREEPOCH=tBeforeEpoch, $
            HISTOBINSIZE=histoBinSize,NEVTOT=nEvTot, $
@@ -573,16 +583,16 @@ PRO SUPERPOSE_STORMS_ALFVENDBQUANTITIES,stormTimeArray_utc, $
            IF ~(noPlots OR noAvgPlots) THEN BEGIN
               IF KEYWORD_SET(running_average) OR KEYWORD_SET(running_median) THEN BEGIN
                  IF KEYWORD_SET(running_average) THEN BEGIN
-                    r_y      = ra_y
-                    r_t      = ra_t
-                    r_nz_i   = ra_nz_i
-                    rBinsize = running_average
+                    r_y        = ra_y
+                    r_t        = ra_t
+                    r_nz_i     = ra_nz_i
+                    rBinsize   = running_average
                     rTitleSuff = ' (Running average)'
                  ENDIF ELSE BEGIN
-                    r_y      = rm_y
-                    r_t      = rm_t
-                    r_nz_i   = rm_nz_i
-                    rBinsize = running_median
+                    r_y        = rm_y
+                    r_t        = rm_t
+                    r_nz_i     = rm_nz_i
+                    rBinsize   = running_median
                     rTitleSuff = ' (Running median)'
                  ENDELSE
 
@@ -598,6 +608,12 @@ PRO SUPERPOSE_STORMS_ALFVENDBQUANTITIES,stormTimeArray_utc, $
                     ;; SYMTRANSPARENCY=symTransparency, $
                     PLOTNAME=name__avg_plot, $
                     PLOTTITLE=title__avg_plot+rTitleSuff, $
+                    ERROR_PLOT=KEYWORD_SET(make_error_bars__avg_plot), $
+                    ERROR_BARS=out_error_bars, $
+                    ERRORBAR_CAPSIZE=errorbar_capsize, $
+                    ERRORBAR_COLOR=errorbar_color, $ 
+                    ERRORBAR_LINESTYLE=errorbar_linestyle, $
+                    ERRORBAR_THICK=errorbar_thick, $
                     XTITLE=xTitle, $
                     XRANGE=xRange, $
                     YTITLE=yTitle, $
@@ -622,6 +638,12 @@ PRO SUPERPOSE_STORMS_ALFVENDBQUANTITIES,stormTimeArray_utc, $
                     ;; SYMTRANSPARENCY=symTransparency, $
                     PLOTNAME=name__avg_plot, $
                     PLOTTITLE=title__avg_plot, $
+                    ERROR_PLOT=KEYWORD_SET(make_error_bars__avg_plot), $
+                    ERROR_BARS=out_error_bars, $
+                    ERRORBAR_CAPSIZE=errorbar_capsize, $
+                    ERRORBAR_COLOR=errorbar_color, $ 
+                    ERRORBAR_LINESTYLE=errorbar_linestyle, $
+                    ERRORBAR_THICK=errorbar_thick, $
                     XTITLE=xTitle, $
                     XRANGE=xRange, $
                     YTITLE=yTitle, $
