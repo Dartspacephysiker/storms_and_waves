@@ -11,9 +11,12 @@ PRO PLOT_ALFVEN_STATS_DURING_STORMPHASES,$
                                  MINMLT=minMLT,MAXMLT=maxMLT,BINMLT=binMLT,MINILAT=minILAT,MAXILAT=maxILAT,BINILAT=binILAT, $
                                  DO_LSHELL=do_lShell, REVERSE_LSHELL=reverse_lShell, $
                                  MINLSHELL=minLshell,MAXLSHELL=maxLshell,BINLSHELL=binLshell, $
+                                 BOTH_HEMIS=both_hemis, $
+                                 NORTH=north, $
+                                 SOUTH=south, $
+                                 HEMI=hemi, $
                                  HWMAUROVAL=HwMAurOval,HWMKPIND=HwMKpInd, $
                                  MIN_NEVENTS=min_nEvents, MASKMIN=maskMin, $
-                                 HEMI=hemi, $
                                  DELAY=delay, STABLEIMF=stableIMF, SMOOTHWINDOW=smoothWindow, INCLUDENOCONSECDATA=includeNoConsecData, $
                                  NPLOTS=nPlots, $
                                  EPLOTS=ePlots, EFLUXPLOTTYPE=eFluxPlotType, LOGEFPLOT=logEfPlot, $
@@ -52,6 +55,8 @@ PRO PLOT_ALFVEN_STATS_DURING_STORMPHASES,$
                                  SAVE_COMBINED_WINDOW=save_combined_window, $
                                  SAVE_COMBINED_NAME=save_combined_name, $
                                  NO_COLORBAR=no_colorbar, $
+                                 CB_FORCE_OOBHIGH=cb_force_oobHigh, $
+                                 CB_FORCE_OOBLOW=cb_force_oobLow, $
                                  VERBOSE=verbose, $
                                  _EXTRA=e
 
@@ -97,9 +102,12 @@ PRO PLOT_ALFVEN_STATS_DURING_STORMPHASES,$
                                   MINMLT=minMLT,MAXMLT=maxMLT,BINMLT=binMLT,MINILAT=minILAT,MAXILAT=maxILAT,BINILAT=binILAT, $
                                   DO_LSHELL=do_lShell,REVERSE_LSHELL=reverse_lShell, $
                                   MINLSHELL=minLshell,MAXLSHELL=maxLshell,BINLSHELL=binLshell, $
+                                  BOTH_HEMIS=both_hemis, $
+                                  NORTH=north, $
+                                  SOUTH=south, $
+                                  HEMI=hemi, $
                                   HWMAUROVAL=HwMAurOval,HWMKPIND=HwMKpInd, $
                                   MIN_NEVENTS=min_nEvents, MASKMIN=maskMin, $
-                                  HEMI=hemi, $
                                   DELAY=delay, STABLEIMF=stableIMF, SMOOTHWINDOW=smoothWindow, INCLUDENOCONSECDATA=includeNoConsecData, $
                                   NPLOTS=nPlots, $
                                   EPLOTS=ePlots, EFLUXPLOTTYPE=eFluxPlotType, LOGEFPLOT=logEfPlot, $
@@ -134,7 +142,10 @@ PRO PLOT_ALFVEN_STATS_DURING_STORMPHASES,$
                                   OUTPUTPLOTSUMMARY=outputPlotSummary, DEL_PS=del_PS, $
                                   OUT_TEMPFILE=out_tempFile, $
                                   NO_COLORBAR=no_colorbar[i], $
-                                  /PRINT_DATA_AVAILABILITY, _EXTRA = e  
+                                  CB_FORCE_OOBHIGH=cb_force_oobHigh, $
+                                  CB_FORCE_OOBLOW=cb_force_oobLow, $
+                                  /PRINT_DATA_AVAILABILITY, $
+                                  _EXTRA = e  
 
      IF KEYWORD_SET(combine_stormphase_plots) THEN outTempFiles = [outTempFiles,out_tempFile]
               
