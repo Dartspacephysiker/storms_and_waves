@@ -17,12 +17,14 @@ PRO JOURNAL__20151223__SEAS__49_PFLUXEST_ON_DAYSIDE_AND_NIGHTSIDE__RUNNING_MEDIA
   running_median    = 10
 
   ;;strings 'n' things
+  @fluxplot_defaults
+
   probOccPref       = 'journal_20151223--SEA_largestorms--49-PFLUXEST--with_NOAA--running_median--dawndusk_asym'
   ptPref            = ''
   plotSuff          = '--all_MLT_day_night.png'
 
   maxInd            = 49
-  yTitle            = '49-Max Poynting flux ($mW/m^2$)'
+  yTitle            = title__alfDB_ind_49
 
   LOAD_NOAA_AND_BRETT_DBS_AND_QI,stormStruct,SSC1,SSC2,qi,DBDir=DBDir,DB_BRETT=DB_Brett,DB_NOAA=DB_NOAA,INDS_FILE=inds_file
 

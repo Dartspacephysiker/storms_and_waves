@@ -18,12 +18,14 @@ PRO JOURNAL__20151223__SEAS__10_EFLUX_LOSSCONE_INTEG_ON_DAYSIDE_AND_NIGHTSIDE__R
 
 
   ;;strings 'n' things
+  @fluxplot_defaults
+
   probOccPref       = 'journal_20151223--SEA_largestorms--10-EFLUX_LOSSCONE_INTEG--with_NOAA--running_median--dawndusk_asym'
   ptPref            = ''
   plotSuff          = '--all_MLT_day_night.png'
 
   maxInd            = 10
-  yTitle            = '10-Integ. L.C. e- Flux (ergs/cm!U2!N-s), at ionos.'
+  yTitle            = title__alfDB_ind_10
 
   LOAD_NOAA_AND_BRETT_DBS_AND_QI,stormStruct,SSC1,SSC2,qi,DBDir=DBDir,DB_BRETT=DB_Brett,DB_NOAA=DB_NOAA,INDS_FILE=inds_file
 

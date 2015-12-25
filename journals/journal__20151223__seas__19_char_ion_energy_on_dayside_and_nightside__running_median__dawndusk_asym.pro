@@ -18,12 +18,14 @@ PRO JOURNAL__20151223__SEAS__19_CHAR_ION_ENERGY_ON_DAYSIDE_AND_NIGHTSIDE__RUNNIN
 
 
   ;;strings 'n' things
+  @fluxplot_defaults
+
   probOccPref       = 'journal_20151223--SEA_largestorms--19-CHAR_ION_ENERGY--with_NOAA--running_median--dawndusk_asym'
   ptPref            = ''
   plotSuff          = '--all_MLT_day_night.png'
 
   maxInd            = 19
-  yTitle            = '19-Ion Characteristic Energy (eV)'
+  yTitle            = title__alfDB_ind_19
 
   LOAD_NOAA_AND_BRETT_DBS_AND_QI,stormStruct,SSC1,SSC2,qi,DBDir=DBDir,DB_BRETT=DB_Brett,DB_NOAA=DB_NOAA,INDS_FILE=inds_file
 

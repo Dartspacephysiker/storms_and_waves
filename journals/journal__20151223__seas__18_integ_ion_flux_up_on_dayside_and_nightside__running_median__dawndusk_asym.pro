@@ -18,12 +18,14 @@ PRO JOURNAL__20151223__SEAS__18_INTEG_ION_FLUX_UP_ON_DAYSIDE_AND_NIGHTSIDE__RUNN
 
 
   ;;strings 'n' things
+  @fluxplot_defaults
+
   probOccPref       = 'journal_20151223--SEA_largestorms--18-INTEG_ION_FLUX_UP--with_NOAA--running_median--dawndusk_asym'
   ptPref            = ''
   plotSuff          = '--all_MLT_day_night.png'
 
   maxInd            = 18
-  yTitle            = "Integrated upward ion flux (N $cm^{-3}$)"
+  yTitle            = title__alfDB_ind_18
 
   LOAD_NOAA_AND_BRETT_DBS_AND_QI,stormStruct,SSC1,SSC2,qi,DBDir=DBDir,DB_BRETT=DB_Brett,DB_NOAA=DB_NOAA,INDS_FILE=inds_file
 
