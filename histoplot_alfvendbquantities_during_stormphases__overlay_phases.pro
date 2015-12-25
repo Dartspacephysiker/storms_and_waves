@@ -304,14 +304,15 @@ EPOCHPLOT_COLORNAMES=epochPlot_colorNames,SCATTEROUTPREFIX=scatterOutPrefix, $
   ;;window setup
   IF N_ELEMENTS(window) EQ 0 THEN BEGIN
      wTitle        = dataName + ' during storm phases'
-     window     = WINDOW(WINDOW_TITLE=wTitle,DIMENSIONS=[1200,900])
+     window     = WINDOW(WINDOW_TITLE=wTitle,DIMENSIONS=[1200,800])
   ENDIF
 
   ;;plot array/window setup
   plotLayout = KEYWORD_SET(layout) ? layout : [1,1,1]
   nPPerWind  = plotLayout[0]*plotLayout[1]*3
   plotArr    = N_ELEMENTS(outPlotArr) EQ 0 ? MAKE_ARRAY(nPPerWind,/OBJ) : outPlotArr
-  firstmarg  = [0.18,0.09,0.08,0.09]
+  firstmarg  = [0.1,0.1,0.1,0.1]
+  ;; firstmarg  = [0.18,0.09,0.08,0.09]
   marg       = [0.01,0.01,0.1,0.01]
 
   IF KEYWORD_SET(histYRange_maxInd) THEN php.yRange = histYRange_maxInd ELSE BEGIN
@@ -353,7 +354,7 @@ EPOCHPLOT_COLORNAMES=epochPlot_colorNames,SCATTEROUTPREFIX=scatterOutPrefix, $
      plotArr[plot_i]   = plot(x,y, $
                               TITLE=(i EQ 0 AND KEYWORD_SET(plotTitle)) ? plotTitle : !NULL, $
                               NAME=niceStrings[i], $
-                              XTITLE=xTitle, $
+                              ;; XTITLE=xTitle, $
                               YTITLE=yTitle, $
                               XRANGE=pHP.xRange, $
                               YRANGE=pHP.yRange, $
@@ -440,6 +441,18 @@ EPOCHPLOT_COLORNAMES=epochPlot_colorNames,SCATTEROUTPREFIX=scatterOutPrefix, $
                              ;; POSITION=[0.87/plotLayout[0],0.87], $
                              /NORMAL, $
                              /AUTO_TEXT_COLOR)
+
+
+  ENDIF
+
+  IF KEYWORD_SET(histXTitle_maxInd) THEN BEGIN
+     titleText = text(0.5,0.05,histXTitle_maxInd, $
+                      ;; FONT_NAME='Courier', $
+                      ALIGNMENT=0.5, $
+                      FONT_SIZE=18, $
+                      /NORMAL, $
+                      TARGET=window, $
+                      CLIP=0)
   ENDIF
 
   ;; IF KEYWORD_SET(plotTitle) THEN BEGIN

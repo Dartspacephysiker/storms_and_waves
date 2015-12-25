@@ -356,7 +356,8 @@ IF KEYWORD_SET(normalize_maxInd_hist) THEN BEGIN
      
      plotArr[i]  = plot(x,y, $
                         TITLE=title, $
-                        XTITLE=xTitle, $
+                        ;; XTITLE=xTitle, $
+                        XTITLE=!NULL, $
                         YTITLE=yTitle, $
                         XRANGE=pHP.xRange, $
                         YRANGE=pHP.yRange, $
@@ -374,36 +375,10 @@ IF KEYWORD_SET(normalize_maxInd_hist) THEN BEGIN
                         FILL_TRANSPARENCY=KEYWORD_SET(fill_transparency) ? fill_transparency : 70, $
                         FILL_COLOR=KEYWORD_SET(fill_color) ? fill_color : plotColor)
      
-     ;;For the integral
-     ;; intString   = STRING(FORMAT='("Integral  : ",I0)',integral)
-     
-     
-     
-     ;;;;;;;;;;;;
-     ;;The old way
-     ;; int_x       = ( ( (i) MOD plotLayout[0] )) * 1/FLOAT(plotLayout[0]) + 0.05
-     ;; IF N_ELEMENTS(outplotArr) GT 0 THEN BEGIN
-     ;;    int_y    = .75
-     ;;    ;; int_y    = 1 - 1/FLOAT(plotLayout[1]*2) - ( ( (i) / plotLayout[0] )) * 1/FLOAT(plotLayout[1]) + 1/FLOAT(plotLayout[1]*8)
-     ;; ENDIF ELSE BEGIN
-     ;;    int_y    = .6
-     ;; ENDELSE
-     ;; textStr     = STRING(FORMAT=$
-     ;;                      '(A0,I0,A0,' + $
-     ;;                      'A0,E0.2,A0,' + $
-     ;;                      'A0,E0.2,A0,' + $
-     ;;                      'A0,E0.2,A0,' + $
-     ;;                      'A0,E0.2,A0,' + $
-     ;;                      'A0,E0.2,A0)', $
-     ;;                      'Integral  : ', integral          , newLine, $
-     ;;                      'Mean      : ', ssa[i].moments.(0), newLine, $
-     ;;                      'Median    : ', ssa[i].moments.(4)[1], newLine, $
-     ;;                      'Std. dev. : ', ssa[i].moments.(1), newLine, $
-     ;;                      'Skewness  : ', ssa[i].moments.(2), newLine, $
-     ;;                      'Kurtosis  : ', ssa[i].moments.(3), newLine)
+
 
      ;;;;;;;;;;;;;
-     ;;The new way
+     ;;Dat integral
      IF ~KEYWORD_SET(no_statistics_text) THEN BEGIN
 
         IF N_ELEMENTS(outplotArr) EQ 0 THEN BEGIN
@@ -453,24 +428,30 @@ IF KEYWORD_SET(normalize_maxInd_hist) THEN BEGIN
                            TARGET=plotArr[i])
         
      ENDIF
-     ;; IF (i GT 0) AND ( ( (i + 1) MOD nPPerWind ) EQ 0 ) THEN BEGIN
-     ;; ENDIF
      
   ENDFOR
 
-  IF KEYWORD_SET(plotTitle) THEN BEGIN
-     titleText = text(0.5,0.96,plotTitle, $
+  IF KEYWORD_SET(histXTitle_maxInd) THEN BEGIN
+     titleText = text(0.5,0.05,histXTitle_maxInd, $
                       ;; FONT_NAME='Courier', $
-                      FONT_SIZE=14, $
+                      ALIGNMENT=0.5, $
+                      FONT_SIZE=18, $
                       /NORMAL, $
                       TARGET=window, $
                       CLIP=0)
   ENDIF
 
-  ;; IF ~STRCMP(plotSuffix,"",1) THEN BEGIN
-  ;;    PRINT,'Saving plot to ' + saveName + '...'
-  ;;    window.save,saveName,RESOLUTION=300
-  ;; ENDIF
+
+  IF KEYWORD_SET(plotTitle) THEN BEGIN
+     titleText = text(0.5,0.96,plotTitle, $
+                      ;; FONT_NAME='Courier', $
+                      ALIGNMENT=0.5, $
+                      FONT_SIZE=18, $
+                      /NORMAL, $
+                      TARGET=window, $
+                      CLIP=0)
+  ENDIF
+
   IF KEYWORD_SET(savePlot) THEN BEGIN
      PRINT,'Saving plot to ' + saveName + '...'
      window.save,saveName,RESOLUTION=300

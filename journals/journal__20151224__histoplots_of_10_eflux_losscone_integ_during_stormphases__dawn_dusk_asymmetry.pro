@@ -5,9 +5,11 @@ PRO JOURNAL__20151224__HISTOPLOTS_OF_10_EFLUX_LOSSCONE_INTEG_DURING_STORMPHASES_
 
   ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
   ;;10-EFLUX_LOSSCONE_INTEG
+  @fluxplot_defaults
+  xTitle            = title__alfDB_ind_10
   
-  night_mlt = [-4.5,7.5]
-  day_mlt   = [7.5,19.5]
+  night_mlt         = [-4.5,7.5]
+  day_mlt           = [7.5,19.5]
 
   ;;normalized dayside, pos and neg
   HISTOPLOT_ALFVENDBQUANTITIES_DURING_STORMPHASES, $
@@ -15,6 +17,7 @@ PRO JOURNAL__20151224__HISTOPLOTS_OF_10_EFLUX_LOSSCONE_INTEG_DURING_STORMPHASES_
      HISTBINSIZE_MAXIND=0.2, $
      /USE_DARTDB_START_ENDDATE, $
      HISTXRANGE_MAXIND=[0.5,5.5], $
+     ;; HISTXTITLE_MAXIND=xTitle, $
      HISTYRANGE_MAXIND=[0,0.15], $
      /LOG_DBQUANTITY, $
      ;; /DAYSIDE, $
@@ -34,6 +37,7 @@ PRO JOURNAL__20151224__HISTOPLOTS_OF_10_EFLUX_LOSSCONE_INTEG_DURING_STORMPHASES_
      HISTBINSIZE_MAXIND=0.2, $
      /USE_DARTDB_START_ENDDATE, $
      HISTXRANGE_MAXIND=[0.5,5.5], $
+     HISTXTITLE_MAXIND=xTitle, $
      HISTYRANGE_MAXIND=[0,0.15], $
      /LOG_DBQUANTITY, $
      ;; /NIGHTSIDE, $
