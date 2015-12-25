@@ -15,7 +15,7 @@ PRO JOURNAL__20151225__PLOTS_OF_10_EFLUX_LOSSCONE_INTEG_DURING_STORMPHASES_WITH_
                                        /LOGENUMFLPLOT, $
                                        ;; ENUMFLPLOTRANGE=[0,6], $
                                        ;; ENUMFLPLOTRANGE=[10^(1.75),10^(4.25)], $
-                                       ENUMFLPLOTRANGE=[10^(2.0),10^(4.6)], $
+                                       ENUMFLPLOTRANGE=[10^(2.0),10^(4.60206)], $
                                        ;; /LOGAVGPLOT, $
                                        /MEDIANPLOT, $
                                        BINMLT=1.5, $
@@ -27,6 +27,7 @@ PRO JOURNAL__20151225__PLOTS_OF_10_EFLUX_LOSSCONE_INTEG_DURING_STORMPHASES_WITH_
                                        /MIDNIGHT, $
                                        /NORTH, $
                                        MINILAT=54, $
+                                       ;; /CB_FORCE_OOBHIGH, $
                                        /COMBINE_STORMPHASE_PLOTS, $
                                        /SAVE_COMBINED_WINDOW, $
                                        ;; SAVE_COMBINED_NAME=plotName, $

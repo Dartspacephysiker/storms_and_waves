@@ -16,7 +16,7 @@ PRO JOURNAL__20151225__PLOTS_OF_18_INTEG_ION_FLUX_UP_DURING_STORMPHASES_WITH_ILA
                                        /NONEGIFLUX, $
                                        /LOGIFPLOT, $
                                        ;; IPLOTRANGE=[10^(8.2),10^(12.7)], $
-                                       IPLOTRANGE=[10^(7.8),10^(11.8)], $
+                                       IPLOTRANGE=[10^(8.0),10^(12.0)], $
                                        ;; /LOGAVGPLOT, $
                                        /MEDIANPLOT, $
                                        BINMLT=1.5, $
@@ -28,7 +28,6 @@ PRO JOURNAL__20151225__PLOTS_OF_18_INTEG_ION_FLUX_UP_DURING_STORMPHASES_WITH_ILA
                                        /CB_FORCE_OOBLOW, $
                                        /COMBINE_STORMPHASE_PLOTS, $
                                        /SAVE_COMBINED_WINDOW, $
-                                       ;; SAVE_COMBINED_NAME=plotName, $
                                        /COMBINED_TO_BUFFER
                                        
 

@@ -49,7 +49,8 @@ PRO PLOT_ALFVEN_STATS_DURING_STORMPHASES,$
                                  PLOTDIR=plotDir, PLOTPREFIX=plotPrefix, PLOTSUFFIX=plotSuffix, $
                                  MEDHISTOUTDATA=medHistOutData, MEDHISTOUTTXT=medHistOutTxt, $
                                  OUTPUTPLOTSUMMARY=outputPlotSummary, DEL_PS=del_PS, $
-                                 LUN=lun, PRINT_DATA_AVAILABILITY=print_data_availability, $
+                                 LUN=lun, $
+                                 PRINT_DATA_AVAILABILITY=print_data_availability, $
                                  COMBINE_STORMPHASE_PLOTS=combine_stormphase_plots, $
                                  COMBINED_TO_BUFFER=combined_to_buffer, $
                                  SAVE_COMBINED_WINDOW=save_combined_window, $
@@ -64,7 +65,13 @@ PRO PLOT_ALFVEN_STATS_DURING_STORMPHASES,$
 
   SET_PLOT_DIR,plotDir,/FOR_STORMS,/ADD_TODAY
 
-  IF NOT KEYWORD_SET(hemi) THEN hemi = 'BOTH'
+  IF NOT (KEYWORD_SET(hemi) OR $
+          KEYWORD_SET(north) OR KEYWORD_SET(south) OR $
+          KEYWORD_SET(both_hemis) ) THEN BEGIN
+     PRINTF,lun,"No hemi provided to PLOT_ALFVEN_STATS_DURING_STORMPHASES!"
+     PRINTF,lun,"Defaulting to 'BOTH'"
+     hemi = 'BOTH'
+  ENDIF
 
   earliest_UTC = str_to_time('1996-10-06/16:26:02.417')
   latest_UTC = str_to_time('2000-10-06/00:08:45.188')
