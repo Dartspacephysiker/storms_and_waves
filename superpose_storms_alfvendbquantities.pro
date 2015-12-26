@@ -69,6 +69,7 @@ PRO SUPERPOSE_STORMS_ALFVENDBQUANTITIES,stormTimeArray_utc, $
                                         NEVENTHISTS=nEventHists, $
                                         HISTOBINSIZE=histoBinSize, HISTORANGE=histoRange, $
                                         TITLE__HISTO_PLOT=title__histo_plot, $
+                                        XLABEL_HISTO_PLOT__SUPPRESS=xLabel_histo_plot__suppress, $
                                         SYMCOLOR__HISTO_PLOT=symColor__histo_plot, $
                                         MAKE_LEGEND__HISTO_PLOT=make_legend__histo_plot, $
                                         NAME__HISTO_PLOT=name__histo_plot, $
@@ -99,8 +100,11 @@ PRO SUPERPOSE_STORMS_ALFVENDBQUANTITIES,stormTimeArray_utc, $
                                         RESTRICT_ALTRANGE=restrict_altRange,RESTRICT_CHARERANGE=restrict_charERange, $
                                         LOG_DBQUANTITY=log_DBQuantity, $
                                         YLOGSCALE_MAXIND=yLogScale_maxInd, $
-                                        YTITLE_MAXIND=yTitle_maxInd, YRANGE_MAXIND=yRange_maxInd, $
+                                        XLABEL_MAXIND__SUPPRESS=xLabel_maxInd__suppress, $
+                                        YTITLE_MAXIND=yTitle_maxInd, $
+                                        YRANGE_MAXIND=yRange_maxInd, $
                                         SYMTRANSP_MAXIND=symTransp_maxInd, $
+                                        ;; LEGEND_MAXIND__SUPPRESS=legend_maxInd__suppress, $
                                         BKGRND_HIST=bkgrnd_hist, BKGRND_MAXIND=bkgrnd_maxInd,TBINS=tBins, $
                                         DBFILE=dbFile,DB_TFILE=db_tFile, $
                                         NO_SUPERPOSE=no_superpose, $
@@ -338,9 +342,9 @@ PRO SUPERPOSE_STORMS_ALFVENDBQUANTITIES,stormTimeArray_utc, $
               RESTRICT_ALTRANGE=restrict_altRange,RESTRICT_CHARERANGE=restrict_charERange, $
               MINMLT=minM,MAXMLT=maxM,BINM=binM,MINILAT=minI,MAXILAT=maxI,BINI=binI, $
               DO_LSHELL=do_lshell,MINLSHELL=minL,MAXLSHELL=maxL,BINL=binL, $
-              BOTH_HEMIS=both_hemis, $
-              NORTH=north, $
-              SOUTH=south, $
+              ;; BOTH_HEMIS=both_hemis, $
+              ;; NORTH=north, $
+              ;; SOUTH=south, $
               HEMI=hemi, $;'BOTH', $
               NEPOCHS=nEpochs, $
               OUTINDSPREFIX=savePlotMaxName, $
@@ -428,6 +432,7 @@ PRO SUPERPOSE_STORMS_ALFVENDBQUANTITIES,stormTimeArray_utc, $
            PLOT_ALFVENDBQUANTITY_HISTOGRAM__EPOCH,histTBins,nEvhistData, $
                                                   NAME=name__histo_plot, $
                                                   XRANGE=xRange, $
+                                                  XHIDELABEL=xLabel_histo_plot__suppress, $
                                                   HISTORANGE=histoRange, $
                                                   YTITLE='N events', $
                                                   MARGIN=plotMargin, $
@@ -453,7 +458,8 @@ PRO SUPERPOSE_STORMS_ALFVENDBQUANTITIES,stormTimeArray_utc, $
                                                   YTITLE=KEYWORD_SET(yTitle_maxInd) ? yTitle_maxInd : yTitle, $
                                                   LOGYPLOT=log_probOccurrence, $
                                                   ;; YTICKFORMAT=, $
-                                                  MARGIN=plotMargin, $
+                                                  ;; MARGIN=plotMargin, $
+                                                  MARGIN=margin__max_plot, $
                                                   PLOTTITLE=title__histo_plot, $
                                                   OVERPLOT_HIST=KEYWORD_SET(overplot_hist) OR N_ELEMENTS(out_histo_plot) GT 0, $
                                                   COLOR=symColor__histo_plot, $
@@ -561,6 +567,7 @@ PRO SUPERPOSE_STORMS_ALFVENDBQUANTITIES,stormTimeArray_utc, $
                                                    ;; PLOTTITLE=plotTitle, $
                                                    XTITLE=xTitle, $
                                                    XRANGE=xRange, $
+                                                   XHIDELABEL=xLabel_maxInd__suppress, $
                                                    YTITLE=yTitle, $
                                                    YRANGE=KEYWORD_SET(yRange_maxInd) ? yRange_maxInd : [minDat,maxDat], $
                                                    LOGYPLOT=yLogScale_maxInd, $
@@ -579,6 +586,9 @@ PRO SUPERPOSE_STORMS_ALFVENDBQUANTITIES,stormTimeArray_utc, $
            IF N_ELEMENTS(out_maxPlotPos) GT 0 AND N_ELEMENTS(out_maxPlotNeg) GT 0 THEN BEGIN
               leg = LEGEND(TARGET=[plot_nEv,plot_bkgrnd], $
                            POSITION=[-20.,((KEYWORD_SET(histoRange) ? histoRange : [0,7500])[1])]*0.45, /DATA, $
+                           FONT_SIZE=18, $
+                           HORIZONTAL_ALIGNMENT=0.5, $
+                           VERTICAL_SPACING=defHPlot_legend__vSpace, $
                            /AUTO_TEXT_COLOR)
            ENDIF
         ENDIF
@@ -619,7 +629,8 @@ PRO SUPERPOSE_STORMS_ALFVENDBQUANTITIES,stormTimeArray_utc, $
                     SYMCOLOR=KEYWORD_SET(symColor__avg_plot) ? symColor__avg_plot : symColor, $
                     ;; SYMTRANSPARENCY=symTransparency, $
                     PLOTNAME=name__avg_plot, $
-                    PLOTTITLE=title__avg_plot+rTitleSuff, $
+                    PLOTTITLE=KEYWORD_SET(title__avg_plot) ? $
+                              title__avg_plot+rTitleSuff : !NULL, $
                     ERROR_PLOT=KEYWORD_SET(make_error_bars__avg_plot), $
                     ERROR_BARS=out_error_bars, $
                     ERRORBAR_CAPSIZE=errorbar_capsize, $
@@ -628,6 +639,7 @@ PRO SUPERPOSE_STORMS_ALFVENDBQUANTITIES,stormTimeArray_utc, $
                     ERRORBAR_THICK=errorbar_thick, $
                     XTITLE=xTitle, $
                     XRANGE=xRange, $
+                    XHIDELABEL=xLabel_maxInd__suppress, $
                     YTITLE=yTitle, $
                     YRANGE=KEYWORD_SET(yRange_maxInd) ? yRange_maxInd : [minDat,maxDat], $
                     LOGYPLOT=yLogScale_maxInd, $
@@ -649,7 +661,8 @@ PRO SUPERPOSE_STORMS_ALFVENDBQUANTITIES,stormTimeArray_utc, $
                     SYMCOLOR=KEYWORD_SET(symColor__avg_plot) ? symColor__avg_plot : symColor, $
                     ;; SYMTRANSPARENCY=symTransparency, $
                     PLOTNAME=name__avg_plot, $
-                    PLOTTITLE=title__avg_plot, $
+                    PLOTTITLE=KEYWORD_SET(title__avg_plot) ? $
+                              title__avg_plotc : !NULL, $
                     ERROR_PLOT=KEYWORD_SET(make_error_bars__avg_plot), $
                     ERROR_BARS=out_error_bars, $
                     ERRORBAR_CAPSIZE=errorbar_capsize, $
@@ -658,6 +671,7 @@ PRO SUPERPOSE_STORMS_ALFVENDBQUANTITIES,stormTimeArray_utc, $
                     ERRORBAR_THICK=errorbar_thick, $
                     XTITLE=xTitle, $
                     XRANGE=xRange, $
+                    XHIDELABEL=xLabel_maxInd__suppress, $
                     YTITLE=yTitle, $
                     YRANGE=KEYWORD_SET(yRange_maxInd) ? yRange_maxInd : [minDat,maxDat], $
                     LOGYPLOT=yLogScale_maxInd, $
@@ -672,7 +686,10 @@ PRO SUPERPOSE_STORMS_ALFVENDBQUANTITIES,stormTimeArray_utc, $
               IF KEYWORD_SET(make_legend__avg_plot) THEN BEGIN
                  IF N_ELEMENTS(out_avg_plot) EQ n__avg_plots THEN BEGIN
                     legend = LEGEND(TARGET=out_avg_plot[0:n__avg_plots-1], $
-                                    POSITION=[0.87,0.35], $
+                                    POSITION=[0.73,0.32], $
+                                    FONT_SIZE=18, $
+                                    HORIZONTAL_ALIGNMENT=0.5, $
+                                    VERTICAL_SPACING=defHPlot_legend__vSpace, $
                                     /NORMAL, $
                                     /AUTO_TEXT_COLOR)
                     

@@ -66,10 +66,10 @@ PRO JOURNAL__20151226__SEAS__19_CHAR_ION_ENERGY_ON_DAYSIDE_AND_NIGHTSIDE__SMOOTH
         WINDOW_MAXIMUS=maximusWindow, $
         OUT_AVG_PLOT=out_avg_plot, $
         /ACCUMULATE__AVG_PLOTS, $
-        TITLE__AVG_PLOT=pT, $
+        ;; TITLE__AVG_PLOT=pT, $
         N__AVG_PLOTS=3, $
         SYMCOLOR__AVG_PLOT=symColor[i], $
-        /MAKE_LEGEND__AVG_PLOT, $
+        ;; /MAKE_LEGEND__AVG_PLOT, $
         NAME__AVG_PLOT=ptRegion[i], $
         /ONLY_POS, $
         /NOGEOMAGPLOTS, $

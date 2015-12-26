@@ -59,6 +59,7 @@ PRO JOURNAL__20151226__SEAS__18_INTEG_ION_FLUX_UP_ON_DAYSIDE_AND_NIGHTSIDE__SMOO
         MAXIND=maxInd, $
         YRANGE_MAXIND=[1e8,1e13], $
         YTITLE_MAXIND=yTitle, $
+        /XLABEL_MAXIND__SUPPRESS, $
         /YLOGSCALE_MAXIND, $
         AVG_TYPE_MAXIND=2, $
         NOMAXPLOTS=(i EQ 0), $
@@ -66,10 +67,10 @@ PRO JOURNAL__20151226__SEAS__18_INTEG_ION_FLUX_UP_ON_DAYSIDE_AND_NIGHTSIDE__SMOO
         WINDOW_MAXIMUS=maximusWindow, $
         OUT_AVG_PLOT=out_avg_plot, $
         /ACCUMULATE__AVG_PLOTS, $
-        TITLE__AVG_PLOT=pT, $
+        ;; TITLE__AVG_PLOT=pT, $
         N__AVG_PLOTS=3, $
         SYMCOLOR__AVG_PLOT=symColor[i], $
-        /MAKE_LEGEND__AVG_PLOT, $
+        ;; /MAKE_LEGEND__AVG_PLOT, $
         NAME__AVG_PLOT=ptRegion[i], $
         /ONLY_POS, $
         /NOGEOMAGPLOTS, $
