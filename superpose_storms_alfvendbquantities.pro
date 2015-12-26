@@ -55,6 +55,7 @@
 ;                         2015/12/23 Default is no longer both hemis. Running average is nice.
 ;                         2015/12/23 Also added running median.
 ;                         2015/12/24 … And error bar stuff.
+;                         2015/12/24 … And smoothing stuff for running stats.
 ;-
 PRO SUPERPOSE_STORMS_ALFVENDBQUANTITIES,stormTimeArray_utc, $
                                         TBEFOREEPOCH=tBeforeEpoch,TAFTEREPOCH=tAfterEpoch, $
@@ -85,6 +86,7 @@ PRO SUPERPOSE_STORMS_ALFVENDBQUANTITIES,stormTimeArray_utc, $
                                         RUNNING_AVERAGE=running_average, $
                                         RUNNING_MEDIAN=running_median, $
                                         RUNNING_BIN_SPACING=running_bin_spacing, $
+                                        RUNNING_SMOOTH_NPOINTS=running_smooth_nPoints, $
                                         SYMCOLOR__MAX_PLOT=symColor__max_plot, $
                                         TITLE__AVG_PLOT=title__avg_plot, $
                                         SYMCOLOR__AVG_PLOT=symColor__avg_plot, $
@@ -278,6 +280,7 @@ PRO SUPERPOSE_STORMS_ALFVENDBQUANTITIES,stormTimeArray_utc, $
            RA_NONZERO_I=ra_nz_i_pos, $
            RA_ZERO_I=ra_z_i_pos, $
            RUNNING_BIN_SPACING=running_bin_spacing, $
+           RUNNING_SMOOTH_NPOINTS=running_smooth_nPoints, $
            NEVHISTDATA=nEvHistData_pos, $
            TAFTEREPOCH=tafterepoch,TBEFOREEPOCH=tBeforeEpoch, $
            HISTOBINSIZE=histoBinSize,NEVTOT=nEvTot_pos, $
@@ -292,6 +295,7 @@ PRO SUPERPOSE_STORMS_ALFVENDBQUANTITIES,stormTimeArray_utc, $
            RA_NONZERO_I=ra_nz_i_neg, $
            RA_ZERO_I=ra_z_i_neg, $
            RUNNING_BIN_SPACING=running_bin_spacing, $
+           RUNNING_SMOOTH_NPOINTS=running_smooth_nPoints, $
            NEVHISTDATA=nEvHistData_neg, $
            TAFTEREPOCH=tafterepoch,TBEFOREEPOCH=tBeforeEpoch, $
            HISTOBINSIZE=histoBinSize,NEVTOT=nEvTot_neg, $
@@ -316,6 +320,7 @@ PRO SUPERPOSE_STORMS_ALFVENDBQUANTITIES,stormTimeArray_utc, $
            RM_NONZERO_I=rm_nz_i, $
            RM_ZERO_I=rm_z_i, $
            RUNNING_BIN_SPACING=running_bin_spacing, $
+           RUNNING_SMOOTH_NPOINTS=running_smooth_nPoints, $
            MAKE_ERROR_BARS=make_error_bars__avg_plot, $
            ERROR_BAR_NBOOT=error_bar_nBoot, $
            OUT_ERROR_BARS=out_error_bars, $
@@ -587,17 +592,24 @@ PRO SUPERPOSE_STORMS_ALFVENDBQUANTITIES,stormTimeArray_utc, $
                     r_t        = ra_t
                     r_nz_i     = ra_nz_i
                     rBinsize   = running_average
-                    rTitleSuff = ' (Running average)'
+                    rTitleSuff = ' (Running average'
                  ENDIF ELSE BEGIN
                     r_y        = rm_y
                     r_t        = rm_t
                     r_nz_i     = rm_nz_i
                     rBinsize   = running_median
-                    rTitleSuff = ' (Running median)'
+                    rTitleSuff = ' (Running median'
+                 ENDELSE
+                 IF running_smooth_nPoints GT 1 THEN BEGIN
+                    rTitleSuff += STRING(FORMAT='(", ",I0,"-hour smoothing)")', $
+                                         running_smooth_nPoints)
+                 ENDIF ELSE BEGIN
+                    rTitleSuff += ')'
                  ENDELSE
 
                  PLOT_ALFVENDBQUANTITY_AVERAGES_OR_SUMS__EPOCH,r_y,r_t,$
-                    TAFTEREPOCH=tAfterEpoch,TBEFOREEPOCH=tBeforeEpoch, $
+                    TAFTEREPOCH=tAfterEpoch, $
+                    TBEFOREEPOCH=tBeforeEpoch, $
                     HISTOBINSIZE=rBinsize, $
                     NONZERO_I=r_nz_i, $
                     /NO_AVG_SYMBOL, $
