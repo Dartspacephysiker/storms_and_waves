@@ -43,8 +43,9 @@ PRO HISTOPLOT_ALFVENDBQUANTITIES_DURING_STORMPHASES__OVERLAY_PHASES, $
    MAXIND=maxInd, $
    NORMALIZE_MAXIND_HIST=normalize_maxInd_hist, $
    HISTXRANGE_MAXIND=histXRange_maxInd, $
-   HISTYRANGE_MAXIND=histYRange_maxInd, $
    HISTXTITLE_MAXIND=histXTitle_maxInd, $
+   HISTYRANGE_MAXIND=histYRange_maxInd, $
+   HISTYTITLE__ONLY_ONE=histYTitle__only_one, $
    HISTBINSIZE_MAXIND=histBinsize_maxInd, $
    ONLY_POS=only_pos, $
    ONLY_NEG=only_neg, $
@@ -68,6 +69,7 @@ PRO HISTOPLOT_ALFVENDBQUANTITIES_DURING_STORMPHASES__OVERLAY_PHASES, $
    OUTPLOTARR=outPlotArr, $
    HISTOPLOT_PARAM_STRUCT=pHP, $
    NO_STATISTICS_TEXT=no_statistics_text, $
+   NO_LEGEND=no_legend, $
    ;; OVERPLOTARR=overplotArr, $
    CURRENT_WINDOW=window, $
    FILL_BACKGROUND=fill_background, $
@@ -311,9 +313,8 @@ EPOCHPLOT_COLORNAMES=epochPlot_colorNames,SCATTEROUTPREFIX=scatterOutPrefix, $
   plotLayout = KEYWORD_SET(layout) ? layout : [1,1,1]
   nPPerWind  = plotLayout[0]*plotLayout[1]*3
   plotArr    = N_ELEMENTS(outPlotArr) EQ 0 ? MAKE_ARRAY(nPPerWind,/OBJ) : outPlotArr
-  firstmarg  = [0.1,0.1,0.1,0.1]
+  ;; firstmarg  = [0.1,0.1,0.1,0.1]
   ;; firstmarg  = [0.18,0.09,0.08,0.09]
-  marg       = [0.01,0.01,0.1,0.01]
 
   IF KEYWORD_SET(histYRange_maxInd) THEN php.yRange = histYRange_maxInd ELSE BEGIN
      IF NOT KEYWORD_SET(normalize_maxInd_hist) THEN BEGIN
@@ -345,10 +346,29 @@ EPOCHPLOT_COLORNAMES=epochPlot_colorNames,SCATTEROUTPREFIX=scatterOutPrefix, $
      ENDIF 
      
      ;; title             = STRING(FORMAT='(A0)',niceStrings[i])
-     xTitle            = pHP.xTitle
-     yTitle            = pHP.yTitle
-     margin            = firstMarg
-     
+     ;; xTitle            = pHP.xTitle
+
+     CASE plotLayout[2] OF
+        1: BEGIN
+           yShowText   = 1
+           yTitle      = pHP.yTitle
+           margin      = defHPlot__firstMarg
+           
+        END
+        2: BEGIN
+           margin      = defHPlot__lastMarg
+           
+           IF KEYWORD_SET(histYTitle__only_one) THEN BEGIN
+              yTitle      = !NULL
+              ;; yShowText   = 0
+           ENDIF ELSE BEGIN
+              yTitle      = pHP.yTitle
+              ;; yShowText   = 1
+           ENDELSE
+           
+        END
+     ENDCASE
+
      plot_i            = i+3*(plotLayout[2]-1)
 
      plotArr[plot_i]   = plot(x,y, $
@@ -358,10 +378,11 @@ EPOCHPLOT_COLORNAMES=epochPlot_colorNames,SCATTEROUTPREFIX=scatterOutPrefix, $
                               YTITLE=yTitle, $
                               XRANGE=pHP.xRange, $
                               YRANGE=pHP.yRange, $
+                              YSHOWTEXT=yShowText, $
                               /HISTOGRAM, $
                               ;; LAYOUT=[plotLayout,i+1], $
                               LAYOUT=plotLayout, $
-                              FONT_SIZE=18, $
+                              FONT_SIZE=defHPlot_xTitle__fSize, $
                               MARGIN=margin, $
                               CURRENT=window, $
                               ;; COLOR=plotColor, $
@@ -376,6 +397,19 @@ EPOCHPLOT_COLORNAMES=epochPlot_colorNames,SCATTEROUTPREFIX=scatterOutPrefix, $
                               FILL_TRANSPARENCY=stormTransp[i], $
                               FILL_COLOR=stormColors[i])
      
+     ;;adjust axes
+     ax                = plotArr[plot_i].axes
+     CASE plotLayout[2] OF
+        1: BEGIN
+           ax[1].showText = 1
+           ax[3].showText = 0
+        END
+        2: BEGIN
+           ax[1].showText = 0
+           ax[3].showText = 1
+        END
+     ENDCASE
+
      ;;;;;;;;;;;;;
      ;;The new way
      ;; IF N_ELEMENTS(outplotArr) EQ 0 THEN BEGIN
@@ -435,10 +469,12 @@ EPOCHPLOT_COLORNAMES=epochPlot_colorNames,SCATTEROUTPREFIX=scatterOutPrefix, $
         
   ENDFOR
 
-  IF plot_i EQ 2 THEN BEGIN
+  IF plot_i EQ 2 AND ~KEYWORD_SET(no_legend) THEN BEGIN
      legend         = LEGEND(TARGET=plotArr[3*(plotLayout[2]-1):3*(plotLayout[2]-1)+2], $
-                             POSITION=[0.87/plotLayout[0]+(plotLayout[0] GT 1 ? 0.1 : 0.0),0.70], $
+                             POSITION=[0.58/plotLayout[0]+(plotLayout[0] GT 1 ? 0.1 : 0.0),0.87], $
                              ;; POSITION=[0.87/plotLayout[0],0.87], $
+                             HORIZONTAL_ALIGNMENT=0.5, $
+                             VERTICAL_SPACING=defHPlot_legend__vSpace, $
                              /NORMAL, $
                              /AUTO_TEXT_COLOR)
 
@@ -446,10 +482,11 @@ EPOCHPLOT_COLORNAMES=epochPlot_colorNames,SCATTEROUTPREFIX=scatterOutPrefix, $
   ENDIF
 
   IF KEYWORD_SET(histXTitle_maxInd) THEN BEGIN
-     titleText = text(0.5,0.05,histXTitle_maxInd, $
+     titleText = text(defHPlot_xTitle__xCoord,defHPlot_xTitle__yCoord, $
+                      histXTitle_maxInd, $
                       ;; FONT_NAME='Courier', $
-                      ALIGNMENT=0.5, $
-                      FONT_SIZE=18, $
+                      ALIGNMENT=defHPlot_xTitle__hAlign, $
+                      FONT_SIZE=defHPlot_xTitle__fSize, $
                       /NORMAL, $
                       TARGET=window, $
                       CLIP=0)

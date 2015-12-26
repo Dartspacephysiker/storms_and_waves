@@ -42,8 +42,9 @@ PRO HISTOPLOT_ALFVENDBQUANTITIES_DURING_STORMPHASES,RESTOREFILE=restoreFile, $
    MAXIND=maxInd, $
    NORMALIZE_MAXIND_HIST=normalize_maxInd_hist, $
    HISTXRANGE_MAXIND=histXRange_maxInd, $
-   HISTYRANGE_MAXIND=histYRange_maxInd, $
    HISTXTITLE_MAXIND=histXTitle_maxInd, $
+   HISTYRANGE_MAXIND=histYRange_maxInd, $
+   HISTYTITLE__ONLY_ONE=histYTitle__only_one, $
    HISTBINSIZE_MAXIND=histBinsize_maxInd, $
    ONLY_POS=only_pos, $
    ONLY_NEG=only_neg, $
@@ -147,9 +148,10 @@ EPOCHPLOT_COLORNAMES=epochPlot_colorNames,SCATTEROUTPREFIX=scatterOutPrefix, $
   dst_i_list=LIST(ns_dst_i,mp_dst_i,rp_dst_i)
   suff = STRING(FORMAT='("--Dstcutoff_",I0)',dstCutoff)
   strings=["nonstorm"+suff,"mainphase"+suff,"recoveryphase"+suff]
-  niceStrings=["Non-storm", $
-               'Main phase (Dst cutoff: ' + STRCOMPRESS(dstCutoff,/REMOVE_ALL) + ' nT)', $
-               "Recovery phase"]
+  niceStrings=["a) Non-storm", $
+               ;; 'Main phase (Dst cutoff: ' + STRCOMPRESS(dstCutoff,/REMOVE_ALL) + ' nT)', $
+               'b) Main phase', $
+               "c) Recovery phase"]
   alf_i_list=LIST()
 
   IF NOT KEYWORD_SET(dataName) THEN dataName = (TAG_NAMES(maximus))[maxInd] ;;        = 'char_ion_energy'
@@ -302,7 +304,7 @@ EPOCHPLOT_COLORNAMES=epochPlot_colorNames,SCATTEROUTPREFIX=scatterOutPrefix, $
                                          MOMENTSTRUCT=MAKE_MOMENT_STRUCT(tempData), $
                                          GENERATING_FILE=genFile)
 
-     ssa        = [ssa,tempESlice]
+     ssa               = [ssa,tempESlice]
   ENDFOR
 
   ;;print stats
@@ -310,17 +312,14 @@ EPOCHPLOT_COLORNAMES=epochPlot_colorNames,SCATTEROUTPREFIX=scatterOutPrefix, $
 
   ;;window setup
   IF N_ELEMENTS(window) EQ 0 THEN BEGIN
-     wTitle        = dataName + ' during storm phases'
-     window     = WINDOW(WINDOW_TITLE=wTitle,DIMENSIONS=[1200,800])
+     wTitle            = dataName + ' during storm phases'
+     window            = WINDOW(WINDOW_TITLE=wTitle,DIMENSIONS=[1200,800])
   ENDIF
 
   ;;plot array/window setup
-  plotLayout = [3,1]
-  nPPerWind  = plotLayout[0]*plotLayout[1]
-  plotArr    = MAKE_ARRAY(nPPerWind,/OBJ)
-  ;; nSlices    = N_ELEMENTS(histTBins)
-  firstmarg  = [0.1,0.1,0.1,0.1]
-  marg       = [0.01,0.01,0.1,0.01]
+  plotLayout           = [3,1]
+  nPPerWind            = plotLayout[0]*plotLayout[1]
+  plotArr              = MAKE_ARRAY(nPPerWind,/OBJ)
 
   FOR i=0,2 DO BEGIN
      ;;the indata
@@ -329,43 +328,42 @@ EPOCHPLOT_COLORNAMES=epochPlot_colorNames,SCATTEROUTPREFIX=scatterOutPrefix, $
      
      integral          = TOTAL(y)
      integralArr[i]    = integral
-     ;; bs_medianArr[i,*] = bs_median
-IF KEYWORD_SET(normalize_maxInd_hist) THEN BEGIN
-        y          = y / integral
-        pHP.yRange = KEYWORD_SET(histYRange_maxInd) ? histYRange_maxInd : [0,0.3]
-        pHP.yTitle = 'Relative Freq.'
+
+     IF KEYWORD_SET(normalize_maxInd_hist) THEN BEGIN
+        y              = y / integral
+        pHP.yRange     = KEYWORD_SET(histYRange_maxInd) ? histYRange_maxInd : [0,0.3]
+        pHP.yTitle     = 'Relative Freq.'
      ENDIF 
      
-     ;; IF layout_i EQ 1 THEN BEGIN
-     ;; title         = STRING(FORMAT='(A0,T15," : ",A0," through ",A0)',strings[i],TIME_TO_STR(ssa[i].eStart),TIME_TO_STR(ssa[i].eEnd))
-     title         = STRING(FORMAT='(A0)',niceStrings[i])
-     ;; xTitle      = i GT plotLayout[0] ? pHP.xTitle : !NULL
-     xTitle      = pHP.xTitle
-     yTitle      = pHP.yTitle
-     ;; yMajorTicks = 3
-     ;; yTickName   = REPLICATE(' ',yMajorTicks)
-     margin      = firstMarg
-     ;; ENDIF ELSE BEGIN
-     ;;    title       = STRING(FORMAT='(I0," through ",I0)',ssa[i].eStart,ssa[i].eEnd)
-     ;;    xTitle      = !NULL
-     ;;    yTitle      = !NULL
-     ;;    yMajorTicks = !NULL
-     ;;    yTickName   = !NULL
-     ;;    margin      = marg
-     ;; ENDELSE
+     title             = STRING(FORMAT='(A0)',niceStrings[i])
+     xTitle            = pHP.xTitle
      
+     CASE i+1 OF
+        1: BEGIN
+           ;; yShowText   = 1
+           margin      = defHPlot_sp__firstMarg
+           yTitle      = pHP.yTitle
+        END
+        2: BEGIN
+           margin      = defHPlot_sp__marg
+           yTitle      = KEYWORD_SET(histYTitle__only_one) ? !NULL : pHP.yTitle
+        END
+        3: BEGIN
+           margin      = defHPlot_sp__lastMarg
+           yTitle      = KEYWORD_SET(histYTitle__only_one) ? !NULL : pHP.yTitle
+        END
+     ENDCASE
+
+
      plotArr[i]  = plot(x,y, $
-                        TITLE=title, $
-                        ;; XTITLE=xTitle, $
+                        ;; TITLE=title, $
                         XTITLE=!NULL, $
                         YTITLE=yTitle, $
                         XRANGE=pHP.xRange, $
                         YRANGE=pHP.yRange, $
-                        ;; YTICKS=yMajorTicks, $
-                        ;; YTICKNAME=yTickName, $
                         /HISTOGRAM, $
                         LAYOUT=[plotLayout,i+1], $
-                        ;; WINDOW=window, $
+                        FONT_SIZE=defHPlot_sp_title__fSize, $
                         MARGIN=margin, $
                         CURRENT=window, $
                         COLOR=plotColor, $
@@ -376,6 +374,32 @@ IF KEYWORD_SET(normalize_maxInd_hist) THEN BEGIN
                         FILL_COLOR=KEYWORD_SET(fill_color) ? fill_color : plotColor)
      
 
+     ;;Title
+     titleText         = text(0.06,0.92,$
+                              title, $
+                              FONT_NAME='Courier', $
+                              FONT_SIZE=defHPlot_title__fSize, $
+                              ;; FONT_COLOR=plotColor, $
+                              /RELATIVE, $
+                              TARGET=plotArr[i])
+        
+
+     ;;adjust axes
+     ax                = plotArr[i].axes
+     CASE i+1 OF
+        1: BEGIN
+           ax[1].showText = 1
+           ax[3].showText = 0
+        END
+        2: BEGIN
+           ax[1].showText = 0
+           ax[3].showText = 0
+        END
+        3: BEGIN
+           ax[1].showText = 0
+           ax[3].showText = 1
+        END
+     ENDCASE
 
      ;;;;;;;;;;;;;
      ;;Dat integral
@@ -432,10 +456,11 @@ IF KEYWORD_SET(normalize_maxInd_hist) THEN BEGIN
   ENDFOR
 
   IF KEYWORD_SET(histXTitle_maxInd) THEN BEGIN
-     titleText = text(0.5,0.05,histXTitle_maxInd, $
+     xText     = text(defHPlot_xTitle__xCoord,defHPlot_xTitle__yCoord, $
+                      histXTitle_maxInd, $
                       ;; FONT_NAME='Courier', $
-                      ALIGNMENT=0.5, $
-                      FONT_SIZE=18, $
+                      ALIGNMENT=defHPlot_xTitle__hAlign, $
+                      FONT_SIZE=defHPlot_xTitle__fSize, $
                       /NORMAL, $
                       TARGET=window, $
                       CLIP=0)
@@ -443,10 +468,10 @@ IF KEYWORD_SET(normalize_maxInd_hist) THEN BEGIN
 
 
   IF KEYWORD_SET(plotTitle) THEN BEGIN
-     titleText = text(0.5,0.96,plotTitle, $
+     titleText = text(0.5,0.935,plotTitle, $
                       ;; FONT_NAME='Courier', $
                       ALIGNMENT=0.5, $
-                      FONT_SIZE=18, $
+                      FONT_SIZE=defHPlot_title__fSize, $
                       /NORMAL, $
                       TARGET=window, $
                       CLIP=0)
