@@ -406,7 +406,7 @@ PRO SUPERPOSE_STORMS_ALFVENDBQUANTITIES,stormTimeArray_utc, $
                                                   LINETHICK=lineThick,LINETRANSP=lineTransp, $
                                                   OVERPLOT=(i EQ 0) ? 0 : 1, $
                                                   CURRENT=1, $
-                                                  MARGIN=plotMargin, $
+                                                  MARGIN=margin__max_plot, $
                                                   LAYOUT=!NULL, $
                                                   ;; CLIP=0, $
                                                   OUTPLOT=geomagPlot, $
@@ -479,8 +479,11 @@ PRO SUPERPOSE_STORMS_ALFVENDBQUANTITIES,stormTimeArray_utc, $
   IF KEYWORD_SET(make_legend__histo_plot) THEN BEGIN
      IF N_ELEMENTS(out_histo_plot) EQ n__histo_plots THEN BEGIN
         legend = LEGEND(TARGET=out_histo_plot[0:n__histo_plots-1], $
-                        POSITION=[0.29,0.40], $
                         /NORMAL, $
+                        POSITION=[0.29,0.45], $
+                        FONT_SIZE=18, $
+                        HORIZONTAL_ALIGNMENT=0.5, $
+                        VERTICAL_SPACING=defHPlot_legend__vSpace, $
                         /AUTO_TEXT_COLOR)
         
      ENDIF

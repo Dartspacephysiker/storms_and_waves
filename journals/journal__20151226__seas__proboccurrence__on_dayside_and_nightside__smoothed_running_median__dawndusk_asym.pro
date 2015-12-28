@@ -8,6 +8,7 @@ PRO JOURNAL__20151226__SEAS__PROBOCCURRENCE__ON_DAYSIDE_AND_NIGHTSIDE__SMOOTHED_
   psRegion          = ['all_MLTs','dayside','nightside']
                               
   do_these_plots    = [0,1,2]
+  ;; do_these_plots    = [1]
   symColor          = ['black','red','blue']
 
   ;;histo stuff
@@ -60,7 +61,7 @@ PRO JOURNAL__20151226__SEAS__PROBOCCURRENCE__ON_DAYSIDE_AND_NIGHTSIDE__SMOOTHED_
                                          PLOTTITLE=pT, $
                                          NOGEOMAGPLOTS=(i GT 0), $
                                          WINDOW_GEOMAG=geomagWindow, $
-                                         HISTORANGE=[0,1.0], $
+                                         HISTORANGE=[0,0.4], $
                                          HISTOBINSIZE=histoBinsize, $
                                          /OVERPLOT_HIST, $
                                          /PROBOCCURENCE_SEA, $
