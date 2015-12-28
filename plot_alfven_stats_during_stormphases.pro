@@ -61,6 +61,8 @@ PRO PLOT_ALFVEN_STATS_DURING_STORMPHASES,$
                                  VERBOSE=verbose, $
                                  _EXTRA=e
 
+  IF N_ELEMENTS(lun) EQ 0 THEN lun = -1
+
   LOAD_DST_AE_DBS,dst,ae
 
   SET_PLOT_DIR,plotDir,/FOR_STORMS,/ADD_TODAY
