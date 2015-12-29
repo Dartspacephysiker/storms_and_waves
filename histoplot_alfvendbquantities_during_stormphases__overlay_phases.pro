@@ -329,8 +329,13 @@ EPOCHPLOT_COLORNAMES=epochPlot_colorNames,SCATTEROUTPREFIX=scatterOutPrefix, $
   stormColors          = ["black","blue","red"] ;nonstorm, main phase, recovery phase
   ;; stormFill            = [1,1,1]
   stormFill            = [0,0,0]
-  stormTransp          = [95,90,90]
-  stormLineThick       = [3.5,3.5,3.5]
+  stormTransp          = KEYWORD_SET(normalize_maxInd_hist) ? $ 
+                         [95,90,90] : $
+                         [80,80,80]
+  stormLineThick       = KEYWORD_SET(normalize_maxInd_hist) ? $
+                         [3.5,3.5,3.5] : $
+                         [5.0,5.0,5.0]
+                         
 
   FOR i=0,2 DO BEGIN
      ;;the indata
@@ -471,7 +476,7 @@ EPOCHPLOT_COLORNAMES=epochPlot_colorNames,SCATTEROUTPREFIX=scatterOutPrefix, $
 
   IF plot_i EQ 2 AND ~KEYWORD_SET(no_legend) THEN BEGIN
      legend         = LEGEND(TARGET=plotArr[3*(plotLayout[2]-1):3*(plotLayout[2]-1)+2], $
-                             POSITION=[0.58/plotLayout[0]+(plotLayout[0] GT 1 ? 0.1 : 0.0),0.87], $
+                             POSITION=[0.58/plotLayout[0]+(plotLayout[0] GT 1 ? 0.1 : 0.0),0.875], $
                              ;; POSITION=[0.87/plotLayout[0],0.87], $
                              HORIZONTAL_ALIGNMENT=0.5, $
                              VERTICAL_SPACING=defHPlot_legend__vSpace, $
