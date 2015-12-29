@@ -1,14 +1,16 @@
 ;;2015/12/05 Wowzers
 ;;Think about it
-PRO JOURNAL__20151229__HISTOPLOTS_OF_10_EFLUX_LOSSCONE_INTEG_DURING_STORMPHASES__OVERLAID_PHASES__DAWN_DUSK_ASYMMETRY__NO_NORM
+PRO JOURNAL__20151229__HISTOPLOTS_OF_10_EFLUX_LOSSCONE_INTEG_DURING_STORMPHASES__OVERLAID_PHASES__DAWN_DUSK_ASYMMETRY__NO_NORM__9_21MLT
 
   ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
   ;;10-EFLUX_LOSSCONE_INTEG
   @fluxplot_defaults
   xTitle            = 'Log ' + title__alfDB_ind_10_pub
   
-  night_mlt         = [-4.5,7.5]
-  day_mlt           = [7.5,19.5]
+  ;; night_mlt         = [-4.5,7.5]
+  ;; day_mlt           = [7.5,19.5]
+  night_mlt         = [-3,9]
+  day_mlt           = [9,21]
 
   ;;titles and suffixes
   pT_day            = STRING(FORMAT='(F0.1,"-",F0.1," MLT")',day_mlt[0],day_mlt[1])

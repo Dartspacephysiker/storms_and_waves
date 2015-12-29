@@ -88,6 +88,7 @@ PRO SUPERPOSE_STORMS_ALFVENDBQUANTITIES,stormTimeArray_utc, $
                                         RUNNING_MEDIAN=running_median, $
                                         RUNNING_BIN_SPACING=running_bin_spacing, $
                                         RUNNING_SMOOTH_NPOINTS=running_smooth_nPoints, $
+                                        WINDOW_SUM=window_sum, $
                                         SYMCOLOR__MAX_PLOT=symColor__max_plot, $
                                         TITLE__AVG_PLOT=title__avg_plot, $
                                         SYMCOLOR__AVG_PLOT=symColor__avg_plot, $
@@ -325,6 +326,7 @@ PRO SUPERPOSE_STORMS_ALFVENDBQUANTITIES,stormTimeArray_utc, $
            RM_ZERO_I=rm_z_i, $
            RUNNING_BIN_SPACING=running_bin_spacing, $
            RUNNING_SMOOTH_NPOINTS=running_smooth_nPoints, $
+           WINDOW_SUM=window_sum, $
            MAKE_ERROR_BARS=make_error_bars__avg_plot, $
            ERROR_BAR_NBOOT=error_bar_nBoot, $
            OUT_ERROR_BARS=out_error_bars, $
@@ -353,6 +355,7 @@ PRO SUPERPOSE_STORMS_ALFVENDBQUANTITIES,stormTimeArray_utc, $
               NEVHISTDATA=fastLoc_nEvHistData, $
               TAFTEREPOCH=tAfterEpoch,TBEFOREEPOCH=tBeforeEpoch, $
               HISTOBINSIZE=histoBinSize,NEVTOT=nEvTot_fastLocHist, $
+              WINDOW_SUM=window_sum, $
               FASTLOC_I_LIST=fastLoc_i_list,FASTLOC_T_LIST=fastLoc_t_list,FASTLOC_DT_LIST=fastLoc_dt_list, $
               NONZERO_I=nz_i_fastLoc ; , $
               ;; FASTLOC_STRUCT=fastLoc,FASTLOC_TIMES=fastLoc_times,FASTLOC_DELTA_T=fastLoc_delta_t
@@ -363,6 +366,10 @@ PRO SUPERPOSE_STORMS_ALFVENDBQUANTITIES,stormTimeArray_utc, $
            ENDIF
            nz_i_po = CGSETINTERSECTION(nz_i,nz_i_fastLoc)
            histData[nz_i_po] = histData[nz_i_po]/fastLocHistData[nz_i_po]
+           IF KEYWORD_SET(running_smooth_nPoints) AND KEYWORD_SET(window_sum) THEN BEGIN
+              histData       = SMOOTH(histData,running_smooth_nPoints,/EDGE_TRUNCATE)
+
+           ENDIF 
         ENDIF
 
      ENDELSE
@@ -406,7 +413,8 @@ PRO SUPERPOSE_STORMS_ALFVENDBQUANTITIES,stormTimeArray_utc, $
                                                   LINETHICK=lineThick,LINETRANSP=lineTransp, $
                                                   OVERPLOT=(i EQ 0) ? 0 : 1, $
                                                   CURRENT=1, $
-                                                  MARGIN=margin__max_plot, $
+                                                  ;; MARGIN=margin__max_plot, $
+                                                  MARGIN=margin__avg_plot, $
                                                   LAYOUT=!NULL, $
                                                   ;; CLIP=0, $
                                                   OUTPLOT=geomagPlot, $
@@ -459,7 +467,8 @@ PRO SUPERPOSE_STORMS_ALFVENDBQUANTITIES,stormTimeArray_utc, $
                                                   LOGYPLOT=log_probOccurrence, $
                                                   ;; YTICKFORMAT=, $
                                                   ;; MARGIN=plotMargin, $
-                                                  MARGIN=margin__max_plot, $
+                                                  ;; MARGIN=margin__max_plot, $
+                                                  MARGIN=margin__avg_plot, $
                                                   PLOTTITLE=title__histo_plot, $
                                                   OVERPLOT_HIST=KEYWORD_SET(overplot_hist) OR N_ELEMENTS(out_histo_plot) GT 0, $
                                                   COLOR=symColor__histo_plot, $
@@ -548,7 +557,8 @@ PRO SUPERPOSE_STORMS_ALFVENDBQUANTITIES,stormTimeArray_utc, $
                                                       LOGYPLOT=yLogScale_maxInd, $
                                                       OVERPLOT_ALFVENDBQUANTITY=(j EQ 0) ? 0 : 1, $
                                                       CURRENT=N_ELEMENTS(maximusWindow) GT 0, $
-                                                      MARGIN=margin__max_plot, $
+                                                      MARGIN=margin__avg_plot, $
+                                                      ;; MARGIN=margin__max_plot, $
                                                       LAYOUT=pn_layout[*,j], $
                                                       CLIP=0, $
                                                       OUTPLOT=(j EQ 0) ? out_maxPlotPos : out_maxPlotNeg, $
@@ -577,7 +587,8 @@ PRO SUPERPOSE_STORMS_ALFVENDBQUANTITIES,stormTimeArray_utc, $
                                                    ;; OVERPLOT_ALFVENDBQUANTITY=(i EQ 0) ? 0 : 1, $
                                                    OVERPLOT_ALFVENDBQUANTITY=0, $
                                                    CURRENT=N_ELEMENTS(maximusWindow) GT 0, $
-                                                   MARGIN=margin__max_plot, $
+                                                   MARGIN=margin__avg_plot, $
+                                                   ;; MARGIN=margin__max_plot, $
                                                    LAYOUT=layout, $
                                                    ;; CLIP=0, $
                                                    OUTPLOT=out_maxPlotAll, $
@@ -649,14 +660,21 @@ PRO SUPERPOSE_STORMS_ALFVENDBQUANTITIES,stormTimeArray_utc, $
                     OVERPLOT=KEYWORD_SET(overPlot) OR N_ELEMENTS(out_avg_plot) GT 0, $
                     CURRENT=1, $
                     MARGIN=margin__avg_plot, $
+                    ;; MARGIN=margin__max_plot, $
                     LAYOUT=layout, $
                     OUTPLOT=out_avg_plot, $
                     ADD_PLOT_TO_PLOT_ARRAY=KEYWORD_SET(accumulate__avg_plots)
                  
               ENDIF ELSE BEGIN
+                 IF KEYWORD_SET(window_sum) THEN BEGIN
+                    hist_t  = histTBins
+                 ENDIF ELSE BEGIN
+                    hist_t = histTBins+histoBinsize*0.5
+                 ENDELSE
+
                  PLOT_ALFVENDBQUANTITY_AVERAGES_OR_SUMS__EPOCH, $
                     histData, $
-                    histTBins+histoBinsize*0.5,$
+                    hist_t,$
                     TAFTEREPOCH=tAfterEpoch,TBEFOREEPOCH=tBeforeEpoch, $
                     HISTOBINSIZE=histoBinSize, $
                     NONZERO_I=nz_i, $
@@ -681,6 +699,7 @@ PRO SUPERPOSE_STORMS_ALFVENDBQUANTITIES,stormTimeArray_utc, $
                     OVERPLOT=KEYWORD_SET(overPlot) OR N_ELEMENTS(out_avg_plot) GT 0, $
                     CURRENT=1, $
                     MARGIN=margin__avg_plot, $
+                    ;; MARGIN=margin__max_plot, $
                     LAYOUT=layout, $
                     OUTPLOT=out_avg_plot, $
                     ADD_PLOT_TO_PLOT_ARRAY=KEYWORD_SET(accumulate__avg_plots)

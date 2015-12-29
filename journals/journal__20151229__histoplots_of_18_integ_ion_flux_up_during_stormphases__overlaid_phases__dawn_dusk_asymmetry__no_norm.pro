@@ -7,9 +7,18 @@ PRO JOURNAL__20151229__HISTOPLOTS_OF_18_INTEG_ION_FLUX_UP_DURING_STORMPHASES__OV
   @fluxplot_defaults
   xTitle            = +'Log ' + title__alfDB_ind_18_pub
   
-  
   night_mlt         = [-4.5,7.5]
   day_mlt           = [7.5,19.5]
+
+  ;;titles and suffixes
+  pT_day            = STRING(FORMAT='(F0.1,"-",F0.1," MLT")',day_mlt[0],day_mlt[1])
+  pT_night          = STRING(FORMAT='(F0.1,"-",F0.1," MLT")',24+night_mlt[0],night_mlt[1])
+  pSuff             = STRING(FORMAT='(F0.1,"-",F0.1,"--",' + $
+                                     'F0.1,"-",F0.1,"_MLT")',day_mlt[0],day_mlt[1], $
+                      24+night_mlt[0],night_mlt[1])
+
+  dayYRange         = [0,5.0e3]
+  nightYRange       = [0,2.5e3]
 
   ;;normalized dayside
   HISTOPLOT_ALFVENDBQUANTITIES_DURING_STORMPHASES__OVERLAY_PHASES, $
@@ -17,10 +26,10 @@ PRO JOURNAL__20151229__HISTOPLOTS_OF_18_INTEG_ION_FLUX_UP_DURING_STORMPHASES__OV
      ;; HISTBINSIZE_MAXIND=0.125, $
      HISTBINSIZE_MAXIND=0.20, $
      /USE_DARTDB_START_ENDDATE, $
-     PLOTTITLE='7.5-19.5 MLT', $
+     PLOTTITLE=pT_day, $
      HISTXRANGE_MAXIND=[6.5,14.5], $
      HISTXTITLE_MAXIND=xTitle, $
-     HISTYRANGE_MAXIND=[0,5.5e3], $
+     HISTYRANGE_MAXIND=dayYRange, $
      ;; HISTYRANGE_MAXIND=[0,0.08], $
      /HISTYTITLE__ONLY_ONE, $
      /LOG_DBQUANTITY, $
@@ -37,7 +46,7 @@ PRO JOURNAL__20151229__HISTOPLOTS_OF_18_INTEG_ION_FLUX_UP_DURING_STORMPHASES__OV
      OUTPLOTARR=outplotArr
 
   ;;normalized nightside
-  pHP.yRange = [0,1.9e3]
+  pHP.yRange = nightYRange
   HISTOPLOT_ALFVENDBQUANTITIES_DURING_STORMPHASES__OVERLAY_PHASES, $
      MAXIND=18, $
      HISTBINSIZE_MAXIND=0.20, $
@@ -57,8 +66,8 @@ PRO JOURNAL__20151229__HISTOPLOTS_OF_18_INTEG_ION_FLUX_UP_DURING_STORMPHASES__OV
      /ONLY_POS, $
      /NO_STATISTICS_TEXT, $
      /SAVEPLOT, $
-     PLOTTITLE='19.5-7.5 MLT', $
-     PLOTSUFFIX='7.5-19.5_MLT--19.5-7.5_MLT', $
+     PLOTTITLE=pT_night, $
+     PLOTSUFFIX=pSuff, $
      HISTOPLOT_PARAM_STRUCT=pHP, $
      CURRENT_WINDOW=window, $
      OUTPLOTARR=outplotArr
