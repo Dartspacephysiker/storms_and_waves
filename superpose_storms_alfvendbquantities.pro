@@ -468,6 +468,7 @@ PRO SUPERPOSE_STORMS_ALFVENDBQUANTITIES,stormTimeArray_utc, $
                                                   ;; YTICKFORMAT=, $
                                                   ;; MARGIN=plotMargin, $
                                                   ;; MARGIN=margin__max_plot, $
+                                                  HISTOGRAM=0, $
                                                   MARGIN=margin__avg_plot, $
                                                   PLOTTITLE=title__histo_plot, $
                                                   OVERPLOT_HIST=KEYWORD_SET(overplot_hist) OR N_ELEMENTS(out_histo_plot) GT 0, $
