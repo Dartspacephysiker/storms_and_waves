@@ -639,7 +639,7 @@ PRO SUPERPOSE_STORMS_ALFVENDBQUANTITIES,stormTimeArray_utc, $
                     NONZERO_I=r_nz_i, $
                     /NO_AVG_SYMBOL, $
                     LINESTYLE='-', $
-                    LINETHICKNESS=2, $
+                    LINETHICKNESS=4.0, $
                     ;; SYMBOL=symbol, $
                     SYMCOLOR=KEYWORD_SET(symColor__avg_plot) ? symColor__avg_plot : symColor, $
                     ;; SYMTRANSPARENCY=symTransparency, $
