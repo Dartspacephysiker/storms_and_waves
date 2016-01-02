@@ -1,4 +1,4 @@
-PRO JOURNAL__20160101__SEAS__10_EFLUX_LOSSCONE_INTEG_ON_DAYSIDE_AND_NIGHTSIDE__SMOOTHED_RUNNING_AVG__DROP_ALL_MLT
+PRO JOURNAL__20160101__SEAS__18_INTEG_ION_FLUX_UP_ON_DAYSIDE_AND_NIGHTSIDE__SMOOTHED_RUNNING_AVG__DROP_ALL_MLT__REVERSE_DUPE
 
   ;;MLT params and stuff
   minM              = [6.0,-6.0]
@@ -6,7 +6,7 @@ PRO JOURNAL__20160101__SEAS__10_EFLUX_LOSSCONE_INTEG_ON_DAYSIDE_AND_NIGHTSIDE__S
   hemi              = 'NORTH'
   ptRegion          = ['Dayside','Nightside']
   psRegion          = ['dayside','nightside']
-  hours_aft         = 60
+  hours_bef         = 120
                               
   do_these_plots    = [0,1]
   symColor          = ['red','blue']
@@ -19,12 +19,12 @@ PRO JOURNAL__20160101__SEAS__10_EFLUX_LOSSCONE_INTEG_ON_DAYSIDE_AND_NIGHTSIDE__S
   ;; fancy_plotNames   = 1
   @fluxplot_defaults
 
-  probOccPref       = 'journal_20160101--SEA_largestorms--10-EFLUX_LOSSCONE_INTEG--with_NOAA--smoothed_running_logAvg'
+  probOccPref       = 'journal_20160101--SEA_largestorms--18-INTEG_ION_FLUX_UP--with_NOAA--smoothed_running_logAvg'
   ptPref            = ''
-  plotSuff          = '--day_night.png'
+  plotSuff          = '--day_night--'+STRCOMPRESS(hours_bef,/REMOVE_ALL)+'-hr_no_dupes_REVERSE.png'
 
-  maxInd            = 10
-  yTitle            = title__alfDB_ind_10
+  maxInd            = 18
+  yTitle            = title__alfDB_ind_18
 
   LOAD_NOAA_AND_BRETT_DBS_AND_QI,stormStruct,SSC1,SSC2,qi,DBDir=DBDir,DB_BRETT=DB_Brett,DB_NOAA=DB_NOAA,INDS_FILE=inds_file
 
@@ -52,12 +52,12 @@ PRO JOURNAL__20160101__SEAS__10_EFLUX_LOSSCONE_INTEG_ON_DAYSIDE_AND_NIGHTSIDE__S
         RUNNING_AVERAGE=running_logAvg, $
         RUNNING_SMOOTH_NPOINTS=smooth_nPoints, $
         STORMTYPE=1, $
-        /REMOVE_DUPES, $
-        HOURS_AFT_FOR_NO_DUPES=hours_aft, $
+        /REMOVE_DUPES__REVERSE, $
+        HOURS_BEF_FOR_NO_DUPES=hours_bef, $
         MAXIND=maxInd, $
-        ;; /XLABEL_MAXIND__SUPPRESS, $
-        YRANGE_MAXIND=[2e1,8e4], $
+        YRANGE_MAXIND=[1e8,1e13], $
         YTITLE_MAXIND=yTitle, $
+        /XLABEL_MAXIND__SUPPRESS, $
         /YLOGSCALE_MAXIND, $
         AVG_TYPE_MAXIND=2, $
         ;; NOMAXPLOTS=(i EQ 0), $

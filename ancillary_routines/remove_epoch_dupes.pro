@@ -2,7 +2,8 @@ PRO REMOVE_EPOCH_DUPES,NEPOCHS=nEpochs, $
                        CENTERTIME=centerTime, $
                        TSTAMPS=tStamps,$
                        DATSTARTSTOP=datStartStop, $
-                       HOURS_AFT_FOR_NO_DUPES=hours_aft_for_no_dupes,TAFTEREPOCH=tAfterEpoch
+                       HOURS_AFT_FOR_NO_DUPES=hours_aft_for_no_dupes, $
+                       TAFTEREPOCH=tAfterEpoch
 
   PRINT,'Finding and trashing epochs that would otherwise appear twice in the superposed epoch analysis...'
      

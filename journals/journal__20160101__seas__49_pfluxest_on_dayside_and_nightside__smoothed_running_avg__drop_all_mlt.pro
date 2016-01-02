@@ -6,6 +6,7 @@ PRO JOURNAL__20160101__SEAS__49_PFLUXEST_ON_DAYSIDE_AND_NIGHTSIDE__SMOOTHED_RUNN
   hemi              = 'NORTH'
   ptRegion          = ['Dayside','Nightside']
   psRegion          = ['dayside','nightside']
+  hours_aft         = 120
                               
   do_these_plots    = [0,1]
   symColor          = ['red','blue']
@@ -52,7 +53,7 @@ PRO JOURNAL__20160101__SEAS__49_PFLUXEST_ON_DAYSIDE_AND_NIGHTSIDE__SMOOTHED_RUNN
         RUNNING_SMOOTH_NPOINTS=smooth_nPoints, $
         STORMTYPE=1, $
         /REMOVE_DUPES, $
-        HOURS_AFT_FOR_NO_DUPES=120, $
+        HOURS_AFT_FOR_NO_DUPES=hours_aft, $
         MAXIND=maxInd, $
         ;; /XLABEL_MAXIND__SUPPRESS, $
         YRANGE_MAXIND=[1e-1,1e2], $

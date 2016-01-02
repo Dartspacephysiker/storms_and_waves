@@ -6,6 +6,7 @@ PRO JOURNAL__20160101__SEAS__18_INTEG_ION_FLUX_UP_ON_DAYSIDE_AND_NIGHTSIDE__SMOO
   hemi              = 'NORTH'
   ptRegion          = ['Dayside','Nightside']
   psRegion          = ['dayside','nightside']
+  hours_aft         = 60
                               
   do_these_plots    = [0,1]
   symColor          = ['red','blue']
@@ -52,11 +53,11 @@ PRO JOURNAL__20160101__SEAS__18_INTEG_ION_FLUX_UP_ON_DAYSIDE_AND_NIGHTSIDE__SMOO
         RUNNING_SMOOTH_NPOINTS=smooth_nPoints, $
         STORMTYPE=1, $
         /REMOVE_DUPES, $
-        HOURS_AFT_FOR_NO_DUPES=120, $
+        HOURS_AFT_FOR_NO_DUPES=hours_aft, $
         MAXIND=maxInd, $
         YRANGE_MAXIND=[1e8,1e13], $
         YTITLE_MAXIND=yTitle, $
-        ;; /XLABEL_MAXIND__SUPPRESS, $
+        /XLABEL_MAXIND__SUPPRESS, $
         /YLOGSCALE_MAXIND, $
         AVG_TYPE_MAXIND=2, $
         ;; NOMAXPLOTS=(i EQ 0), $
