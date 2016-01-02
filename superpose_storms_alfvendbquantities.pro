@@ -56,7 +56,7 @@
 ;                         2015/12/23 Also added running median.
 ;                         2015/12/24 … And error bar stuff.
 ;                         2015/12/24 … And smoothing stuff for running stats.
-;                         2016/01/01 Added REMOVE_DUPES__REVERSE to see what happens if we remove storms BEFORE others
+;                         2016/01/01 Added REVERSE_REMOVE_DUPES to see what happens if we remove storms BEFORE others
 ;-
 PRO SUPERPOSE_STORMS_ALFVENDBQUANTITIES,stormTimeArray_utc, $
                                         TBEFOREEPOCH=tBeforeEpoch,TAFTEREPOCH=tAfterEpoch, $
@@ -65,7 +65,7 @@ PRO SUPERPOSE_STORMS_ALFVENDBQUANTITIES,stormTimeArray_utc, $
                                         EPOCHINDS=epochInds, SSC_TIMES_UTC=ssc_times_utc, $
                                         REMOVE_DUPES=remove_dupes, $
                                         HOURS_AFT_FOR_NO_DUPES=hours_aft_for_no_dupes, $
-                                        REMOVE_DUPES__REVERSE=remove_dupes__reverse, $
+                                        REVERSE_REMOVE_DUPES=remove_dupes__reverse, $
                                         HOURS_BEF_FOR_NO_DUPES=hours_bef_for_no_dupes, $
                                         STORMTYPE=stormType, $
                                         USE_SYMH=use_symh,USE_AE=use_AE, $

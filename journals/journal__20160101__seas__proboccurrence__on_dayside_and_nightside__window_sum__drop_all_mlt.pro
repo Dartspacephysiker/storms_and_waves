@@ -6,13 +6,10 @@ PRO JOURNAL__20160101__SEAS__PROBOCCURRENCE__ON_DAYSIDE_AND_NIGHTSIDE__WINDOW_SU
   hemi              = 'NORTH'
   ptRegion          = ['Dayside','Nightside']
   psRegion          = ['dayside','nightside']
+  hours_aft         = 120
                               
   do_these_plots    = [0,1]
-  ;; do_these_plots    = [1]
   symColor          = ['red','blue']
-
-  ;;histo stuff
-  ;; histoBinSize      =  5 ;in hrs
 
   ;;Do a running median window
   window_sum        = 10
@@ -40,7 +37,7 @@ PRO JOURNAL__20160101__SEAS__PROBOCCURRENCE__ON_DAYSIDE_AND_NIGHTSIDE__WINDOW_SU
                                 probOccPref, $
                                 window_sum)
      spn               = savePlotPref+plotSuff
-     pT                = 'SEA of 40 storms'
+     pT                = 'SEA of 41 storms'
 
      ;; pt                = STRING(FORMAT='(I0,"-hr bins, asym dawn/dusk line")', $
      ;;                            histoBinsize)
@@ -53,7 +50,7 @@ PRO JOURNAL__20160101__SEAS__PROBOCCURRENCE__ON_DAYSIDE_AND_NIGHTSIDE__WINDOW_SU
         /USE_DARTDB_START_ENDDATE, $
         STORMTYPE=1, $
         /REMOVE_DUPES, $
-        HOURS_AFT_FOR_NO_DUPES=120, $
+        HOURS_AFT_FOR_NO_DUPES=hours_aft, $
         MINMLT=minM[i], $
         MAXMLT=maxM[i], $
         HEMI=hemi, $
@@ -61,7 +58,7 @@ PRO JOURNAL__20160101__SEAS__PROBOCCURRENCE__ON_DAYSIDE_AND_NIGHTSIDE__WINDOW_SU
         PLOTTITLE=pT, $
         NOGEOMAGPLOTS=(i GT 0), $
         WINDOW_GEOMAG=geomagWindow, $
-        ;; /XLABEL_MAXIND__SUPPRESS, $
+        /XLABEL_MAXIND__SUPPRESS, $
         HISTORANGE=[0,0.5], $
         HISTOBINSIZE=histoBinsize, $
         /OVERPLOT_HIST, $
