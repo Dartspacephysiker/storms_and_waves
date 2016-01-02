@@ -58,6 +58,7 @@ PRO PLOT_ALFVEN_STATS_DURING_STORMPHASES,$
                                  NO_COLORBAR=no_colorbar, $
                                  CB_FORCE_OOBHIGH=cb_force_oobHigh, $
                                  CB_FORCE_OOBLOW=cb_force_oobLow, $
+                                 FANCY_PLOTNAMES=fancy_plotNames, $
                                  VERBOSE=verbose, $
                                  _EXTRA=e
 
@@ -153,6 +154,7 @@ PRO PLOT_ALFVEN_STATS_DURING_STORMPHASES,$
                                   NO_COLORBAR=no_colorbar[i], $
                                   CB_FORCE_OOBHIGH=cb_force_oobHigh, $
                                   CB_FORCE_OOBLOW=cb_force_oobLow, $
+                                  FANCY_PLOTNAMES=fancy_plotNames, $
                                   /PRINT_DATA_AVAILABILITY, $
                                   _EXTRA = e  
 
@@ -161,6 +163,17 @@ PRO PLOT_ALFVEN_STATS_DURING_STORMPHASES,$
   ENDFOR
 
   IF KEYWORD_SET(combine_stormphase_plots) THEN BEGIN
+
+     ;; COMBINE_ALFVEN_STATS_PLOTS,niceStrings, $
+     ;;                            TEMPFILES=outTempFiles, $
+     ;;                            OUT_IMGS_ARR=out_imgs_arr, $
+     ;;                            OUT_TITLEOBJS_ARR=out_titleObjs_arr, $
+     ;;                            COMBINED_TO_BUFFER=combined_to_buffer, $
+     ;;                            SAVE_COMBINED_WINDOW=save_combined_window, $
+     ;;                            SAVE_COMBINED_NAME=save_combined_name, $
+     ;;                            PLOTSUFFIX=plotSuffix, $
+     ;;                            PLOTDIR=plotDir, $
+     ;;                            /DELETE_PLOTS_WHEN_FINISHED
 
      PRINT,"Combining stormphase plots..."
 
@@ -199,7 +212,6 @@ PRO PLOT_ALFVEN_STATS_DURING_STORMPHASES,$
                            SAVE_COMBINED_NAME=save_combined_name, $
                            PLOTDIR=plotDir, $
                            /DELETE_PLOTS_WHEN_FINISHED
-
 
   ENDIF
 
