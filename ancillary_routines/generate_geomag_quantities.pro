@@ -23,8 +23,8 @@ PRO GENERATE_GEOMAG_QUANTITIES,DATSTARTSTOP=datStartStop,NEPOCHS=nEpochs, $
   defUse_data_minMax = 0
 
   defDo_Dst = 0
-  defDstRange = [-300,100] 
-  ;; defDstRange = [-150,50] 
+  ;; defDstRange = [-300,100] 
+  defDstRange = [-120,30] 
 
   IF N_ELEMENTS(sw_data) EQ 0 THEN BEGIN
      LOAD_OMNI_DB,sw_data,SWDBDIR=swDBDir,SWDBFILE=swDBFile

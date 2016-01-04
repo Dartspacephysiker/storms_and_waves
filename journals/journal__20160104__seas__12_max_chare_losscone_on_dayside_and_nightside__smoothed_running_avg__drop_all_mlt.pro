@@ -1,4 +1,4 @@
-PRO JOURNAL__20160101__SEAS__10_EFLUX_LOSSCONE_INTEG_ON_DAYSIDE_AND_NIGHTSIDE__SMOOTHED_RUNNING_AVG__DROP_ALL_MLT
+PRO JOURNAL__20160104__SEAS__12_MAX_CHARE_LOSSCONE_ON_DAYSIDE_AND_NIGHTSIDE__SMOOTHED_RUNNING_AVG__DROP_ALL_MLT
 
   ;;MLT params and stuff
   minM              = [6.0,-6.0]
@@ -6,7 +6,7 @@ PRO JOURNAL__20160101__SEAS__10_EFLUX_LOSSCONE_INTEG_ON_DAYSIDE_AND_NIGHTSIDE__S
   hemi              = 'NORTH'
   ptRegion          = ['Dayside','Nightside']
   psRegion          = ['dayside','nightside']
-  hours_aft         = 60
+  hours_aft         = 120
                               
   do_these_plots    = [0,1]
   symColor          = ['red','blue']
@@ -19,12 +19,13 @@ PRO JOURNAL__20160101__SEAS__10_EFLUX_LOSSCONE_INTEG_ON_DAYSIDE_AND_NIGHTSIDE__S
   ;; fancy_plotNames   = 1
   @fluxplot_defaults
 
-  probOccPref       = 'journal_20160101--SEA_largestorms--10-EFLUX_LOSSCONE_INTEG--with_NOAA--smoothed_running_logAvg'
+  probOccPref       = 'journal_20160104--SEA_largestorms--12-MAX_CHARE_LOSSCONE--with_NOAA--smoothed_running_logAvg'
   ptPref            = ''
   plotSuff          = '--day_night.png'
 
-  maxInd            = 10
-  yTitle            = title__alfDB_ind_10
+  maxInd            = 12
+  yTitle            = title__alfDB_ind_12
+  yRange_maxInd     = [2e1,1e4]
 
   LOAD_NOAA_AND_BRETT_DBS_AND_QI,stormStruct,SSC1,SSC2,qi,DBDir=DBDir,DB_BRETT=DB_Brett,DB_NOAA=DB_NOAA,INDS_FILE=inds_file
 
@@ -45,8 +46,8 @@ PRO JOURNAL__20160101__SEAS__10_EFLUX_LOSSCONE_INTEG_ON_DAYSIDE_AND_NIGHTSIDE__S
                                 running_logAvg)
 
      SUPERPOSE_STORMS_ALFVENDBQUANTITIES, $
-        ;; EPOCHINDS=q1_st, $
-        ;; SSC_TIMES_UTC=q1_utc, $
+        EPOCHINDS=q1_st, $
+        SSC_TIMES_UTC=q1_utc, $
         /USE_DARTDB_START_ENDDATE, $
         HISTOBINSIZE=histoBinSize, $
         RUNNING_AVERAGE=running_logAvg, $
@@ -55,8 +56,8 @@ PRO JOURNAL__20160101__SEAS__10_EFLUX_LOSSCONE_INTEG_ON_DAYSIDE_AND_NIGHTSIDE__S
         /REMOVE_DUPES, $
         HOURS_AFT_FOR_NO_DUPES=hours_aft, $
         MAXIND=maxInd, $
-        ;; /XLABEL_MAXIND__SUPPRESS, $
-        YRANGE_MAXIND=[2e1,8e4], $
+        /XLABEL_MAXIND__SUPPRESS, $
+        YRANGE_MAXIND=yRange_maxInd, $
         YTITLE_MAXIND=yTitle, $
         /YLOGSCALE_MAXIND, $
         AVG_TYPE_MAXIND=2, $
