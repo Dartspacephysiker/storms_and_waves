@@ -1,3 +1,6 @@
 
 #No silly emacs files
 *.pro~
+
+#No temp dir
+temp/

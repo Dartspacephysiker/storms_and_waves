@@ -19,7 +19,9 @@ PRO PLOT_ALFVEN_STATS_DURING_STORMPHASES,$
                                  MIN_NEVENTS=min_nEvents, MASKMIN=maskMin, $
                                  DELAY=delay, STABLEIMF=stableIMF, SMOOTHWINDOW=smoothWindow, INCLUDENOCONSECDATA=includeNoConsecData, $
                                  NPLOTS=nPlots, $
-                                 EPLOTS=ePlots, EFLUXPLOTTYPE=eFluxPlotType, LOGEFPLOT=logEfPlot, $
+                                 EPLOTS=ePlots, $
+                                 EPLOTRANGE=ePlotRange, $
+                                 EFLUXPLOTTYPE=eFluxPlotType, LOGEFPLOT=logEfPlot, $
                                  ABSEFLUX=abseflux, NOPOSEFLUX=noPosEFlux, NONEGEFLUX=noNegEflux, $
                                  ENUMFLPLOTS=eNumFlPlots, ENUMFLPLOTTYPE=eNumFlPlotType, LOGENUMFLPLOT=logENumFlPlot, ABSENUMFL=absENumFl, $
                                  NONEGENUMFL=noNegENumFl, NOPOSENUMFL=noPosENumFl, ENUMFLPLOTRANGE=ENumFlPlotRange, $
@@ -120,7 +122,10 @@ PRO PLOT_ALFVEN_STATS_DURING_STORMPHASES,$
                                   MIN_NEVENTS=min_nEvents, MASKMIN=maskMin, $
                                   DELAY=delay, STABLEIMF=stableIMF, SMOOTHWINDOW=smoothWindow, INCLUDENOCONSECDATA=includeNoConsecData, $
                                   NPLOTS=nPlots, $
-                                  EPLOTS=ePlots, EFLUXPLOTTYPE=eFluxPlotType, LOGEFPLOT=logEfPlot, $
+                                  EPLOTS=ePlots, $
+                                  EPLOTRANGE=ePlotRange, $
+                                  EFLUXPLOTTYPE=eFluxPlotType, $
+                                  LOGEFPLOT=logEfPlot, $
                                   ABSEFLUX=abseflux, NOPOSEFLUX=noPosEFlux, NONEGEFLUX=noNegEflux, $
                                   ENUMFLPLOTS=eNumFlPlots, ENUMFLPLOTTYPE=eNumFlPlotType, LOGENUMFLPLOT=logENumFlPlot, ABSENUMFL=absENumFl, $
                                   NONEGENUMFL=noNegENumFl, NOPOSENUMFL=noPosENumFl, ENUMFLPLOTRANGE=ENumFlPlotRange, $

@@ -19,6 +19,8 @@
 ;                              NO_SUPERPOSE      : Don't superpose Alfven wave DB quantities over Dst/SYM-H 
 ;                               
 ;                              PLOTTITLE         : Title of superposed plot
+;                              SAVEFILE          : Save histoplot data. Note, it won't erase other saved histoplot data provided
+;                                                    they are stored in the variable 'saved_ssa_list'.
 ;                              SAVEPLOTNAME      : Name of outputted file
 ;
 ; OUTPUTS:                     
@@ -31,8 +33,8 @@
 ;
 ; MODIFICATION HISTORY:   2015/12/04 Ripped off HISTOPLOT_ALFVENDBQUANTITIES_DURING_STORMPHASES because
 ;                                    Professor LaBelle and I would like to see storm phases overlaid
+;                         2016/01/05 Added some stuff for SAVEFILE keyword so that we can save histoplot data for examination.
 ;-
-
 PRO HISTOPLOT_ALFVENDBQUANTITIES_DURING_STORMPHASES__OVERLAY_PHASES, $
    RESTOREFILE=restoreFile, $
    stormTimeArray_utc, $
@@ -511,5 +513,29 @@ EPOCHPLOT_COLORNAMES=epochPlot_colorNames,SCATTEROUTPREFIX=scatterOutPrefix, $
   ENDIF
 
   outPlotArr = plotArr
+
+  IF KEYWORD_SET(saveFile) THEN BEGIN
+
+     IF FILE_TEST(saveFile) THEN BEGIN
+        PRINT,'histoplot savefile "' + saveFile + '" exists!'
+        PRINT,'Restoring...'
+        RESTORE,saveFile
+
+        IF N_ELEMENTS(saved_ssa_list) EQ 0 THEN BEGIN
+           PRINT,"No saved storm slice arrays in this file. Creating a new one ..."
+           saved_ssa_list = LIST(ssa)
+        ENDIF ELSE BEGIN
+           PRINT,"This file contains " + STRCOMPRESS(n_ELEMENTS(saved_ssa_list),/REMOVE_ALL) + " storm slice arrays. Adding ..."
+           saved_ssa_list.add,ssa
+        ENDELSE
+
+     ENDIF ELSE BEGIN
+        PRINT,'histoplot savefile "' + saveFile + '" does not exist; creating a new one ...'
+        saved_ssa_list = LIST(ssa)
+     ENDELSE 
+
+     PRINT,'Saving histoplot data to "' + saveFile + '" ...'
+     SAVE,saved_ssa_list,FILENAME=saveFile
+  ENDIF
 
 END
