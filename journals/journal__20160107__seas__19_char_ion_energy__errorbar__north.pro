@@ -1,6 +1,6 @@
-PRO JOURNAL__20160106__SEAS__19_CHAR_ION_ENERGY_ON_DAYSIDE_AND_NIGHTSIDE__SMOOTHED_RUNNING_AVG__DROP_ALL_MLT__BOTH_HEMIS
+PRO JOURNAL__20160107__SEAS__19_CHAR_ION_ENERGY__ERRORBAR__NORTH
 
-  @journal__20160106__plot_defaults.pro
+  @journal__20160107__plot_defaults.pro
 
   probOccPref       = pref + '--19-CHAR_ION_ENERGY'
   ptPref            = ''
@@ -24,7 +24,12 @@ PRO JOURNAL__20160106__SEAS__19_CHAR_ION_ENERGY_ON_DAYSIDE_AND_NIGHTSIDE__SMOOTH
         /USE_DARTDB_START_ENDDATE, $
         HISTOBINSIZE=histoBinSize, $
         RUNNING_AVERAGE=running_logAvg, $
+        RUNNING_BIN_SPACING=running_bin_spacing, $
         RUNNING_SMOOTH_NPOINTS=smooth_nPoints, $
+        RUNNING_BIN_L_OFFSET=running_bin_l_offset, $
+        RUNNING_BIN_R_OFFSET=running_bin_r_offset, $
+        MAKE_ERROR_BARS__AVG_PLOT=make_eb, $
+        ERROR_BAR_NBOOT=eb_nBoot, $
         STORMTYPE=1, $
         /REMOVE_DUPES, $
         HOURS_AFT_FOR_NO_DUPES=hours_aft, $

@@ -1,6 +1,6 @@
-PRO JOURNAL__20160106__SEAS__49_PFLUXEST_ON_DAYSIDE_AND_NIGHTSIDE__SMOOTHED_RUNNING_AVG__DROP_ALL_MLT__BOTH_HEMIS
+PRO JOURNAL__20160107__SEAS__49_PFLUXEST__ERRORBAR__NORTH
 
-  @journal__20160106__plot_defaults.pro
+  @journal__20160107__plot_defaults.pro
 
   probOccPref       = pref + '--49-PFLUXEST'
   ptPref            = ''
@@ -24,7 +24,12 @@ PRO JOURNAL__20160106__SEAS__49_PFLUXEST_ON_DAYSIDE_AND_NIGHTSIDE__SMOOTHED_RUNN
         /USE_DARTDB_START_ENDDATE, $
         HISTOBINSIZE=histoBinSize, $
         RUNNING_AVERAGE=running_logAvg, $
+        RUNNING_BIN_SPACING=running_bin_spacing, $
         RUNNING_SMOOTH_NPOINTS=smooth_nPoints, $
+        RUNNING_BIN_L_OFFSET=running_bin_l_offset, $
+        RUNNING_BIN_R_OFFSET=running_bin_r_offset, $
+        MAKE_ERROR_BARS__AVG_PLOT=make_eb, $
+        ERROR_BAR_NBOOT=eb_nBoot, $
         STORMTYPE=1, $
         /REMOVE_DUPES, $
         HOURS_AFT_FOR_NO_DUPES=hours_aft, $
@@ -34,15 +39,12 @@ PRO JOURNAL__20160106__SEAS__49_PFLUXEST_ON_DAYSIDE_AND_NIGHTSIDE__SMOOTHED_RUNN
         YTITLE_MAXIND=yTitle, $
         /YLOGSCALE_MAXIND, $
         AVG_TYPE_MAXIND=2, $
-        ;; NOMAXPLOTS=(i EQ 0), $
         SYMCOLOR__MAX_PLOT=symColor[i], $
         WINDOW_MAXIMUS=maximusWindow, $
         OUT_AVG_PLOT=out_avg_plot, $
         /ACCUMULATE__AVG_PLOTS, $
-        ;; TITLE__AVG_PLOT=pT, $
         N__AVG_PLOTS=2, $
         SYMCOLOR__AVG_PLOT=symColor[i], $
-        ;; /MAKE_LEGEND__AVG_PLOT, $
         NAME__AVG_PLOT=ptRegion[i], $
         /ONLY_POS, $
         /NOGEOMAGPLOTS, $

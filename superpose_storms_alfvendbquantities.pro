@@ -57,6 +57,8 @@
 ;                         2015/12/24 … And error bar stuff.
 ;                         2015/12/24 … And smoothing stuff for running stats.
 ;                         2016/01/01 Added REVERSE_REMOVE_DUPES to see what happens if we remove storms BEFORE others
+;                         2016/01/07 Added ERROR_BAR_CONFLIMIT; it looks like we've got to have error bars after all...
+;                                    ... Oh, and RUNNING_BIN{L,R}_OFFSET
 ;-
 PRO SUPERPOSE_STORMS_ALFVENDBQUANTITIES,stormTimeArray_utc, $
                                         TBEFOREEPOCH=tBeforeEpoch,TAFTEREPOCH=tAfterEpoch, $
@@ -92,6 +94,10 @@ PRO SUPERPOSE_STORMS_ALFVENDBQUANTITIES,stormTimeArray_utc, $
                                         RUNNING_MEDIAN=running_median, $
                                         RUNNING_BIN_SPACING=running_bin_spacing, $
                                         RUNNING_SMOOTH_NPOINTS=running_smooth_nPoints, $
+                                        RUNNING_BIN_L_OFFSET=bin_l_offset, $
+                                        RUNNING_BIN_R_OFFSET=bin_r_offset, $
+                                        RUNNING_BIN_L_EDGES=bin_l_edges, $
+                                        RUNNING_BIN_R_EDGES=bin_r_edges, $
                                         WINDOW_SUM=window_sum, $
                                         SYMCOLOR__MAX_PLOT=symColor__max_plot, $
                                         TITLE__AVG_PLOT=title__avg_plot, $
@@ -99,6 +105,7 @@ PRO SUPERPOSE_STORMS_ALFVENDBQUANTITIES,stormTimeArray_utc, $
                                         MAKE_LEGEND__AVG_PLOT=make_legend__avg_plot, $
                                         MAKE_ERROR_BARS__AVG_PLOT=make_error_bars__avg_plot, $
                                         ERROR_BAR_NBOOT=error_bar_nBoot, $
+                                        ERROR_BAR_CONFLIMIT=error_bar_confLimit, $
                                         NAME__AVG_PLOT=name__avg_plot, $
                                         N__AVG_PLOTS=n__avg_plots, $
                                         ACCUMULATE__AVG_PLOTS=accumulate__avg_plots, $
@@ -300,6 +307,10 @@ PRO SUPERPOSE_STORMS_ALFVENDBQUANTITIES,stormTimeArray_utc, $
            RA_ZERO_I=ra_z_i_pos, $
            RUNNING_BIN_SPACING=running_bin_spacing, $
            RUNNING_SMOOTH_NPOINTS=running_smooth_nPoints, $
+           RUNNING_BIN_L_OFFSET=bin_l_offset, $
+           RUNNING_BIN_R_OFFSET=bin_r_offset, $
+           RUNNING_BIN_L_EDGES=bin_l_edges, $
+           RUNNING_BIN_R_EDGES=bin_r_edges, $
            NEVHISTDATA=nEvHistData_pos, $
            TAFTEREPOCH=tafterepoch,TBEFOREEPOCH=tBeforeEpoch, $
            HISTOBINSIZE=histoBinSize,NEVTOT=nEvTot_pos, $
@@ -315,6 +326,10 @@ PRO SUPERPOSE_STORMS_ALFVENDBQUANTITIES,stormTimeArray_utc, $
            RA_ZERO_I=ra_z_i_neg, $
            RUNNING_BIN_SPACING=running_bin_spacing, $
            RUNNING_SMOOTH_NPOINTS=running_smooth_nPoints, $
+           RUNNING_BIN_L_OFFSET=bin_l_offset, $
+           RUNNING_BIN_R_OFFSET=bin_r_offset, $
+           RUNNING_BIN_L_EDGES=bin_l_edges, $
+           RUNNING_BIN_R_EDGES=bin_r_edges, $
            NEVHISTDATA=nEvHistData_neg, $
            TAFTEREPOCH=tafterepoch,TBEFOREEPOCH=tBeforeEpoch, $
            HISTOBINSIZE=histoBinSize,NEVTOT=nEvTot_neg, $
@@ -340,9 +355,14 @@ PRO SUPERPOSE_STORMS_ALFVENDBQUANTITIES,stormTimeArray_utc, $
            RM_ZERO_I=rm_z_i, $
            RUNNING_BIN_SPACING=running_bin_spacing, $
            RUNNING_SMOOTH_NPOINTS=running_smooth_nPoints, $
+           RUNNING_BIN_L_OFFSET=bin_l_offset, $
+           RUNNING_BIN_R_OFFSET=bin_r_offset, $
+           RUNNING_BIN_L_EDGES=bin_l_edges, $
+           RUNNING_BIN_R_EDGES=bin_r_edges, $
            WINDOW_SUM=window_sum, $
            MAKE_ERROR_BARS=make_error_bars__avg_plot, $
            ERROR_BAR_NBOOT=error_bar_nBoot, $
+           ERROR_BAR_CONFLIMIT=error_bar_confLimit, $
            OUT_ERROR_BARS=out_error_bars, $
            NEVHISTDATA=nEvHistData, $
            TAFTEREPOCH=tafterepoch,TBEFOREEPOCH=tBeforeEpoch, $
@@ -370,6 +390,8 @@ PRO SUPERPOSE_STORMS_ALFVENDBQUANTITIES,stormTimeArray_utc, $
               TAFTEREPOCH=tAfterEpoch,TBEFOREEPOCH=tBeforeEpoch, $
               HISTOBINSIZE=histoBinSize,NEVTOT=nEvTot_fastLocHist, $
               WINDOW_SUM=window_sum, $
+              RUNNING_BIN_L_OFFSET=bin_l_offset, $
+              RUNNING_BIN_R_OFFSET=bin_r_offset, $
               FASTLOC_I_LIST=fastLoc_i_list,FASTLOC_T_LIST=fastLoc_t_list,FASTLOC_DT_LIST=fastLoc_dt_list, $
               NONZERO_I=nz_i_fastLoc ; , $
               ;; FASTLOC_STRUCT=fastLoc,FASTLOC_TIMES=fastLoc_times,FASTLOC_DELTA_T=fastLoc_delta_t

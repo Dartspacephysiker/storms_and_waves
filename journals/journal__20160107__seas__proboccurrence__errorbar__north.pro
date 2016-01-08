@@ -1,6 +1,6 @@
-PRO JOURNAL__20160106__SEAS__PROBOCCURRENCE__ON_DAYSIDE_AND_NIGHTSIDE__WINDOW_SUM__DROP_ALL_MLT__BOTH_HEMIS
+PRO JOURNAL__20160107__SEAS__PROBOCCURRENCE__ERRORBAR__NORTH
 
-  @journal__20160106__plot_defaults.pro
+  @journal__20160107__plot_defaults.pro
 
   window_sum        = 10
 
@@ -36,6 +36,8 @@ PRO JOURNAL__20160106__SEAS__PROBOCCURRENCE__ON_DAYSIDE_AND_NIGHTSIDE__WINDOW_SU
         /OVERPLOT_HIST, $
         /PROBOCCURENCE_SEA, $
         WINDOW_SUM=window_sum, $
+        RUNNING_BIN_L_OFFSET=running_bin_l_offset, $
+        RUNNING_BIN_R_OFFSET=running_bin_r_offset, $
         SAVEPLOT=(i EQ 1), $
         OUT_HISTO_PLOT=out_histo_plot, $
         /ACCUMULATE__HISTO_PLOTS, $
