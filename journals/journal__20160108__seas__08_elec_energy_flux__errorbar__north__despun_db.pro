@@ -1,6 +1,6 @@
-PRO JOURNAL__20160107__SEAS__08_ELEC_ENERGY_FLUX__ERRORBAR__NORTH
+PRO JOURNAL__20160108__SEAS__08_ELEC_ENERGY_FLUX__ERRORBAR__NORTH__DESPUN_DB
 
-  @journal__20160107__plot_defaults.pro
+  @journal__20160108__plot_defaults.pro
 
   maxQuant          = '08-ELEC_ENERGY_FLUX'
   maxInd            = 08
@@ -24,6 +24,7 @@ PRO JOURNAL__20160107__SEAS__08_ELEC_ENERGY_FLUX__ERRORBAR__NORTH
         EPOCHINDS=q1_st, $
         SSC_TIMES_UTC=q1_utc, $
         /USE_DARTDB_START_ENDDATE, $
+        DO_DESPUNDB=do_despun, $
         HISTOBINSIZE=histoBinSize, $
         RUNNING_AVERAGE=running_logAvg, $
         RUNNING_BIN_SPACING=running_bin_spacing, $

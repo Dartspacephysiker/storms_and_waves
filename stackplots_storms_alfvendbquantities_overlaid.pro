@@ -88,6 +88,7 @@ PRO STACKPLOTS_STORMS_ALFVENDBQUANTITIES_OVERLAID,stormTimeArray_utc, $
                              NO_SUPERPOSE=no_superpose, $
                              NOPLOTS=noPlots, NOMAXPLOTS=noMaxPlots, $
                              USE_DARTDB_START_ENDDATE=use_dartdb_start_enddate, $
+                             DO_DESPUNDB=do_despunDB, $
                              SAVEFILE=saveFile, $
                              OVERPLOT_HIST=overplot_hist, $
                              PLOTTITLE=plotTitle, $
@@ -128,7 +129,7 @@ PRO STACKPLOTS_STORMS_ALFVENDBQUANTITIES_OVERLAID,stormTimeArray_utc, $
   ;Now restore 'em
   LOAD_OMNI_DB,sw_data,SWDBDIR=swDBDir,SWDBFILE=swDBFile
   LOAD_NOAA_AND_BRETT_DBS_AND_QI,stormStruct,DB_BRETT=stormFile,DBDIR=stormDir
-  LOAD_MAXIMUS_AND_CDBTIME,maximus,cdbTime,DB_TFILE=DB_tFile,DBDIR=DBDir,DBFILE=DBFile
+  LOAD_MAXIMUS_AND_CDBTIME,maximus,cdbTime,DB_TFILE=DB_tFile,DBDIR=DBDir,DBFILE=DBFile,DO_DESPUNDB=do_despunDB
 
   IF ~use_SYMH AND ~use_AE AND ~omni_Quantity THEN BEGIN
      LOAD_DST_AE_DBS,dst,ae,DST_AE_DIR=DST_AEDir,DST_AE_FILE=DST_AEFile
@@ -231,6 +232,11 @@ PRO STACKPLOTS_STORMS_ALFVENDBQUANTITIES_OVERLAID,stormTimeArray_utc, $
                                                      XRANGE=xRange, $
                                                      YTITLE=KEYWORD_SET(just_one_label) ? (i EQ 1 ? yTitle : !NULL ) : yTitle, $
                                                      YRANGE=yRange, $
+                                                     YTICKNAME=['-100','-50','0'], $
+                                                     YTICKVALUES=[-100,-50,0], $
+                                                     ;; YTICKNAME=['-100','-75','-50','-25','0','25'], $
+                                                     ;; YTICKVALUES=[-100,-75,-50,-25,0,25], $
+                                                     YMINOR=4, $
                                                      LOGYPLOT=logYPlot, $
                                                      LINETHICK=lineThick, $
                                                      ;; LINETRANSP=lineTransp, $

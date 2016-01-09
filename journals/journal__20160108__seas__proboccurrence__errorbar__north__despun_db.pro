@@ -1,11 +1,12 @@
-PRO JOURNAL__20160107__SEAS__PROBOCCURRENCE__ERRORBAR__NORTH
+PRO JOURNAL__20160108__SEAS__PROBOCCURRENCE__ERRORBAR__NORTH__DESPUN_DB
 
-  @journal__20160107__plot_defaults.pro
+  @journal__20160108__plot_defaults.pro
 
-  window_sum        = 10
+  window_sum        = running_logAvg          ;use the values that all the other plots do
+  window_sum        = 10                      ; ... or don't
 
-  probOccPref       = pref + 'PROBOCCURRENCE--with_NOAA--window_sum'
-  ptPref            = ''
+  probOccPref          = pref + 'PROBOCCURRENCE--with_NOAA--window_sum'
+  ptPref               = ''
 
   FOR j=0,N_ELEMENTS(do_these_plots)-1 DO BEGIN
      i                 = do_these_plots[j]
@@ -20,6 +21,7 @@ PRO JOURNAL__20160107__SEAS__PROBOCCURRENCE__ERRORBAR__NORTH
         EPOCHINDS=q1_st, $
         SSC_TIMES_UTC=q1_utc, $
         /USE_DARTDB_START_ENDDATE, $
+        DO_DESPUNDB=do_despun, $
         STORMTYPE=1, $
         /REMOVE_DUPES, $
         HOURS_AFT_FOR_NO_DUPES=hours_aft, $
@@ -35,10 +37,10 @@ PRO JOURNAL__20160107__SEAS__PROBOCCURRENCE__ERRORBAR__NORTH
         HISTOBINSIZE=histoBinsize, $
         /OVERPLOT_HIST, $
         /PROBOCCURENCE_SEA, $
-        WINDOW_SUM=window_sum, $
-        RUNNING_BIN_SPACING=running_bin_spacing, $
-        RUNNING_BIN_L_OFFSET=running_bin_l_offset, $
-        RUNNING_BIN_R_OFFSET=running_bin_r_offset, $
+        ;; WINDOW_SUM=window_sum, $
+        ;; RUNNING_BIN_SPACING=running_bin_spacing, $
+        ;; RUNNING_BIN_L_OFFSET=running_bin_l_offset, $
+        ;; RUNNING_BIN_R_OFFSET=running_bin_r_offset, $
         SAVEPLOT=(i EQ 1), $
         OUT_HISTO_PLOT=out_histo_plot, $
         /ACCUMULATE__HISTO_PLOTS, $

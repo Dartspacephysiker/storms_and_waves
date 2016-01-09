@@ -126,6 +126,7 @@ PRO SUPERPOSE_STORMS_ALFVENDBQUANTITIES,stormTimeArray_utc, $
                                         NOMAXPLOTS=noMaxPlots, $
                                         NOAVGPLOTS=noAvgPlots, $
                                         USE_DARTDB_START_ENDDATE=use_dartdb_start_enddate, $
+                                        DO_DESPUNDB=do_despunDB, $
                                         SAVEFILE=saveFile,OVERPLOT_HIST=overplot_hist, $
                                         PLOTTITLE=plotTitle, $
                                         SAVEPNAME=savePName, $
@@ -183,7 +184,7 @@ PRO SUPERPOSE_STORMS_ALFVENDBQUANTITIES,stormTimeArray_utc, $
   ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
   ;Now restore 'em
   LOAD_NOAA_AND_BRETT_DBS_AND_QI,stormStruct,DB_BRETT=stormFile,DBDIR=stormDir
-  LOAD_MAXIMUS_AND_CDBTIME,maximus,cdbTime,DB_TFILE=DB_tFile,DBDIR=DBDir,DBFILE=DBFile
+  LOAD_MAXIMUS_AND_CDBTIME,maximus,cdbTime,DB_TFILE=DB_tFile,DBDIR=DBDir,DBFILE=DBFile,DO_DESPUNDB=do_despunDB
 
   IF ~use_SYMH AND ~use_AE AND ~omni_Quantity THEN BEGIN
      LOAD_DST_AE_DBS,dst,ae,DST_AE_DIR=DST_AEDir,DST_AE_FILE=DST_AEFile
@@ -260,31 +261,44 @@ PRO SUPERPOSE_STORMS_ALFVENDBQUANTITIES,stormTimeArray_utc, $
 
      IF KEYWORD_SET(maxInd) THEN BEGIN
         GET_DATA_FOR_ALFVENDB_EPOCH_PLOTS,MAXIMUS=maximus,CDBTIME=cdbTime,MAXIND=maxInd,GOOD_I=good_i, $
-                                      ALF_EPOCH_I=alf_epoch_i,ALF_IND_LIST=alf_ind_list, $
-                                      MINMAXDAT=minMaxDat, NALFEPOCHS=nAlfEpochs,NEPOCHS=nEpochs, $
-                                      LOG_DBQUANTITY=log_DBQuantity, $
-                                      CENTERTIME=alf_centerTime,TSTAMPS=alf_tStamps,tAfterEpoch=tAfterEpoch,tBeforeEpoch=tBeforeEpoch, $
-                                      NEG_AND_POS_SEPAR=neg_and_pos_separ, $
-                                      ONLY_POS=only_pos, $
-                                      TOT_PLOT_I_POS_LIST=tot_plot_i_pos_list,TOT_ALF_T_POS_LIST=tot_alf_t_pos_list,TOT_ALF_Y_POS_LIST=tot_alf_y_pos_list, $
-                                      TOT_PLOT_I_NEG_LIST=tot_plot_i_neg_list,TOT_ALF_T_NEG_LIST=tot_alf_t_neg_list,TOT_ALF_Y_NEG_LIST=tot_alf_y_neg_list, $
-                                      TOT_PLOT_I_LIST=tot_plot_i_list,TOT_ALF_T_LIST=tot_alf_t_list,TOT_ALF_Y_LIST=tot_alf_y_list, $
-                                      NEVTOT=nEvTot, $
-                                      SAVEFILE=saveFile,SAVESTR=saveStr
+                                          ALF_EPOCH_I=alf_epoch_i,ALF_IND_LIST=alf_ind_list, $
+                                          MINMAXDAT=minMaxDat, NALFEPOCHS=nAlfEpochs,NEPOCHS=nEpochs, $
+                                          LOG_DBQUANTITY=log_DBQuantity, $
+                                          CENTERTIME=alf_centerTime,TSTAMPS=alf_tStamps,tAfterEpoch=tAfterEpoch,tBeforeEpoch=tBeforeEpoch, $
+                                          NEG_AND_POS_SEPAR=neg_and_pos_separ, $
+                                          ONLY_POS=only_pos, $
+                                          TOT_PLOT_I_POS_LIST=tot_plot_i_pos_list, $
+                                          TOT_ALF_T_POS_LIST=tot_alf_t_pos_list, $
+                                          TOT_ALF_Y_POS_LIST=tot_alf_y_pos_list, $
+                                          TOT_PLOT_I_NEG_LIST=tot_plot_i_neg_list, $
+                                          TOT_ALF_T_NEG_LIST=tot_alf_t_neg_list, $
+                                          TOT_ALF_Y_NEG_LIST=tot_alf_y_neg_list, $
+                                          TOT_PLOT_I_LIST=tot_plot_i_list, $
+                                          TOT_ALF_T_LIST=tot_alf_t_list, $
+                                          TOT_ALF_Y_LIST=tot_alf_y_list, $
+                                          NEVTOT=nEvTot, $
+                                          SAVEFILE=saveFile,SAVESTR=saveStr
                                           
      ENDIF ELSE BEGIN
         IF KEYWORD_SET(probOccurrence_sea) OR KEYWORD_SET(nEventHists) THEN BEGIN
            ;;use maxInd = 20 here to get current width
            GET_DATA_FOR_ALFVENDB_EPOCH_PLOTS,MAXIMUS=maximus,CDBTIME=cdbTime,MAXIND=20,GOOD_I=good_i, $
-                                      ALF_EPOCH_I=alf_epoch_i,ALF_IND_LIST=alf_ind_list, $
-                                      MINMAXDAT=minMaxDat, NALFEPOCHS=nAlfEpochs,NEPOCHS=nEpochs, $
-                                      LOG_DBQUANTITY=log_DBQuantity, $
-                                      CENTERTIME=alf_centerTime,TSTAMPS=alf_tStamps,tAfterEpoch=tAfterEpoch,tBeforeEpoch=tBeforeEpoch, $
-                                      NEG_AND_POS_SEPAR=neg_and_pos_separ, $
-                                      TOT_PLOT_I_POS_LIST=tot_plot_i_pos_list,TOT_ALF_T_POS_LIST=tot_alf_t_pos_list,TOT_ALF_Y_POS_LIST=tot_alf_y_pos_list, $
-                                      TOT_PLOT_I_NEG_LIST=tot_plot_i_neg_list,TOT_ALF_T_NEG_LIST=tot_alf_t_neg_list,TOT_ALF_Y_NEG_LIST=tot_alf_y_neg_list, $
-                                      TOT_PLOT_I_LIST=tot_plot_i_list,TOT_ALF_T_LIST=tot_alf_t_list,TOT_ALF_Y_LIST=tot_alf_y_list, $
-                                      NEVTOT=nEvTot
+                                             ALF_EPOCH_I=alf_epoch_i,ALF_IND_LIST=alf_ind_list, $
+                                             MINMAXDAT=minMaxDat, NALFEPOCHS=nAlfEpochs,NEPOCHS=nEpochs, $
+                                             LOG_DBQUANTITY=log_DBQuantity, $
+                                             CENTERTIME=alf_centerTime,TSTAMPS=alf_tStamps, $
+                                             TAFTEREPOCH=tAfterEpoch,TBEFOREEPOCH=tBeforeEpoch, $
+                                             NEG_AND_POS_SEPAR=neg_and_pos_separ, $
+                                             TOT_PLOT_I_POS_LIST=tot_plot_i_pos_list, $
+                                             TOT_ALF_T_POS_LIST=tot_alf_t_pos_list, $
+                                             TOT_ALF_Y_POS_LIST=tot_alf_y_pos_list, $
+                                             TOT_PLOT_I_NEG_LIST=tot_plot_i_neg_list, $
+                                             TOT_ALF_T_NEG_LIST=tot_alf_t_neg_list, $
+                                             TOT_ALF_Y_NEG_LIST=tot_alf_y_neg_list, $
+                                             TOT_PLOT_I_LIST=tot_plot_i_list, $
+                                             TOT_ALF_T_LIST=tot_alf_t_list, $
+                                             TOT_ALF_Y_LIST=tot_alf_y_list, $
+                                             NEVTOT=nEvTot
         ENDIF
      ENDELSE
      
@@ -338,9 +352,16 @@ PRO SUPERPOSE_STORMS_ALFVENDBQUANTITIES,stormTimeArray_utc, $
         tot_alf_t = LIST_TO_1DARRAY(tot_alf_t_list,/WARN,/SKIP_NEG1_ELEMENTS)
         tot_alf_y = LIST_TO_1DARRAY(tot_alf_y_list,/WARN,/SKIP_NEG1_ELEMENTS)
 
-        IF N_ELEMENTS(avg_type_maxInd) GT 0 THEN histoType = avg_type_maxind
+        IF N_ELEMENTS(avg_type_maxInd) GT 0 THEN BEGIN
+           IF KEYWORD_SET(window_sum) THEN BEGIN
+              histoType = 0
+           ENDIF ELSE BEGIN
+              histoType = avg_type_maxind
+           ENDELSE
+        ENDIF
 
-        GET_ALFVENDBQUANTITY_HISTOGRAM__EPOCH_ARRAY,tot_alf_t,tot_alf_y,HISTOTYPE=histoType, $
+        GET_ALFVENDBQUANTITY_HISTOGRAM__EPOCH_ARRAY,tot_alf_t,tot_alf_y, $
+           HISTOTYPE=histoType, $
            HISTDATA=histData, $
            HISTTBINS=histTBins, $
            RUNNING_AVERAGE=running_average, $
@@ -390,6 +411,7 @@ PRO SUPERPOSE_STORMS_ALFVENDBQUANTITIES,stormTimeArray_utc, $
               TAFTEREPOCH=tAfterEpoch,TBEFOREEPOCH=tBeforeEpoch, $
               HISTOBINSIZE=histoBinSize,NEVTOT=nEvTot_fastLocHist, $
               WINDOW_SUM=window_sum, $
+              RUNNING_BIN_SPACING=running_bin_spacing, $
               RUNNING_BIN_L_OFFSET=bin_l_offset, $
               RUNNING_BIN_R_OFFSET=bin_r_offset, $
               FASTLOC_I_LIST=fastLoc_i_list,FASTLOC_T_LIST=fastLoc_t_list,FASTLOC_DT_LIST=fastLoc_dt_list, $
@@ -504,7 +526,7 @@ PRO SUPERPOSE_STORMS_ALFVENDBQUANTITIES,stormTimeArray_utc, $
                                                   ;; YTICKFORMAT=, $
                                                   ;; MARGIN=plotMargin, $
                                                   ;; MARGIN=margin__max_plot, $
-                                                  HISTOGRAM=0, $
+                                                  HISTOGRAM=1, $
                                                   MARGIN=margin__avg_plot, $
                                                   PLOTTITLE=title__histo_plot, $
                                                   OVERPLOT_HIST=KEYWORD_SET(overplot_hist) OR N_ELEMENTS(out_histo_plot) GT 0, $

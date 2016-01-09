@@ -1,14 +1,12 @@
-PRO JOURNAL__20160107__SEAS__08_ELEC_ENERGY_FLUX__ERRORBAR__NORTH
+PRO JOURNAL__20160108__SEAS__10_EFLUX_LOSSCONE_INTEG__ERRORBAR__NORTH__DESPUN_DB
 
-  @journal__20160107__plot_defaults.pro
+  @journal__20160108__plot_defaults.pro
 
-  maxQuant          = '08-ELEC_ENERGY_FLUX'
-  maxInd            = 08
-  yTitle            = title__alfDB_ind_08
-  yRange_maxInd     = [4e-2,5e2]
+  probOccPref       = pref + '--10-EFLUX_LOSSCONE_INTEG'
 
-  probOccPref       = pref + '--' + maxQuant
-  ptPref            = ''
+  maxInd            = 10
+  yRange_maxInd     = [2e1,8e4]
+  yTitle            = title__alfDB_ind_10
 
   FOR j=0,N_ELEMENTS(do_these_plots)-1 DO BEGIN
      i                 = do_these_plots[j]
@@ -24,6 +22,7 @@ PRO JOURNAL__20160107__SEAS__08_ELEC_ENERGY_FLUX__ERRORBAR__NORTH
         EPOCHINDS=q1_st, $
         SSC_TIMES_UTC=q1_utc, $
         /USE_DARTDB_START_ENDDATE, $
+        DO_DESPUNDB=do_despun, $
         HISTOBINSIZE=histoBinSize, $
         RUNNING_AVERAGE=running_logAvg, $
         RUNNING_BIN_SPACING=running_bin_spacing, $

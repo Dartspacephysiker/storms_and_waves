@@ -3,8 +3,11 @@ PRO JOURNAL__20160107__SEAS__10_EFLUX_LOSSCONE_INTEG__ERRORBAR__NORTH
   @journal__20160107__plot_defaults.pro
 
   probOccPref       = pref + '--10-EFLUX_LOSSCONE_INTEG'
+  ;; probOccPref       = pref + '--10-EFLUX_LOSSCONE_INTEG--restricted_chare_4_300_eV'
+  ;; probOccPref       = pref + '--10-EFLUX_LOSSCONE_INTEG--restricted_chare_300_4000eV'
 
   maxInd            = 10
+  yRange_maxInd     = [2e1,8e4]
   yTitle            = title__alfDB_ind_10
 
   FOR j=0,N_ELEMENTS(do_these_plots)-1 DO BEGIN
@@ -22,6 +25,7 @@ PRO JOURNAL__20160107__SEAS__10_EFLUX_LOSSCONE_INTEG__ERRORBAR__NORTH
         SSC_TIMES_UTC=q1_utc, $
         /USE_DARTDB_START_ENDDATE, $
         HISTOBINSIZE=histoBinSize, $
+        RESTRICT_CHARERANGE=1, $
         RUNNING_AVERAGE=running_logAvg, $
         RUNNING_BIN_SPACING=running_bin_spacing, $
         RUNNING_SMOOTH_NPOINTS=smooth_nPoints, $
@@ -33,7 +37,7 @@ PRO JOURNAL__20160107__SEAS__10_EFLUX_LOSSCONE_INTEG__ERRORBAR__NORTH
         /REMOVE_DUPES, $
         HOURS_AFT_FOR_NO_DUPES=hours_aft, $
         MAXIND=maxInd, $
-        YRANGE_MAXIND=[2e1,8e4], $
+        YRANGE_MAXIND=yRange_maxInd, $
         YTITLE_MAXIND=yTitle, $
         /YLOGSCALE_MAXIND, $
         AVG_TYPE_MAXIND=2, $

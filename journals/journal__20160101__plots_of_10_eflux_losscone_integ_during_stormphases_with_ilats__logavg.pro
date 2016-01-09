@@ -8,9 +8,14 @@ PRO JOURNAL__20160101__PLOTS_OF_10_EFLUX_LOSSCONE_INTEG_DURING_STORMPHASES_WITH_
   maxInd    = 10
   enumfpt   = 'eflux_losscone_integ'
 
+  ;2016/01/08 Checking it out
+  ;; charERange = [4,300]
+  ;; charERange = [300,4000]
+
   PLOT_ALFVEN_STATS_DURING_STORMPHASES,DSTCUTOFF=dstCutoff, $
                                        /ENUMFLPLOTS, $
                                        ENUMFLPLOTTYPE=enumfpt, $
+                                       CHARERANGE=charERange, $
                                        /NONEGENUMFL, $ ;Because we're not interested in upflowing electrons
                                        /LOGENUMFLPLOT, $
                                        ;; ENUMFLPLOTRANGE=[0,6], $

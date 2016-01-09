@@ -1,22 +1,19 @@
-PRO JOURNAL__20160105__PLOTS_OF_08_ELEC_ENERGY_FLUX_DURING_STORMPHASES_WITH_ILATS__LOGAVG
+PRO JOURNAL__20160109__PLOTS_OF_NEVENTS_DURING_STORMPHASES_WITH_ILATS
 
   dstCutoff              = -20
 
-  ;;08-ELEC_ENERGY_FLUX
   maxInd                 = 08
   efpt                   = 'MAX'
   ePlotRange             = [2e-1,2e1]
 
   ;2016/01/08 Checking it out
-  charERange = [4,300]
-  charERange = [300,4000]
+  ;; charERange = [4,300]
+  ;; charERange = [300,4000]
 
   PLOT_ALFVEN_STATS_DURING_STORMPHASES,DSTCUTOFF=dstCutoff, $
                                        CHARERANGE=charERange, $
-                                       /EPLOTS, $
-                                       EPLOTRANGE=ePlotRange, $                                       
-                                       /LOGEFPLOT, $
-                                       EFLUXPLOTTYPE=efpt, $
+                                       /NPLOTS, $
+                                       /LOGNEVENTSPLOT, $
                                        /LOGAVGPLOT, $
                                        BINMLT=1.5, $
                                        /MIDNIGHT, $

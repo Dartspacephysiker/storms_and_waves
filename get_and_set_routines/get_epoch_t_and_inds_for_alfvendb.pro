@@ -38,6 +38,8 @@ PRO GET_EPOCH_T_AND_INDS_FOR_ALFVENDB,maximus,cdbTime,NEPOCHS=nEpochs,TBEFOREEPO
                          HEMI=hemi, $ ;/BOTH_HEMIS, $
                          ALTITUDERANGE=(restrict_altRange) ? [1000,5000] : !NULL, $
                          CHARERANGE=(restrict_charERange) ? [4,4000] : !NULL, $
+                         ;; CHARERANGE=(restrict_charERange) ? [300,4000] : !NULL, $
+                         ;; CHARERANGE=(restrict_charERange) ? [4,300] : !NULL, $
                          MINMLT=minM,MAXMLT=maxM,BINM=binM,MINILAT=minI,MAXILAT=maxI,BINI=binI, $
                          DO_LSHELL=do_lshell,MINLSHELL=minL,MAXLSHELL=maxL,BINL=binL, $
                          DAYSIDE=dayside,NIGHTSIDE=nightside,/PRINT_PARAM_SUMMARY)

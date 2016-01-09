@@ -1,14 +1,12 @@
-PRO JOURNAL__20160107__SEAS__08_ELEC_ENERGY_FLUX__ERRORBAR__NORTH
+PRO JOURNAL__20160108__SEAS__18_INTEG_ION_FLUX_UP__ERRORBAR__NORTH
 
-  @journal__20160107__plot_defaults.pro
+  @journal__20160108__plot_defaults.pro
 
-  maxQuant          = '08-ELEC_ENERGY_FLUX'
-  maxInd            = 08
-  yTitle            = title__alfDB_ind_08
-  yRange_maxInd     = [4e-2,5e2]
-
-  probOccPref       = pref + '--' + maxQuant
+  probOccPref       = pref + '--18-INTEG_ION_FLUX_UP'
   ptPref            = ''
+
+  maxInd            = 18
+  yTitle            = title__alfDB_ind_18
 
   FOR j=0,N_ELEMENTS(do_these_plots)-1 DO BEGIN
      i                 = do_these_plots[j]
@@ -24,6 +22,7 @@ PRO JOURNAL__20160107__SEAS__08_ELEC_ENERGY_FLUX__ERRORBAR__NORTH
         EPOCHINDS=q1_st, $
         SSC_TIMES_UTC=q1_utc, $
         /USE_DARTDB_START_ENDDATE, $
+        DO_DESPUNDB=do_despun, $
         HISTOBINSIZE=histoBinSize, $
         RUNNING_AVERAGE=running_logAvg, $
         RUNNING_BIN_SPACING=running_bin_spacing, $
@@ -36,8 +35,9 @@ PRO JOURNAL__20160107__SEAS__08_ELEC_ENERGY_FLUX__ERRORBAR__NORTH
         /REMOVE_DUPES, $
         HOURS_AFT_FOR_NO_DUPES=hours_aft, $
         MAXIND=maxInd, $
-        YRANGE_MAXIND=yRange_maxInd, $
+        YRANGE_MAXIND=[1e8,1e13], $
         YTITLE_MAXIND=yTitle, $
+        /XLABEL_MAXIND__SUPPRESS, $
         /YLOGSCALE_MAXIND, $
         AVG_TYPE_MAXIND=2, $
         SYMCOLOR__MAX_PLOT=symColor[i], $
