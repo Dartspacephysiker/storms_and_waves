@@ -9,31 +9,31 @@
 ;
 ; OPTIONAL INPUTS:
 ;
-; KEYWORD PARAMETERS:          TBEFOREEPOCH      : Amount of time (hours) to plot before a given DST min
-;                              TAFTEREPOCH       : Amount of time (hours) to plot after a given DST min
-;                              STARTDATE         : Include storms starting with this time (in seconds since Jan 1, 1970)
-;                              STOPDATE          : Include storms up to this time (in seconds since Jan 1, 1970)
-;                              EPOCHINDS         : Indices of epochs to be included within the given storm DB
-;                              SSC_TIMES_UTC     : Times (in UTC) of sudden commencements
-;                              REMOVE_DUPES      : Remove all duplicate epochs falling within [tBeforeEpoch,tAfterEpoch]
-;                              STORMTYPE         : '0'=small, '1'=large, '2'=all <-- ONLY APPLICABLE TO BRETT'S DB
-;                              USE_SYMH          : Use SYM-H geomagnetic index instead of DST for plots of storm epoch.
-;                              NEVENTHISTS       : Create histogram of number of Alfvén events relative to storm epoch
-;                              HISTOBINSIZE      : Size of histogram bins in hours
-;                              NEG_AND_POS_SEPAR : Do plots of negative and positive log numbers separately
-;                              MAXIND            : Index into maximus structure; plot corresponding quantity as a function of time
-;                                                    since storm commencement (e.g., MAXIND=6 corresponds to mag current).
-;                              AVG_TYPE_MAXIND   : Type of averaging to perform for events in a particular time bin.
-;                                                    0: standard averaging; 1: log averaging (if /LOG_DBQUANTITY is set)
-;                              RUNNING_AVG       : Length of running avg window in hours (automatically calculated for every binsize increment)
-;                              LOG_DBQUANTITY    : Plot the quantity from the Alfven wave database on a log scale
-;                              NO_SUPERPOSE      : Don't superpose Alfven wave DB quantities over Dst/SYM-H 
-;                              NOPLOTS           : Do not plot anything.
-;                              NOMAXPLOTS        : Do not plot output from Alfven wave/Chaston DB.
-;                              NEG_AND_POS_LAYOUT: Set to array of plot layout for pos_and_neg_plots
-;                               
-;                              PLOTTITLE         : Title of superposed plot
-;                              SAVEPNAME         : Name of outputted file
+; KEYWORD PARAMETERS:          TBEFOREEPOCH              : Amount of time (hours) to plot before a given DST min
+;                              TAFTEREPOCH               : Amount of time (hours) to plot after a given DST min
+;                              STARTDATE                 : Include storms starting with this time (in seconds since Jan 1, 1970)
+;                              STOPDATE                  : Include storms up to this time (in seconds since Jan 1, 1970)
+;                              EPOCHINDS                 : Indices of epochs to be included within the given storm DB
+;                              SSC_TIMES_UTC             : Times (in UTC) of sudden commencements
+;                              REMOVE_DUPES              : Remove all duplicate epochs falling within [tBeforeEpoch,tAfterEpoch]
+;                              STORMTYPE                 : '0'=small, '1'=large, '2'=all <-- ONLY APPLICABLE TO BRETT'S DB
+;                              USE_SYMH                  : Use SYM-H geomagnetic index instead of DST for plots of storm epoch.
+;                              NEVENTHISTS               : Create histogram of number of Alfvén events relative to storm epoch
+;                              HISTOBINSIZE              : Size of histogram bins in hours
+;                              NEG_AND_POS_SEPAR         : Do plots of negative and positive log numbers separately
+;                              MAXIND                    : Index into maximus structure; plot corresponding quantity as a function of time
+;                                                            since storm commencement (e.g., MAXIND=6 corresponds to mag current).
+;                              AVG_TYPE_MAXIND           : Type of averaging to perform for events in a particular time bin.
+;                                                            0: standard averaging; 1: log averaging (if /LOG_DBQUANTITY is set)
+;                              RUNNING_AVG               : Length of running avg window in hours (automatically calculated for every binsize increment)
+;                              LOG_DBQUANTITY            : Plot the quantity from the Alfven wave database on a log scale
+;                              NO_SUPERPOSE              : Don't superpose Alfven wave DB quantities over Dst/SYM-H 
+;                              NOPLOTS                   : Do not plot anything.
+;                              NOMAXPLOTS                : Do not plot output from Alfven wave/Chaston DB.
+;                              NEG_AND_POS_LAYOUT        : Set to array of plot layout for pos_and_neg_plots
+;                              PRINT_MAXIND_SEA_STATS    : Print some pre-storm, storm-time, and recovery stats on the quantity of interest.
+;                              PLOTTITLE                 : Title of superposed plot
+;                              SAVEPNAME                 : Name of outputted file
 ;
 ; OUTPUTS:                     
 ;
@@ -59,6 +59,7 @@
 ;                         2016/01/01 Added REVERSE_REMOVE_DUPES to see what happens if we remove storms BEFORE others
 ;                         2016/01/07 Added ERROR_BAR_CONFLIMIT; it looks like we've got to have error bars after all...
 ;                                    ... Oh, and RUNNING_BIN{L,R}_OFFSET
+;                         2016/01/11 Added PRINT_MAXIND_SEA_STATS keyword.
 ;-
 PRO SUPERPOSE_STORMS_ALFVENDBQUANTITIES,stormTimeArray_utc, $
                                         TBEFOREEPOCH=tBeforeEpoch,TAFTEREPOCH=tAfterEpoch, $
@@ -116,8 +117,10 @@ PRO SUPERPOSE_STORMS_ALFVENDBQUANTITIES,stormTimeArray_utc, $
                                         YTITLE_MAXIND=yTitle_maxInd, $
                                         YRANGE_MAXIND=yRange_maxInd, $
                                         SYMTRANSP_MAXIND=symTransp_maxInd, $
+                                        PRINT_MAXIND_SEA_STATS=print_maxInd_sea_stats, $
                                         ;; LEGEND_MAXIND__SUPPRESS=legend_maxInd__suppress, $
-                                        BKGRND_HIST=bkgrnd_hist, BKGRND_MAXIND=bkgrnd_maxInd,TBINS=tBins, $
+                                        BKGRND_HIST=bkgrnd_hist, BKGRND_MAXIND=bkgrnd_maxInd, $
+                                        TBINS=tBins, $
                                         DBFILE=dbFile,DB_TFILE=db_tFile, $
                                         NO_SUPERPOSE=no_superpose, $
                                         WINDOW_GEOMAG=geomagWindow, $
@@ -388,7 +391,9 @@ PRO SUPERPOSE_STORMS_ALFVENDBQUANTITIES,stormTimeArray_utc, $
            NEVHISTDATA=nEvHistData, $
            TAFTEREPOCH=tafterepoch,TBEFOREEPOCH=tBeforeEpoch, $
            HISTOBINSIZE=histoBinSize,NEVTOT=nEvTot, $
-           NONZERO_I=nz_i
+           NONZERO_I=nz_i, $
+           PRINT_MAXIND_SEA_STATS=print_maxInd_sea_stats, $
+           LUN=lun
 
         IF KEYWORD_SET(probOccurrence_sea) THEN BEGIN
 
@@ -415,7 +420,9 @@ PRO SUPERPOSE_STORMS_ALFVENDBQUANTITIES,stormTimeArray_utc, $
               RUNNING_BIN_L_OFFSET=bin_l_offset, $
               RUNNING_BIN_R_OFFSET=bin_r_offset, $
               FASTLOC_I_LIST=fastLoc_i_list,FASTLOC_T_LIST=fastLoc_t_list,FASTLOC_DT_LIST=fastLoc_dt_list, $
-              NONZERO_I=nz_i_fastLoc ; , $
+              NONZERO_I=nz_i_fastLoc, $
+              PRINT_MAXIND_SEA_STATS=print_maxInd_sea_stats, $
+              LUN=lun
               ;; FASTLOC_STRUCT=fastLoc,FASTLOC_TIMES=fastLoc_times,FASTLOC_DELTA_T=fastLoc_delta_t
            
            IF N_ELEMENTS(nz_i_fastLoc) LT N_ELEMENTS(nz_i) THEN BEGIN
@@ -517,7 +524,9 @@ PRO SUPERPOSE_STORMS_ALFVENDBQUANTITIES,stormTimeArray_utc, $
         
      ENDIF ELSE BEGIN                      ;end IF nEventHists
         IF KEYWORD_SET(probOccurrence_sea) THEN BEGIN
-           PLOT_ALFVENDBQUANTITY_HISTOGRAM__EPOCH,histTBins,histData, $
+           PLOT_ALFVENDBQUANTITY_HISTOGRAM__EPOCH,histTBins- $
+                                                  (KEYWORD_SET(window_sum) ? window_sum/2. : 0), $
+                                                  histData, $
                                                   NAME=name__histo_plot, $
                                                   XRANGE=xRange, $
                                                   HISTORANGE=histoRange, $

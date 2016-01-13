@@ -31,6 +31,7 @@ PRO JOURNAL__20160107__SEAS__10_EFLUX_LOSSCONE_INTEG__ERRORBAR__NORTH
         RUNNING_SMOOTH_NPOINTS=smooth_nPoints, $
         RUNNING_BIN_L_OFFSET=running_bin_l_offset, $
         RUNNING_BIN_R_OFFSET=running_bin_r_offset, $
+        /PRINT_MAXIND_SEA_STATS, $
         MAKE_ERROR_BARS__AVG_PLOT=make_eb, $
         ERROR_BAR_NBOOT=eb_nBoot, $
         STORMTYPE=1, $
