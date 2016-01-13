@@ -33,7 +33,7 @@ PRO REMOVE_EPOCH_DUPES,NEPOCHS=nEpochs, $
   IF nBad GT 0 THEN BEGIN
      PRINT,'Losing ' + STRCOMPRESS(N_ELEMENTS(bad_i),/REMOVE_ALL) + ' epochs that would otherwise be duplicated in the SEA...'
      
-     FOR j=0,N_ELEMENTS(bad_i)-1 DO print,FORMAT='("Epoch ",I0,":",TR5,A0)',bad_i(j),tStamps(bad_i(j)) ;show me where!
+     FOR j=0,N_ELEMENTS(bad_i)-1 DO print,FORMAT='("Epoch ",I0,":",TR5,A0)',bad_i[j],tStamps[bad_i[j]] ;show me where!
      
      datStartStop = datStartStop[keep_i,*]
      nEpochs = nKeep
