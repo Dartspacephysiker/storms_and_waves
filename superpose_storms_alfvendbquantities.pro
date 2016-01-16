@@ -154,7 +154,9 @@ PRO SUPERPOSE_STORMS_ALFVENDBQUANTITIES,stormTimeArray_utc, $
                                         OUT_MAXPLOT=out_maxPlot, $
                                         OUT_GEOMAG_PLOT=out_geomag_plot, $
                                         OUT_HISTO_PLOT=out_histo_plot, $
-                                        OUT_AVG_PLOT=out_avg_plot
+                                        OUT_AVG_PLOT=out_avg_plot, $
+                                        EPS_OUTPUT=eps_output, $
+                                        PDF_OUTPUT=pdf_output
   
   
   dataDir='/SPENCEdata/Research/Cusp/database/'
@@ -175,14 +177,18 @@ PRO SUPERPOSE_STORMS_ALFVENDBQUANTITIES,stormTimeArray_utc, $
                               OMNI_QUANTITY=omni_quantity,LOG_OMNI_QUANTITY=log_omni_quantity,USE_DATA_MINMAX=use_data_minMax, $
                               HISTOBINSIZE=histoBinSize, HISTORANGE=histoRange, $
                               PROBOCCURENCE_SEA=probOccurrence_sea, $
-                              SAVEMAXPLOT=saveMaxPlot, $
+                              ;; SAVEMAXPLOT=saveMaxPlot, $
                               SAVEFILE=saveFile,SAVESTR=saveStr, $
-                              PLOTTITLE=plotTitle,SAVEPLOTNAME=savePlotName, $
+                              PLOTTITLE=plotTitle, $
+                              SAVEPNAME=savePName, $
+                              SAVEMPNAME=saveMPName, $
                               NOPLOTS=noPlots,NOGEOMAGPLOTS=noGeomagPlots, $
                               NOMAXPLOTS=noMaxPlots, $
                               NOAVGPLOTS=noAvgPlots, $
                               DO_SCATTERPLOTS=do_scatterPlots,EPOCHPLOT_COLORNAMES=epochPlot_colorNames,SCATTEROUTPREFIX=scatterOutPrefix, $
-                              RANDOMTIMES=randomTimes
+                              RANDOMTIMES=randomTimes, $
+                              EPS_OUTPUT=eps_output, $
+                              PDF_OUTPUT=pdf_output
 
   @utcplot_defaults.pro
 
@@ -581,7 +587,12 @@ PRO SUPERPOSE_STORMS_ALFVENDBQUANTITIES,stormTimeArray_utc, $
   IF KEYWORD_SET(savePlot) THEN BEGIN
      SET_PLOT_DIR,plotDir,/FOR_STORMS,/VERBOSE,/ADD_TODAY
      PRINT,"Saving plot to file: " + plotDir + savePName
-     geomagWindow.save,plotDir + savePName,RESOLUTION=defRes
+     geomagWindow.save,plotDir + savePName,RESOLUTION=defRes,CMYK=KEYWORD_SET(eps_output)
+
+     IF KEYWORD_SET(eps_output) THEN BEGIN
+        ;; SETUP_EPS_OUTPUT,/CLOSE
+        CGPS_CLOSE
+     ENDIF
   ENDIF
 
   IF KEYWORD_SET(maxInd) AND ~KEYWORD_SET(proOccurrence_sea) THEN BEGIN
@@ -886,7 +897,12 @@ PRO SUPERPOSE_STORMS_ALFVENDBQUANTITIES,stormTimeArray_utc, $
      IF KEYWORD_SET(saveMaxPlot) AND ~(noPlots OR (noMaxPlots AND noAvgPlots)) THEN BEGIN
         SET_PLOT_DIR,plotDir,/FOR_STORMS,/VERBOSE,/ADD_TODAY
         PRINT,"Saving maxplot to file: " + plotDir + saveMPName
-        maximuswindow.save,plotDir + saveMPName,RESOLUTION=defRes
+        maximuswindow.save,plotDir + saveMPName,RESOLUTION=defRes,CMYK=KEYWORD_SET(eps_output)
+
+        IF KEYWORD_SET(eps_output) THEN BEGIN
+           ;; SETUP_EPS_OUTPUT,/CLOSE
+           CGPS_CLOSE
+        ENDIF
      ENDIF
 
   ENDIF

@@ -92,8 +92,10 @@ PRO STACKPLOTS_STORMS_ALFVENDBQUANTITIES_OVERLAID,stormTimeArray_utc, $
                              SAVEFILE=saveFile, $
                              OVERPLOT_HIST=overplot_hist, $
                              PLOTTITLE=plotTitle, $
-                             SAVEPLOTNAME=savePlotName, $
-                             SAVEMAXPLOTNAME=saveMaxPlotName, $
+                             SAVEPLOT=savePlot, $
+                             SAVEMAXPLOT=saveMaxPlot, $
+                             SAVEPNAME=savePName, $
+                             SAVEMPNAME=saveMPName, $
                              DO_SCATTERPLOTS=do_scatterPlots, $
                              EPOCHPLOT_COLORNAMES=epochPlot_colorNames, $
                              SCATTEROUTPREFIX=scatterOutPrefix, $
@@ -102,7 +104,8 @@ PRO STACKPLOTS_STORMS_ALFVENDBQUANTITIES_OVERLAID,stormTimeArray_utc, $
                              OUT_MAXPLOTS=out_maxPlots, $ ;OUT_MAXWINDOW=out_maxWindow, $
                              OUT_GEOMAGPLOTS=out_geomagPlots,OUT_GEOMAGWINDOW=geomagWindow, $
                              OUT_DATSTARTSTOP=out_datStartStop, $
-                             SHOW_DATA_AVAILABILITY= show_data_availability
+                             SHOW_DATA_AVAILABILITY= show_data_availability, $
+                             EPS_OUTPUT=eps_output
   
   
   dataDir='/SPENCEdata/Research/Cusp/database/'
@@ -120,8 +123,11 @@ PRO STACKPLOTS_STORMS_ALFVENDBQUANTITIES_OVERLAID,stormTimeArray_utc, $
                               HISTOBINSIZE=histoBinSize, $
                               SAVEFILE=saveFile,SAVESTR=saveStr, $
                               NOPLOTS=noPlots,NOMAXPLOTS=noMaxPlots, $
+                              SAVEPNAME=savePName, $
+                              SAVEMPNAME=saveMPName, $
                               DO_SCATTERPLOTS=do_scatterPlots,EPOCHPLOT_COLORNAMES=epochPlot_colorNames,SCATTEROUTPREFIX=scatterOutPrefix, $
-                              SHOW_DATA_AVAILABILITY=show_data_availability
+                              SHOW_DATA_AVAILABILITY=show_data_availability, $
+                              EPS_OUTPUT=eps_output
 
   @utcplot_defaults.pro
 
@@ -552,9 +558,9 @@ PRO STACKPLOTS_STORMS_ALFVENDBQUANTITIES_OVERLAID,stormTimeArray_utc, $
         ENDELSE
      ENDIF
 
-     ;; IF KEYWORD_SET(saveMaxPlotName) AND ~(noPlots OR noMaxPlots) THEN BEGIN
-     ;;    PRINT,"Saving maxplot to file: " + saveMaxPlotName
-     ;;    maximuswindow.save,savemaxplotname,RESOLUTION=defRes
+     ;; IF KEYWORD_SET(saveMaxPlot) AND ~(noPlots OR noMaxPlots) THEN BEGIN
+     ;;    PRINT,"Saving maxplot to file: " + saveMPName
+     ;;    maximuswindow.save,saveMPName,RESOLUTION=defRes
      ;; ENDIF
 
   ENDIF
@@ -586,10 +592,15 @@ PRO STACKPLOTS_STORMS_ALFVENDBQUANTITIES_OVERLAID,stormTimeArray_utc, $
      ENDFOR
   ENDIF
 
-  IF KEYWORD_SET(savePlotName) THEN BEGIN
+  IF KEYWORD_SET(savePlot) THEN BEGIN
      SET_PLOT_DIR,plotDir,/FOR_STORMS,/VERBOSE,/ADD_TODAY
-     PRINT,"Saving plot to file: " + plotDir + savePlotName
-     geomagWindow.save,plotDir + savePlotName,RESOLUTION=defRes
+     PRINT,"Saving plot to file: " + plotDir + savePName
+     geomagWindow.save,plotDir + savePName,RESOLUTION=defRes
+
+     IF KEYWORD_SET(eps_output) THEN BEGIN
+        ;; SETUP_EPS_OUTPUT,/CLOSE
+        CGPS_CLOSE
+     ENDIF
   ENDIF
   ;; out_geomagWindow = geomagWindow
 

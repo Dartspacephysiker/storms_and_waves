@@ -50,7 +50,9 @@ PRO PLOT_ALFVEN_STATS_DURING_STORMPHASES,$
                                  JUSTDATA=justData, SHOWPLOTSNOSAVE=showPlotsNoSave, $
                                  PLOTDIR=plotDir, PLOTPREFIX=plotPrefix, PLOTSUFFIX=plotSuffix, $
                                  MEDHISTOUTDATA=medHistOutData, MEDHISTOUTTXT=medHistOutTxt, $
-                                 OUTPUTPLOTSUMMARY=outputPlotSummary, DEL_PS=del_PS, $
+                                 OUTPUTPLOTSUMMARY=outputPlotSummary, $
+                                 DEL_PS=del_PS, $
+                                 EPS_OUTPUT=eps_output, $
                                  LUN=lun, $
                                  PRINT_DATA_AVAILABILITY=print_data_availability, $
                                  COMBINE_STORMPHASE_PLOTS=combine_stormphase_plots, $
@@ -154,7 +156,9 @@ PRO PLOT_ALFVEN_STATS_DURING_STORMPHASES,$
                                   JUSTDATA=justData, SHOWPLOTSNOSAVE=showPlotsNoSave, $
                                   PLOTDIR=plotDir, PLOTPREFIX=strings[i], PLOTSUFFIX=plotSuffix, $
                                   MEDHISTOUTDATA=medHistOutData, MEDHISTOUTTXT=medHistOutTxt, $
-                                  OUTPUTPLOTSUMMARY=outputPlotSummary, DEL_PS=del_PS, $
+                                  OUTPUTPLOTSUMMARY=outputPlotSummary, $
+                                  DEL_PS=del_PS, $
+                                  EPS_OUTPUT=eps_output, $
                                   OUT_TEMPFILE=out_tempFile, $
                                   NO_COLORBAR=no_colorbar[i], $
                                   CB_FORCE_OOBHIGH=cb_force_oobHigh, $
@@ -169,6 +173,7 @@ PRO PLOT_ALFVEN_STATS_DURING_STORMPHASES,$
 
   IF KEYWORD_SET(combine_stormphase_plots) THEN BEGIN
 
+     IF KEYWORD_SET(eps_output) THEN fileSuff = '.ps' ELSE fileSuff = '.png'
      ;; COMBINE_ALFVEN_STATS_PLOTS,niceStrings, $
      ;;                            TEMPFILES=outTempFiles, $
      ;;                            OUT_IMGS_ARR=out_imgs_arr, $
@@ -185,7 +190,7 @@ PRO PLOT_ALFVEN_STATS_DURING_STORMPHASES,$
      plotFileArr = !NULL
      FOR i=0,2 DO BEGIN
         RESTORE,outTempFiles[i]
-        plotFileArr = [plotFileArr,plotDir + paramStr+dataNameArr[0]+'.png']
+        plotFileArr = [plotFileArr,plotDir + paramStr+dataNameArr[0] + fileSuff]
         ;; imArr[i]    = IMAGE(plotFileArr[i], $
         ;;                     LAYOUT=[3,1,i+1],$
         ;;                     MARGIN=0)
@@ -205,7 +210,7 @@ PRO PLOT_ALFVEN_STATS_DURING_STORMPHASES,$
         ;; hoyDia = GET_TODAY_STRING()
         save_combined_name = GET_TODAY_STRING() + '--' + dataNameArr[0] + $
                              (KEYWORD_SET(plotSuffix) ? plotSuffix : '') + $
-                             '--' + statType + '--combined_phases.png'
+                             '--' + statType + '--combined_phases' + fileSuff
      ENDIF
 
      PRINT,"Saving to " + save_combined_name + "..."

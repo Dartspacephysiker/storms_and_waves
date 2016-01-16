@@ -16,16 +16,20 @@ PRO SET_STORMS_NEVENTS_DEFAULTS,TBEFOREEPOCH=tBeforeEpoch,TAFTEREPOCH=tAfterEpoc
                                 OMNI_QUANTITY=omni_quantity,LOG_OMNI_QUANTITY=log_omni_quantity,USE_DATA_MINMAX=use_data_minMax, $
                                 HISTOBINSIZE=histoBinSize, HISTORANGE=histoRange, $
                                 PROBOCCURENCE_SEA=probOccurrence_sea, $
-                                SAVEMAXPLOTNAME=saveMaxPlotName, $
+                                SAVEPNAME=savePName, $
+                                SAVEMPNAME=saveMPName, $
                                 SAVEFILE=saveFile,SAVESTR=saveStr, $
-                                PLOTTITLE=plotTitle,SAVEPLOTNAME=savePlotName, $
+                                PLOTTITLE=plotTitle, $
                                 NOPLOTS=noPlots, $
                                 NOGEOMAGPLOTS=noGeomagPlots, $
                                 NOMAXPLOTS=noMaxPlots, $
                                 NOAVGPLOTS=noAvgPlots, $
                                 DO_SCATTERPLOTS=do_scatterPlots,epochPlot_colorNames=scPlot_colorList,SCATTEROUTPREFIX=scatterOutPrefix, $
                                 RANDOMTIMES=randomTimes, $
-                                SHOW_DATA_AVAILABILITY=show_data_availability
+                                SHOW_DATA_AVAILABILITY=show_data_availability, $
+                                EPS_OUTPUT=eps_output, $
+                                PDF_OUTPUT=pdf_output, $
+                                LUN=lun
   
 
   defTBeforeEpoch               = 60.0D                                 ;in hours
@@ -73,6 +77,8 @@ PRO SET_STORMS_NEVENTS_DEFAULTS,TBEFOREEPOCH=tBeforeEpoch,TAFTEREPOCH=tAfterEpoc
   defShow_data_availability     = 0
 
   ;;set defaults
+  IF N_ELEMENTS(lun) EQ 0 THEN lun = -1 ;stdout
+
   IF N_ELEMENTS(tBeforeEpoch) EQ 0 THEN tBeforeEpoch = defTBeforeEpoch
   IF N_ELEMENTS(tAfterEpoch) EQ 0 THEN tAfterEpoch = defTAfterEpoch
 
@@ -134,8 +140,52 @@ PRO SET_STORMS_NEVENTS_DEFAULTS,TBEFOREEPOCH=tBeforeEpoch,TAFTEREPOCH=tAfterEpoc
      IF SIZE(saveFile,/TYPE) NE 7 THEN saveFile='superpose_storms_alfven_db_quantities.dat'
   ENDIF ELSE saveStr=''
 
-  IF KEYWORD_SET(savePlotName) THEN BEGIN
-     IF SIZE(savePlotName,/TYPE) NE 7 THEN savePlotName="SYM-H_plus_histogram.png"
+  IF KEYWORD_SET(savePName) THEN BEGIN
+     IF SIZE(savePName,/TYPE) NE 7 THEN BEGIN
+        savePName=GET_TODAY_STRING(/DO_YYYYMMDD_FMT) + "--superpose_storms_plot_output.png"
+        PRINT,'savePName set without providing a name! Set to ' + savePName
+     ENDIF
+  ENDIF ELSE BEGIN
+     savePName = !NULL
+  ENDELSE
+
+  IF KEYWORD_SET(saveMPName) THEN BEGIN
+     IF SIZE(saveMPName,/TYPE) NE 7 THEN BEGIN
+        saveMPName=GET_TODAY_STRING(/DO_YYYYMMDD_FMT) + "--superpose_storms_maxplot_output.png"
+        PRINT,'saveMPName set without providing a name! Set to ' + saveMPName
+     ENDIF
+  ENDIF ELSE BEGIN
+     saveMPName = !NULL
+  ENDELSE
+
+  IF ( KEYWORD_SET(eps_output) OR KEYWORD_SET(pdf_output) ) AND (KEYWORD_SET(savePName) OR KEYWORD_SET(saveMPName)) THEN BEGIN
+     IF KEYWORD_SET(saveMPName) AND KEYWORD_SET(savePName) THEN BEGIN
+        PRINT,"Can't do both maxPlot and a regular plot at the same time! Stopping ..."
+        STOP
+     ENDIF ELSE BEGIN
+        IF KEYWORD_SET(saveMPName) THEN BEGIN
+           fName = saveMPName
+        ENDIF ELSE BEGIN
+           IF KEYWORD_SET(savePName) THEN BEGIN
+              fName = savePName
+           ENDIF
+        ENDELSE
+     ENDELSE
   ENDIF
+
+  IF KEYWORD_SET(eps_output) THEN BEGIN
+     ;; SETUP_EPS_OUTPUT,FILENAME=fName
+     CGPS_OPEN,fName,/ENCAPSULATED
+  ENDIF ELSE BEGIN
+     IF KEYWORD_SET(pdf_output) THEN BEGIN
+        IF STRMATCH(fName,'*.png',/FOLD_CASE) THEN BEGIN
+           fName = fName.replace('.png','.tiff',/FOLD_CASE)
+           PRINT,FORMAT='("Swapped ending to make .pdf   :",A0)',fName
+        ENDIF
+        IF KEYWORD_SET(saveMPName) THEN saveMPName = fName ELSE BEGIN
+           IF KEYWORD_SET(savePName) THEN savePName = fName
+        ENDELSE
+     ENDIF
+  ENDELSE
 
 END
