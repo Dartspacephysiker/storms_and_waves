@@ -18,9 +18,11 @@ PRO JOURNAL__20160119__PLOTS_OF_10_EFLUX_LOSSCONE_INTEG_DURING_STORMPHASES_WITH_
                                        ENUMFLPLOTRANGE=[10^(2.0),10^(4.0)], $
                                        PLOTSUFFIX=plotSuff, $
                                        /LOGAVGPLOT, $
-                                       /SOUTH, $
+                                       ;; /SOUTH, $
+                                       /NORTH, $
                                        BINMLT=1.5, $
-                                       MAXILAT=-54, $
+                                       ;; MAXILAT=-54, $
+                                       MINILAT=54, $
                                        /MIDNIGHT, $
                                        /CB_FORCE_OOBHIGH, $
                                        /COMBINE_STORMPHASE_PLOTS, $
