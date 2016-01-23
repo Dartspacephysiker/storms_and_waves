@@ -29,13 +29,13 @@ PRO GET_SPENCE_SSCS_BASED_ON_RATING,storm_inds,storm_utcs,STORMRATING=stormRatin
 
   ;;Load the other stuff
   ;; LOAD_NOAA_AND_BRETT_DBS_AND_QI,stormStruct,SSC1,SSC2,qi,INDS_FILE=inds_file
-  LOAD_NOAA_AND_BRETT_DBS_AND_QI,stormStruct,SSC1,SSC2,qi,INDS_FILE=inds_file
-  q1_st=qi[0].list_i[0]
-  q1_1=qi[1].list_i[0]
+  ;; LOAD_NOAA_AND_BRETT_DBS_AND_QI,stormStruct,SSC1,SSC2,qi,INDS_FILE=inds_file
+  ;; q1_st=qi[0].list_i[0]
+  ;; q1_1=qi[1].list_i[0]
   
-  q1_utc=conv_julday_to_utc(ssc1.julday[q1_1])
+  ;; q1_utc=conv_julday_to_utc(ssc1.julday[q1_1])
 
-  stormStruct_inds=WHERE(stormStruct.time GE startDate AND stormStruct.time LE stopDate AND stormstruct.is_largestorm,/NULL)
+  ;; stormStruct_inds=WHERE(stormStruct.time GE startDate AND stormStruct.time LE stopDate AND stormstruct.is_largestorm,/NULL)
 
 
 END

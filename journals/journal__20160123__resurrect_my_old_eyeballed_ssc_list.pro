@@ -34,13 +34,13 @@ PRO JOURNAL__20160123__RESURRECT_MY_OLD_EYEBALLED_SSC_LIST
   ;;Load the other stuff
   ;; LOAD_NOAA_AND_BRETT_DBS_AND_QI,stormStruct,SSC1,SSC2,qi,INDS_FILE=inds_file
   LOAD_NOAA_AND_BRETT_DBS_AND_QI,stormStruct,SSC1,SSC2,qi,INDS_FILE=inds_file
-  q1_st                     = qi[0].list_i[0]
-  q1_1                      = qi[1].list_i[0]
-  q1_utc                    = conv_julday_to_utc(ssc1.julday[q1_1])
+  ;; q1_st                     = qi[0].list_i[0]
+  ;; q1_1                      = qi[1].list_i[0]
+  ;; q1_utc                    = conv_julday_to_utc(ssc1.julday[q1_1])
   stormStruct_inds          = WHERE(stormStruct.time GE startDate AND stormStruct.time LE stopDate AND stormstruct.is_largestorm,/NULL)
 
   ;;Get the times of my SSCs in UTC
-  times                     = stormstruct.time[stormStruct_inds[lrg_commencement.ind]] + lrg_commencement.offset
+  times                     = stormstruct.time[stormStruct_inds[lrg_commencement.ind]] + lrg_commencement.offset*3600
 
   lrg_commencement          ={lrgStorm_AND_after_dartdb_begins_ind:lrg_commencement.ind, $
                               inds_into_stormStruct:stormStruct_inds[lrg_commencement.ind], $
