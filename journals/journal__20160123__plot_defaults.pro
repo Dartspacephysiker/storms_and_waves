@@ -7,6 +7,8 @@
   psRegion              = ['dayside','nightside']
   hours_aft             = 60
                               
+  stormType             = 2
+
   stormRating           = 3
 
   do_these_plots        = [0,1]
@@ -22,20 +24,31 @@
 
   do_despun             = 0
 
-  pref                  = 'journal_20160123--SEA_Spence_SSC_largestorms'
+  ;; pref                  = 'journal_20160123--SEA_Spence_SSC_largestorms'
+  pref                  = 'journal_20160123--SEA_Quad1and2_NOAA_largestorms'
   plotSuff              = '--2-hr_spacing--no_smoothing--north_hemi.png'
 
   ;;strings 'n' things
   ;; fancy_plotNames   = 1
   @fluxplot_defaults
 
-  GET_SPENCE_SSCS_BASED_ON_RATING,q1_st,q1_utc,STORMRATING=stormRating
+  ;; GET_SPENCE_SSCS_BASED_ON_RATING,q1_st,q1_utc,STORMRATING=stormRating
 
-  ;; LOAD_NOAA_AND_BRETT_DBS_AND_QI,stormStruct,SSC1,SSC2,qi,DBDir=DBDir,DB_BRETT=DB_Brett,DB_NOAA=DB_NOAA,INDS_FILE=inds_file
+  LOAD_NOAA_AND_BRETT_DBS_AND_QI,stormStruct,SSC1,SSC2,qi,DBDir=DBDir,DB_BRETT=DB_Brett,DB_NOAA=DB_NOAA,INDS_FILE=inds_file
 
-  ;; ;;these qi structs get restored with the inds file
+  ;;these qi structs get restored with the inds file
   ;; q1_st=qi[0].list_i[0]
   ;; q1_1=qi[1].list_i[0]
   
   ;; q1_utc=conv_julday_to_utc(ssc1.julday[q1_1])
+
+  q1_st=[qi[0].list_i[0],qi[0].list_i[1]]
+  q1_1=[qi[1].list_i[0],qi[1].list_i[1]]
+  q1_utc=conv_julday_to_utc(ssc1.julday[q1_1])
+
+  ;for doing Q2
+  ;; q1_st=qi[0].list_i[2]
+  ;; q1_1=qi[1].list_i[2]
+  
+  ;; q1_utc=!NULL
 

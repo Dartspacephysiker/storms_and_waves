@@ -33,7 +33,7 @@ PRO JOURNAL__20160123__SEAS__08_ELEC_ENERGY_FLUX__SPENCE_SSC__NORTH
         /PRINT_MAXIND_SEA_STATS, $
         MAKE_ERROR_BARS__AVG_PLOT=make_eb, $
         ERROR_BAR_NBOOT=eb_nBoot, $
-        STORMTYPE=1, $
+        STORMTYPE=stormType, $
         /REMOVE_DUPES, $
         HOURS_AFT_FOR_NO_DUPES=hours_aft, $
         MAXIND=maxInd, $

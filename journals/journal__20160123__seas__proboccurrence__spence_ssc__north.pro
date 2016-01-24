@@ -4,9 +4,13 @@ PRO JOURNAL__20160123__SEAS__PROBOCCURRENCE__SPENCE_SSC__NORTH
 
   window_sum        = 10
 
-  probOccPref       = pref + 'PROBOCCURRENCE--with_SPENCE_SSC--window_sum'
+  ;; probOccPref       = pref + 'PROBOCCURRENCE--with_SPENCE_SSC--window_sum'
+  ;; probOccPref       = pref + 'PROBOCCURRENCE--with_Q3_no_NOAA--window_sum'
+  probOccPref       = pref + 'PROBOCCURRENCE--with_Q1andQ2_NOAA--window_sum'
   ptPref            = ''
-  pT                = 'SEA of Spence storms'
+  ;; pT                = 'SEA of Spence storms'
+  ;; pT                = 'SEA of Q3 storms'
+  pT                = 'SEA of Q1 and Q2 storms'
 
   FOR j=0,N_ELEMENTS(do_these_plots)-1 DO BEGIN
      i                 = do_these_plots[j]
@@ -20,7 +24,7 @@ PRO JOURNAL__20160123__SEAS__PROBOCCURRENCE__SPENCE_SSC__NORTH
         EPOCHINDS=q1_st, $
         SSC_TIMES_UTC=q1_utc, $
         /USE_DARTDB_START_ENDDATE, $
-        STORMTYPE=1, $
+        STORMTYPE=stormType, $
         /REMOVE_DUPES, $
         HOURS_AFT_FOR_NO_DUPES=hours_aft, $
         MINMLT=minM[i], $
