@@ -167,6 +167,7 @@ PRO SUPERPOSE_STORMS_ALFVENDBQUANTITIES,stormTimeArray_utc, $
                               DAYSIDE=dayside,NIGHTSIDE=nightside, $
                               RESTRICT_CHARERANGE=restrict_charERange,RESTRICT_ALTRANGE=restrict_altRange, $
                               MAXIND=maxInd,AVG_TYPE_MAXIND=avg_type_maxInd,LOG_DBQUANTITY=log_DBQuantity, $
+                              USING_HEAVIES=using_heavies, $
                               YLOGSCALE_MAXIND=yLogScale_maxInd, $
                               YTITLE_MAXIND=yTitle_maxInd, YRANGE_MAXIND=yRange_maxInd, $
                               NEG_AND_POS_SEPAR=neg_and_pos_separ, $
@@ -194,11 +195,6 @@ PRO SUPERPOSE_STORMS_ALFVENDBQUANTITIES,stormTimeArray_utc, $
 
   ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
   ;Now restore 'em
-  IF KEYWORD_SET(maxInd) AND N_ELEMENTS(using_heavies) EQ 0 THEN BEGIN
-     IF maxInd GE 26 AND maxInd LE 31 THEN BEGIN
-        using_heavies = 1
-     ENDIF
-  ENDIF
   LOAD_NOAA_AND_BRETT_DBS_AND_QI,stormStruct,DB_BRETT=stormFile,DBDIR=stormDir
   LOAD_MAXIMUS_AND_CDBTIME,maximus,cdbTime, $
                            DB_TFILE=DB_tFile, $

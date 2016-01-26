@@ -34,6 +34,7 @@
 ; MODIFICATION HISTORY:   2015/12/04 Ripped off HISTOPLOT_ALFVENDBQUANTITIES_DURING_STORMPHASES because
 ;                                    Professor LaBelle and I would like to see storm phases overlaid
 ;                         2016/01/05 Added some stuff for SAVEFILE keyword so that we can save histoplot data for examination.
+;                         2016/01/26 Added USING_HEAVIES keywords below in case we're using heavy-ion data
 ;-
 PRO HISTOPLOT_ALFVENDBQUANTITIES_DURING_STORMPHASES__OVERLAY_PHASES, $
    RESTOREFILE=restoreFile, $
@@ -61,8 +62,11 @@ PRO HISTOPLOT_ALFVENDBQUANTITIES_DURING_STORMPHASES__OVERLAY_PHASES, $
    TBINS=tBins, $
    DBFILE=dbFile,DB_TFILE=db_tFile, $
    USE_DARTDB_START_ENDDATE=use_dartdb_start_enddate, $
+   DO_DESPUNDB=do_despundb, $
    SAVEFILE=saveFile, $
-   PLOTTITLE=plotTitle,SAVEPLOT=savePlot, $
+   PLOTTITLE=plotTitle, $
+   SAVEPLOT=savePlot, $
+   ;; SAVEPNAME=savePName, $
    RANDOMTIMES=randomTimes, $
    MINMLT=minM,MAXMLT=maxM,BINM=binM,MINILAT=minI,MAXILAT=maxI,BINI=binI, $
    DO_LSHELL=do_lshell,MINLSHELL=minL,MAXLSHELL=maxL,BINL=binL, $
@@ -91,6 +95,7 @@ PRO HISTOPLOT_ALFVENDBQUANTITIES_DURING_STORMPHASES__OVERLAY_PHASES, $
                               DAYSIDE=dayside,NIGHTSIDE=nightside, $
                               RESTRICT_CHARERANGE=restrict_charERange,RESTRICT_ALTRANGE=restrict_altRange, $
                               MAXIND=maxInd,AVG_TYPE_MAXIND=avg_type_maxInd,LOG_DBQUANTITY=log_DBQuantity, $
+                              USING_HEAVIES=using_heavies, $
                               YLOGSCALE_MAXIND=yLogScale_maxInd, $
                               YTITLE_MAXIND=yTitle_maxInd, YRANGE_MAXIND=yRange_maxInd, $
                               NEG_AND_POS_SEPAR=neg_and_pos_separ, $
@@ -99,9 +104,9 @@ PRO HISTOPLOT_ALFVENDBQUANTITIES_DURING_STORMPHASES__OVERLAY_PHASES, $
                               ;; NEG_LAYOUT=neg_layout, $
                               USE_SYMH=use_SYMH,USE_AE=use_AE, $
                               OMNI_QUANTITY=omni_quantity,LOG_OMNI_QUANTITY=log_omni_quantity,USE_DATA_MINMAX=use_data_minMax, $
-                              SAVEMAXPLOTNAME=saveMaxPlotName, $
+                              SAVEMPNAME=saveMPName, $
                               SAVEFILE=saveFile,SAVESTR=saveStr, $
-                              PLOTTITLE=plotTitle,SAVEPLOTNAME=savePlotName, $
+                              PLOTTITLE=plotTitle,SAVEPNAME=savePName, $
                               NOPLOTS=noPlots,NOGEOMAGPLOTS=noGeomagPlots,NOMAXPLOTS=noMaxPlots, $
                               DO_SCATTERPLOTS=do_scatterPlots, $
 EPOCHPLOT_COLORNAMES=epochPlot_colorNames,SCATTEROUTPREFIX=scatterOutPrefix, $
@@ -119,9 +124,14 @@ EPOCHPLOT_COLORNAMES=epochPlot_colorNames,SCATTEROUTPREFIX=scatterOutPrefix, $
 
   ;;********************************************************
   ;;Now clean and tap the database
-  LOAD_MAXIMUS_AND_CDBTIME,maximus,cdbTime,DB_TFILE=DB_tFile,DBDIR=DBDir,DBFILE=DBFile
+  LOAD_MAXIMUS_AND_CDBTIME,maximus,cdbTime,DB_TFILE=DB_tFile,DBDIR=DBDir,DBFILE=DBFile, $
+                           DO_DESPUNDB=do_despundb,USING_HEAVIES=using_heavies
   good_i = GET_CHASTON_IND(maximus,satellite,lun, $
-                           DBTIMES=cdbTime,dbfile=dbfile,CHASTDB=do_chastdb,HEMI=hemi, $
+                           DBTIMES=cdbTime,dbfile=dbfile, $
+                           CHASTDB=do_chastdb, $
+                           DESPUNDB=do_despundb, $
+                           USING_HEAVIES=using_heavies, $
+                           HEMI=hemi, $
                            ORBRANGE=orbRange, ALTITUDERANGE=altitudeRange, CHARERANGE=charERange,POYNTRANGE=poyntRange, $
                            MINMLT=minM,MAXMLT=maxM,BINM=binM,MINILAT=minI,MAXILAT=maxI,BINI=binI, $
                            DO_LSHELL=do_lshell,MINLSHELL=minL,MAXLSHELL=maxL,BINL=binL, $

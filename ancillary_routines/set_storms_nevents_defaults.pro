@@ -6,6 +6,7 @@ PRO SET_STORMS_NEVENTS_DEFAULTS,TBEFOREEPOCH=tBeforeEpoch,TAFTEREPOCH=tAfterEpoc
                                 DAYSIDE=dayside,NIGHTSIDE=nightside, $
                                 RESTRICT_CHARERANGE=restrict_charERange,RESTRICT_ALTRANGE=restrict_altRange, $
                                 MAXIND=maxInd,AVG_TYPE_MAXIND=avg_type_maxInd,LOG_DBQUANTITY=log_DBQuantity, $
+                                USING_HEAVIES=using_heavies, $
                                 YLOGSCALE_MAXIND=yLogScale_maxInd, $
                                 YTITLE_MAXIND=yTitle_maxInd, YRANGE_MAXIND=yRange_maxInd, $
                                 NEG_AND_POS_SEPAR=neg_and_pos_separ, $
@@ -90,7 +91,16 @@ PRO SET_STORMS_NEVENTS_DEFAULTS,TBEFOREEPOCH=tBeforeEpoch,TAFTEREPOCH=tAfterEpoc
   IF N_ELEMENTS(restrict_charERange) EQ 0 THEN restrict_charERange = defRestrict_charERange
   IF N_ELEMENTS(restrict_altRange) EQ 0 THEN restrict_altRange = defRestrict_altRange
 
-  IF N_ELEMENTS(maxInd) EQ 0 THEN maxInd =defMaxInd
+  IF N_ELEMENTS(maxInd) EQ 0 THEN maxInd = defMaxInd
+  IF N_ELEMENTS(using_heavies) EQ 0 THEN BEGIN
+     IF maxInd GE 26 AND maxInd LE 31 THEN BEGIN
+        using_heavies = 1
+        PRINT,"Using TEAMS data for heavy ions!"
+     ENDIF ELSE BEGIN 
+        using_heavies = 0
+     ENDELSE
+  ENDIF
+
   IF N_ELEMENTS(avg_type_maxInd) EQ 0 THEN avg_type_maxInd=defAvg_type_maxInd
 
   IF N_ELEMENTS(log_DBQuantity) EQ 0 THEN log_DBQuantity=defLog_DBQuantity
