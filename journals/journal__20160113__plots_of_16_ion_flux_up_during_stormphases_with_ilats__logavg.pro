@@ -6,7 +6,7 @@ PRO JOURNAL__20160113__PLOTS_OF_16_ION_FLUX_UP_DURING_STORMPHASES_WITH_ILATS__LO
   maxInd                 = 16
   ifpt                   = 'MAX_UP'
   ;; iPlotRange             = [5e7,5e9]
-  iPlotRange             = [10^(5.5),10^(8.5)]
+  iPlotRange             = [10^(7.0),10^(9.0)]
 
   ;2016/01/08 Checking it out
   ;; charERange = [4,300]

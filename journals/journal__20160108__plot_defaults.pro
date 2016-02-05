@@ -18,7 +18,7 @@
   make_eb               = 0
   eb_nBoot              = 1000
 
-  do_despun             = 1
+  do_despun             = 0
 
   pref                  = 'journal_20160108--SEA_largestorms'
   plotSuff              = '--2-hr_spacing--no_smoothing--north_hemi--despun_db.png'

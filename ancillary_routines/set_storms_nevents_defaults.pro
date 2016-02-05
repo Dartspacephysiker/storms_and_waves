@@ -92,11 +92,16 @@ PRO SET_STORMS_NEVENTS_DEFAULTS,TBEFOREEPOCH=tBeforeEpoch,TAFTEREPOCH=tAfterEpoc
   IF N_ELEMENTS(restrict_altRange) EQ 0 THEN restrict_altRange = defRestrict_altRange
 
   IF N_ELEMENTS(maxInd) EQ 0 THEN maxInd = defMaxInd
+
   IF N_ELEMENTS(using_heavies) EQ 0 THEN BEGIN
-     IF maxInd GE 26 AND maxInd LE 31 THEN BEGIN
-        using_heavies = 1
-        PRINT,"Using TEAMS data for heavy ions!"
-     ENDIF ELSE BEGIN 
+     IF N_ELEMENTS(maxInd) GT 0 THEN BEGIN
+        IF maxInd GE 26 AND maxInd LE 31 THEN BEGIN
+           using_heavies = 1
+           PRINT,"Using TEAMS data for heavy ions!"
+        ENDIF ELSE BEGIN 
+           using_heavies = 0
+        ENDELSE
+     ENDIF ELSE BEGIN
         using_heavies = 0
      ENDELSE
   ENDIF
