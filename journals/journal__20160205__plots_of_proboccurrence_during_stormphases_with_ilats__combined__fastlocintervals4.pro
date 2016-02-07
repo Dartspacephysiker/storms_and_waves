@@ -6,11 +6,11 @@ PRO JOURNAL__20160205__PLOTS_OF_PROBOCCURRENCE_DURING_STORMPHASES_WITH_ILATS__CO
 
   plotSuff  = '--inside_extremeVals'
   PLOT_ALFVEN_STATS_DURING_STORMPHASES,DSTCUTOFF=dstCutoff, $
-                                       /MIRROR, $
-                                       /SOUTH, $
-                                       MAXILAT=-54, $
-                                       ;; /NORTH, $
-                                       ;; MINILAT=54, $
+                                       ;; /MIRROR, $
+                                       ;; /SOUTH, $
+                                       ;; MAXILAT=-54, $
+                                       /NORTH, $
+                                       MINILAT=54, $
                                        /PROBOCCURRENCEPLOT, $
                                        /LOGPROBOCCURRENCE, $
                                        ;; PROBOCCURRENCERANGE=[1e-3,6e-1], $

@@ -8,18 +8,18 @@ PRO JOURNAL__20160205__SEAS__PROBOCCURRENCE__JUSTHISTO__FASTLOCINTERVALS4
   histobinsize      = 2.5
 
   ;;manual mod this
-  ;; IF do_despun THEN BEGIN
-  ;;    plotSuff       = '--north_hemi--despun_db.png'
-  ;; ENDIF ELSE BEGIN
-  ;;    plotSuff       = '--north_hemi.png'
-  ;; ENDELSE
-
-  hemi              = 'SOUTH'
   IF do_despun THEN BEGIN
-     plotSuff       = '--south_hemi--despun_db.png'
+     plotSuff       = '--north_hemi--despun_db.png'
   ENDIF ELSE BEGIN
-     plotSuff       = '--south_hemi.png'
+     plotSuff       = '--north_hemi.png'
   ENDELSE
+
+  ;; hemi              = 'SOUTH'
+  ;; IF do_despun THEN BEGIN
+  ;;    plotSuff       = '--south_hemi--despun_db.png'
+  ;; ENDIF ELSE BEGIN
+  ;;    plotSuff       = '--south_hemi.png'
+  ;; ENDELSE
 
   probOccPref       = pref + 'PROBOCCURRENCE--with_NOAA--justhisto'
   ;; probOccPref       = pref + 'PROBOCCURRENCE--with_NOAA--justhisto--despun_db'
