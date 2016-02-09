@@ -11,6 +11,7 @@ PRO JOURNAL__20160205__PLOTS_OF_PROBOCCURRENCE_DURING_STORMPHASES_WITH_ILATS__CO
                                        ;; MAXILAT=-54, $
                                        /NORTH, $
                                        MINILAT=54, $
+                                       /LOGAVGPLOT, $
                                        /PROBOCCURRENCEPLOT, $
                                        /LOGPROBOCCURRENCE, $
                                        ;; PROBOCCURRENCERANGE=[1e-3,6e-1], $

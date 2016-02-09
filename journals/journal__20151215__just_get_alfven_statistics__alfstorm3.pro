@@ -42,14 +42,16 @@ PRO JOURNAL__20151215__JUST_GET_ALFVEN_STATISTICS__ALFSTORM3
                                        /CHAREPLOTS, $
                                        CHARETYPE='Losscone', $
                                        /NONEGCHARE, $
-                                       /NORTH, $
+                                       ;; /NORTH, $
+                                       ;; MINILAT=54 ;, $
+                                       /SOUTH, $
+                                       MAXILAT=-54, $ ;, $
+                                       BINMLT=1.5, $
                                        /LOGCHAREPLOT, $
                                        CHAREPLOTRANGE=[10^(1.6),10^(3.0)], $   ; inside of highest and lowest vals
                                        PLOTSUFFIX=plotSuff, $
                                        /LOGAVGPLOT, $
-                                       BINMLT=1.5, $
-                                       /MIDNIGHT, $
-                                       MINILAT=54 ;, $
+                                       /MIDNIGHT
                                        ;; /COMBINE_STORMPHASE_PLOTS, $
                                        ;; /SAVE_COMBINED_WINDOW, $
                                        ;; /COMBINED_TO_BUFFER
