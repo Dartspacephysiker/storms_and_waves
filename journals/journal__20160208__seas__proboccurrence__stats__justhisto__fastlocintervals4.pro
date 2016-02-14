@@ -7,6 +7,8 @@ PRO JOURNAL__20160208__SEAS__PROBOCCURRENCE__STATS__JUSTHISTO__FASTLOCINTERVALS4
   ;; window_sum        = 10                      ; ... or don't
   histobinsize      = 2.5
 
+  do_despun         = 0
+
   ;;manual mod this
   IF do_despun THEN BEGIN
      plotSuff       = '--north_hemi--despun_db.png'
@@ -56,7 +58,7 @@ PRO JOURNAL__20160208__SEAS__PROBOCCURRENCE__STATS__JUSTHISTO__FASTLOCINTERVALS4
         HISTOBINSIZE=histoBinsize, $
         /OVERPLOT_HIST, $
         /PROBOCCURENCE_SEA, $
-        WINDOW_SUM=histoBinsize, $
+        ;; WINDOW_SUM=histoBinsize, $
         ;; RUNNING_BIN_SPACING=running_bin_spacing, $
         ;; RUNNING_BIN_L_OFFSET=running_bin_l_offset, $
         ;; RUNNING_BIN_R_OFFSET=running_bin_r_offset, $

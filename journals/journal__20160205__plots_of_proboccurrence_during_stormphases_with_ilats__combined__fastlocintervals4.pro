@@ -15,11 +15,12 @@ PRO JOURNAL__20160205__PLOTS_OF_PROBOCCURRENCE_DURING_STORMPHASES_WITH_ILATS__CO
                                        /PROBOCCURRENCEPLOT, $
                                        /LOGPROBOCCURRENCE, $
                                        ;; PROBOCCURRENCERANGE=[1e-3,6e-1], $
-                                       PROBOCCURRENCERANGE=[3e-3,3e-1], $
+                                       PROBOCCURRENCERANGE=[1e-3,1e-1], $
                                        PLOTSUFFIX=plotSuff, $
                                        /MIDNIGHT, $
                                        BINMLT=1.5, $
                                        /CB_FORCE_OOBLOW, $
+                                       /CB_FORCE_OOBHIGH, $
                                        /COMBINE_STORMPHASE_PLOTS, $
                                        /SAVE_COMBINED_WINDOW, $
                                        /COMBINED_TO_BUFFER
