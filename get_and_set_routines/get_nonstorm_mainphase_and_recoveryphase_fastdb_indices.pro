@@ -2,6 +2,7 @@
 ;2016/01/01 If this has already been done once today, then don't do it again
 ;2016/01/01 Also output t1 and t2 for each phase, if desired
 PRO GET_NONSTORM_MAINPHASE_AND_RECOVERYPHASE_FASTDB_INDICES,NONSTORM_I=ns_i,MAINPHASE_I=mp_i,RECOVERYPHASE_I=rp_i, $
+   DSTCUTOFF=dstCutoff, $
    STORM_DST_I=s_dst_i, $
    NONSTORM_DST_I=ns_dst_i, $
    MAINPHASE_DST_I=mp_dst_i, $
@@ -22,6 +23,7 @@ PRO GET_NONSTORM_MAINPHASE_AND_RECOVERYPHASE_FASTDB_INDICES,NONSTORM_I=ns_i,MAIN
   good_i=alfven_db_cleaner(maximus)
 
   GET_NONSTORM_MAINPHASE_AND_RECOVERYPHASE_PERIODS,dst, $
+     DSTCUTOFF=dstCutoff, $
      STORM_DST_I=s_dst_i, $
      NONSTORM_DST_I=ns_dst_i, $
      MAINPHASE_DST_I=mp_dst_i, $
