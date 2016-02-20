@@ -206,7 +206,7 @@ PRO PLOT_ALFVEN_STATS_DURING_STORMPHASES,$
      plotFileArr = !NULL
      FOR i=0,2 DO BEGIN
         RESTORE,outTempFiles[i]
-        plotFileArr = [plotFileArr,plotDir + paramStr+dataNameArr[0] + fileSuff]
+        plotFileArr = [plotFileArr,plotDir + paramStr+'--'+dataNameArr[0] + fileSuff]
         ;; imArr[i]    = IMAGE(plotFileArr[i], $
         ;;                     LAYOUT=[3,1,i+1],$
         ;;                     MARGIN=0)
