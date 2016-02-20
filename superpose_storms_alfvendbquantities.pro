@@ -61,6 +61,7 @@
 ;                                    ... Oh, and RUNNING_BIN{L,R}_OFFSET
 ;                         2016/01/11 Added PRINT_MAXIND_SEA_STATS keyword.
 ;                         2016/01/13 Added USING_HEAVIES keyword. You know.
+;                         2016/02/20 Added TIMEAVGD_PFLUX keyword.
 ;-
 PRO SUPERPOSE_STORMS_ALFVENDBQUANTITIES,stormTimeArray_utc, $
                                         TBEFOREEPOCH=tBeforeEpoch,TAFTEREPOCH=tAfterEpoch, $
@@ -83,7 +84,8 @@ PRO SUPERPOSE_STORMS_ALFVENDBQUANTITIES,stormTimeArray_utc, $
                                         NAME__HISTO_PLOT=name__histo_plot, $
                                         N__HISTO_PLOTS=n__histo_plots, $
                                         ACCUMULATE__HISTO_PLOTS=accumulate__histo_plots, $
-                                        PROBOCCURENCE_SEA=probOccurrence_sea, LOG_PROBOCCURRENCE=log_probOccurrence, $
+                                        PROBOCCURRENCE_SEA=probOccurrence_sea, LOG_PROBOCCURRENCE=log_probOccurrence, $
+                                        TIMEAVGD_PFLUX_SEA=timeAvgd_pFlux_sea, LOG_TIMEAVGD_PFLUX=log_timeAvgd_pFlux, $
                                         RETURNED_NEV_TBINS_and_HIST=returned_nEv_tbins_and_Hist, $
                                         ONLY_POS=only_pos, $
                                         NEG_AND_POS_SEPAR=neg_and_pos_separ, $
@@ -177,7 +179,8 @@ PRO SUPERPOSE_STORMS_ALFVENDBQUANTITIES,stormTimeArray_utc, $
                               USE_SYMH=use_SYMH,USE_AE=use_AE, $
                               OMNI_QUANTITY=omni_quantity,LOG_OMNI_QUANTITY=log_omni_quantity,USE_DATA_MINMAX=use_data_minMax, $
                               HISTOBINSIZE=histoBinSize, HISTORANGE=histoRange, $
-                              PROBOCCURENCE_SEA=probOccurrence_sea, $
+                              PROBOCCURRENCE_SEA=probOccurrence_sea, $
+                              TIMEAVGD_PFLUX_SEA=timeAvgd_pFlux_sea, $
                               ;; SAVEMAXPLOT=saveMaxPlot, $
                               SAVEFILE=saveFile,SAVESTR=saveStr, $
                               PLOTTITLE=plotTitle, $
@@ -258,7 +261,8 @@ PRO SUPERPOSE_STORMS_ALFVENDBQUANTITIES,stormTimeArray_utc, $
 
   ;; Get ranges for plots
   IF    KEYWORD_SET(nEventHists) OR (avg_type_maxInd GT 0) $
-     OR KEYWORD_SET(maxInd)      OR KEYWORD_SET(probOccurrence_sea) THEN BEGIN                    ;Histos of Alfvén events relative to storm epoch
+     OR KEYWORD_SET(maxInd)      OR KEYWORD_SET(probOccurrence_sea) $
+     OR KEYWORD_SET(timeAvgd_pFlux) THEN BEGIN ;Histos of Alfvén events relative to storm epoch
      ;; ;Get nearest events in Chaston DB
      GET_EPOCH_T_AND_INDS_FOR_ALFVENDB,maximus,cdbTime,NEPOCHS=nEpochs,TBEFOREEPOCH=tBeforeEpoch,TAFTEREPOCH=tAfterEpoch, $
                                        CENTERTIME=centerTime, $
@@ -297,7 +301,7 @@ PRO SUPERPOSE_STORMS_ALFVENDBQUANTITIES,stormTimeArray_utc, $
                                           SAVEFILE=saveFile,SAVESTR=saveStr
                                           
      ENDIF ELSE BEGIN
-        IF KEYWORD_SET(probOccurrence_sea) OR KEYWORD_SET(nEventHists) THEN BEGIN
+        IF KEYWORD_SET(probOccurrence_sea) OR KEYWORD_SET(nEventHists) OR KEYWORD_SET(timeAvgd_pFlux) THEN BEGIN
            ;;use maxInd = 20 here to get current width
            GET_DATA_FOR_ALFVENDB_EPOCH_PLOTS,MAXIMUS=maximus,CDBTIME=cdbTime,MAXIND=20,GOOD_I=good_i, $
                                              ALF_EPOCH_I=alf_epoch_i,ALF_IND_LIST=alf_ind_list, $
@@ -316,6 +320,28 @@ PRO SUPERPOSE_STORMS_ALFVENDBQUANTITIES,stormTimeArray_utc, $
                                              TOT_ALF_T_LIST=tot_alf_t_list, $
                                              TOT_ALF_Y_LIST=tot_alf_y_list, $
                                              NEVTOT=nEvTot
+        ENDIF
+
+        ;;Take it to the next level
+        IF KEYWORD_SET(timeAvgd_pFlux) THEN BEGIN
+           GET_DATA_FOR_ALFVENDB_EPOCH_PLOTS,MAXIMUS=maximus,CDBTIME=cdbTime,MAXIND=49,GOOD_I=good_i, $
+                                             ALF_EPOCH_I=alf_epoch_i,ALF_IND_LIST=alf_ind_list, $
+                                             MINMAXDAT=minMaxDat, NALFEPOCHS=nAlfEpochs,NEPOCHS=nEpochs, $
+                                             LOG_DBQUANTITY=log_DBQuantity, $
+                                             CENTERTIME=alf_centerTime,TSTAMPS=alf_tStamps, $
+                                             TAFTEREPOCH=tAfterEpoch,TBEFOREEPOCH=tBeforeEpoch, $
+                                             NEG_AND_POS_SEPAR=neg_and_pos_separ, $
+                                             TOT_PLOT_I_POS_LIST=tot_plot_i_pos_list, $
+                                             TOT_ALF_T_POS_LIST=tot_pFlux_t_pos_list, $
+                                             TOT_ALF_Y_POS_LIST=tot_pFlux_y_pos_list, $
+                                             TOT_PLOT_I_NEG_LIST=tot_plot_i_neg_list, $
+                                             TOT_ALF_T_NEG_LIST=tot_pFlux_t_neg_list, $
+                                             TOT_ALF_Y_NEG_LIST=tot_pFlux_y_neg_list, $
+                                             TOT_PLOT_I_LIST=tot_plot_i_list, $
+                                             TOT_ALF_T_LIST=tot_pFlux_t_list, $
+                                             TOT_ALF_Y_LIST=tot_pFlux_y_list, $
+                                             NEVTOT=nEvTot
+
         ENDIF
      ENDELSE
      
@@ -369,6 +395,18 @@ PRO SUPERPOSE_STORMS_ALFVENDBQUANTITIES,stormTimeArray_utc, $
         tot_alf_t = LIST_TO_1DARRAY(tot_alf_t_list,/WARN,/SKIP_NEG1_ELEMENTS)
         tot_alf_y = LIST_TO_1DARRAY(tot_alf_y_list,/WARN,/SKIP_NEG1_ELEMENTS)
 
+        IF KEYWORD_SET(timeAvgd_pFlux) THEN BEGIN
+           tot_pFlux_t = LIST_TO_1DARRAY(tot_pFlux_t_list,/WARN,/SKIP_NEG1_ELEMENTS)
+           tot_pFlux_y = LIST_TO_1DARRAY(tot_pFlux_y_list,/WARN,/SKIP_NEG1_ELEMENTS)
+
+           IF ARRAY_EQUAL(tot_alf_t,tot_pFlux_t) THEN BEGIN
+              tot_alf_y = tot_alf_y*tot_pFlux_y
+           ENDIF ELSE BEGIN
+              PRINT,"pFlux time array isn't the same as width_data array! Better check it out..."
+              STOP
+           ENDELSE
+        ENDIF
+
         IF N_ELEMENTS(avg_type_maxInd) GT 0 THEN BEGIN
            IF KEYWORD_SET(window_sum) THEN BEGIN
               histoType = 0
@@ -409,7 +447,7 @@ PRO SUPERPOSE_STORMS_ALFVENDBQUANTITIES,stormTimeArray_utc, $
            PRINT_MAXIND_SEA_STATS=print_maxInd_sea_stats, $
            LUN=lun
 
-        IF KEYWORD_SET(probOccurrence_sea) THEN BEGIN
+        IF KEYWORD_SET(probOccurrence_sea) OR KEYWORD_SET(timeAvgd_pFlux) THEN BEGIN
 
            GET_FASTLOC_HISTOGRAM__EPOCH_ARRAY, $
               T1_ARR=datStartStop[*,0], $
@@ -446,7 +484,7 @@ PRO SUPERPOSE_STORMS_ALFVENDBQUANTITIES,stormTimeArray_utc, $
            nz_i_po = CGSETINTERSECTION(nz_i,nz_i_fastLoc)
            histData[nz_i_po] = histData[nz_i_po]/fastLocHistData[nz_i_po]
            IF KEYWORD_SET(running_smooth_nPoints) AND KEYWORD_SET(window_sum) THEN BEGIN
-              histData       = SMOOTH(histData,running_smooth_nPoints,/EDGE_TRUNCATE)
+              histData       = SMOOTH(histData,running_smooth_nPoints,/EDGpE_TRUNCATE)
 
            ENDIF 
         ENDIF

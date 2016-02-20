@@ -16,7 +16,8 @@ PRO SET_STORMS_NEVENTS_DEFAULTS,TBEFOREEPOCH=tBeforeEpoch,TAFTEREPOCH=tAfterEpoc
                                 USE_SYMH=use_SYMH,USE_AE=use_AE, $
                                 OMNI_QUANTITY=omni_quantity,LOG_OMNI_QUANTITY=log_omni_quantity,USE_DATA_MINMAX=use_data_minMax, $
                                 HISTOBINSIZE=histoBinSize, HISTORANGE=histoRange, $
-                                PROBOCCURENCE_SEA=probOccurrence_sea, $
+                                PROBOCCURRENCE_SEA=probOccurrence_sea, $
+                                TIMEAVGD_PFLUX_SEA=timeAvgd_pFlux_sea, $
                                 SAVEPNAME=savePName, $
                                 SAVEMPNAME=saveMPName, $
                                 SAVEFILE=saveFile,SAVESTR=saveStr, $
@@ -68,6 +69,9 @@ PRO SET_STORMS_NEVENTS_DEFAULTS,TBEFOREEPOCH=tBeforeEpoch,TAFTEREPOCH=tAfterEpoc
                                 
   defProbOccurrencePref         = 'probOccurrence' 
   defProbOccurrenceHistoRange   = [1e-4,1e0]
+
+  defTimeAvgd_PFluxPref         = 'timeAvgd_pFlux' 
+  defTimeAvgd_PFluxHistoRange   = [1e-4,1e0]
 
   defDo_scatterPlots            = 0
   defScatterOutPrefix           = 'stackplots_storms_nevents--scatterplot'
@@ -150,6 +154,12 @@ PRO SET_STORMS_NEVENTS_DEFAULTS,TBEFOREEPOCH=tBeforeEpoch,TAFTEREPOCH=tAfterEpoc
      IF ~KEYWORD_SET(histoRange) THEN histoRange = defProbOccurrenceHistoRange
   ENDIF
 
+  IF KEYWORD_SET(timeAvgd_pFlux_sea) THEN BEGIN
+     ;; IF ~KEYWORD_SET(yTitle_maxInd) THEN yTitle_maxInd = "Probability of Occurrence"
+     IF ~KEYWORD_SET(yTitle_maxInd) THEN yTitle_maxInd = "Time-averaged Poynting flux"
+     ;; plotTitle = KEYWORD_SET(plotTitle) ? plotTitle : "Prob Occurrence" ;defTimeAvgd_PFluxPref + '--' + saveMaxPlotName : defTimeAvgd_PFluxPref + '.png'
+     IF ~KEYWORD_SET(histoRange) THEN histoRange = defTimeAvgd_PFluxHistoRange
+  ENDIF
   IF saveFile THEN BEGIN 
      saveStr='save' 
      IF SIZE(saveFile,/TYPE) NE 7 THEN saveFile='superpose_storms_alfven_db_quantities.dat'

@@ -5,66 +5,74 @@
 ;;2015/11/30 1. Make all stormphase plots appear in one window instead of separating output
 ;;
 PRO PLOT_ALFVEN_STATS_DURING_STORMPHASES,$
-                                 DSTCUTOFF=dstCutoff, $
-                                 CLOCKSTR=clockStr, ANGLELIM1=angleLim1, ANGLELIM2=angleLim2, $
-                                 ORBRANGE=orbRange, ALTITUDERANGE=altitudeRange, CHARERANGE=charERange, POYNTRANGE=poyntRange, NUMORBLIM=numOrbLim, $
-                                 MINMLT=minMLT,MAXMLT=maxMLT,BINMLT=binMLT,MINILAT=minILAT,MAXILAT=maxILAT,BINILAT=binILAT, $
-                                 DO_LSHELL=do_lShell, REVERSE_LSHELL=reverse_lShell, $
-                                 MINLSHELL=minLshell,MAXLSHELL=maxLshell,BINLSHELL=binLshell, $
-                                 BOTH_HEMIS=both_hemis, $
-                                 NORTH=north, $
-                                 SOUTH=south, $
-                                 HEMI=hemi, $
-                                 HWMAUROVAL=HwMAurOval,HWMKPIND=HwMKpInd, $
-                                 MIN_NEVENTS=min_nEvents, MASKMIN=maskMin, $
-                                 DELAY=delay, STABLEIMF=stableIMF, SMOOTHWINDOW=smoothWindow, INCLUDENOCONSECDATA=includeNoConsecData, $
-                                 NPLOTS=nPlots, $
-                                 EPLOTS=ePlots, $
-                                 EPLOTRANGE=ePlotRange, $
-                                 EFLUXPLOTTYPE=eFluxPlotType, LOGEFPLOT=logEfPlot, $
-                                 ABSEFLUX=abseflux, NOPOSEFLUX=noPosEFlux, NONEGEFLUX=noNegEflux, $
-                                 ENUMFLPLOTS=eNumFlPlots, ENUMFLPLOTTYPE=eNumFlPlotType, LOGENUMFLPLOT=logENumFlPlot, ABSENUMFL=absENumFl, $
-                                 NONEGENUMFL=noNegENumFl, NOPOSENUMFL=noPosENumFl, ENUMFLPLOTRANGE=ENumFlPlotRange, $
-                                 PPLOTS=pPlots, LOGPFPLOT=logPfPlot, ABSPFLUX=absPflux, $
-                                 NONEGPFLUX=noNegPflux, NOPOSPFLUX=noPosPflux, PPLOTRANGE=PPlotRange, $
-                                 IONPLOTS=ionPlots, IFLUXPLOTTYPE=ifluxPlotType, LOGIFPLOT=logIfPlot, ABSIFLUX=absIflux, $
-                                 NONEGIFLUX=noNegIflux, NOPOSIFLUX=noPosIflux, IPLOTRANGE=IPlotRange, $
-                                 CHAREPLOTS=charEPlots, CHARETYPE=charEType, LOGCHAREPLOT=logCharEPlot, ABSCHARE=absCharE, $
-                                 NONEGCHARE=noNegCharE, NOPOSCHARE=noPosCharE, CHAREPLOTRANGE=CharEPlotRange, $
-                                 CHARIEPLOTS=chariePlots, LOGCHARIEPLOT=logChariePlot, ABSCHARIE=absCharie, $
-                                 NONEGCHARIE=noNegCharie, NOPOSCHARIE=noPosCharie, CHARIEPLOTRANGE=ChariePlotRange, $
-                                 ORBCONTRIBPLOT=orbContribPlot, ORBTOTPLOT=orbTotPlot, ORBFREQPLOT=orbFreqPlot, $
-                                 ORBCONTRIBRANGE=orbContribRange, ORBTOTRANGE=orbTotRange, ORBFREQRANGE=orbFreqRange, $
-                                 NEVENTPERORBPLOT=nEventPerOrbPlot, LOGNEVENTPERORB=logNEventPerOrb, NEVENTPERORBRANGE=nEventPerOrbRange, $
-                                 DIVNEVBYAPPLICABLE=divNEvByApplicable, $
-                                 NEVENTPERMINPLOT=nEventPerMinPlot, LOGNEVENTPERMIN=logNEventPerMin, $
-                                 PROBOCCURRENCEPLOT=probOccurrencePlot,PROBOCCURRENCERANGE=probOccurrenceRange,LOGPROBOCCURRENCE=logProbOccurrence, $
-                                 MEDIANPLOT=medianPlot, LOGAVGPLOT=logAvgPlot, $
-                                 ALL_LOGPLOTS=all_logPlots, $
-                                 SQUAREPLOT=squarePlot, POLARCONTOUR=polarContour, $ 
-                                 WHOLECAP=wholeCap, $
-                                 DBFILE=dbfile, NO_BURSTDATA=no_burstData, DATADIR=dataDir, DO_CHASTDB=do_chastDB, $
-                                 NEVENTSPLOTRANGE=nEventsPlotRange, LOGNEVENTSPLOT=logNEventsPlot, $
-                                 WRITEASCII=writeASCII, WRITEHDF5=writeHDF5, WRITEPROCESSEDH2D=writeProcessedH2d, $
-                                 SAVERAW=saveRaw, RAWDIR=rawDir, $
-                                 JUSTDATA=justData, SHOWPLOTSNOSAVE=showPlotsNoSave, $
-                                 PLOTDIR=plotDir, PLOTPREFIX=plotPrefix, PLOTSUFFIX=plotSuffix, $
-                                 MEDHISTOUTDATA=medHistOutData, MEDHISTOUTTXT=medHistOutTxt, $
-                                 OUTPUTPLOTSUMMARY=outputPlotSummary, $
-                                 DEL_PS=del_PS, $
-                                 EPS_OUTPUT=eps_output, $
-                                 LUN=lun, $
-                                 PRINT_DATA_AVAILABILITY=print_data_availability, $
-                                 COMBINE_STORMPHASE_PLOTS=combine_stormphase_plots, $
-                                 COMBINED_TO_BUFFER=combined_to_buffer, $
-                                 SAVE_COMBINED_WINDOW=save_combined_window, $
-                                 SAVE_COMBINED_NAME=save_combined_name, $
-                                 NO_COLORBAR=no_colorbar, $
-                                 CB_FORCE_OOBHIGH=cb_force_oobHigh, $
-                                 CB_FORCE_OOBLOW=cb_force_oobLow, $
-                                 FANCY_PLOTNAMES=fancy_plotNames, $
-                                 VERBOSE=verbose, $
-                                 _EXTRA=e
+   DSTCUTOFF=dstCutoff, $
+   CLOCKSTR=clockStr, ANGLELIM1=angleLim1, ANGLELIM2=angleLim2, $
+   ORBRANGE=orbRange, ALTITUDERANGE=altitudeRange, CHARERANGE=charERange, POYNTRANGE=poyntRange, NUMORBLIM=numOrbLim, $
+   MINMLT=minMLT,MAXMLT=maxMLT,BINMLT=binMLT,MINILAT=minILAT,MAXILAT=maxILAT,BINILAT=binILAT, $
+   DO_LSHELL=do_lShell, REVERSE_LSHELL=reverse_lShell, $
+   MINLSHELL=minLshell,MAXLSHELL=maxLshell,BINLSHELL=binLshell, $
+   BOTH_HEMIS=both_hemis, $
+   NORTH=north, $
+   SOUTH=south, $
+   HEMI=hemi, $
+   HWMAUROVAL=HwMAurOval,HWMKPIND=HwMKpInd, $
+   MIN_NEVENTS=min_nEvents, MASKMIN=maskMin, $
+   DELAY=delay, STABLEIMF=stableIMF, SMOOTHWINDOW=smoothWindow, INCLUDENOCONSECDATA=includeNoConsecData, $
+   NPLOTS=nPlots, $
+   EPLOTS=ePlots, $
+   EPLOTRANGE=ePlotRange, $
+   EFLUXPLOTTYPE=eFluxPlotType, LOGEFPLOT=logEfPlot, $
+   ABSEFLUX=abseflux, NOPOSEFLUX=noPosEFlux, NONEGEFLUX=noNegEflux, $
+   ENUMFLPLOTS=eNumFlPlots, ENUMFLPLOTTYPE=eNumFlPlotType, LOGENUMFLPLOT=logENumFlPlot, ABSENUMFL=absENumFl, $
+   NONEGENUMFL=noNegENumFl, NOPOSENUMFL=noPosENumFl, ENUMFLPLOTRANGE=ENumFlPlotRange, $
+   PPLOTS=pPlots, LOGPFPLOT=logPfPlot, ABSPFLUX=absPflux, $
+   NONEGPFLUX=noNegPflux, NOPOSPFLUX=noPosPflux, PPLOTRANGE=PPlotRange, $
+   IONPLOTS=ionPlots, IFLUXPLOTTYPE=ifluxPlotType, LOGIFPLOT=logIfPlot, ABSIFLUX=absIflux, $
+   NONEGIFLUX=noNegIflux, NOPOSIFLUX=noPosIflux, IPLOTRANGE=IPlotRange, $
+   CHAREPLOTS=charEPlots, CHARETYPE=charEType, LOGCHAREPLOT=logCharEPlot, ABSCHARE=absCharE, $
+   NONEGCHARE=noNegCharE, NOPOSCHARE=noPosCharE, CHAREPLOTRANGE=CharEPlotRange, $
+   CHARIEPLOTS=chariePlots, LOGCHARIEPLOT=logChariePlot, ABSCHARIE=absCharie, $
+   NONEGCHARIE=noNegCharie, NOPOSCHARIE=noPosCharie, CHARIEPLOTRANGE=ChariePlotRange, $
+   ORBCONTRIBPLOT=orbContribPlot, ORBTOTPLOT=orbTotPlot, ORBFREQPLOT=orbFreqPlot, $
+   ORBCONTRIBRANGE=orbContribRange, ORBTOTRANGE=orbTotRange, ORBFREQRANGE=orbFreqRange, $
+   NEVENTPERORBPLOT=nEventPerOrbPlot, LOGNEVENTPERORB=logNEventPerOrb, NEVENTPERORBRANGE=nEventPerOrbRange, $
+   DIVNEVBYAPPLICABLE=divNEvByApplicable, $
+   NEVENTPERMINPLOT=nEventPerMinPlot, LOGNEVENTPERMIN=logNEventPerMin, $
+   PROBOCCURRENCEPLOT=probOccurrencePlot, $
+   PROBOCCURRENCERANGE=probOccurrenceRange, $
+   LOGPROBOCCURRENCE=logProbOccurrence, $
+   TIMEAVGD_PFLUXPLOT=timeAvgd_pFluxPlot, $
+   TIMEAVGD_PFLUXRANGE=timeAvgd_pFluxRange, $
+   LOGTIMEAVGD_PFLUX=logTimeAvgd_PFlux, $
+   TIMEAVGD_EFLUXMAXPLOT=timeAvgd_eFluxMaxPlot, $
+   TIMEAVGD_EFLUXMAXRANGE=timeAvgd_eFluxMaxRange, $
+   LOGTIMEAVGD_EFLUXMAX=logtimeAvgd_eFluxMax, $
+   MEDIANPLOT=medianPlot, LOGAVGPLOT=logAvgPlot, $
+   ALL_LOGPLOTS=all_logPlots, $
+   SQUAREPLOT=squarePlot, POLARCONTOUR=polarContour, $ 
+   WHOLECAP=wholeCap, $
+   DBFILE=dbfile, NO_BURSTDATA=no_burstData, DATADIR=dataDir, DO_CHASTDB=do_chastDB, $
+   NEVENTSPLOTRANGE=nEventsPlotRange, LOGNEVENTSPLOT=logNEventsPlot, $
+   WRITEASCII=writeASCII, WRITEHDF5=writeHDF5, WRITEPROCESSEDH2D=writeProcessedH2d, $
+   SAVERAW=saveRaw, RAWDIR=rawDir, $
+   JUSTDATA=justData, SHOWPLOTSNOSAVE=showPlotsNoSave, $
+   PLOTDIR=plotDir, PLOTPREFIX=plotPrefix, PLOTSUFFIX=plotSuffix, $
+   MEDHISTOUTDATA=medHistOutData, MEDHISTOUTTXT=medHistOutTxt, $
+   OUTPUTPLOTSUMMARY=outputPlotSummary, $
+   DEL_PS=del_PS, $
+   EPS_OUTPUT=eps_output, $
+   LUN=lun, $
+   PRINT_DATA_AVAILABILITY=print_data_availability, $
+   COMBINE_STORMPHASE_PLOTS=combine_stormphase_plots, $
+   COMBINED_TO_BUFFER=combined_to_buffer, $
+   SAVE_COMBINED_WINDOW=save_combined_window, $
+   SAVE_COMBINED_NAME=save_combined_name, $
+   NO_COLORBAR=no_colorbar, $
+   CB_FORCE_OOBHIGH=cb_force_oobHigh, $
+   CB_FORCE_OOBLOW=cb_force_oobLow, $
+   FANCY_PLOTNAMES=fancy_plotNames, $
+   VERBOSE=verbose, $
+   _EXTRA=e
 
   IF N_ELEMENTS(lun) EQ 0 THEN lun = -1
 
@@ -144,7 +152,15 @@ PRO PLOT_ALFVEN_STATS_DURING_STORMPHASES,$
                                   NEVENTPERORBPLOT=nEventPerOrbPlot, LOGNEVENTPERORB=logNEventPerOrb, NEVENTPERORBRANGE=nEventPerOrbRange, $
                                   DIVNEVBYAPPLICABLE=divNEvByApplicable, $
                                   NEVENTPERMINPLOT=nEventPerMinPlot, LOGNEVENTPERMIN=logNEventPerMin, $
-                                  PROBOCCURRENCEPLOT=probOccurrencePlot,PROBOCCURRENCERANGE=probOccurrenceRange,LOGPROBOCCURRENCE=logProbOccurrence, $
+                                  PROBOCCURRENCEPLOT=probOccurrencePlot, $
+                                  PROBOCCURRENCERANGE=probOccurrenceRange, $
+                                  LOGPROBOCCURRENCE=logProbOccurrence, $
+                                  TIMEAVGD_PFLUXPLOT=timeAvgd_pFluxPlot, $
+                                  TIMEAVGD_PFLUXRANGE=timeAvgd_pFluxRange, $
+                                  LOGTIMEAVGD_PFLUX=logTimeAvgd_PFlux, $
+                                  TIMEAVGD_EFLUXMAXPLOT=timeAvgd_eFluxMaxPlot, $
+                                  TIMEAVGD_EFLUXMAXRANGE=timeAvgd_eFluxMaxRange, $
+                                  LOGTIMEAVGD_EFLUXMAX=logtimeAvgd_eFluxMax, $
                                   MEDIANPLOT=medianPlot, LOGAVGPLOT=logAvgPlot, $
                                   ALL_LOGPLOTS=all_logPlots, $
                                   SQUAREPLOT=squarePlot, POLARCONTOUR=polarContour, $ 
