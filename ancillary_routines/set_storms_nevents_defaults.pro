@@ -18,6 +18,7 @@ PRO SET_STORMS_NEVENTS_DEFAULTS,TBEFOREEPOCH=tBeforeEpoch,TAFTEREPOCH=tAfterEpoc
                                 HISTOBINSIZE=histoBinSize, HISTORANGE=histoRange, $
                                 PROBOCCURRENCE_SEA=probOccurrence_sea, $
                                 TIMEAVGD_PFLUX_SEA=timeAvgd_pFlux_sea, $
+                                TIMEAVGD_EFLUXMAX_SEA=timeAvgd_eFluxMax_sea, $
                                 SAVEPNAME=savePName, $
                                 SAVEMPNAME=saveMPName, $
                                 SAVEFILE=saveFile,SAVESTR=saveStr, $
@@ -72,6 +73,9 @@ PRO SET_STORMS_NEVENTS_DEFAULTS,TBEFOREEPOCH=tBeforeEpoch,TAFTEREPOCH=tAfterEpoc
 
   defTimeAvgd_PFluxPref         = 'timeAvgd_pFlux' 
   defTimeAvgd_PFluxHistoRange   = [1e-4,1e0]
+
+  defTimeAvgd_eFluxMaxPref         = 'timeAvgd_eFluxMax' 
+  defTimeAvgd_eFluxMaxHistoRange   = [1e-4,1e0]
 
   defDo_scatterPlots            = 0
   defScatterOutPrefix           = 'stackplots_storms_nevents--scatterplot'
@@ -156,10 +160,18 @@ PRO SET_STORMS_NEVENTS_DEFAULTS,TBEFOREEPOCH=tBeforeEpoch,TAFTEREPOCH=tAfterEpoc
 
   IF KEYWORD_SET(timeAvgd_pFlux_sea) THEN BEGIN
      ;; IF ~KEYWORD_SET(yTitle_maxInd) THEN yTitle_maxInd = "Probability of Occurrence"
-     IF ~KEYWORD_SET(yTitle_maxInd) THEN yTitle_maxInd = "Time-averaged Poynting flux"
+     IF ~KEYWORD_SET(yTitle_maxInd) THEN yTitle_maxInd = "Time-averaged Poynting flux (mW/m^2)"
      ;; plotTitle = KEYWORD_SET(plotTitle) ? plotTitle : "Prob Occurrence" ;defTimeAvgd_PFluxPref + '--' + saveMaxPlotName : defTimeAvgd_PFluxPref + '.png'
      IF ~KEYWORD_SET(histoRange) THEN histoRange = defTimeAvgd_PFluxHistoRange
   ENDIF
+
+  IF KEYWORD_SET(timeAvgd_eFluxMax_sea) THEN BEGIN
+     ;; IF ~KEYWORD_SET(yTitle_maxInd) THEN yTitle_maxInd = "Probability of Occurrence"
+     IF ~KEYWORD_SET(yTitle_maxInd) THEN yTitle_maxInd = "Time-averaged e- flux (mW/m^2)"
+     ;; plotTitle = KEYWORD_SET(plotTitle) ? plotTitle : "Prob Occurrence" ;defTimeAvgd_eFluxMaxPref + '--' + saveMaxPlotName : defTimeAvgd_eFluxMaxPref + '.png'
+     IF ~KEYWORD_SET(histoRange) THEN histoRange = defTimeAvgd_eFluxMaxHistoRange
+  ENDIF
+
   IF saveFile THEN BEGIN 
      saveStr='save' 
      IF SIZE(saveFile,/TYPE) NE 7 THEN saveFile='superpose_storms_alfven_db_quantities.dat'

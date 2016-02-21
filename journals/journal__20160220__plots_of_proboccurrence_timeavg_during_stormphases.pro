@@ -4,12 +4,11 @@ PRO JOURNAL__20160220__PLOTS_OF_PROBOCCURRENCE_TIMEAVG_DURING_STORMPHASES
 
   dstCutoff = -20
 
-  plotSuff  = '--inside_extremeVals'
-
   hemi                           = 'NORTH'
   minILAT                        = 54
   ;; maxILAT                        = 86
-  ;; binILAT                        = 4.0
+  binILAT                        = 2.0
+  ;; binILAT                        = 2.0
 
   ;; hemi                           = 'SOUTH'
   ;; minILAT                        = -86
@@ -26,7 +25,8 @@ PRO JOURNAL__20160220__PLOTS_OF_PROBOCCURRENCE_TIMEAVG_DURING_STORMPHASES
 
   ;Time-averaged pFlux
   timeAvgd_pFluxPlot             = 1
-  timeAvgd_pFluxRange            = [1e-3,1e1]
+  ;; timeAvgd_pFluxRange            = [1e-4,1e0]
+  timeAvgd_pFluxRange            = [10^(-3.5),10^(0.5)]
   logTimeAvgd_pFlux              = 1
 
   ;Time-averaged pFlux
