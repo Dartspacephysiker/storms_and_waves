@@ -2,7 +2,7 @@
 ;;mod history
 ;;;;;;;
 ;;TO DO
-;;2015/11/30 1. Make all stormphase plots appear in one window instead of separating output
+;; You kidding me?
 ;;
 PRO PLOT_ALFVEN_STATS_DURING_STORMPHASES,$
    DSTCUTOFF=dstCutoff, $
@@ -16,7 +16,8 @@ PRO PLOT_ALFVEN_STATS_DURING_STORMPHASES,$
    SOUTH=south, $
    HEMI=hemi, $
    HWMAUROVAL=HwMAurOval,HWMKPIND=HwMKpInd, $
-   MIN_NEVENTS=min_nEvents, MASKMIN=maskMin, $
+   ;; MIN_NEVENTS=min_nEvents, $
+   MASKMIN=maskMin, $
    DELAY=delay, STABLEIMF=stableIMF, SMOOTHWINDOW=smoothWindow, INCLUDENOCONSECDATA=includeNoConsecData, $
    NPLOTS=nPlots, $
    EPLOTS=ePlots, $
@@ -51,7 +52,9 @@ PRO PLOT_ALFVEN_STATS_DURING_STORMPHASES,$
    ALL_LOGPLOTS=all_logPlots, $
    SQUAREPLOT=squarePlot, POLARCONTOUR=polarContour, $ 
    WHOLECAP=wholeCap, $
-   DBFILE=dbfile, NO_BURSTDATA=no_burstData, DATADIR=dataDir, DO_CHASTDB=do_chastDB, $
+   DBFILE=dbfile, NO_BURSTDATA=no_burstData, DATADIR=dataDir, $
+   DO_CHASTDB=do_chastDB, $
+   DO_DESPUNDB=do_despunDB, $
    NEVENTSPLOTRANGE=nEventsPlotRange, LOGNEVENTSPLOT=logNEventsPlot, $
    WRITEASCII=writeASCII, WRITEHDF5=writeHDF5, WRITEPROCESSEDH2D=writeProcessedH2d, $
    SAVERAW=saveRaw, RAWDIR=rawDir, $
@@ -129,7 +132,8 @@ PRO PLOT_ALFVEN_STATS_DURING_STORMPHASES,$
                                   SOUTH=south, $
                                   HEMI=hemi, $
                                   HWMAUROVAL=HwMAurOval,HWMKPIND=HwMKpInd, $
-                                  MIN_NEVENTS=min_nEvents, MASKMIN=maskMin, $
+                                  ;; MIN_NEVENTS=min_nEvents, $
+                                  MASKMIN=maskMin, $
                                   DELAY=delay, STABLEIMF=stableIMF, SMOOTHWINDOW=smoothWindow, INCLUDENOCONSECDATA=includeNoConsecData, $
                                   NPLOTS=nPlots, $
                                   EPLOTS=ePlots, $
@@ -165,7 +169,9 @@ PRO PLOT_ALFVEN_STATS_DURING_STORMPHASES,$
                                   ALL_LOGPLOTS=all_logPlots, $
                                   SQUAREPLOT=squarePlot, POLARCONTOUR=polarContour, $ 
                                   WHOLECAP=wholeCap, $
-                                  DBFILE=dbfile, NO_BURSTDATA=no_burstData, DATADIR=dataDir, DO_CHASTDB=do_chastDB, $
+                                  DBFILE=dbfile, NO_BURSTDATA=no_burstData, DATADIR=dataDir, $
+                                  DO_CHASTDB=do_chastDB, $
+                                  DO_DESPUNDB=do_despunDB, $
                                   NEVENTSPLOTRANGE=nEventsPlotRange, LOGNEVENTSPLOT=logNEventsPlot, $
                                   WRITEASCII=writeASCII, WRITEHDF5=writeHDF5, WRITEPROCESSEDH2D=writeProcessedH2d, $
                                   SAVERAW=saveRaw, RAWDIR=rawDir, $
@@ -206,10 +212,7 @@ PRO PLOT_ALFVEN_STATS_DURING_STORMPHASES,$
      plotFileArr = !NULL
      FOR i=0,2 DO BEGIN
         RESTORE,outTempFiles[i]
-        plotFileArr = [plotFileArr,plotDir + paramStr+'--'+dataNameArr[0] + fileSuff]
-        ;; imArr[i]    = IMAGE(plotFileArr[i], $
-        ;;                     LAYOUT=[3,1,i+1],$
-        ;;                     MARGIN=0)
+        plotFileArr = [[plotFileArr],[plotDir + paramStr+'--'+dataNameArr[0:-3+KEYWORD_SET(nPlots)] + fileSuff]]
      ENDFOR
 
      IF ~KEYWORD_SET(save_combined_name) THEN BEGIN
@@ -223,22 +226,25 @@ PRO PLOT_ALFVEN_STATS_DURING_STORMPHASES,$
            ENDELSE
         ENDELSE
 
-        ;; hoyDia = GET_TODAY_STRING()
-        save_combined_name = GET_TODAY_STRING() + '--' + dataNameArr[0] + $
-                             (KEYWORD_SET(plotSuffix) ? plotSuffix : '') + $
-                             '--' + statType + '--combined_phases' + fileSuff
+        save_combined_name = paramStr + '--' + dataNameArr[0:-3+KEYWORD_SET(nPlots)] + $
+                             '--combined_phases' + fileSuff
+        ;; save_combined_name = GET_TODAY_STRING() + '--' + dataNameArr[0:-3+KEYWORD_SET(nPlots)] + $
+        ;;                      (KEYWORD_SET(plotSuffix) ? plotSuffix : '') + $
+        ;;                      '--' + statType + '--combined_phases' + fileSuff
      ENDIF
 
-     PRINT,"Saving to " + save_combined_name + "..."
-     TILE_STORMPHASE_PLOTS,plotFileArr,niceStrings, $
-                           OUT_IMGARR=out_imgArr, $
-                           OUT_TITLEOBJS=out_titleObjs, $
-                           COMBINED_TO_BUFFER=combined_to_buffer, $
-                           SAVE_COMBINED_WINDOW=save_combined_window, $
-                           SAVE_COMBINED_NAME=save_combined_name, $
-                           PLOTDIR=plotDir, $
-                           /DELETE_PLOTS_WHEN_FINISHED
+     FOR i=0,N_ELEMENTS(plotFileArr[*,0])-1 DO BEGIN
 
+        PRINT,"Saving to " + save_combined_name[i] + "..."
+        TILE_STORMPHASE_PLOTS,plotFileArr[i,*],niceStrings, $
+                              OUT_IMGARR=out_imgArr, $
+                              OUT_TITLEOBJS=out_titleObjs, $
+                              COMBINED_TO_BUFFER=combined_to_buffer, $
+                              SAVE_COMBINED_WINDOW=save_combined_window, $
+                              SAVE_COMBINED_NAME=save_combined_name[i], $
+                              PLOTDIR=plotDir, $
+                              /DELETE_PLOTS_WHEN_FINISHED
+     ENDFOR
   ENDIF
 
 END

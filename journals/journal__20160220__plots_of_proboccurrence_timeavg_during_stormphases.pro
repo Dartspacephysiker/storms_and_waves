@@ -1,14 +1,28 @@
 ;2016/02/20
+;Chris wants us to try some new plots
 PRO JOURNAL__20160220__PLOTS_OF_PROBOCCURRENCE_TIMEAVG_DURING_STORMPHASES
 
   dstCutoff = -20
 
   plotSuff  = '--inside_extremeVals'
 
-  binMLT                         = 1.0
+  hemi                           = 'NORTH'
+  minILAT                        = 54
+  ;; maxILAT                        = 86
+  ;; binILAT                        = 4.0
+
+  ;; hemi                           = 'SOUTH'
+  ;; minILAT                        = -86
+  ;; maxILAT                        = -54
+  ;; binILAT                        = 4.0
+
+  binMLT                         = 1.5
+
+  maskMin                        = 10
 
   ;PROBOCCURRENCE
   probOccurrenceRange            = [1e-3,1e-1]
+  logProbOccurrence              = 1
 
   ;Time-averaged pFlux
   timeAvgd_pFluxPlot             = 1
@@ -20,18 +34,19 @@ PRO JOURNAL__20160220__PLOTS_OF_PROBOCCURRENCE_TIMEAVG_DURING_STORMPHASES
   timeAvgd_eFluxMaxRange         = [1e-4,1e0]
   logtimeAvgd_eFluxMax           = 1
 
-  do_despun                      = 1
+  do_despun                      = 0
 
   PLOT_ALFVEN_STATS_DURING_STORMPHASES,DSTCUTOFF=dstCutoff, $
-                                       ;; /MIRROR, $
-                                       ;; /SOUTH, $
-                                       ;; MAXILAT=-54, $
-                                       /NORTH, $
-                                       MINILAT=54, $
+                                       HEMI=hemi, $
+                                       MINILAT=minILAT, $
+                                       MAXILAT=maxILAT, $
+                                       BINILAT=binILAT, $
+                                       BINMLT=binMLT, $
+                                       DO_DESPUNDB=do_despun, $
+                                       MASKMIN=maskMin, $
                                        /LOGAVGPLOT, $
                                        /PROBOCCURRENCEPLOT, $
-                                       /LOGPROBOCCURRENCE, $
-                                       ;; PROBOCCURRENCERANGE=[1e-3,6e-1], $
+                                       LOGPROBOCCURRENCE=logProbOccurrence, $
                                        PROBOCCURRENCERANGE=probOccurrenceRange, $
                                        TIMEAVGD_PFLUXPLOT=timeAvgd_pFluxPlot, $
                                        TIMEAVGD_PFLUXRANGE=timeAvgd_pFluxRange, $
@@ -41,7 +56,6 @@ PRO JOURNAL__20160220__PLOTS_OF_PROBOCCURRENCE_TIMEAVG_DURING_STORMPHASES
                                        LOGTIMEAVGD_EFLUXMAX=logtimeAvgd_eFluxMax, $
                                        PLOTSUFFIX=plotSuff, $
                                        /MIDNIGHT, $
-                                       BINMLT=binMLT, $
                                        /CB_FORCE_OOBLOW, $
                                        /CB_FORCE_OOBHIGH, $
                                        /COMBINE_STORMPHASE_PLOTS, $
