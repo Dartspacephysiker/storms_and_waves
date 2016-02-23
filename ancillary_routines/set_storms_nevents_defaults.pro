@@ -17,6 +17,7 @@ PRO SET_STORMS_NEVENTS_DEFAULTS,TBEFOREEPOCH=tBeforeEpoch,TAFTEREPOCH=tAfterEpoc
                                 OMNI_QUANTITY=omni_quantity,LOG_OMNI_QUANTITY=log_omni_quantity,USE_DATA_MINMAX=use_data_minMax, $
                                 HISTOBINSIZE=histoBinSize, HISTORANGE=histoRange, $
                                 PROBOCCURRENCE_SEA=probOccurrence_sea, $
+                                TIMEAVGD_MAXIND_SEA=timeAvgd_maxInd_sea, $
                                 TIMEAVGD_PFLUX_SEA=timeAvgd_pFlux_sea, $
                                 TIMEAVGD_EFLUXMAX_SEA=timeAvgd_eFluxMax_sea, $
                                 SAVEPNAME=savePName, $
@@ -70,6 +71,9 @@ PRO SET_STORMS_NEVENTS_DEFAULTS,TBEFOREEPOCH=tBeforeEpoch,TAFTEREPOCH=tAfterEpoc
                                 
   defProbOccurrencePref         = 'probOccurrence' 
   defProbOccurrenceHistoRange   = [1e-4,1e0]
+
+  defTimeAvgd_MaxIndPref        = 'timeAvgd_' 
+  defTimeAvgd_MaxIndHistoRange  = [1e-4,1e0]
 
   defTimeAvgd_PFluxPref         = 'timeAvgd_pFlux' 
   defTimeAvgd_PFluxHistoRange   = [1e-4,1e0]
