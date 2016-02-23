@@ -1,11 +1,11 @@
 ;2016/02/23 Now you know
-PRO JOURNAL__20160223__SEAS__18_INTEG_ION_FLUX_UP_DIVIDED_BY_WIDTH_X
+PRO JOURNAL__20160223__SEAS__10_EFLUX_LOSSCONE_INTEG_DIVIDED_BY_WIDTH_X__TIMEAVG
 
   @journal__20160223__plot_defaults.pro
 
   ;; window_sum        = running_logAvg          ;use the values that all the other plots do
   ;; window_sum        = 10                      ; ... or don't
-  histobinsize          = 2
+  histobinsize          = 2.5
 
   do_despun             = 1
 
@@ -16,16 +16,12 @@ PRO JOURNAL__20160223__SEAS__18_INTEG_ION_FLUX_UP_DIVIDED_BY_WIDTH_X
      plotSuff           = '--north_hemi.png'
   ENDELSE
 
-  maxInd                = 18
-
+  maxInd                = 10
   divide_by_width_x     = 1
-  probOccPref           = pref + 'spatialAvg_18_INTEG_ION_FLUX_UP--with_NOAA'
-  yTitle                = "Spatially averaged " + title__alfDB_ind_18
-  yRange_maxInd         = [10^(5.0),10^(10.0)]
 
-  ;; probOccPref           = pref + '18_INTEG_ION_FLUX_UP--with_NOAA'
-  ;; yTitle                = title__alfDB_ind_18
-  ;; yRange_maxInd         = [10^(11.0),10^(16.0)]
+  probOccPref           = pref + 'time_spatialAvg_10_EFLUX_LOSSCONE_INTEG--with_NOAA'
+  yTitle                = "Temp/Spatially averaged e- energy flux" 
+  yRange_maxInd         = [.008,2]
 
   yLogScale_maxInd      = 1
 
@@ -35,8 +31,6 @@ PRO JOURNAL__20160223__SEAS__18_INTEG_ION_FLUX_UP_DIVIDED_BY_WIDTH_X
   ;; ENDIF ELSE BEGIN
   ;;    plotSuff       = '--south_hemi.png'
   ;; ENDELSE
-
-  ptPref                = ''
 
   FOR j=0,N_ELEMENTS(do_these_plots)-1 DO BEGIN
      i                  = do_these_plots[j]
@@ -61,36 +55,30 @@ PRO JOURNAL__20160223__SEAS__18_INTEG_ION_FLUX_UP_DIVIDED_BY_WIDTH_X
         MINMLT=minM[i], $
         MAXMLT=maxM[i], $
         HEMI=hemi, $
-        /NOGEOMAGPLOTS, $
+        /NOMAXPLOTS, $
         PLOTTITLE=pT, $
-        ;; NOGEOMAGPLOTS=(i GT 0), $
+        NOGEOMAGPLOTS=(i GT 0), $
         WINDOW_GEOMAG=geomagWindow, $
         /XLABEL_MAXIND__SUPPRESS, $
         YRANGE_MAXIND=yRange_maxInd, $
         YTITLE_MAXIND=yTitle, $
         HISTOBINSIZE=histoBinsize, $
         /OVERPLOT_HIST, $
-        ;; /TIMEAVGD_MAXIND_SEA, $
+        /TIMEAVGD_MAXIND_SEA, $
         LOG_DBQUANTITY=log_dbQuantity, $
         YLOGSCALE_MAXIND=yLogScale_maxInd, $
-        AVG_TYPE_MAXIND=2, $
-        SYMCOLOR__MAX_PLOT=symColor[i], $
-        WINDOW_MAXIMUS=maximusWindow, $
-        OUT_AVG_PLOT=out_avg_plot, $
-        /ACCUMULATE__AVG_PLOTS, $
-        N__AVG_PLOTS=2, $
-        SYMCOLOR__AVG_PLOT=symColor[i], $
-        NAME__AVG_PLOT=ptRegion[i], $
-        /ONLY_POS, $
-        RUNNING_AVERAGE=running_logAvg, $
-        RUNNING_BIN_SPACING=running_bin_spacing, $
-        RUNNING_SMOOTH_NPOINTS=smooth_nPoints, $
-        RUNNING_BIN_L_OFFSET=running_bin_l_offset, $
-        RUNNING_BIN_R_OFFSET=running_bin_r_offset, $
-        SAVEMAXPLOT=(i EQ 1), $
+        ;; WINDOW_SUM=window_sum, $
+        ;; RUNNING_BIN_SPACING=running_bin_spacing, $
+        ;; RUNNING_BIN_L_OFFSET=running_bin_l_offset, $
+        ;; RUNNING_BIN_R_OFFSET=running_bin_r_offset, $
+        SAVEPLOT=(i EQ 1), $
+        OUT_HISTO_PLOT=out_histo_plot, $
+        /ACCUMULATE__HISTO_PLOTS, $
+        N__HISTO_PLOTS=2, $
         SYMCOLOR__HISTO_PLOT=symColor[i], $
-        /MAKE_LEGEND__AVG_PLOT, $
-        SAVEMPNAME=spn
+        /MAKE_LEGEND__HISTO_PLOT, $
+        NAME__HISTO_PLOT=ptRegion[i], $
+        SAVEPNAME=spn
   ENDFOR
 
 END

@@ -31,7 +31,17 @@ PRO GET_DATA_FOR_ALFVENDB_EPOCH_PLOTS,MAXIMUS=maximus,CDBTIME=cdbTime, $
   maxData                      = maximus.(maxInd)
   IF KEYWORD_SET(divide_by_width_x) THEN BEGIN
      PRINT,'Dividing by WIDTH_X!'
-     maxData[WHERE(FINITE(maxData))] = maxData[WHERE(FINITE(maxData))]/maximus.width_x[WHERE(FINITE(maxData))]
+
+     inds_to_scale_to_cm       = [15,16,17,18,26,28,30]
+     scale_to_cm               = WHERE(maxInd EQ inds_to_scale_to_cm) 
+     IF scale_to_cm[0] EQ -1 THEN BEGIN
+        factor = 1.D
+     ENDIF ELSE BEGIN 
+        factor = .01D 
+        PRINT,'...Scaling WIDTH_X to centimeters for maxInd='+STRCOMPRESS(maxInd,/REMOVE_ALL)+'...'
+     ENDELSE
+
+     maxData[WHERE(FINITE(maxData))] = maxData[WHERE(FINITE(maxData))]*factor/maximus.width_x[WHERE(FINITE(maxData))]
   ENDIF
 
 
