@@ -54,7 +54,7 @@ PRO JOURNAL__20160220__SEAS__TIMEAVG_EFLUXMAX__JUSTHISTO
         NOGEOMAGPLOTS=(i GT 0), $
         WINDOW_GEOMAG=geomagWindow, $
         /XLABEL_MAXIND__SUPPRESS, $
-        HISTORANGE=[0,0.1], $
+        HISTORANGE=[0.01,1.0], $
         HISTOBINSIZE=histoBinsize, $
         /OVERPLOT_HIST, $
         /TIMEAVGD_EFLUXMAX_SEA, $

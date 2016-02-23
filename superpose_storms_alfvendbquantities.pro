@@ -434,7 +434,7 @@ PRO SUPERPOSE_STORMS_ALFVENDBQUANTITIES,stormTimeArray_utc, $
         ENDIF
 
         IF KEYWORD_SET(timeAvgd_eFluxMax_sea) THEN BEGIN
-           PRINT,'Doing time-averaged Poynting flux SEA ...'
+           PRINT,'Doing time-averaged e- energy flux SEA ...'
            tot_eFluxMax_t = LIST_TO_1DARRAY(tot_eFluxMax_t_list,/WARN,/SKIP_NEG1_ELEMENTS)
            tot_eFluxMax_y = LIST_TO_1DARRAY(tot_eFluxMax_y_list,/WARN,/SKIP_NEG1_ELEMENTS)
 
