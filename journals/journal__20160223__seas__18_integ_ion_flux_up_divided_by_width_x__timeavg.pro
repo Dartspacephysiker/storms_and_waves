@@ -5,9 +5,9 @@ PRO JOURNAL__20160223__SEAS__18_INTEG_ION_FLUX_UP_DIVIDED_BY_WIDTH_X__TIMEAVG
 
   ;; window_sum        = running_logAvg          ;use the values that all the other plots do
   ;; window_sum        = 10                      ; ... or don't
-  histobinsize          = 4
+  histobinsize          = 5
 
-  do_despun             = 1
+  do_despun             = 0
 
   ;;manual mod this
   IF do_despun THEN BEGIN
@@ -20,8 +20,8 @@ PRO JOURNAL__20160223__SEAS__18_INTEG_ION_FLUX_UP_DIVIDED_BY_WIDTH_X__TIMEAVG
   divide_by_width_x     = 1
 
   probOccPref           = pref + 'time_spatialAvg_18_INTEG_ION_FLUX_UP--with_NOAA'
-  yTitle                = "Temp/Spatially averaged upward ion flux" + title__alfDB_ind_18
-  yRange_maxInd         = [10^(5.0),10^(10.0)]
+  yTitle                = "Average Upward Ion Flux (cm!U-2!Ns!U-1!N) at 100 km"
+  yRange_maxInd         = [10^(5.0),10^(9.5)]
 
   yLogScale_maxInd      = 1
 

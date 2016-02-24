@@ -7,7 +7,7 @@ PRO JOURNAL__20160223__SEAS__49_PFLUXEST__TIMEAVG
   ;; window_sum        = 10                      ; ... or don't
   histobinsize          = 5.0
 
-  do_despun             = 1
+  do_despun             = 0
 
   ;;manual mod this
   IF do_despun THEN BEGIN
@@ -20,8 +20,9 @@ PRO JOURNAL__20160223__SEAS__49_PFLUXEST__TIMEAVG
   ;; divide_by_width_x     = 1
 
   probOccPref           = pref + 'time_spatialAvg_49_PFLUXEST--with_NOAA'
-  yTitle                = "Time-averaged Poynting flux (mW/m!U2!N)" 
-  yRange_maxInd         = [.02,2]
+  yTitle                = "Average Poynting Flux (mW/m!U2!N) at 100 km" 
+  ;; yRange_maxInd         = [.02,2]  ;;work well for despun data
+  yRange_maxInd         = [.01,3.]
 
   yLogScale_maxInd      = 1
 

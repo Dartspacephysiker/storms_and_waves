@@ -1,6 +1,7 @@
 ;2016/02/23
 ;;And try it again!!
-PRO JOURNAL__20160223__PLOTS_OF_10_EFLUX_LOSSCONE_INTEG__18_INTEG_ION_FLUX_UP__TIME_AND_SPACEAVG_DURING_STORMPHASES
+;;PFLUXEST maxes out at 10 with the current config, so keep it!
+PRO JOURNAL__20160224__PLOTS_OF_49_PFLUXEST__TIMEAVG_DURING_STORMPHASES
 
   dstCutoff = -20
 
@@ -19,21 +20,15 @@ PRO JOURNAL__20160223__PLOTS_OF_10_EFLUX_LOSSCONE_INTEG__18_INTEG_ION_FLUX_UP__T
 
   maskMin                        = 10
 
-   ;; 10-EFLUX_LOSSCONE_INTEG
-   eNumFlPlotType                = 'Eflux_Losscone_Integ'
-   eNumFlRange                   = [10^(-2.5),10^(-0.5)]
-   eNumFlRange                   = [10.^(-3.0),10.^(-1.0)]
-   logENumFlPlot                 = 1
-   noNegeNumFl                   = 1
+  ;; ;;PROBOCCURRENCE
+  ;; probOccurrenceRange            = [1e-3,1e-1]
+  ;; logProbOccurrence              = 1
 
-  ;;18--INTEG_ION_FLUX_UP
-  iFluxPlotType                  = 'Integ_Up'
-  ;; iPlotRange                     = [10^(3.5),10^(7.5)]  ;for time-averaged plot
-  iPlotRange                     = [10.^(6.0),10.^(8.0)]  ;for time-averaged plot
-  logIFPlot                      = 1
+  ;;49--pFluxEst
+  pPlotRange                     = [1e-2,1e0] ;for time-averaged
+  logPFPlot                      = 1
 
   do_despun                      = 0
-  divide_by_width_x              = 1
 
   PLOT_ALFVEN_STATS_DURING_STORMPHASES,DSTCUTOFF=dstCutoff, $
                                        HEMI=hemi, $
@@ -44,16 +39,13 @@ PRO JOURNAL__20160223__PLOTS_OF_10_EFLUX_LOSSCONE_INTEG__18_INTEG_ION_FLUX_UP__T
                                        DO_DESPUNDB=do_despun, $
                                        MASKMIN=maskMin, $
                                        /LOGAVGPLOT, $
-                                       DIVIDE_BY_WIDTH_X=divide_by_width_x, $
+                                       ;; /PROBOCCURRENCEPLOT, $
+                                       ;; LOGPROBOCCURRENCE=logProbOccurrence, $
+                                       ;; PROBOCCURRENCERANGE=probOccurrenceRange, $
                                        /DO_TIMEAVG_FLUXQUANTITIES, $
-                                       /ENUMFLPLOTS, $
-                                       LOGENUMFLPLOT=logeNumFlPlot, $
-                                       ENUMFLPLOTRANGE=eNumFlRange, $
-                                       ENUMFLPLOTTYPE=eNumFlPlotType, $
-                                       /IONPLOTS, $
-                                       LOGIFPLOT=logIFPlot, $
-                                       IPLOTRANGE=iPlotRange, $
-                                       IFLUXPLOTTYPE=iFluxPlotType, $
+                                       /PPLOTS, $
+                                       LOGPFPLOT=logPFPlot, $
+                                       PPLOTRANGE=pPlotRange, $
                                        PLOTSUFFIX=plotSuff, $
                                        /MIDNIGHT, $
                                        /CB_FORCE_OOBLOW, $

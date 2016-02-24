@@ -6,8 +6,8 @@ PRO JOURNAL__20160223__PLOTS_OF_PROBOCCURRENCE__49_PFLUXEST__TIMEAVG_DURING_STOR
 
   hemi                           = 'NORTH'
   minILAT                        = 61
-  maxILAT                        = 85
-  binILAT                        = 2.0
+  maxILAT                        = 86
+  binILAT                        = 5.0
   ;; binILAT                        = 2.0
 
   ;; hemi                           = 'SOUTH'
@@ -15,7 +15,7 @@ PRO JOURNAL__20160223__PLOTS_OF_PROBOCCURRENCE__49_PFLUXEST__TIMEAVG_DURING_STOR
   ;; maxILAT                        = -54
   ;; binILAT                        = 4.0
 
-  binMLT                         = 1.5
+  binMLT                         = 1.0
 
   maskMin                        = 10
 
@@ -27,7 +27,7 @@ PRO JOURNAL__20160223__PLOTS_OF_PROBOCCURRENCE__49_PFLUXEST__TIMEAVG_DURING_STOR
   pPlotRange                     = [1e-3,1e1] ;for time-averaged
   logPFPlot                      = 1
 
-  do_despun                      = 1
+  do_despun                      = 0
 
   PLOT_ALFVEN_STATS_DURING_STORMPHASES,DSTCUTOFF=dstCutoff, $
                                        HEMI=hemi, $
@@ -42,13 +42,13 @@ PRO JOURNAL__20160223__PLOTS_OF_PROBOCCURRENCE__49_PFLUXEST__TIMEAVG_DURING_STOR
                                        LOGPROBOCCURRENCE=logProbOccurrence, $
                                        PROBOCCURRENCERANGE=probOccurrenceRange, $
                                        /DO_TIMEAVG_FLUXQUANTITIES, $
-                                       /PPLOTS, $
-                                       LOGPFPLOT=logPFPlot, $
-                                       PPLOTRANGE=pPlotRange, $
+                                       ;; /PPLOTS, $
+                                       ;; LOGPFPLOT=logPFPlot, $
+                                       ;; PPLOTRANGE=pPlotRange, $
                                        PLOTSUFFIX=plotSuff, $
                                        /MIDNIGHT, $
                                        /CB_FORCE_OOBLOW, $
-                                       /CB_FORCE_OOBHIGH, $
+                                       ;; /CB_FORCE_OOBHIGH, $
                                        /COMBINE_STORMPHASE_PLOTS, $
                                        /SAVE_COMBINED_WINDOW, $
                                        /COMBINED_TO_BUFFER

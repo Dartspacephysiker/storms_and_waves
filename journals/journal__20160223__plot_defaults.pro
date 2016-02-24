@@ -2,13 +2,20 @@
   ;;MLT params and stuff
   minM                  = [6.0,-6.0]
   maxM                  = [18.0,6.0]
-  hemi                  = 'NORTH'
   ptRegion              = ['Dayside','Nightside']
   psRegion              = ['dayside','nightside']
+  symColor              = ['red','blue']
+
+  ;; minM                  = [-6.0,6.0]
+  ;; maxM                  = [6.0,18.0]
+  ;; ptRegion              = ['Nightside','Dayside']
+  ;; psRegion              = ['nightside','dayside']
+  ;; symColor              = ['blue','red']
+
+  hemi                  = 'NORTH'
   hours_aft             = 60
                               
   do_these_plots        = [0,1]
-  symColor              = ['red','blue']
 
   ;;Do a running logAvg window
   running_logAvg        = 10

@@ -5,9 +5,9 @@ PRO JOURNAL__20160223__SEAS__10_EFLUX_LOSSCONE_INTEG_DIVIDED_BY_WIDTH_X__TIMEAVG
 
   ;; window_sum        = running_logAvg          ;use the values that all the other plots do
   ;; window_sum        = 10                      ; ... or don't
-  histobinsize          = 2.5
+  histobinsize          = 5.0
 
-  do_despun             = 1
+  do_despun             = 0
 
   ;;manual mod this
   IF do_despun THEN BEGIN
@@ -20,8 +20,8 @@ PRO JOURNAL__20160223__SEAS__10_EFLUX_LOSSCONE_INTEG_DIVIDED_BY_WIDTH_X__TIMEAVG
   divide_by_width_x     = 1
 
   probOccPref           = pref + 'time_spatialAvg_10_EFLUX_LOSSCONE_INTEG--with_NOAA'
-  yTitle                = "Temp/Spatially averaged e- energy flux" 
-  yRange_maxInd         = [.008,2]
+  yTitle                = "Average e!U-!N Flux (mW/m!U2!N) at 100 km" 
+  yRange_maxInd         = [.004,2]
 
   yLogScale_maxInd      = 1
 

@@ -795,7 +795,7 @@ PRO SUPERPOSE_STORMS_ALFVENDBQUANTITIES,stormTimeArray_utc, $
      IF N_ELEMENTS(out_histo_plot) EQ n__histo_plots THEN BEGIN
         legend = LEGEND(TARGET=out_histo_plot[0:n__histo_plots-1], $
                         /NORMAL, $
-                        POSITION=[0.29,0.50], $
+                        POSITION=[0.29,0.85], $
                         FONT_SIZE=18, $
                         HORIZONTAL_ALIGNMENT=0.5, $
                         VERTICAL_SPACING=defHPlot_legend__vSpace, $
