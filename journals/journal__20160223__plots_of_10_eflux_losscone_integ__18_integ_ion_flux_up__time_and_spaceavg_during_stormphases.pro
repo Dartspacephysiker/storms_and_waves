@@ -5,17 +5,21 @@ PRO JOURNAL__20160223__PLOTS_OF_10_EFLUX_LOSSCONE_INTEG__18_INTEG_ION_FLUX_UP__T
   dstCutoff = -20
 
   hemi                           = 'NORTH'
+  ;; minILAT                        = 61
+  ;; maxILAT                        = 86
+  ;; binILAT                        = 5.0
+  ;; binILAT                        = 2.5
+  ;; binMLT                         = 1.0
+
   minILAT                        = 61
-  maxILAT                        = 86
-  binILAT                        = 5.0
-  ;; binILAT                        = 2.0
+  maxILAT                        = 85
+  binILAT                        = 3.0
+  binMLT                         = 1.5
 
   ;; hemi                           = 'SOUTH'
   ;; minILAT                        = -86
   ;; maxILAT                        = -54
   ;; binILAT                        = 4.0
-
-  binMLT                         = 1.0
 
   maskMin                        = 10
 
@@ -29,7 +33,7 @@ PRO JOURNAL__20160223__PLOTS_OF_10_EFLUX_LOSSCONE_INTEG__18_INTEG_ION_FLUX_UP__T
   ;;18--INTEG_ION_FLUX_UP
   iFluxPlotType                  = 'Integ_Up'
   ;; iPlotRange                     = [10^(3.5),10^(7.5)]  ;for time-averaged plot
-  iPlotRange                     = [10.^(6.0),10.^(8.0)]  ;for time-averaged plot
+  iPlotRange                     = [10.^(4.5),10.^(7.5)]  ;for time-averaged plot
   logIFPlot                      = 1
 
   do_despun                      = 0

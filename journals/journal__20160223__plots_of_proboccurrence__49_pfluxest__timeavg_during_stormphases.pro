@@ -5,17 +5,21 @@ PRO JOURNAL__20160223__PLOTS_OF_PROBOCCURRENCE__49_PFLUXEST__TIMEAVG_DURING_STOR
   dstCutoff = -20
 
   hemi                           = 'NORTH'
+  ;; minILAT                        = 61
+  ;; maxILAT                        = 86
+  ;; binILAT                        = 5.0
+  ;; binILAT                        = 2.5
+  ;; binMLT                         = 1.0
+
   minILAT                        = 61
-  maxILAT                        = 86
-  binILAT                        = 5.0
-  ;; binILAT                        = 2.0
+  maxILAT                        = 85
+  binILAT                        = 3.0
+  binMLT                         = 1.5
 
   ;; hemi                           = 'SOUTH'
   ;; minILAT                        = -86
   ;; maxILAT                        = -54
   ;; binILAT                        = 4.0
-
-  binMLT                         = 1.0
 
   maskMin                        = 10
 
@@ -24,8 +28,8 @@ PRO JOURNAL__20160223__PLOTS_OF_PROBOCCURRENCE__49_PFLUXEST__TIMEAVG_DURING_STOR
   logProbOccurrence              = 1
 
   ;;49--pFluxEst
-  pPlotRange                     = [1e-3,1e1] ;for time-averaged
-  logPFPlot                      = 1
+  ;; pPlotRange                     = [1e-3,1e1] ;for time-averaged
+  ;; logPFPlot                      = 1
 
   do_despun                      = 0
 

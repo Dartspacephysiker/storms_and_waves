@@ -55,7 +55,7 @@ PRO JOURNAL__20160205__SEAS__PROBOCCURRENCE__JUSTHISTO__FASTLOCINTERVALS4
         HISTORANGE=[0,0.1], $
         HISTOBINSIZE=histoBinsize, $
         /OVERPLOT_HIST, $
-        /PROBOCCURENCE_SEA, $
+        /PROBOCCURRENCE_SEA, $
         ;; WINDOW_SUM=window_sum, $
         ;; RUNNING_BIN_SPACING=running_bin_spacing, $
         ;; RUNNING_BIN_L_OFFSET=running_bin_l_offset, $

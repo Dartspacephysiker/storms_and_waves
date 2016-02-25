@@ -50,6 +50,7 @@ PRO HISTOPLOT_ALFVENDBQUANTITIES_DURING_STORMPHASES__OVERLAY_PHASES, $
    HISTYRANGE_MAXIND=histYRange_maxInd, $
    HISTYTITLE__ONLY_ONE=histYTitle__only_one, $
    HISTBINSIZE_MAXIND=histBinsize_maxInd, $
+   DIVIDE_BY_WIDTH_X=divide_by_width_x, $
    ONLY_POS=only_pos, $
    ONLY_NEG=only_neg, $
    ABSVAL=absVal, $
@@ -219,6 +220,21 @@ EPOCHPLOT_COLORNAMES=epochPlot_colorNames,SCATTEROUTPREFIX=scatterOutPrefix, $
         tempData = maximus.(maxInd)[alf_i]
      ENDELSE
 
+     IF KEYWORD_SET(divide_by_width_x) THEN BEGIN
+        PRINT,'Dividing by WIDTH_X!'
+        
+        inds_to_scale_to_cm       = [15,16,17,18,26,28,30]
+        scale_to_cm               = WHERE(maxInd EQ inds_to_scale_to_cm) 
+        IF scale_to_cm[0] EQ -1 THEN BEGIN
+           factor = 1.D
+        ENDIF ELSE BEGIN 
+           factor = .01D 
+           PRINT,'...Scaling WIDTH_X to centimeters for maxInd='+STRCOMPRESS(maxInd,/REMOVE_ALL)+'...'
+        ENDELSE
+        
+        tempData[WHERE(FINITE(tempData))] = tempData[WHERE(FINITE(tempData))]*factor/maximus.width_x[WHERE(FINITE(tempData))]
+     ENDIF
+        
      IF KEYWORD_SET(log_DBQuantity) THEN BEGIN
         PRINT,"Logging these data..."
         tempData = ALOG10(tempData)

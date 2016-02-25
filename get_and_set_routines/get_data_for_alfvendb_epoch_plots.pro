@@ -61,6 +61,11 @@ PRO GET_DATA_FOR_ALFVENDB_EPOCH_PLOTS,MAXIMUS=maximus,CDBTIME=cdbTime, $
      good_i = CGSETINTERSECTION(good_i,WHERE(maxData GT 0.0 AND FINITE(maxData)))
   ENDIF
 
+  IF KEYWORD_SET(only_neg) THEN BEGIN
+     good_i = CGSETINTERSECTION(good_i,WHERE(maxData LT 0.0 AND FINITE(maxData)))
+     
+  ENDIF
+
   IF neg_and_pos_separ OR ( log_DBQuantity AND (alf_ind_list[1,0] NE -1)) THEN BEGIN
      PRINT,'Got some negs here...'
      WAIT,1
@@ -136,9 +141,14 @@ PRO GET_DATA_FOR_ALFVENDB_EPOCH_PLOTS,MAXIMUS=maximus,CDBTIME=cdbTime, $
            alf_t=(DOUBLE(cdbTime[plot_i])-DOUBLE(alf_centerTime[i]))/3600.
            
            ;; get corresponding data
-           alf_y=maxData[plot_i]
+           IF KEYWORD_SET(only_neg) THEN BEGIN
+              PRINT,"converting neg data to pos!"
+              alf_y=ABS(maxData[plot_i])
+           ENDIF ELSE BEGIN
+              alf_y=maxData[plot_i]
+           ENDELSE
            IF KEYWORD_SET(log_dbquantity) THEN BEGIN
-              alf_y = ALOG10(alf_y)
+                 alf_y = ALOG10(alf_y)
            ENDIF
 
            IF i EQ 0 THEN BEGIN

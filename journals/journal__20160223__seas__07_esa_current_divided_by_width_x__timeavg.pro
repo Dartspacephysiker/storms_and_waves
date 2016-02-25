@@ -1,5 +1,5 @@
 ;2016/02/23 Now you know
-PRO JOURNAL__20160223__SEAS__10_EFLUX_LOSSCONE_INTEG_DIVIDED_BY_WIDTH_X__TIMEAVG
+PRO JOURNAL__20160223__SEAS__07_ESA_CURRENT_DIVIDED_BY_WIDTH_X__TIMEAVG
 
   @journal__20160223__plot_defaults.pro
 
@@ -16,12 +16,13 @@ PRO JOURNAL__20160223__SEAS__10_EFLUX_LOSSCONE_INTEG_DIVIDED_BY_WIDTH_X__TIMEAVG
      plotSuff           = '--north_hemi.png'
   ENDELSE
 
-  maxInd                = 10
+  maxInd                = 07
   divide_by_width_x     = 1
 
-  probOccPref           = pref + 'time_spatialAvg_10_EFLUX_LOSSCONE_INTEG--with_NOAA'
-  yTitle                = "Average e!U-!N Flux (mW/m!U2!N) at 100 km"
-  yRange_maxInd         = [.004,2]
+  probOccPref           = pref + 'time_spatialAvg_07_ESA_CURRENT--with_NOAA'
+  yTitle                = "Average e!U-!N current () at 100 km" 
+  ;; yRange_maxInd         = [.000002,.02]  ;;for ONLY_POS
+  yRange_maxInd         = [.00000002,.0002]  ;;for ONLY_NEG
 
   yLogScale_maxInd      = 1
 
@@ -75,6 +76,7 @@ PRO JOURNAL__20160223__SEAS__10_EFLUX_LOSSCONE_INTEG_DIVIDED_BY_WIDTH_X__TIMEAVG
         OUT_HISTO_PLOT=out_histo_plot, $
         /ACCUMULATE__HISTO_PLOTS, $
         N__HISTO_PLOTS=2, $
+        /ONLY_NEG, $
         SYMCOLOR__HISTO_PLOT=symColor[i], $
         /MAKE_LEGEND__HISTO_PLOT, $
         NAME__HISTO_PLOT=ptRegion[i], $

@@ -6,17 +6,22 @@ PRO JOURNAL__20160224__PLOTS_OF_49_PFLUXEST__TIMEAVG_DURING_STORMPHASES
   dstCutoff = -20
 
   hemi                           = 'NORTH'
+
+  ;; minILAT                        = 60
+  ;; maxILAT                        = 85
+  ;; binILAT                        = 5.0
+  ;; binILAT                        = 2.5
+  ;; binMLT                         = 1.0
+
   minILAT                        = 61
-  maxILAT                        = 86
-  binILAT                        = 5.0
-  ;; binILAT                        = 2.0
+  maxILAT                        = 85
+  binILAT                        = 3.0
+  binMLT                         = 1.5
 
   ;; hemi                           = 'SOUTH'
   ;; minILAT                        = -86
   ;; maxILAT                        = -54
   ;; binILAT                        = 4.0
-
-  binMLT                         = 1.0
 
   maskMin                        = 10
 

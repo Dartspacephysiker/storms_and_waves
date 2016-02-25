@@ -95,6 +95,7 @@ PRO SUPERPOSE_STORMS_ALFVENDBQUANTITIES,stormTimeArray_utc, $
                                         DIVIDE_BY_WIDTH_X=divide_by_width_x, $
                                         RETURNED_NEV_TBINS_and_HIST=returned_nEv_tbins_and_Hist, $
                                         ONLY_POS=only_pos, $
+                                        ONLY_NEG=only_neg, $
                                         NEG_AND_POS_SEPAR=neg_and_pos_separ, $
                                         LAYOUT=layout, $
                                         POS_LAYOUT=pos_layout, $
@@ -304,6 +305,7 @@ PRO SUPERPOSE_STORMS_ALFVENDBQUANTITIES,stormTimeArray_utc, $
                                           TBEFOREEPOCH=tBeforeEpoch, $
                                           NEG_AND_POS_SEPAR=neg_and_pos_separ, $
                                           ONLY_POS=only_pos, $
+                                          ONLY_NEG=only_neg, $
                                           TOT_PLOT_I_POS_LIST=tot_plot_i_pos_list, $
                                           TOT_ALF_T_POS_LIST=tot_alf_t_pos_list, $
                                           TOT_ALF_Y_POS_LIST=tot_alf_y_pos_list, $
@@ -468,8 +470,13 @@ PRO SUPERPOSE_STORMS_ALFVENDBQUANTITIES,stormTimeArray_utc, $
            HISTOBINSIZE=histoBinSize,NEVTOT=nEvTot_neg, $
            NONZERO_I=nz_i_neg
      ENDIF ELSE BEGIN
-        tot_alf_t = LIST_TO_1DARRAY(tot_alf_t_list,/WARN,/SKIP_NEG1_ELEMENTS)
-        tot_alf_y = LIST_TO_1DARRAY(tot_alf_y_list,/WARN,/SKIP_NEG1_ELEMENTS)
+        IF KEYWORD_SET(probOccurrence_sea) THEN BEGIN
+           tot_alf_t = LIST_TO_1DARRAY(tot_widthT_t_list,/WARN,/SKIP_NEG1_ELEMENTS)
+           tot_alf_y = LIST_TO_1DARRAY(tot_widthT_y_list,/WARN,/SKIP_NEG1_ELEMENTS)
+        ENDIF ELSE BEGIN
+           tot_alf_t = LIST_TO_1DARRAY(tot_alf_t_list,/WARN,/SKIP_NEG1_ELEMENTS)
+           tot_alf_y = LIST_TO_1DARRAY(tot_alf_y_list,/WARN,/SKIP_NEG1_ELEMENTS)
+        ENDELSE
 
         IF KEYWORD_SET(timeAvgd_pFlux_sea) THEN BEGIN
            PRINT,'Doing time-averaged Poynting flux SEA ...'
