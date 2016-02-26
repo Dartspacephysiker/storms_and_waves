@@ -51,7 +51,6 @@ PRO JOURNAL__20160224__PLOTS_OF_49_PFLUXEST__TIMEAVG_DURING_STORMPHASES
                                        /PPLOTS, $
                                        LOGPFPLOT=logPFPlot, $
                                        PPLOTRANGE=pPlotRange, $
-                                       PLOTSUFFIX=plotSuff, $
                                        /MIDNIGHT, $
                                        /CB_FORCE_OOBLOW, $
                                        /CB_FORCE_OOBHIGH, $
