@@ -51,6 +51,7 @@ PRO HISTOPLOT_ALFVENDBQUANTITIES_DURING_STORMPHASES__OVERLAY_PHASES, $
    HISTYTITLE__ONLY_ONE=histYTitle__only_one, $
    HISTBINSIZE_MAXIND=histBinsize_maxInd, $
    DIVIDE_BY_WIDTH_X=divide_by_width_x, $
+   MULTIPLY_BY_WIDTH_X=multiply_by_width_x, $
    ONLY_POS=only_pos, $
    ONLY_NEG=only_neg, $
    ABSVAL=absVal, $
@@ -235,6 +236,21 @@ EPOCHPLOT_COLORNAMES=epochPlot_colorNames,SCATTEROUTPREFIX=scatterOutPrefix, $
         tempData[WHERE(FINITE(tempData))] = tempData[WHERE(FINITE(tempData))]*factor/maximus.width_x[WHERE(FINITE(tempData))]
      ENDIF
         
+     IF KEYWORD_SET(multiply_by_width_x) THEN BEGIN
+        PRINT,'Multiplying by WIDTH_X!'
+        
+        inds_to_scale_to_cm       = [999] ;Just ESA number flux, which isn't currently implemented
+        scale_to_cm               = WHERE(maxInd EQ inds_to_scale_to_cm) 
+        IF scale_to_cm[0] EQ -1 THEN BEGIN
+           factor = 1.D
+        ENDIF ELSE BEGIN 
+           factor = .01D 
+           PRINT,'...Scaling WIDTH_X to centimeters for maxInd='+STRCOMPRESS(maxInd,/REMOVE_ALL)+'...'
+        ENDELSE
+        
+        tempData[WHERE(FINITE(tempData))] = tempData[WHERE(FINITE(tempData))]*factor*maximus.width_x[WHERE(FINITE(tempData))]
+     ENDIF
+
      IF KEYWORD_SET(log_DBQuantity) THEN BEGIN
         PRINT,"Logging these data..."
         tempData = ALOG10(tempData)
@@ -409,7 +425,9 @@ EPOCHPLOT_COLORNAMES=epochPlot_colorNames,SCATTEROUTPREFIX=scatterOutPrefix, $
                               NAME=niceStrings[i], $
                               ;; XTITLE=xTitle, $
                               YTITLE=yTitle, $
+                              XMINOR=4, $
                               XRANGE=pHP.xRange, $
+                              YMINOR=4, $
                               YRANGE=pHP.yRange, $
                               YSHOWTEXT=yShowText, $
                               /HISTOGRAM, $
@@ -432,6 +450,8 @@ EPOCHPLOT_COLORNAMES=epochPlot_colorNames,SCATTEROUTPREFIX=scatterOutPrefix, $
      
      ;;adjust axes
      ax                = plotArr[plot_i].axes
+
+     
      CASE plotLayout[2] OF
         1: BEGIN
            ax[1].showText = 1
