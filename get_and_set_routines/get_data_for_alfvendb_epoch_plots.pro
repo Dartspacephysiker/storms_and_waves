@@ -9,6 +9,7 @@
 PRO GET_DATA_FOR_ALFVENDB_EPOCH_PLOTS,MAXIMUS=maximus,CDBTIME=cdbTime, $
                                       MAXIND=maxInd, $
                                       DIVIDE_BY_WIDTH_X=divide_by_width_x, $
+                                      MULTIPLY_BY_WIDTH_X=multiply_by_width_x, $
                                       GOOD_I=good_i, $
                                       ALF_EPOCH_I=alf_epoch_i, $
                                       ALF_IND_LIST=alf_ind_list, $
@@ -44,6 +45,20 @@ PRO GET_DATA_FOR_ALFVENDB_EPOCH_PLOTS,MAXIMUS=maximus,CDBTIME=cdbTime, $
      maxData[WHERE(FINITE(maxData))] = maxData[WHERE(FINITE(maxData))]*factor/maximus.width_x[WHERE(FINITE(maxData))]
   ENDIF
 
+  IF KEYWORD_SET(multiply_by_width_x) THEN BEGIN
+     PRINT,'Multiplying by WIDTH_X!'
+
+     inds_to_scale_to_cm       = [15,16,17,18,26,28,30]
+     scale_to_cm               = WHERE(maxInd EQ inds_to_scale_to_cm) 
+     IF scale_to_cm[0] EQ -1 THEN BEGIN
+        factor = 1.D
+     ENDIF ELSE BEGIN 
+        factor = .01D 
+        PRINT,'...Scaling WIDTH_X to centimeters for maxInd='+STRCOMPRESS(maxInd,/REMOVE_ALL)+'...'
+     ENDELSE
+
+     maxData[WHERE(FINITE(maxData))] = maxData[WHERE(FINITE(maxData))]*factor*maximus.width_x[WHERE(FINITE(maxData))]
+  ENDIF
 
   ;; Get ranges for plots
   minMaxDat=MAKE_ARRAY(nEpochs,2,/DOUBLE)

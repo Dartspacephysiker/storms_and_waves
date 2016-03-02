@@ -389,8 +389,12 @@ EPOCHPLOT_COLORNAMES=epochPlot_colorNames,SCATTEROUTPREFIX=scatterOutPrefix, $
      integral          = TOTAL(y)
      integralArr[i]    = integral
      IF KEYWORD_SET(normalize_maxInd_hist) THEN BEGIN
-        y              = y / integral
-        pHP.yRange     = KEYWORD_SET(histYRange_maxInd) ? histYRange_maxInd : [0,0.3]
+        ;; y              = y / integral
+        ;; pHP.yRange     = KEYWORD_SET(histYRange_maxInd) ? histYRange_maxInd : [0,0.3]
+
+        y              = y / DOUBLE(MAX(y))
+        pHP.yRange     = KEYWORD_SET(histYRange_maxInd) ? histYRange_maxInd : [0,1.0]
+
         pHP.yTitle     = 'Relative Frequency'
      ENDIF 
      

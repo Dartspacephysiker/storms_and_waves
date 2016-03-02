@@ -86,6 +86,7 @@ PRO SUPERPOSE_STORMS_ALFVENDBQUANTITIES,stormTimeArray_utc, $
                                         ACCUMULATE__HISTO_PLOTS=accumulate__histo_plots, $
                                         PROBOCCURRENCE_SEA=probOccurrence_sea, $
                                         LOG_PROBOCCURRENCE=log_probOccurrence, $
+                                        HIST_MAXIND_SEA=hist_maxInd_sea, $
                                         TIMEAVGD_MAXIND_SEA=timeAvgd_maxInd_sea, $
                                         LOG_TIMEAVGD_MAXIND=log_timeAvgd_maxInd, $
                                         TIMEAVGD_PFLUX_SEA=timeAvgd_pFlux_sea, $
@@ -93,6 +94,7 @@ PRO SUPERPOSE_STORMS_ALFVENDBQUANTITIES,stormTimeArray_utc, $
                                         TIMEAVGD_EFLUXMAX_SEA=timeAvgd_eFluxMax_sea, $
                                         LOG_TIMEAVGD_EFLUXMAX=log_timeAvgd_eFluxMax, $
                                         DIVIDE_BY_WIDTH_X=divide_by_width_x, $
+                                        MULTIPLY_BY_WIDTH_X=multiply_by_width_x, $
                                         RETURNED_NEV_TBINS_and_HIST=returned_nEv_tbins_and_Hist, $
                                         ONLY_POS=only_pos, $
                                         ONLY_NEG=only_neg, $
@@ -295,6 +297,7 @@ PRO SUPERPOSE_STORMS_ALFVENDBQUANTITIES,stormTimeArray_utc, $
         GET_DATA_FOR_ALFVENDB_EPOCH_PLOTS,MAXIMUS=maximus,CDBTIME=cdbTime, $
                                           MAXIND=maxInd, $
                                           DIVIDE_BY_WIDTH_X=divide_by_width_x, $
+                                          MULTIPLY_BY_WIDTH_X=multiply_by_width_x, $
                                           GOOD_I=good_i, $
                                           ALF_EPOCH_I=alf_epoch_i,ALF_IND_LIST=alf_ind_list, $
                                           MINMAXDAT=minMaxDat, NALFEPOCHS=nAlfEpochs,NEPOCHS=nEpochs, $
@@ -470,39 +473,56 @@ PRO SUPERPOSE_STORMS_ALFVENDBQUANTITIES,stormTimeArray_utc, $
            HISTOBINSIZE=histoBinSize,NEVTOT=nEvTot_neg, $
            NONZERO_I=nz_i_neg
      ENDIF ELSE BEGIN
-        IF KEYWORD_SET(probOccurrence_sea) THEN BEGIN
-           tot_alf_t = LIST_TO_1DARRAY(tot_widthT_t_list,/WARN,/SKIP_NEG1_ELEMENTS)
-           tot_alf_y = LIST_TO_1DARRAY(tot_widthT_y_list,/WARN,/SKIP_NEG1_ELEMENTS)
-        ENDIF ELSE BEGIN
-           tot_alf_t = LIST_TO_1DARRAY(tot_alf_t_list,/WARN,/SKIP_NEG1_ELEMENTS)
-           tot_alf_y = LIST_TO_1DARRAY(tot_alf_y_list,/WARN,/SKIP_NEG1_ELEMENTS)
-        ENDELSE
-
-        IF KEYWORD_SET(timeAvgd_pFlux_sea) THEN BEGIN
-           PRINT,'Doing time-averaged Poynting flux SEA ...'
-           tot_pFlux_t = LIST_TO_1DARRAY(tot_pFlux_t_list,/WARN,/SKIP_NEG1_ELEMENTS)
-           tot_pFlux_y = LIST_TO_1DARRAY(tot_pFlux_y_list,/WARN,/SKIP_NEG1_ELEMENTS)
-
-           IF ARRAY_EQUAL(tot_widthT_t,tot_pFlux_t) THEN BEGIN
-              tot_alf_y = tot_widthT_y*tot_pFlux_y
-           ENDIF ELSE BEGIN
-              PRINT,"pFlux time array isn't the same as width_data array! Better check it out..."
-              STOP
-           ENDELSE
-        ENDIF
-
-        IF KEYWORD_SET(timeAvgd_eFluxMax_sea) THEN BEGIN
-           PRINT,'Doing time-averaged e- energy flux SEA ...'
-           tot_eFluxMax_t = LIST_TO_1DARRAY(tot_eFluxMax_t_list,/WARN,/SKIP_NEG1_ELEMENTS)
-           tot_eFluxMax_y = LIST_TO_1DARRAY(tot_eFluxMax_y_list,/WARN,/SKIP_NEG1_ELEMENTS)
-
-           IF ARRAY_EQUAL(tot_widthT_t,tot_eFluxMax_t) THEN BEGIN
-              tot_alf_y = tot_widthT_y*tot_eFluxMax_y
-           ENDIF ELSE BEGIN
-              PRINT,"eFluxMax time array isn't the same as width_data array! Better check it out..."
-              STOP
-           ENDELSE
-        ENDIF
+        CASE 1 OF
+           KEYWORD_SET(probOccurrence_sea): BEGIN
+              PRINT,'Prob Occurrence SEA ...'
+              tot_alf_t = LIST_TO_1DARRAY(tot_widthT_t_list,/WARN,/SKIP_NEG1_ELEMENTS)
+              tot_alf_y = LIST_TO_1DARRAY(tot_widthT_y_list,/WARN,/SKIP_NEG1_ELEMENTS)
+           END
+           KEYWORD_SET(timeAvgd_maxInd_sea): BEGIN
+              PRINT,'Doing time-averaged maxInd SEA ...'
+              tot_alf_t = LIST_TO_1DARRAY(tot_alf_t_list,/WARN,/SKIP_NEG1_ELEMENTS)
+              tot_alf_y = LIST_TO_1DARRAY(tot_alf_y_list,/WARN,/SKIP_NEG1_ELEMENTS)
+              
+              tot_widthT_t = LIST_TO_1DARRAY(tot_widthT_t_list,/WARN,/SKIP_NEG1_ELEMENTS)
+              tot_widthT_y = LIST_TO_1DARRAY(tot_widthT_y_list,/WARN,/SKIP_NEG1_ELEMENTS)
+              
+              IF ARRAY_EQUAL(tot_widthT_t,tot_alf_t) THEN BEGIN
+                 tot_alf_y = tot_widthT_y*tot_alf_y
+              ENDIF ELSE BEGIN
+                 PRINT,"maxInd time array isn't the same as width_data array! Better check it out..."
+                 STOP
+              ENDELSE
+           END
+           KEYWORD_SET(timeAvgd_pFlux_sea): BEGIN
+              PRINT,'Doing time-averaged Poynting flux SEA ...'
+              tot_pFlux_t = LIST_TO_1DARRAY(tot_pFlux_t_list,/WARN,/SKIP_NEG1_ELEMENTS)
+              tot_pFlux_y = LIST_TO_1DARRAY(tot_pFlux_y_list,/WARN,/SKIP_NEG1_ELEMENTS)
+              
+              IF ARRAY_EQUAL(tot_widthT_t,tot_pFlux_t) THEN BEGIN
+                 tot_alf_y = tot_widthT_y*tot_pFlux_y
+              ENDIF ELSE BEGIN
+                 PRINT,"pFlux time array isn't the same as width_data array! Better check it out..."
+                 STOP
+              ENDELSE
+           END
+           KEYWORD_SET(timeAvgd_eFluxMax_sea): BEGIN
+              PRINT,'Doing time-averaged e- energy flux SEA ...'
+              tot_eFluxMax_t = LIST_TO_1DARRAY(tot_eFluxMax_t_list,/WARN,/SKIP_NEG1_ELEMENTS)
+              tot_eFluxMax_y = LIST_TO_1DARRAY(tot_eFluxMax_y_list,/WARN,/SKIP_NEG1_ELEMENTS)
+              
+              IF ARRAY_EQUAL(tot_widthT_t,tot_eFluxMax_t) THEN BEGIN
+                 tot_alf_y = tot_widthT_y*tot_eFluxMax_y
+              ENDIF ELSE BEGIN
+                 PRINT,"eFluxMax time array isn't the same as width_data array! Better check it out..."
+                 STOP
+              ENDELSE
+           END
+           ELSE: BEGIN
+              tot_alf_t = LIST_TO_1DARRAY(tot_alf_t_list,/WARN,/SKIP_NEG1_ELEMENTS)
+              tot_alf_y = LIST_TO_1DARRAY(tot_alf_y_list,/WARN,/SKIP_NEG1_ELEMENTS)
+           END
+        ENDCASE
 
         IF N_ELEMENTS(avg_type_maxInd) GT 0 THEN BEGIN
            IF KEYWORD_SET(window_sum) THEN BEGIN
@@ -596,6 +616,7 @@ PRO SUPERPOSE_STORMS_ALFVENDBQUANTITIES,stormTimeArray_utc, $
   ;; Need a window?
   IF KEYWORD_SET(savePlot) OR KEYWORD_SET(nEventHists) $
      OR KEYWORD_SET(probOccurrence_sea) OR KEYWORD_SET(timeAvgd_maxInd_sea) $
+     OR KEYWORD_SET(hist_maxInd_sea) $
      OR KEYWORD_SET(timeAvgd_pFlux_sea) OR KEYWORD_SET(timeAvgd_eFluxMax_sea) $
      AND ~KEYWORD_SET(noPlots) AND ~KEYWORD_SET(noGeomagPlots) THEN BEGIN
      IF N_ELEMENTS(geomagWindow) EQ 0 THEN BEGIN
@@ -739,6 +760,40 @@ PRO SUPERPOSE_STORMS_ALFVENDBQUANTITIES,stormTimeArray_utc, $
                                                      ADD_PLOT_TO_PLOT_ARRAY=KEYWORD_SET(accumulate__histo_plots)
 
            END
+           KEYWORD_SET(hist_maxInd_sea): BEGIN
+
+              PREPARE_ALFVENDB_EPOCHPLOTS,MINMAXDAT=minMaxDat,MAXDAT=maxDat,MINDAT=minDat, $
+                                          ALF_IND_LIST=alf_ind_list, $
+                                          LOG_DBQUANTITY=log_DBQuantity,NEG_AND_POS_SEPAR=neg_and_pos_separ
+              
+
+
+              PLOT_ALFVENDBQUANTITY_HISTOGRAM__EPOCH,histTBins- $
+                                                     (KEYWORD_SET(window_sum) ? window_sum/2. : 0), $
+                                                     histData, $
+                                                     NAME=name__histo_plot, $
+                                                     XRANGE=xRange, $
+                                                     HISTORANGE=KEYWORD_SET(yRange_maxInd) ? yRange_maxInd : [minDat,maxDat], $
+                                                     YTITLE=KEYWORD_SET(yTitle_maxInd) ? yTitle_maxInd : yTitle, $
+                                                     LOGYPLOT=yLogScale_maxInd, $
+                                                     ;; YTICKFORMAT=, $
+                                                     ;; MARGIN=plotMargin, $
+                                                     ;; MARGIN=margin__max_plot, $
+                                                     HISTOGRAM=1, $
+                                                     MARGIN=margin__avg_plot, $
+                                                     PLOTTITLE=title__histo_plot, $
+                                                     OVERPLOT_HIST=KEYWORD_SET(overplot_hist) OR N_ELEMENTS(out_histo_plot) GT 0, $
+                                                     COLOR=symColor__histo_plot, $
+                                                     CURRENT=1, $
+                                                     LAYOUT=layout, $
+                                                     HISTOPLOT=histoPlot, $
+                                                     BKGRND_HIST=bkgrnd_hist, $
+                                                     BKGRNDHISTOPLOT=bkgrndHistoPlot, $
+                                                     OUTPLOT=out_histo_plot, $
+                                                     OUTBKGRNDPLOT=outBkgrndPlot, $
+                                                     ADD_PLOT_TO_PLOT_ARRAY=KEYWORD_SET(accumulate__histo_plots)
+
+           END
            KEYWORD_SET(timeAvgd_pFlux_sea): BEGIN
               PLOT_ALFVENDBQUANTITY_HISTOGRAM__EPOCH,histTBins- $
                                                      (KEYWORD_SET(window_sum) ? window_sum/2. : 0), $
@@ -823,6 +878,7 @@ PRO SUPERPOSE_STORMS_ALFVENDBQUANTITIES,stormTimeArray_utc, $
   ENDIF
 
   IF KEYWORD_SET(maxInd) AND ~KEYWORD_SET(proOccurrence_sea) AND ~KEYWORD_SET(timeAvgd_maxInd_sea) $
+     AND ~KEYWORD_SET(hist_maxInd_sea) $
      AND ~KEYWORD_SET(timeAvgd_pFlux_sea) AND ~KEYWORD_SET(timeAvgd_eFluxMax_sea) THEN BEGIN
 
      mTags=TAG_NAMES(maximus)
