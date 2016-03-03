@@ -1,5 +1,5 @@
-;2016/02/23 Now you know
-PRO JOURNAL__20160301__SEAS__49_PFLUXEST__MULTIPLY_BY_WIDTH_X__HISTO
+;2016/03/03
+PRO JOURNAL__20160303__SEAS__49_PFLUXEST__MULTIPLY_BY_WIDTH_X__RELATIVE_VARIATION_HISTO
 
   @journal__20160223__plot_defaults.pro
 
@@ -29,7 +29,7 @@ PRO JOURNAL__20160301__SEAS__49_PFLUXEST__MULTIPLY_BY_WIDTH_X__HISTO
   ;; ;;for not-time-averaged SEA!
   hist_maxInd_sea       = 1
   ;; probOccPref           = pref + '49_PFLUXEST_multiply_by_width_x__histo--DESPUN--with_NOAA--'
-  probOccPref           = pref + '49_PFLUXEST_multiply_by_width_x__histo--with_NOAA--'
+  probOccPref           = pref + '49_PFLUXEST_multiply_by_width_x__relative_variation_histo--with_NOAA--'
 
   ;; probOccPref           = pref + '49_PFLUXEST_multiply_by_width_x__histo--DESPUN--minDst--'
 
@@ -37,6 +37,8 @@ PRO JOURNAL__20160301__SEAS__49_PFLUXEST__MULTIPLY_BY_WIDTH_X__HISTO
   multiply_by_width_x   = 1
   yRange_maxInd         = [7e2,6e3]
   yTitle                = 'Integrated Poynting Flux (mW/m) at 100 km' 
+
+  include_total_var     = 1
 
   ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
   ;; ;;for Time-averaged SEA!

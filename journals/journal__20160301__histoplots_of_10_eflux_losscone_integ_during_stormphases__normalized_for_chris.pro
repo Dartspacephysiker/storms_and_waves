@@ -27,8 +27,15 @@ PRO JOURNAL__20160301__HISTOPLOTS_OF_10_EFLUX_LOSSCONE_INTEG_DURING_STORMPHASES_
   ;; nightYRange       = [0,2.5e3]
 
   normalize         = 1
-  dayYRange         = [0,0.07]
-  nightYRange       = [0,0.07]
+  ;; dayYRange         = [0,0.07]
+  ;; nightYRange       = [0,0.07]
+
+  ;;use these for including stats text
+  include_stats     = 1
+  dayYRange         = [0,0.10]
+  nightYRange       = [0,0.10]
+
+  no_legend         = 1
 
   ;;normalized dayside
   HISTOPLOT_ALFVENDBQUANTITIES_DURING_STORMPHASES__OVERLAY_PHASES, $
@@ -50,8 +57,8 @@ PRO JOURNAL__20160301__HISTOPLOTS_OF_10_EFLUX_LOSSCONE_INTEG_DURING_STORMPHASES_
      NORMALIZE_MAXIND_HIST=normalize, $
      LAYOUT=[2,1,1], $
      /ONLY_POS, $
-     /NO_STATISTICS_TEXT, $
-     /NO_LEGEND, $
+     NO_STATISTICS_TEXT=~KEYWORD_SET(include_stats), $
+     NO_LEGEND=no_legend, $
      HISTOPLOT_PARAM_STRUCT=pHP, $
      CURRENT_WINDOW=window, $
      OUTPLOTARR=outplotArr
@@ -75,8 +82,8 @@ PRO JOURNAL__20160301__HISTOPLOTS_OF_10_EFLUX_LOSSCONE_INTEG_DURING_STORMPHASES_
      NORMALIZE_MAXIND_HIST=normalize, $
      LAYOUT=[2,1,2], $
      /ONLY_POS, $
-     /NO_STATISTICS_TEXT, $
-     /NO_LEGEND, $
+     NO_STATISTICS_TEXT=~KEYWORD_SET(include_stats), $
+     NO_LEGEND=no_legend, $
      /SAVEPLOT, $
      PLOTTITLE=pT_night, $
      PLOTSUFFIX=pSuff, $

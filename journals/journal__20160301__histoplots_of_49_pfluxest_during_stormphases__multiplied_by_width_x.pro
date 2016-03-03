@@ -22,9 +22,16 @@ PRO JOURNAL__20160301__HISTOPLOTS_OF_49_PFLUXEST_DURING_STORMPHASES__MULTIPLIED_
   dayYRange         = [0,0.063]
   nightYRange       = [0,0.063]
 
+  ;;use these for including stats text
+  include_stats     = 1
+  dayYRange         = [0,0.09]
+  nightYRange       = [0,0.09]
+
   ;; histBinsize       = 0.2
   ;; dayYRange         = [0,0.13]
   ;; nightYRange       = [0,0.13]
+
+  no_legend         = 1
 
   ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
   ;;titles and suffixes
@@ -49,18 +56,17 @@ PRO JOURNAL__20160301__HISTOPLOTS_OF_49_PFLUXEST_DURING_STORMPHASES__MULTIPLIED_
      HISTXRANGE_MAXIND=dayXRange, $
      HISTXTITLE_MAXIND=xTitle, $
      HISTYRANGE_MAXIND=dayYRange, $
-     ;; HISTYRANGE_MAXIND=[0,0.08], $
      /HISTYTITLE__ONLY_ONE, $
      MULTIPLY_BY_WIDTH_X=multiply_by_width_x, $
      /LOG_DBQUANTITY, $
-     ;; /DAYSIDE, $
      MINMLT=day_mlt[0], $
      MAXMLT=day_mlt[1], $
      HEMI="NORTH", $
      LAYOUT=[2,1,1], $
      /NORMALIZE_MAXIND_HIST, $
      /ONLY_POS, $
-     /NO_STATISTICS_TEXT, $
+     NO_STATISTICS_TEXT=~KEYWORD_SET(include_stats), $
+     NO_LEGEND=no_legend, $
      HISTOPLOT_PARAM_STRUCT=pHP, $
      CURRENT_WINDOW=window, $
      OUTPLOTARR=outplotArr
@@ -86,7 +92,8 @@ PRO JOURNAL__20160301__HISTOPLOTS_OF_49_PFLUXEST_DURING_STORMPHASES__MULTIPLIED_
      LAYOUT=[2,1,2], $
      /NORMALIZE_MAXIND_HIST, $
      /ONLY_POS, $
-     /NO_STATISTICS_TEXT, $
+     NO_STATISTICS_TEXT=~KEYWORD_SET(include_stats), $
+     NO_LEGEND=no_legend, $
      /SAVEPLOT, $
      PLOTTITLE=pT_night, $
      PLOTSUFFIX=pSuff, $

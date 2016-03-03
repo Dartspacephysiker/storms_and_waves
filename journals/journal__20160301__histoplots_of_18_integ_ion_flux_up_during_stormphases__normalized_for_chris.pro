@@ -27,8 +27,15 @@ PRO JOURNAL__20160301__HISTOPLOTS_OF_18_INTEG_ION_FLUX_UP_DURING_STORMPHASES__NO
   ;; nightYRange       = [0,1.5e3]
 
   normalize         = 1
-  dayYRange         = [0,0.082]
-  nightYRange       = [0,0.082]
+  ;; dayYRange         = [0,0.082]
+  ;; nightYRange       = [0,0.082]
+
+  ;;use these for including stats text
+  include_stats     = 1
+  dayYRange         = [0,0.11]
+  nightYRange       = [0,0.11]
+
+  no_legend         = 1
 
   ;;normalized dayside
   HISTOPLOT_ALFVENDBQUANTITIES_DURING_STORMPHASES__OVERLAY_PHASES, $
@@ -50,8 +57,8 @@ PRO JOURNAL__20160301__HISTOPLOTS_OF_18_INTEG_ION_FLUX_UP_DURING_STORMPHASES__NO
      LAYOUT=[2,1,1], $
      NORMALIZE_MAXIND_HIST=normalize, $
      /ONLY_POS, $
-     /NO_STATISTICS_TEXT, $
-     /NO_LEGEND, $
+     NO_STATISTICS_TEXT=~KEYWORD_SET(include_stats), $
+     NO_LEGEND=no_legend, $
      HISTOPLOT_PARAM_STRUCT=pHP, $
      CURRENT_WINDOW=window, $
      OUTPLOTARR=outplotArr
@@ -76,8 +83,8 @@ PRO JOURNAL__20160301__HISTOPLOTS_OF_18_INTEG_ION_FLUX_UP_DURING_STORMPHASES__NO
      LAYOUT=[2,1,2], $
      NORMALIZE_MAXIND_HIST=normalize, $
      /ONLY_POS, $
-     /NO_STATISTICS_TEXT, $
-     /NO_LEGEND, $
+     NO_STATISTICS_TEXT=~KEYWORD_SET(include_stats), $
+     NO_LEGEND=no_legend, $
      /SAVEPLOT, $
      PLOTTITLE=pT_night, $
      PLOTSUFFIX=pSuff, $

@@ -62,6 +62,7 @@
 ;                         2016/01/11 Added PRINT_MAXIND_SEA_STATS keyword.
 ;                         2016/01/13 Added USING_HEAVIES keyword. You know.
 ;                         2016/02/20 Added TIMEAVGD_{PFLUX,EFLUXMAX}_SEA keywords.
+;                         2016/03/03 Added OVERPLOT_TOTAL_EPOCH_VARIATION, which sums all observations in a given bin and divides by the amount of time that FAST spent in that bin to get a relative variation.
 ;-
 PRO SUPERPOSE_STORMS_ALFVENDBQUANTITIES,stormTimeArray_utc, $
                                         TBEFOREEPOCH=tBeforeEpoch,TAFTEREPOCH=tAfterEpoch, $
@@ -113,6 +114,11 @@ PRO SUPERPOSE_STORMS_ALFVENDBQUANTITIES,stormTimeArray_utc, $
                                         RUNNING_BIN_L_EDGES=bin_l_edges, $
                                         RUNNING_BIN_R_EDGES=bin_r_edges, $
                                         WINDOW_SUM=window_sum, $
+                                        OVERPLOT_TOTAL_EPOCH_VARIATION=overplot_total_epoch_variation, $
+                                        TITLE__EPOCHVAR_PLOT=title__epochVar_plot, $
+                                        NAME__EPOCHVAR_PLOT=name__epochVar_plot, $
+                                        TOTAL_EPOCH__DO_HISTOPLOT=total_epoch__do_histoPlot, $
+                                        SYMCOLOR__TOTAL_EPOCH_VAR=symColor__totalVar_plot, $
                                         SYMCOLOR__MAX_PLOT=symColor__max_plot, $
                                         TITLE__AVG_PLOT=title__avg_plot, $
                                         SYMCOLOR__AVG_PLOT=symColor__avg_plot, $
@@ -144,7 +150,8 @@ PRO SUPERPOSE_STORMS_ALFVENDBQUANTITIES,stormTimeArray_utc, $
                                         USE_DARTDB_START_ENDDATE=use_dartdb_start_enddate, $
                                         DO_DESPUNDB=do_despunDB, $
                                         USING_HEAVIES=using_heavies, $
-                                        SAVEFILE=saveFile,OVERPLOT_HIST=overplot_hist, $
+                                        SAVEFILE=saveFile, $
+                                        OVERPLOT_HIST=overplot_hist, $
                                         PLOTTITLE=plotTitle, $
                                         SAVEPNAME=savePName, $
                                         SAVEPLOT=savePlot, $
@@ -193,7 +200,6 @@ PRO SUPERPOSE_STORMS_ALFVENDBQUANTITIES,stormTimeArray_utc, $
                               TIMEAVGD_MAXIND_SEA=timeAvgd_maxInd_sea, $
                               TIMEAVGD_PFLUX_SEA=timeAvgd_pFlux_sea, $
                               TIMEAVGD_EFLUXMAX_SEA=timeAvgd_eFluxMax_sea, $
-                              ;; SAVEMAXPLOT=saveMaxPlot, $
                               SAVEFILE=saveFile,SAVESTR=saveStr, $
                               PLOTTITLE=plotTitle, $
                               SAVEPNAME=savePName, $
@@ -577,7 +583,7 @@ PRO SUPERPOSE_STORMS_ALFVENDBQUANTITIES,stormTimeArray_utc, $
               ;; BOTH_HEMIS=both_hemis, $
               ;; NORTH=north, $
               ;; SOUTH=south, $
-              HEMI=hemi, $;'BOTH', $
+              HEMI=hemi, $      ;'BOTH', $
               NEPOCHS=nEpochs, $
               OUTINDSPREFIX=savePlotMaxName, $
               HISTDATA=fastLocHistData, $
@@ -593,7 +599,7 @@ PRO SUPERPOSE_STORMS_ALFVENDBQUANTITIES,stormTimeArray_utc, $
               NONZERO_I=nz_i_fastLoc, $
               PRINT_MAXIND_SEA_STATS=print_maxInd_sea_stats, $
               LUN=lun
-              ;; FASTLOC_STRUCT=fastLoc,FASTLOC_TIMES=fastLoc_times,FASTLOC_DELTA_T=fastLoc_delta_t
+           ;; FASTLOC_STRUCT=fastLoc,FASTLOC_TIMES=fastLoc_times,FASTLOC_DELTA_T=fastLoc_delta_t
            
            IF N_ELEMENTS(nz_i_fastLoc) LT N_ELEMENTS(nz_i) THEN BEGIN
               PRINT,"How does the ephemeris have fewer histo bins than actual data?"
@@ -603,10 +609,86 @@ PRO SUPERPOSE_STORMS_ALFVENDBQUANTITIES,stormTimeArray_utc, $
            histData[nz_i_po] = histData[nz_i_po]/fastLocHistData[nz_i_po]
            IF KEYWORD_SET(running_smooth_nPoints) AND KEYWORD_SET(window_sum) THEN BEGIN
               histData       = SMOOTH(histData,running_smooth_nPoints,/EDGpE_TRUNCATE)
-
+              
            ENDIF 
         ENDIF
 
+
+        IF KEYWORD_SET(overplot_total_epoch_variation) THEN BEGIN
+
+           GET_FASTLOC_HISTOGRAM__EPOCH_ARRAY, $
+              T1_ARR=datStartStop[*,0], $
+              T2_ARR=datStartStop[*,1], $
+              CENTERTIME=centerTime, $
+              RESTRICT_ALTRANGE=restrict_altRange,RESTRICT_CHARERANGE=restrict_charERange, $
+              MINMLT=minM,MAXMLT=maxM,BINM=binM,MINILAT=minI,MAXILAT=maxI,BINI=binI, $
+              DO_LSHELL=do_lshell,MINLSHELL=minL,MAXLSHELL=maxL,BINL=binL, $
+              ;; BOTH_HEMIS=both_hemis, $
+              ;; NORTH=north, $
+              ;; SOUTH=south, $
+              HEMI=hemi, $;'BOTH', $
+              NEPOCHS=nEpochs, $
+              OUTINDSPREFIX=savePlotMaxName, $
+              HISTDATA=fastLocHistData, $
+              HISTTBINS=fastLocBins, $
+              NEVHISTDATA=fastLoc_nEvHistData, $
+              TAFTEREPOCH=tAfterEpoch,TBEFOREEPOCH=tBeforeEpoch, $
+              HISTOBINSIZE=histoBinSize,NEVTOT=nEvTot_fastLocHist, $
+              ;; WINDOW_SUM=window_sum, $
+              ;; RUNNING_BIN_SPACING=running_bin_spacing, $
+              ;; RUNNING_BIN_L_OFFSET=bin_l_offset, $
+              ;; RUNNING_BIN_R_OFFSET=bin_r_offset, $
+              FASTLOC_I_LIST=fastLoc_i_list,FASTLOC_T_LIST=fastLoc_t_list,FASTLOC_DT_LIST=fastLoc_dt_list, $
+              NONZERO_I=nz_i_fastLoc, $
+              PRINT_MAXIND_SEA_STATS=print_maxInd_sea_stats, $
+              LUN=lun
+              ;; FASTLOC_STRUCT=fastLoc,FASTLOC_TIMES=fastLoc_times,FASTLOC_DELTA_T=fastLoc_delta_t
+           
+
+           PRINT,'Getting sums of measurements in each bin for total epoch variation ...'
+           ;; Just get the sum of measurements in each bin; histoType = 0 to make this happen
+           total_epoch_histoType = 0
+           GET_ALFVENDBQUANTITY_HISTOGRAM__EPOCH_ARRAY,tot_alf_t,tot_alf_y, $
+              HISTOTYPE=total_epoch_histoType, $
+              HISTDATA=total_epoch_histData, $
+              HISTTBINS=total_epoch_histTBins, $
+              ;; RUNNING_AVERAGE=running_average, $
+              ;; RA_T=ra_t, $
+              ;; RA_Y=ra_y, $
+              ;; RA_NONZERO_I=ra_nz_i, $
+              ;; RA_ZERO_I=ra_z_i, $
+              ;; RUNNING_MEDIAN=running_median, $
+              ;; RM_T=rm_t, $
+              ;; RM_Y=rm_y, $
+              ;; RM_NONZERO_I=rm_nz_i, $
+              ;; RM_ZERO_I=rm_z_i, $
+              ;; RUNNING_BIN_SPACING=running_bin_spacing, $
+              ;; RUNNING_SMOOTH_NPOINTS=running_smooth_nPoints, $
+              ;; RUNNING_BIN_L_OFFSET=bin_l_offset, $
+              ;; RUNNING_BIN_R_OFFSET=bin_r_offset, $
+              ;; RUNNING_BIN_L_EDGES=bin_l_edges, $
+              ;; RUNNING_BIN_R_EDGES=bin_r_edges, $
+              ;; WINDOW_SUM=window_sum, $
+              ;; MAKE_ERROR_BARS=make_error_bars__avg_plot, $
+              ;; ERROR_BAR_NBOOT=error_bar_nBoot, $
+              ;; ERROR_BAR_CONFLIMIT=error_bar_confLimit, $
+              ;; OUT_ERROR_BARS=out_error_bars, $
+              ;; NEVHISTDATA=nEvHistData, $
+              TAFTEREPOCH=tafterepoch,TBEFOREEPOCH=tBeforeEpoch, $
+              HISTOBINSIZE=histoBinSize,NEVTOT=nEvTot, $
+              NONZERO_I=nz_i_totalEpoch, $
+              PRINT_MAXIND_SEA_STATS=print_maxInd_sea_stats, $
+              LUN=lun
+
+           
+           IF N_ELEMENTS(nz_i_fastLoc) LT N_ELEMENTS(nz_i_totalEpoch) THEN BEGIN
+              PRINT,"How does the ephemeris have fewer histo bins than totalVar data?"
+              STOP
+           ENDIF
+              nz_i_totalEpoch_po = CGSETINTERSECTION(nz_i_totalEpoch,nz_i_fastLoc)
+              total_epoch_histData[nz_i_totalEpoch_po] = total_epoch_histData[nz_i_totalEpoch_po]/fastLocHistData[nz_i_totalEpoch_po] 
+              total_epoch_histData = total_epoch_histData*(histoBinsize*3600.)/fastLocHistData
+        ENDIF
      ENDELSE
   ENDIF
 
@@ -1058,7 +1140,7 @@ PRO SUPERPOSE_STORMS_ALFVENDBQUANTITIES,stormTimeArray_utc, $
                     ;; SYMTRANSPARENCY=symTransparency, $
                     PLOTNAME=name__avg_plot, $
                     PLOTTITLE=KEYWORD_SET(title__avg_plot) ? $
-                              title__avg_plotc : !NULL, $
+                              title__avg_plot : !NULL, $
                     ERROR_PLOT=KEYWORD_SET(make_error_bars__avg_plot), $
                     ERROR_BARS=out_error_bars, $
                     ERRORBAR_CAPSIZE=errorbar_capsize, $
@@ -1079,19 +1161,59 @@ PRO SUPERPOSE_STORMS_ALFVENDBQUANTITIES,stormTimeArray_utc, $
                     OUTPLOT=out_avg_plot, $
                     ADD_PLOT_TO_PLOT_ARRAY=KEYWORD_SET(accumulate__avg_plots)
               ENDELSE
+           ENDIF
+        ENDIF
+
+        IF KEYWORD_SET(overplot_total_epoch_variation) AND ~noPlots THEN BEGIN
+
+
+                 PLOT_ALFVENDBQUANTITY_AVERAGES_OR_SUMS__EPOCH, $
+                    total_epoch_histData, $
+                    total_epoch_histTBins,$
+                    TAFTEREPOCH=tAfterEpoch,TBEFOREEPOCH=tBeforeEpoch, $
+                    HISTOBINSIZE=histoBinSize, $
+                    HISTOGRAM=total_epoch__do_histoPlot, $
+                    NONZERO_I=nz_i_totalEpoch_po, $
+                    LINESTYLE=0, $
+                    LINETHICKNESS=4.0, $
+                    /NO_AVG_SYMBOL, $
+                    SYMCOLOR=KEYWORD_SET(symColor__totalVar_plot) ? symColor__totalVar_plot : symColor, $
+                    ;; SYMTRANSPARENCY=symTransparency, $
+                    PLOTNAME=name__epochVar_plot, $
+                    PLOTTITLE=KEYWORD_SET(title__epochVar_plot) ? $
+                              title__epochVar_plot : !NULL, $
+                    ;; ERROR_PLOT=KEYWORD_SET(make_error_bars__avg_plot), $
+                    ;; ERROR_BARS=out_error_bars, $
+                    ;; ERRORBAR_CAPSIZE=errorbar_capsize, $
+                    ;; ERRORBAR_COLOR=errorbar_color, $ 
+                    ;; ERRORBAR_LINESTYLE=errorbar_linestyle, $
+                    ;; ERRORBAR_THICK=errorbar_thick, $
+                    MAKE_SECOND_AXIS=1, $
+                    XTITLE=xTitle, $
+                    XRANGE=xRange, $
+                    XHIDELABEL=xLabel_maxInd__suppress, $
+                    YTITLE=yTitle, $
+                    YRANGE=KEYWORD_SET(yRange_maxInd) ? yRange_maxInd : [minDat,maxDat], $
+                    LOGYPLOT=yLogScale_maxInd, $
+                    OVERPLOT=KEYWORD_SET(overPlot) OR N_ELEMENTS(out_avg_plot) GT 0, $
+                    CURRENT=1, $
+                    MARGIN=margin__avg_plot, $
+                    ;; MARGIN=margin__max_plot, $
+                    LAYOUT=layout, $
+                    OUTPLOT=out_avg_plot, $
+                    ADD_PLOT_TO_PLOT_ARRAY=KEYWORD_SET(accumulate__avg_plots)
+        ENDIF
+
+        IF KEYWORD_SET(make_legend__avg_plot) THEN BEGIN
+           IF N_ELEMENTS(out_avg_plot) EQ n__avg_plots THEN BEGIN
+              legend = LEGEND(TARGET=out_avg_plot[0:n__avg_plots-1], $
+                              POSITION=[0.73,0.32], $
+                              FONT_SIZE=18, $
+                              HORIZONTAL_ALIGNMENT=0.5, $
+                              VERTICAL_SPACING=defHPlot_legend__vSpace, $
+                              /NORMAL, $
+                              /AUTO_TEXT_COLOR)
               
-              IF KEYWORD_SET(make_legend__avg_plot) THEN BEGIN
-                 IF N_ELEMENTS(out_avg_plot) EQ n__avg_plots THEN BEGIN
-                    legend = LEGEND(TARGET=out_avg_plot[0:n__avg_plots-1], $
-                                    POSITION=[0.73,0.32], $
-                                    FONT_SIZE=18, $
-                                    HORIZONTAL_ALIGNMENT=0.5, $
-                                    VERTICAL_SPACING=defHPlot_legend__vSpace, $
-                                    /NORMAL, $
-                                    /AUTO_TEXT_COLOR)
-                    
-                 ENDIF
-              ENDIF
            ENDIF
         ENDIF
 

@@ -66,6 +66,7 @@ PRO HISTOPLOT_ALFVENDBQUANTITIES_DURING_STORMPHASES__OVERLAY_PHASES, $
    USE_DARTDB_START_ENDDATE=use_dartdb_start_enddate, $
    DO_DESPUNDB=do_despundb, $
    SAVEFILE=saveFile, $
+   SAVEDIR=saveDir, $
    PLOTTITLE=plotTitle, $
    SAVEPLOT=savePlot, $
    ;; SAVEPNAME=savePName, $
@@ -168,13 +169,13 @@ EPOCHPLOT_COLORNAMES=epochPlot_colorNames,SCATTEROUTPREFIX=scatterOutPrefix, $
   alf_i_list=LIST()
 
   IF NOT KEYWORD_SET(dataName) THEN dataName = (TAG_NAMES(maximus))[maxInd] ;;        = 'char_ion_energy'
-  IF NOT KEYWORD_SET(plotSuffix) THEN plotSuffix = "" ELSE plotSuffix = '--' + plotSuffix
+  IF NOT KEYWORD_SET(plotSuffix) THEN tempSuffix = "" ELSE tempSuffix = '--' + plotSuffix
   ;;data out
   genFile_pref    = date + '--' + dataName + '--from_histoplot_alfvendbquantities_during_stormphases__overlaid_phases.pro'
   outstats        = date + '--' + dataName + '_moment_data_for_stormphases.sav'
   SET_PLOT_DIR,plotDir,/FOR_STORMS,/VERBOSE,/ADD_TODAY
   saveName        = plotDir + 'stormphase_histos--overlaid_phases--' + STRING(FORMAT='(I2)',maxInd) + $
-                    '_' + dataName + plotSuffix + '.png' ;savePlotSuffix
+                    '_' + dataName + tempSuffix + '.png' ;savePlotSuffix
   
 
   ;;declare the slice structure array, null lists
@@ -187,6 +188,8 @@ EPOCHPLOT_COLORNAMES=epochPlot_colorNames,SCATTEROUTPREFIX=scatterOutPrefix, $
   tot_alf_y_list = LIST()
 
   FOR i=0,2 DO BEGIN
+
+     temptempSuffix = tempSuffix
 
      temp_dst_i=dst_i_list[i]
 
@@ -213,7 +216,7 @@ EPOCHPLOT_COLORNAMES=epochPlot_colorNames,SCATTEROUTPREFIX=scatterOutPrefix, $
                    ABSVAL=absVal, $
                    INDICES=new_ii, $
                    USER_RESPONSE=user_response, $
-                   ADD_SUFF_TO_THIS_STRING=plotSuffix, $
+                   ADD_SUFF_TO_THIS_STRING=temptempSuffix, $
                    LUN=lun)
 
         alf_i = alf_i[new_ii]
@@ -264,7 +267,7 @@ EPOCHPLOT_COLORNAMES=epochPlot_colorNames,SCATTEROUTPREFIX=scatterOutPrefix, $
         PRINT,"Beware ... why do you have negs in these data?"
         tempData = prompt__conv_quantity_to_pos_neg_or_abs(maximus.(maxInd)[alf_i], $
                                                            INDICES=new_ii, $
-                                                           ADD_SUFF_TO_THIS_STRING=plotSuffix)
+                                                           ADD_SUFF_TO_THIS_STRING=temptempSuffix)
         IF KEYWORD_SET(log_DBQuantity) THEN BEGIN
            PRINT,"Logging these data..."
            tempData = ALOG10(tempData)
@@ -274,7 +277,7 @@ EPOCHPLOT_COLORNAMES=epochPlot_colorNames,SCATTEROUTPREFIX=scatterOutPrefix, $
         tot_alf_y_list.add,tempData
         alf_i    = alf_i[new_ii]
         ;;update savename
-        saveName = plotDir + 'stormphase_histos--' + dataName + plotSuffix + '.png'
+        saveName = plotDir + 'stormphase_histos--' + dataName + temptempSuffix + '.png'
 
      ENDIF ELSE BEGIN
         ;; IF KEYWORD_SET(log_DBQuantity) THEN BEGIN
@@ -389,11 +392,11 @@ EPOCHPLOT_COLORNAMES=epochPlot_colorNames,SCATTEROUTPREFIX=scatterOutPrefix, $
      integral          = TOTAL(y)
      integralArr[i]    = integral
      IF KEYWORD_SET(normalize_maxInd_hist) THEN BEGIN
-        ;; y              = y / integral
-        ;; pHP.yRange     = KEYWORD_SET(histYRange_maxInd) ? histYRange_maxInd : [0,0.3]
+        y              = y / integral
+        pHP.yRange     = KEYWORD_SET(histYRange_maxInd) ? histYRange_maxInd : [0,0.3]
 
-        y              = y / DOUBLE(MAX(y))
-        pHP.yRange     = KEYWORD_SET(histYRange_maxInd) ? histYRange_maxInd : [0,1.0]
+        ;; y              = y / DOUBLE(MAX(y))
+        ;; pHP.yRange     = KEYWORD_SET(histYRange_maxInd) ? histYRange_maxInd : [0,1.0]
 
         pHP.yTitle     = 'Relative Frequency'
      ENDIF 
@@ -566,10 +569,17 @@ EPOCHPLOT_COLORNAMES=epochPlot_colorNames,SCATTEROUTPREFIX=scatterOutPrefix, $
 
   IF KEYWORD_SET(saveFile) THEN BEGIN
 
-     IF FILE_TEST(saveFile) THEN BEGIN
-        PRINT,'histoplot savefile "' + saveFile + '" exists!'
+     IF N_ELEMENTS(saveFileName) EQ 0 THEN BEGIN
+        saveFileName        = GET_TODAY_STRING(/DO_YYYYMMDD_FMT) + '--stormphase_histos--overlaid_phases--' + STRING(FORMAT='(I2)',maxInd) + $
+                              '_' + dataName + tempSuffix + '.sav'
+     ENDIF
+
+     IF KEYWORD_SET(saveDir) THEN saveFileName = saveDir + '/' + saveFileName
+
+     IF FILE_TEST(saveFileName) THEN BEGIN
+        PRINT,'histoplot savefile "' + saveFileName + '" exists!'
         PRINT,'Restoring...'
-        RESTORE,saveFile
+        RESTORE,saveFileName
 
         IF N_ELEMENTS(saved_ssa_list) EQ 0 THEN BEGIN
            PRINT,"No saved storm slice arrays in this file. Creating a new one ..."
@@ -580,12 +590,12 @@ EPOCHPLOT_COLORNAMES=epochPlot_colorNames,SCATTEROUTPREFIX=scatterOutPrefix, $
         ENDELSE
 
      ENDIF ELSE BEGIN
-        PRINT,'histoplot savefile "' + saveFile + '" does not exist; creating a new one ...'
+        PRINT,'histoplot savefile "' + saveFileName + '" does not exist; creating a new one ...'
         saved_ssa_list = LIST(ssa)
      ENDELSE 
 
-     PRINT,'Saving histoplot data to "' + saveFile + '" ...'
-     SAVE,saved_ssa_list,FILENAME=saveFile
+     PRINT,'Saving histoplot data to "' + saveFileName + '" ...'
+     SAVE,saved_ssa_list,FILENAME=saveFileName
   ENDIF
 
 END
