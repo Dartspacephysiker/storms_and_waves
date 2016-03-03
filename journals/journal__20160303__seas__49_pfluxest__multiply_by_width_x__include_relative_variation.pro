@@ -9,12 +9,14 @@ PRO JOURNAL__20160303__SEAS__49_PFLUXEST__MULTIPLY_BY_WIDTH_X__INCLUDE_RELATIVE_
 
   include_total_var     = 1
   total_epoch_do_histoPlot = 1
+  do_two_panels         = 1
+
 
   probOccPref           = pref + '49_PFLUXEST_multiply_by_width_x__include_relative_variation--with_NOAA'
   ;; probOccPref           = pref + '49_PFLUXEST_multiply_by_width_x--DESPUN--minDst'
-  yTitle                = 'Integrated Poynting Flux (mW/m) at 100 km' 
+  yTitle                = 'Integ. Poynting Flux (mW/m), 100 km' 
   ;; yRange_maxInd         = [.02,2]  ;;work well for despun data
-  yRange_maxInd         = [2e2,3e4]
+  yRange_maxInd         = [9e1,5e4]
 
   yLogScale_maxInd      = 1
 
@@ -56,8 +58,10 @@ PRO JOURNAL__20160303__SEAS__49_PFLUXEST__MULTIPLY_BY_WIDTH_X__INCLUDE_RELATIVE_
         MAKE_LEGEND__AVG_PLOT=make_legend__avg_plot, $
         AVG_TYPE_MAXIND=avg_type_maxInd, $
         SYMCOLOR__MAX_PLOT=symColor[i], $
+        DO_TWO_PANELS=do_two_panels, $
         OVERPLOT_TOTAL_EPOCH_VARIATION=include_total_var, $
-        SYMCOLOR__TOTAL_EPOCH_VAR=symColor__totalVar[i], $
+        ;; SYMCOLOR__TOTAL_EPOCH_VAR=symColor__totalVar[i], $
+        SYMCOLOR__TOTAL_EPOCH_VAR=symColor[i], $
         TOTAL_EPOCH__DO_HISTOPLOT=total_epoch_do_histoPlot, $
         WINDOW_MAXIMUS=maximusWindow, $
         OUT_AVG_PLOT=out_avg_plot, $

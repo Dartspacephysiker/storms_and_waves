@@ -114,6 +114,7 @@ PRO SUPERPOSE_STORMS_ALFVENDBQUANTITIES,stormTimeArray_utc, $
                                         RUNNING_BIN_L_EDGES=bin_l_edges, $
                                         RUNNING_BIN_R_EDGES=bin_r_edges, $
                                         WINDOW_SUM=window_sum, $
+                                        DO_TWO_PANELS=do_two_panels, $
                                         OVERPLOT_TOTAL_EPOCH_VARIATION=overplot_total_epoch_variation, $
                                         TITLE__EPOCHVAR_PLOT=title__epochVar_plot, $
                                         NAME__EPOCHVAR_PLOT=name__epochVar_plot, $
@@ -1012,6 +1013,7 @@ PRO SUPERPOSE_STORMS_ALFVENDBQUANTITIES,stormTimeArray_utc, $
                                                       YTITLE=yTitle, $
                                                       YRANGE=KEYWORD_SET(yRange_maxInd) ? yRange_maxInd : [minDat[j],maxDat[j]], $
                                                       LOGYPLOT=yLogScale_maxInd, $
+                                                      DO_TWO_PANELS=do_two_panels, $
                                                       OVERPLOT_ALFVENDBQUANTITY=(j EQ 0) ? 0 : 1, $
                                                       CURRENT=N_ELEMENTS(maximusWindow) GT 0, $
                                                       MARGIN=margin__avg_plot, $
@@ -1042,6 +1044,7 @@ PRO SUPERPOSE_STORMS_ALFVENDBQUANTITIES,stormTimeArray_utc, $
                                                    YRANGE=KEYWORD_SET(yRange_maxInd) ? yRange_maxInd : [minDat,maxDat], $
                                                    LOGYPLOT=yLogScale_maxInd, $
                                                    ;; OVERPLOT_ALFVENDBQUANTITY=(i EQ 0) ? 0 : 1, $
+                                                   DO_TWO_PANELS=do_two_panels, $
                                                    OVERPLOT_ALFVENDBQUANTITY=0, $
                                                    CURRENT=N_ELEMENTS(maximusWindow) GT 0, $
                                                    MARGIN=margin__avg_plot, $
@@ -1108,6 +1111,7 @@ PRO SUPERPOSE_STORMS_ALFVENDBQUANTITIES,stormTimeArray_utc, $
                     ERRORBAR_COLOR=errorbar_color, $ 
                     ERRORBAR_LINESTYLE=errorbar_linestyle, $
                     ERRORBAR_THICK=errorbar_thick, $
+                    DO_TWO_PANELS=do_two_panels, $
                     XTITLE=xTitle, $
                     XRANGE=xRange, $
                     XHIDELABEL=xLabel_maxInd__suppress, $
@@ -1147,6 +1151,7 @@ PRO SUPERPOSE_STORMS_ALFVENDBQUANTITIES,stormTimeArray_utc, $
                     ERRORBAR_COLOR=errorbar_color, $ 
                     ERRORBAR_LINESTYLE=errorbar_linestyle, $
                     ERRORBAR_THICK=errorbar_thick, $
+                    DO_TWO_PANELS=do_two_panels, $
                     XTITLE=xTitle, $
                     XRANGE=xRange, $
                     XHIDELABEL=xLabel_maxInd__suppress, $
@@ -1188,6 +1193,7 @@ PRO SUPERPOSE_STORMS_ALFVENDBQUANTITIES,stormTimeArray_utc, $
                     ;; ERRORBAR_COLOR=errorbar_color, $ 
                     ;; ERRORBAR_LINESTYLE=errorbar_linestyle, $
                     ;; ERRORBAR_THICK=errorbar_thick, $
+                    DO_TWO_PANELS=do_two_panels, $
                     MAKE_SECOND_AXIS=1, $
                     XTITLE=xTitle, $
                     XRANGE=xRange, $
@@ -1195,7 +1201,7 @@ PRO SUPERPOSE_STORMS_ALFVENDBQUANTITIES,stormTimeArray_utc, $
                     YTITLE=yTitle, $
                     YRANGE=KEYWORD_SET(yRange_maxInd) ? yRange_maxInd : [minDat,maxDat], $
                     LOGYPLOT=yLogScale_maxInd, $
-                    OVERPLOT=KEYWORD_SET(overPlot) OR N_ELEMENTS(out_avg_plot) GT 0, $
+                    OVERPLOT=KEYWORD_SET(overPlot) OR (~KEYWORD_SET(DO_two_panels) AND N_ELEMENTS(out_avg_plot) GT 0), $
                     CURRENT=1, $
                     MARGIN=margin__avg_plot, $
                     ;; MARGIN=margin__max_plot, $
