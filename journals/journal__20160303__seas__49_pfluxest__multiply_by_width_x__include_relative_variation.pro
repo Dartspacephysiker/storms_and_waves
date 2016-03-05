@@ -46,7 +46,7 @@ PRO JOURNAL__20160303__SEAS__49_PFLUXEST__MULTIPLY_BY_WIDTH_X__INCLUDE_RELATIVE_
         /REMOVE_DUPES, $
         HOURS_AFT_FOR_NO_DUPES=hours_aft, $
         MAXIND=maxInd, $
-        ;; /XLABEL_MAXIND__SUPPRESS, $
+        /XLABEL_MAXIND__SUPPRESS, $
         YRANGE_MAXIND=yRange_maxInd, $
         YTITLE_MAXIND=yTitle, $
         /YLOGSCALE_MAXIND, $

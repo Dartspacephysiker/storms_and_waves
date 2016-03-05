@@ -1,4 +1,4 @@
-PRO JOURNAL__20160303__SEAS__10_EFLUX_LOSSCONE_INTEG__INCLUDE_RELATIVE_VARIATION
+PRO JOURNAL__20160305__SEAS__10_EFLUX_LOSSCONE_INTEG__LINEAR_TOTALVAR
 
   @journal__20160303__plot_defaults.pro
 
@@ -16,6 +16,8 @@ PRO JOURNAL__20160303__SEAS__10_EFLUX_LOSSCONE_INTEG__INCLUDE_RELATIVE_VARIATION
   probOccPref           = pref + '10_EFLUX_LOSSCONE_INTEG__include_relative_variation--with_NOAA'
   yTitle                = "Integ. L.C. e!U-!N Flux (mW/m), 100 km"
   yRange_maxInd         = [2e1,8e4]
+
+  yRange_totalVar       = [[0,3e3],[0,1e3]] ;day, then night
 
   yLogScale_maxInd      = 1
 
@@ -45,6 +47,7 @@ PRO JOURNAL__20160303__SEAS__10_EFLUX_LOSSCONE_INTEG__INCLUDE_RELATIVE_VARIATION
         ;; NOGEOMAGPLOTS=(i GT 0), $
         /ONLY_POS, $
         WINDOW_GEOMAG=geomagWindow, $
+        /PRINT_MAXIND_SEA_STATS, $
         ;; /XLABEL_MAXIND__SUPPRESS, $
         YRANGE_MAXIND=yRange_maxInd, $
         YTITLE_MAXIND=yTitle, $
@@ -52,9 +55,12 @@ PRO JOURNAL__20160303__SEAS__10_EFLUX_LOSSCONE_INTEG__INCLUDE_RELATIVE_VARIATION
         YLOGSCALE_MAXIND=yLogScale_maxInd, $
         AVG_TYPE_MAXIND=avg_type_maxInd, $
         SYMCOLOR__MAX_PLOT=symColor[i], $
-        SECONDARY_AXIS__AVG_PLOT=(i EQ 1), $
-        DO_TWO_PANELS=do_two_panels, $
         OVERPLOT_TOTAL_EPOCH_VARIATION=include_total_var, $
+        DO_TWO_PANELS=do_two_panels, $
+        SECOND_PANEL__PREP_FOR_SECONDARY_AXIS=(i EQ 0), $
+        YRANGE_TOTALVAR=yRange_totalVar[*,i], $
+        YLOGSCALE_TOTALVAR=0, $
+        SECONDARY_AXIS__TOTALVAR_PLOT=(i GT 0), $
         ;; SYMCOLOR__TOTAL_EPOCH_VAR=symColor__totalVar[i], $
         SYMCOLOR__TOTAL_EPOCH_VAR=symColor[i], $
         TOTAL_EPOCH__DO_HISTOPLOT=total_epoch_do_histoPlot, $
@@ -67,8 +73,7 @@ PRO JOURNAL__20160303__SEAS__10_EFLUX_LOSSCONE_INTEG__INCLUDE_RELATIVE_VARIATION
         RUNNING_AVERAGE=running_logAvg, $
         RUNNING_BIN_SPACING=running_bin_spacing, $
         RUNNING_SMOOTH_NPOINTS=smooth_nPoints, $
-        RUNNING_BIN_L_OFFSET=running_bin_l_offset, $
-        RUNNING_BIN_R_OFFSET=running_bin_r_offset, $
+        RUNNING_BIN_OFFSET=running_bin_r_offset, $
         SAVEMAXPLOT=(i EQ 1), $
         SYMCOLOR__HISTO_PLOT=symColor[i], $
         ;; /MAKE_LEGEND__AVG_PLOT, $

@@ -16,7 +16,7 @@
   ;; running_logAvg        = 20
   running_logAvg        = 10
   running_bin_spacing   = 2.5
-  running_bin_r_offset  = 0.00
+  running_bin_r_offset  = -5
   ;; smooth_nPoints    = 3
   make_eb               = 0
   eb_nBoot              = 1000

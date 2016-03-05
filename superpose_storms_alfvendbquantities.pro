@@ -109,13 +109,17 @@ PRO SUPERPOSE_STORMS_ALFVENDBQUANTITIES,stormTimeArray_utc, $
                                         RUNNING_MEDIAN=running_median, $
                                         RUNNING_BIN_SPACING=running_bin_spacing, $
                                         RUNNING_SMOOTH_NPOINTS=running_smooth_nPoints, $
-                                        RUNNING_BIN_L_OFFSET=bin_l_offset, $
-                                        RUNNING_BIN_R_OFFSET=bin_r_offset, $
+                                        ;; RUNNING_BIN_L_OFFSET=bin_l_offset, $
+                                        ;; RUNNING_BIN_R_OFFSET=bin_r_offset, $
+                                        RUNNING_BIN_OFFSET=bin_offset, $
                                         RUNNING_BIN_L_EDGES=bin_l_edges, $
                                         RUNNING_BIN_R_EDGES=bin_r_edges, $
                                         WINDOW_SUM=window_sum, $
                                         DO_TWO_PANELS=do_two_panels, $
+                                        SECOND_PANEL__PREP_FOR_SECONDARY_AXIS=second_panel__prep_for_secondary_axis, $
                                         OVERPLOT_TOTAL_EPOCH_VARIATION=overplot_total_epoch_variation, $
+                                        YRANGE_TOTALVAR=yRange_totalVar, $
+                                        YLOGSCALE_TOTALVAR=yLogScale_totalVar, $
                                         TITLE__EPOCHVAR_PLOT=title__epochVar_plot, $
                                         NAME__EPOCHVAR_PLOT=name__epochVar_plot, $
                                         TOTAL_EPOCH__DO_HISTOPLOT=total_epoch__do_histoPlot, $
@@ -123,6 +127,7 @@ PRO SUPERPOSE_STORMS_ALFVENDBQUANTITIES,stormTimeArray_utc, $
                                         SYMCOLOR__MAX_PLOT=symColor__max_plot, $
                                         TITLE__AVG_PLOT=title__avg_plot, $
                                         SYMCOLOR__AVG_PLOT=symColor__avg_plot, $
+                                        SECONDARY_AXIS__TOTALVAR_PLOT=secondary_axis__totalVar_plot, $
                                         MAKE_LEGEND__AVG_PLOT=make_legend__avg_plot, $
                                         MAKE_ERROR_BARS__AVG_PLOT=make_error_bars__avg_plot, $
                                         ERROR_BAR_NBOOT=error_bar_nBoot, $
@@ -452,8 +457,9 @@ PRO SUPERPOSE_STORMS_ALFVENDBQUANTITIES,stormTimeArray_utc, $
            RA_ZERO_I=ra_z_i_pos, $
            RUNNING_BIN_SPACING=running_bin_spacing, $
            RUNNING_SMOOTH_NPOINTS=running_smooth_nPoints, $
-           RUNNING_BIN_L_OFFSET=bin_l_offset, $
-           RUNNING_BIN_R_OFFSET=bin_r_offset, $
+           RUNNING_BIN_OFFSET=bin_offset, $
+           ;; RUNNING_BIN_L_OFFSET=bin_l_offset, $
+           ;; RUNNING_BIN_R_OFFSET=bin_r_offset, $
            RUNNING_BIN_L_EDGES=bin_l_edges, $
            RUNNING_BIN_R_EDGES=bin_r_edges, $
            NEVHISTDATA=nEvHistData_pos, $
@@ -471,8 +477,9 @@ PRO SUPERPOSE_STORMS_ALFVENDBQUANTITIES,stormTimeArray_utc, $
            RA_ZERO_I=ra_z_i_neg, $
            RUNNING_BIN_SPACING=running_bin_spacing, $
            RUNNING_SMOOTH_NPOINTS=running_smooth_nPoints, $
-           RUNNING_BIN_L_OFFSET=bin_l_offset, $
-           RUNNING_BIN_R_OFFSET=bin_r_offset, $
+           RUNNING_BIN_OFFSET=bin_offset, $
+           ;; RUNNING_BIN_L_OFFSET=bin_l_offset, $
+           ;; RUNNING_BIN_R_OFFSET=bin_r_offset, $
            RUNNING_BIN_L_EDGES=bin_l_edges, $
            RUNNING_BIN_R_EDGES=bin_r_edges, $
            NEVHISTDATA=nEvHistData_neg, $
@@ -555,8 +562,9 @@ PRO SUPERPOSE_STORMS_ALFVENDBQUANTITIES,stormTimeArray_utc, $
            RM_ZERO_I=rm_z_i, $
            RUNNING_BIN_SPACING=running_bin_spacing, $
            RUNNING_SMOOTH_NPOINTS=running_smooth_nPoints, $
-           RUNNING_BIN_L_OFFSET=bin_l_offset, $
-           RUNNING_BIN_R_OFFSET=bin_r_offset, $
+           RUNNING_BIN_OFFSET=bin_offset, $
+           ;; RUNNING_BIN_L_OFFSET=bin_l_offset, $
+           ;; RUNNING_BIN_R_OFFSET=bin_r_offset, $
            RUNNING_BIN_L_EDGES=bin_l_edges, $
            RUNNING_BIN_R_EDGES=bin_r_edges, $
            WINDOW_SUM=window_sum, $
@@ -594,8 +602,9 @@ PRO SUPERPOSE_STORMS_ALFVENDBQUANTITIES,stormTimeArray_utc, $
               HISTOBINSIZE=histoBinSize,NEVTOT=nEvTot_fastLocHist, $
               WINDOW_SUM=window_sum, $
               RUNNING_BIN_SPACING=running_bin_spacing, $
-              RUNNING_BIN_L_OFFSET=bin_l_offset, $
-              RUNNING_BIN_R_OFFSET=bin_r_offset, $
+              RUNNING_BIN_OFFSET=bin_offset, $
+              ;; RUNNING_BIN_L_OFFSET=bin_l_offset, $
+              ;; RUNNING_BIN_R_OFFSET=bin_r_offset, $
               FASTLOC_I_LIST=fastLoc_i_list,FASTLOC_T_LIST=fastLoc_t_list,FASTLOC_DT_LIST=fastLoc_dt_list, $
               NONZERO_I=nz_i_fastLoc, $
               PRINT_MAXIND_SEA_STATS=print_maxInd_sea_stats, $
@@ -635,10 +644,6 @@ PRO SUPERPOSE_STORMS_ALFVENDBQUANTITIES,stormTimeArray_utc, $
               NEVHISTDATA=fastLoc_nEvHistData, $
               TAFTEREPOCH=tAfterEpoch,TBEFOREEPOCH=tBeforeEpoch, $
               HISTOBINSIZE=histoBinSize,NEVTOT=nEvTot_fastLocHist, $
-              ;; WINDOW_SUM=window_sum, $
-              ;; RUNNING_BIN_SPACING=running_bin_spacing, $
-              ;; RUNNING_BIN_L_OFFSET=bin_l_offset, $
-              ;; RUNNING_BIN_R_OFFSET=bin_r_offset, $
               FASTLOC_I_LIST=fastLoc_i_list,FASTLOC_T_LIST=fastLoc_t_list,FASTLOC_DT_LIST=fastLoc_dt_list, $
               NONZERO_I=nz_i_fastLoc, $
               PRINT_MAXIND_SEA_STATS=print_maxInd_sea_stats, $
@@ -653,28 +658,6 @@ PRO SUPERPOSE_STORMS_ALFVENDBQUANTITIES,stormTimeArray_utc, $
               HISTOTYPE=total_epoch_histoType, $
               HISTDATA=total_epoch_histData, $
               HISTTBINS=total_epoch_histTBins, $
-              ;; RUNNING_AVERAGE=running_average, $
-              ;; RA_T=ra_t, $
-              ;; RA_Y=ra_y, $
-              ;; RA_NONZERO_I=ra_nz_i, $
-              ;; RA_ZERO_I=ra_z_i, $
-              ;; RUNNING_MEDIAN=running_median, $
-              ;; RM_T=rm_t, $
-              ;; RM_Y=rm_y, $
-              ;; RM_NONZERO_I=rm_nz_i, $
-              ;; RM_ZERO_I=rm_z_i, $
-              ;; RUNNING_BIN_SPACING=running_bin_spacing, $
-              ;; RUNNING_SMOOTH_NPOINTS=running_smooth_nPoints, $
-              ;; RUNNING_BIN_L_OFFSET=bin_l_offset, $
-              ;; RUNNING_BIN_R_OFFSET=bin_r_offset, $
-              ;; RUNNING_BIN_L_EDGES=bin_l_edges, $
-              ;; RUNNING_BIN_R_EDGES=bin_r_edges, $
-              ;; WINDOW_SUM=window_sum, $
-              ;; MAKE_ERROR_BARS=make_error_bars__avg_plot, $
-              ;; ERROR_BAR_NBOOT=error_bar_nBoot, $
-              ;; ERROR_BAR_CONFLIMIT=error_bar_confLimit, $
-              ;; OUT_ERROR_BARS=out_error_bars, $
-              ;; NEVHISTDATA=nEvHistData, $
               TAFTEREPOCH=tafterepoch,TBEFOREEPOCH=tBeforeEpoch, $
               HISTOBINSIZE=histoBinSize,NEVTOT=nEvTot, $
               NONZERO_I=nz_i_totalEpoch, $
@@ -1013,6 +996,7 @@ PRO SUPERPOSE_STORMS_ALFVENDBQUANTITIES,stormTimeArray_utc, $
                                                       YTITLE=yTitle, $
                                                       YRANGE=KEYWORD_SET(yRange_maxInd) ? yRange_maxInd : [minDat[j],maxDat[j]], $
                                                       LOGYPLOT=yLogScale_maxInd, $
+                                                      DO_SECONDARY_AXIS=secondary_axis__totalVar_plot, $
                                                       DO_TWO_PANELS=do_two_panels, $
                                                       OVERPLOT_ALFVENDBQUANTITY=(j EQ 0) ? 0 : 1, $
                                                       CURRENT=N_ELEMENTS(maximusWindow) GT 0, $
@@ -1044,6 +1028,7 @@ PRO SUPERPOSE_STORMS_ALFVENDBQUANTITIES,stormTimeArray_utc, $
                                                    YRANGE=KEYWORD_SET(yRange_maxInd) ? yRange_maxInd : [minDat,maxDat], $
                                                    LOGYPLOT=yLogScale_maxInd, $
                                                    ;; OVERPLOT_ALFVENDBQUANTITY=(i EQ 0) ? 0 : 1, $
+                                                   DO_SECONDARY_AXIS=secondary_axis__totalVar_plot, $
                                                    DO_TWO_PANELS=do_two_panels, $
                                                    OVERPLOT_ALFVENDBQUANTITY=0, $
                                                    CURRENT=N_ELEMENTS(maximusWindow) GT 0, $
@@ -1111,6 +1096,7 @@ PRO SUPERPOSE_STORMS_ALFVENDBQUANTITIES,stormTimeArray_utc, $
                     ERRORBAR_COLOR=errorbar_color, $ 
                     ERRORBAR_LINESTYLE=errorbar_linestyle, $
                     ERRORBAR_THICK=errorbar_thick, $
+                    ;; DO_SECONDARY_AXIS=secondary_axis__totalVar_plot, $
                     DO_TWO_PANELS=do_two_panels, $
                     XTITLE=xTitle, $
                     XRANGE=xRange, $
@@ -1151,6 +1137,7 @@ PRO SUPERPOSE_STORMS_ALFVENDBQUANTITIES,stormTimeArray_utc, $
                     ERRORBAR_COLOR=errorbar_color, $ 
                     ERRORBAR_LINESTYLE=errorbar_linestyle, $
                     ERRORBAR_THICK=errorbar_thick, $
+                    ;; DO_SECONDARY_AXIS=secondary_axis__totalVar_plot, $
                     DO_TWO_PANELS=do_two_panels, $
                     XTITLE=xTitle, $
                     XRANGE=xRange, $
@@ -1194,13 +1181,15 @@ PRO SUPERPOSE_STORMS_ALFVENDBQUANTITIES,stormTimeArray_utc, $
                     ;; ERRORBAR_LINESTYLE=errorbar_linestyle, $
                     ;; ERRORBAR_THICK=errorbar_thick, $
                     DO_TWO_PANELS=do_two_panels, $
-                    MAKE_SECOND_AXIS=1, $
+                    MAKE_SECOND_PANEL=1, $
+                    SECOND_PANEL__PREP_FOR_SECONDARY_AXIS=second_panel__prep_for_secondary_axis, $
+                    DO_SECONDARY_AXIS=secondary_axis__totalVar_plot, $
                     XTITLE=xTitle, $
                     XRANGE=xRange, $
                     XHIDELABEL=xLabel_maxInd__suppress, $
                     YTITLE=yTitle, $
-                    YRANGE=KEYWORD_SET(yRange_maxInd) ? yRange_maxInd : [minDat,maxDat], $
-                    LOGYPLOT=yLogScale_maxInd, $
+                    YRANGE=KEYWORD_SET(yRange_totalVar) ? yRange_totalVar : [minDat,maxDat], $
+                    LOGYPLOT=yLogScale_totalVar, $
                     OVERPLOT=KEYWORD_SET(overPlot) OR (~KEYWORD_SET(DO_two_panels) AND N_ELEMENTS(out_avg_plot) GT 0), $
                     CURRENT=1, $
                     MARGIN=margin__avg_plot, $
