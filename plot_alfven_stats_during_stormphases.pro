@@ -49,6 +49,8 @@ PRO PLOT_ALFVEN_STATS_DURING_STORMPHASES,$
    TIMEAVGD_EFLUXMAXRANGE=timeAvgd_eFluxMaxRange, $
    LOGTIMEAVGD_EFLUXMAX=logtimeAvgd_eFluxMax, $
    DO_TIMEAVG_FLUXQUANTITIES=do_timeAvg_fluxQuantities, $
+   DO_GROSSRATE_FLUXQUANTITIES=do_grossRate_fluxQuantities, $
+   DO_LOGAVG_THE_TIMEAVG=do_logavg_the_timeAvg, $
    DIVIDE_BY_WIDTH_X=divide_by_width_x, $
    MULTIPLY_BY_WIDTH_X=multiply_by_width_x, $
    MEDIANPLOT=medianPlot, LOGAVGPLOT=logAvgPlot, $
@@ -169,6 +171,8 @@ PRO PLOT_ALFVEN_STATS_DURING_STORMPHASES,$
                                   TIMEAVGD_EFLUXMAXRANGE=timeAvgd_eFluxMaxRange, $
                                   LOGTIMEAVGD_EFLUXMAX=logtimeAvgd_eFluxMax, $
                                   DO_TIMEAVG_FLUXQUANTITIES=do_timeAvg_fluxQuantities, $
+                                  DO_GROSSRATE_FLUXQUANTITIES=do_grossRate_fluxQuantities, $
+                                  DO_LOGAVG_THE_TIMEAVG=do_logavg_the_timeAvg, $
                                   DIVIDE_BY_WIDTH_X=divide_by_width_x, $
                                   MULTIPLY_BY_WIDTH_X=multiply_by_width_x, $
                                   MEDIANPLOT=medianPlot, LOGAVGPLOT=logAvgPlot, $
