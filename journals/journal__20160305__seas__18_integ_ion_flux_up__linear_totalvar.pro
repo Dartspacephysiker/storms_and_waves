@@ -15,7 +15,7 @@ PRO JOURNAL__20160305__SEAS__18_INTEG_ION_FLUX_UP__LINEAR_TOTALVAR
 
   probOccPref           = pref + '18_INTEG_ION_FLUX_UP__include_relative_variation--with_NOAA'
   yTitle                = "Integ. Up. Ion Flux (cm!U-1!Ns!U-1!N), 100 km"
-  yRange_maxInd         = [8e10,9e14]
+  yRange_maxInd         = [2e10,9e15]
 
   yRange_totalVar       = [[0,1.3e14],[0,1.3e13]] ;day, then night
 
