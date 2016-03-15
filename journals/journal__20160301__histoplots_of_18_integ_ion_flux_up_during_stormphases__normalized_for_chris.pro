@@ -27,13 +27,13 @@ PRO JOURNAL__20160301__HISTOPLOTS_OF_18_INTEG_ION_FLUX_UP_DURING_STORMPHASES__NO
   ;; nightYRange       = [0,1.5e3]
 
   normalize         = 1
-  ;; dayYRange         = [0,0.082]
-  ;; nightYRange       = [0,0.082]
+  dayYRange         = [0,0.082]
+  nightYRange       = [0,0.082]
 
   ;;use these for including stats text
-  include_stats     = 1
-  dayYRange         = [0,0.11]
-  nightYRange       = [0,0.11]
+  include_stats     = 0
+  ;; dayYRange         = [0,0.11]
+  ;; nightYRange       = [0,0.11]
 
   no_legend         = 1
 

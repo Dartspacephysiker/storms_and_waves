@@ -31,7 +31,7 @@ PRO JOURNAL__20160315__HISTOPLOTS_OF_49_PFLUXEST_DURING_STORMPHASES__MULTIPLIED_
   ;; dayYRange         = [0,0.13]
   ;; nightYRange       = [0,0.13]
 
-  no_legend         = 1
+  no_legend         = 0
 
   ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
   ;;titles and suffixes

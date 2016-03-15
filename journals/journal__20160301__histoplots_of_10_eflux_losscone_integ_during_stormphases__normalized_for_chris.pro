@@ -27,13 +27,13 @@ PRO JOURNAL__20160301__HISTOPLOTS_OF_10_EFLUX_LOSSCONE_INTEG_DURING_STORMPHASES_
   ;; nightYRange       = [0,2.5e3]
 
   normalize         = 1
-  ;; dayYRange         = [0,0.07]
-  ;; nightYRange       = [0,0.07]
+  dayYRange         = [0,0.07]
+  nightYRange       = [0,0.07]
 
   ;;use these for including stats text
-  include_stats     = 1
-  dayYRange         = [0,0.10]
-  nightYRange       = [0,0.10]
+  include_stats     = 0
+  ;; dayYRange         = [0,0.10]
+  ;; nightYRange       = [0,0.10]
 
   no_legend         = 1
 

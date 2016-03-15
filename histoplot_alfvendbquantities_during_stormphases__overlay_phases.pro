@@ -373,15 +373,16 @@ EPOCHPLOT_COLORNAMES=epochPlot_colorNames,SCATTEROUTPREFIX=scatterOutPrefix, $
 
 
   ;;plot settings and colors for each storm phase
-  stormColors          = ["black","blue","red"] ;nonstorm, main phase, recovery phase
+  stormColors          = ["blue","red","black"] ;nonstorm, main phase, recovery phase
   ;; stormFill            = [1,1,1]
   stormFill            = [0,0,0]
   stormTransp          = KEYWORD_SET(normalize_maxInd_hist) ? $ 
-                         [95,90,90] : $
+                         [80,80,85] : $
                          [80,80,80]
   stormLineThick       = KEYWORD_SET(normalize_maxInd_hist) ? $
-                         [3.5,3.5,3.5] : $
+                         [4.2,4.2,4.2] : $
                          [5.0,5.0,5.0]
+  stormLinestyle       = [0,0,2] ;solid, solid, dash
                          
 
   FOR i=0,2 DO BEGIN
@@ -447,6 +448,7 @@ EPOCHPLOT_COLORNAMES=epochPlot_colorNames,SCATTEROUTPREFIX=scatterOutPrefix, $
                               COLOR=stormColors[i], $
                               TRANSPARENCY=(i EQ 0) ? 40 : 40, $
                               THICK=stormLineThick[i], $
+                              LINESTYLE=stormLinestyle[i], $
                               OVERPLOT=(i GT 0) ? 1 : 0, $ ;N_ELEMENTS(outplotArr) GT 0 ? outplotArr[i] : !NULL, $
                               ;; FILL_BACKGROUND=fill_background, $
                               FILL_BACKGROUND=stormFill[i], $

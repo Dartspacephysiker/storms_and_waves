@@ -4,9 +4,9 @@ PRO JOURNAL__20160301__PLOTS_OF_10_EFLUX_LOSSCONE_INTEG__18_INTEG_ION_FLUX_UP__4
 
   ;;;;;;;;;;;;;;;;;
   ;;turn plots on and off
-  ionPlots                       = 1
-  probOccurrencePlot             = 1
-  eNumFluxPlot                   = 1
+  ionPlots                       = 0
+  probOccurrencePlot             = 0
+  eNumFluxPlot                   = 0
   pFluxPlot                      = 1
 
   ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
@@ -39,7 +39,8 @@ PRO JOURNAL__20160301__PLOTS_OF_10_EFLUX_LOSSCONE_INTEG__18_INTEG_ION_FLUX_UP__4
 
   ;;;;;;;;;;;;;;;;;;;;;;
   ;;49--PFLUXEST
-  pPlotRange                     = [10.^(2.5),10.^(4.5)] ;for pFlux multiplied by width_x
+  ;; pPlotRange                     = [10.^(2.5),10.^(4.5)] ;for pFlux multiplied by width_x
+  pPlotRange                     = [10.^(2.0),10.^(4.0)] ;for pFlux multiplied by width_x AFTER I figured out I screwed up scaling with B
   logPFPlot                      = 1
   multiply_pFlux_by_width_x      = 1
 
