@@ -4,6 +4,9 @@ PRO JOURNAL__20160305__SEAS__18_INTEG_ION_FLUX_UP__LINEAR_TOTALVAR
 
   maxInd               = 18
 
+  ;; hemi                 = 'SOUTH'
+  ;; plotSuff             = '--totalVar--south_hemi.png'
+
   avg_type_maxInd      = 2
   multiply_by_width_x  = 1
 

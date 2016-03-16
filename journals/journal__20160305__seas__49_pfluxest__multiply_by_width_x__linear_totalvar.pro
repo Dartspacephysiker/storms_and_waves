@@ -4,6 +4,9 @@ PRO JOURNAL__20160305__SEAS__49_PFLUXEST__MULTIPLY_BY_WIDTH_X__LINEAR_TOTALVAR
 
   maxInd               = 49
                        
+  ;; hemi                 = 'SOUTH'
+  ;; plotSuff             = '--totalVar--south_hemi.png'
+
   avg_type_maxInd      = 2
   multiply_by_width_x  = 1
 

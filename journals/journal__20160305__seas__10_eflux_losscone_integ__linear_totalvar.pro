@@ -4,6 +4,9 @@ PRO JOURNAL__20160305__SEAS__10_EFLUX_LOSSCONE_INTEG__LINEAR_TOTALVAR
 
   maxInd               = 10
 
+  ;; hemi                 = 'SOUTH'
+  ;; plotSuff             = '--totalVar--south_hemi.png'
+
   avg_type_maxInd      = 2
   multiply_by_width_x  = 1
 
