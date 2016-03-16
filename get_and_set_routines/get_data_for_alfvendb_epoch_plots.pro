@@ -50,7 +50,7 @@ PRO GET_DATA_FOR_ALFVENDB_EPOCH_PLOTS,MAXIMUS=maximus,CDBTIME=cdbTime, $
         PRINT,'Scaling width to ionosphere before dividing!'
         LOAD_MAPPING_RATIO_DB,mapRatio, $
                               DO_DESPUNDB=maximus.despun
-        magFieldFactor         = SQRT(mapRatio.ratio[tmp_i]) ;This scales width_x to the ionosphere
+        magFieldFactor         = SQRT(mapRatio.ratio[WHERE(FINITE(maxData))]) ;This scales width_x to the ionosphere
      ENDELSE
      
      maxData[WHERE(FINITE(maxData))] = maxData[WHERE(FINITE(maxData))]*factor*magFieldFactor/maximus.width_x[WHERE(FINITE(maxData))]
@@ -74,9 +74,9 @@ PRO GET_DATA_FOR_ALFVENDB_EPOCH_PLOTS,MAXIMUS=maximus,CDBTIME=cdbTime, $
                                  DO_DESPUNDB=maximus.despun
            IF maximus.corrected_fluxes THEN BEGIN ;Assume that pFlux has been multiplied by mapRatio
               PRINT,'Undoing a square-root factor of multiplication by magField ratio for Poynting flux ...'
-              magFieldFactor        = 1.D/SQRT(mapRatio.ratio[tmp_i]) ;This undoes the full multiplication by mapRatio performed in CORRECT_ALFVENDB_FLUXES
+              magFieldFactor        = 1.D/SQRT(mapRatio.ratio[WHERE(FINITE(maxData))]) ;This undoes the full multiplication by mapRatio performed in CORRECT_ALFVENDB_FLUXES
            ENDIF ELSE BEGIN
-              magFieldFactor        = SQRT(mapRatio.ratio[tmp_i])
+              magFieldFactor        = SQRT(mapRatio.ratio[WHERE(FINITE(maxData))])
            ENDELSE
         END
         ELSE: BEGIN

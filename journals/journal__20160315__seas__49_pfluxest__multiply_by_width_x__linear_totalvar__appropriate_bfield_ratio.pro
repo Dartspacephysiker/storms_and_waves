@@ -15,9 +15,9 @@ PRO JOURNAL__20160315__SEAS__49_PFLUXEST__MULTIPLY_BY_WIDTH_X__LINEAR_TOTALVAR__
 
   probOccPref           = pref + '49_PFLUXEST_multiply_by_width_x__include_relative_variation--with_NOAA'
   yTitle                = 'Integ. Poynting Flux (mW/m), 100 km' 
-  yRange_maxInd         = [9e1,5e4]
+  yRange_maxInd         = [5e1,5e4]
 
-  yRange_totalVar       = [[0,5.4e3],[0,5.4e3]] ;day, then night
+  yRange_totalVar       = [[0,4.5e3],[0,4.5e3]] ;day, then night
 
   yLogScale_maxInd      = 1
 

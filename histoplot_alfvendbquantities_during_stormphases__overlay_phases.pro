@@ -244,7 +244,7 @@ EPOCHPLOT_COLORNAMES=epochPlot_colorNames,SCATTEROUTPREFIX=scatterOutPrefix, $
            PRINT,'Scaling width to ionosphere before dividing!'
            LOAD_MAPPING_RATIO_DB,mapRatio, $
                                  DO_DESPUNDB=maximus.despun
-           magFieldFactor         = SQRT(mapRatio.ratio[tmp_i]) ;This scales width_x to the ionosphere
+           magFieldFactor         = SQRT(mapRatio.ratio[WHERE(FINITE(tempData))]) ;This scales width_x to the ionosphere
         ENDELSE
 
         tempData[WHERE(FINITE(tempData))] = tempData[WHERE(FINITE(tempData))]*factor*magFieldFactor/maximus.width_x[WHERE(FINITE(tempData))]
@@ -268,9 +268,9 @@ EPOCHPLOT_COLORNAMES=epochPlot_colorNames,SCATTEROUTPREFIX=scatterOutPrefix, $
                                     DO_DESPUNDB=maximus.despun
               IF maximus.corrected_fluxes THEN BEGIN ;Assume that pFlux has been multiplied by mapRatio
                  PRINT,'Undoing a square-root factor of multiplication by magField ratio for Poynting flux ...'
-                 magFieldFactor        = 1.D/SQRT(mapRatio.ratio[tmp_i]) ;This undoes the full multiplication by mapRatio performed in CORRECT_ALFVENDB_FLUXES
+                 magFieldFactor        = 1.D/SQRT(mapRatio.ratio[WHERE(FINITE(tempData))]) ;This undoes the full multiplication by mapRatio performed in CORRECT_ALFVENDB_FLUXES
               ENDIF ELSE BEGIN
-                 magFieldFactor        = SQRT(mapRatio.ratio[tmp_i])
+                 magFieldFactor        = SQRT(mapRatio.ratio[WHERE(FINITE(tempData))])
               ENDELSE
            END
            ELSE: BEGIN

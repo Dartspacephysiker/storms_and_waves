@@ -41,10 +41,10 @@ PRO JOURNAL__20160315__HISTOPLOTS_OF_49_PFLUXEST_DURING_STORMPHASES__MULTIPLIED_
                                      'F0.1,"-",F0.1,"_MLT")',day_mlt[0],day_mlt[1], $
                       24+night_mlt[0],night_mlt[1])
 
-  dayXRange         = [1.2,7.7]
+  dayXRange         = [0.8,7.0]
   ;; dayYRange         = [0,6.0e3]
 
-  nightXRange       = [1.2,7.7]
+  nightXRange       = [0.8,7.0]
   ;; nightYRange       = [0,1.5e3]
 
   ;;normalized dayside
