@@ -49,7 +49,7 @@ PRO GET_NONSTORM_MAINPHASE_AND_RECOVERYPHASE_PERIODS, $
      PRINTF,lun,FORMAT='("Using default Dst cutoff value: ",I0)',dstCutoff
   ENDIF
 
-  s_dst_i = WHERE(dst.dst LT dstCutoff,n_s,COMPLEMENT=ns_dst_i,NCOMPLEMENT=n_ns)
+  s_dst_i = WHERE(dst.dst LE dstCutoff,n_s,COMPLEMENT=ns_dst_i,NCOMPLEMENT=n_ns)
 
   IF KEYWORD_SET(earliest_UTC) THEN BEGIN
      early_i = WHERE(dst.time GE earliest_UTC)
