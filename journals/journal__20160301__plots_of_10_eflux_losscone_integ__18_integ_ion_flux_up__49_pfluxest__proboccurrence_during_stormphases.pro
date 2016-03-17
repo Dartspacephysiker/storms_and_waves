@@ -4,22 +4,22 @@ PRO JOURNAL__20160301__PLOTS_OF_10_EFLUX_LOSSCONE_INTEG__18_INTEG_ION_FLUX_UP__4
 
   ;;;;;;;;;;;;;;;;;
   ;;turn plots on and off
-  ionPlots                       = 0
-  probOccurrencePlot             = 0
-  eNumFluxPlot                   = 0
+  ionPlots                       = 1
+  probOccurrencePlot             = 1
+  eNumFluxPlot                   = 1
   pFluxPlot                      = 1
 
   ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
   ;;Hemi stuff
-  hemi                           = 'NORTH'
-  minILAT                        = 58
-  maxILAT                        = 84
-  binILAT                        = 2.0
-
-  ;; hemi                           = 'SOUTH'
-  ;; minILAT                        = -84
-  ;; maxILAT                        = -58
+  ;; hemi                           = 'NORTH'
+  ;; minILAT                        = 58
+  ;; maxILAT                        = 84
   ;; binILAT                        = 2.0
+
+  hemi                           = 'SOUTH'
+  minILAT                        = -84
+  maxILAT                        = -58
+  binILAT                        = 2.0
 
   binMLT                         = 1.5
 

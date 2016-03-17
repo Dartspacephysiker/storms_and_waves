@@ -6,8 +6,10 @@
 ;; tot_alf_{y,t}_{pos,_neg_,}list   : A list of arrays of {data, UTC time} values for Alfven
 ;;                                      events that pass screening
 ;;2016/02/23         Added DIVIDE_BY_WIDTH_X keyword
+;;2016/03/17         added CUSTOM_MAXIND keyword to make possible way awesome calculations
 PRO GET_DATA_FOR_ALFVENDB_EPOCH_PLOTS,MAXIMUS=maximus,CDBTIME=cdbTime, $
                                       MAXIND=maxInd, $
+                                      CUSTOM_MAXIND=custom_maxInd, $
                                       DIVIDE_BY_WIDTH_X=divide_by_width_x, $
                                       MULTIPLY_BY_WIDTH_X=multiply_by_width_x, $
                                       GOOD_I=good_i, $
@@ -29,63 +31,69 @@ PRO GET_DATA_FOR_ALFVENDB_EPOCH_PLOTS,MAXIMUS=maximus,CDBTIME=cdbTime, $
   IF N_ELEMENTS(lun) EQ 0 THEN lun = -1
   
   ;;Data quantity
-  maxData                      = maximus.(maxInd)
-  IF KEYWORD_SET(divide_by_width_x) THEN BEGIN
-     PRINT,'Dividing by WIDTH_X!'
+  IF KEYWORD_SET(custom_maxInd) THEN BEGIN
+     maxData                      = GET_CUSTOM_ALFVENDB_QUANTITY(custom_maxInd,MAXIMUS=maximus,/VERBOSE)
+  ENDIF ELSE BEGIN
+     maxData                      = maximus.(maxInd)
 
-     inds_to_scale_to_cm       = [15,16,17,18,26,28,30]
-     scale_to_cm               = WHERE(maxInd EQ inds_to_scale_to_cm) 
-     IF scale_to_cm[0] EQ -1 THEN BEGIN
-        factor = 1.D
-     ENDIF ELSE BEGIN 
-        factor = .01D 
-        PRINT,'...Scaling WIDTH_X to centimeters for maxInd='+STRCOMPRESS(maxInd,/REMOVE_ALL)+'...'
-     ENDELSE
-
-     inds_needing_scaled_width = [10,11,17,18]
-     need_to_scale_width       = WHERE(maxInd EQ inds_needing_scaled_width)
-     IF need_to_scale_width[0] EQ -1 THEN BEGIN
-        magFieldFactor         = 1.0D
-     ENDIF ELSE BEGIN
-        PRINT,'Scaling width to ionosphere before dividing!'
-        LOAD_MAPPING_RATIO_DB,mapRatio, $
-                              DO_DESPUNDB=maximus.despun
-        magFieldFactor         = SQRT(mapRatio.ratio[WHERE(FINITE(maxData))]) ;This scales width_x to the ionosphere
-     ENDELSE
-     
-     maxData[WHERE(FINITE(maxData))] = maxData[WHERE(FINITE(maxData))]*factor*magFieldFactor/maximus.width_x[WHERE(FINITE(maxData))]
-  ENDIF
-
-  IF KEYWORD_SET(multiply_by_width_x) THEN BEGIN
-     PRINT,'Multiplying by WIDTH_X!'
-
-     inds_to_scale_to_cm       = [15,16,17,18,26,28,30]
-     scale_to_cm               = WHERE(maxInd EQ inds_to_scale_to_cm) 
-     IF scale_to_cm[0] EQ -1 THEN BEGIN
-        factor = 1.D
-     ENDIF ELSE BEGIN 
-        factor = .01D 
-        PRINT,'...Scaling WIDTH_X to centimeters for maxInd='+STRCOMPRESS(maxInd,/REMOVE_ALL)+'...'
-     ENDELSE
-
-     CASE maxInd OF
-        49: BEGIN
+     IF KEYWORD_SET(divide_by_width_x) THEN BEGIN
+        PRINT,'Dividing by WIDTH_X!'
+        
+        inds_to_scale_to_cm       = [15,16,17,18,26,28,30]
+        scale_to_cm               = WHERE(maxInd EQ inds_to_scale_to_cm) 
+        IF scale_to_cm[0] EQ -1 THEN BEGIN
+           factor = 1.D
+        ENDIF ELSE BEGIN 
+           factor = .01D 
+           PRINT,'...Scaling WIDTH_X to centimeters for maxInd='+STRCOMPRESS(maxInd,/REMOVE_ALL)+'...'
+        ENDELSE
+        
+        inds_needing_scaled_width = [10,11,17,18]
+        need_to_scale_width       = WHERE(maxInd EQ inds_needing_scaled_width)
+        IF need_to_scale_width[0] EQ -1 THEN BEGIN
+           magFieldFactor         = 1.0D
+        ENDIF ELSE BEGIN
+           PRINT,'Scaling width to ionosphere before dividing!'
            LOAD_MAPPING_RATIO_DB,mapRatio, $
                                  DO_DESPUNDB=maximus.despun
-           IF maximus.corrected_fluxes THEN BEGIN ;Assume that pFlux has been multiplied by mapRatio
-              PRINT,'Undoing a square-root factor of multiplication by magField ratio for Poynting flux ...'
-              magFieldFactor        = 1.D/SQRT(mapRatio.ratio[WHERE(FINITE(maxData))]) ;This undoes the full multiplication by mapRatio performed in CORRECT_ALFVENDB_FLUXES
-           ENDIF ELSE BEGIN
-              magFieldFactor        = SQRT(mapRatio.ratio[WHERE(FINITE(maxData))])
-           ENDELSE
-        END
-        ELSE: BEGIN
-           magFieldFactor           = 1.0
-        END
-     ENDCASE
+           magFieldFactor         = SQRT(mapRatio.ratio[WHERE(FINITE(maxData))]) ;This scales width_x to the ionosphere
+        ENDELSE
+        
+        maxData[WHERE(FINITE(maxData))] = maxData[WHERE(FINITE(maxData))]*factor*magFieldFactor/maximus.width_x[WHERE(FINITE(maxData))]
+     ENDIF
      
-     maxData[WHERE(FINITE(maxData))] = maxData[WHERE(FINITE(maxData))]*factor*magFieldFactor*maximus.width_x[WHERE(FINITE(maxData))]
-  ENDIF
+     IF KEYWORD_SET(multiply_by_width_x) THEN BEGIN
+        PRINT,'Multiplying by WIDTH_X!'
+        
+        inds_to_scale_to_cm       = [15,16,17,18,26,28,30]
+        scale_to_cm               = WHERE(maxInd EQ inds_to_scale_to_cm) 
+        IF scale_to_cm[0] EQ -1 THEN BEGIN
+           factor = 1.D
+        ENDIF ELSE BEGIN 
+           factor = .01D 
+           PRINT,'...Scaling WIDTH_X to centimeters for maxInd='+STRCOMPRESS(maxInd,/REMOVE_ALL)+'...'
+        ENDELSE
+        
+        CASE maxInd OF
+           49: BEGIN
+              LOAD_MAPPING_RATIO_DB,mapRatio, $
+                                    DO_DESPUNDB=maximus.despun
+              IF maximus.corrected_fluxes THEN BEGIN ;Assume that pFlux has been multiplied by mapRatio
+                 PRINT,'Undoing a square-root factor of multiplication by magField ratio for Poynting flux ...'
+                 magFieldFactor        = 1.D/SQRT(mapRatio.ratio[WHERE(FINITE(maxData))]) ;This undoes the full multiplication by mapRatio performed in CORRECT_ALFVENDB_FLUXES
+              ENDIF ELSE BEGIN
+                 magFieldFactor        = SQRT(mapRatio.ratio[WHERE(FINITE(maxData))])
+              ENDELSE
+           END
+           ELSE: BEGIN
+              magFieldFactor           = 1.0
+           END
+        ENDCASE
+        
+        maxData[WHERE(FINITE(maxData))] = maxData[WHERE(FINITE(maxData))]*factor*magFieldFactor*maximus.width_x[WHERE(FINITE(maxData))]
+     ENDIF
+
+  ENDELSE
 
   ;; Get ranges for plots
   minMaxDat=MAKE_ARRAY(nEpochs,2,/DOUBLE)
@@ -94,7 +102,7 @@ PRO GET_DATA_FOR_ALFVENDB_EPOCH_PLOTS,MAXIMUS=maximus,CDBTIME=cdbTime, $
   alf_ind_list.add,WHERE(maxData LT 0)
   IF KEYWORD_SET(log_dbquantity) THEN BEGIN
      PRINTF,lun,'Logging all Alfven DB values for maxInd = ' + STRCOMPRESS(maxInd,/REMOVE_ALL) + '...'
-
+     
      log_i = WHERE(maxData NE 0.0 AND FINITE(maxData))
      good_i = CGSETINTERSECTION(good_i,log_i)
   ENDIF
@@ -102,10 +110,9 @@ PRO GET_DATA_FOR_ALFVENDB_EPOCH_PLOTS,MAXIMUS=maximus,CDBTIME=cdbTime, $
   IF KEYWORD_SET(only_pos) THEN BEGIN
      good_i = CGSETINTERSECTION(good_i,WHERE(maxData GT 0.0 AND FINITE(maxData)))
   ENDIF
-
+  
   IF KEYWORD_SET(only_neg) THEN BEGIN
      good_i = CGSETINTERSECTION(good_i,WHERE(maxData LT 0.0 AND FINITE(maxData)))
-     
   ENDIF
 
   IF neg_and_pos_separ OR ( log_DBQuantity AND (alf_ind_list[1,0] NE -1)) THEN BEGIN

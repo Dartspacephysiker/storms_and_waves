@@ -103,6 +103,7 @@ PRO SUPERPOSE_STORMS_ALFVENDBQUANTITIES,stormTimeArray_utc, $
                                         LAYOUT=layout, $
                                         POS_LAYOUT=pos_layout, $
                                         NEG_LAYOUT=neg_layout, $
+                                        CUSTOM_MAXIND=custom_maxInd, $
                                         MAXIND=maxInd, $
                                         AVG_TYPE_MAXIND=avg_type_maxInd, $
                                         RUNNING_AVERAGE=running_average, $
@@ -307,6 +308,7 @@ PRO SUPERPOSE_STORMS_ALFVENDBQUANTITIES,stormTimeArray_utc, $
 
      IF KEYWORD_SET(maxInd) THEN BEGIN
         GET_DATA_FOR_ALFVENDB_EPOCH_PLOTS,MAXIMUS=maximus,CDBTIME=cdbTime, $
+                                          CUSTOM_MAXIND=custom_maxInd, $
                                           MAXIND=maxInd, $
                                           DIVIDE_BY_WIDTH_X=divide_by_width_x, $
                                           MULTIPLY_BY_WIDTH_X=multiply_by_width_x, $

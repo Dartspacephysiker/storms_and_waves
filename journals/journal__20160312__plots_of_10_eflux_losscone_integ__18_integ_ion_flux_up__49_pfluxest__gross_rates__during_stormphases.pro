@@ -1,4 +1,4 @@
-;;Just how much action, anyway
+;;Just how much action, anyway?
 PRO JOURNAL__20160312__PLOTS_OF_10_EFLUX_LOSSCONE_INTEG__18_INTEG_ION_FLUX_UP__49_PFLUXEST__GROSS_RATES__DURING_STORMPHASES
   dstCutoff = -20
 

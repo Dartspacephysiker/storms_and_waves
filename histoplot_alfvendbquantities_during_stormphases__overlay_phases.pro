@@ -44,6 +44,8 @@ PRO HISTOPLOT_ALFVENDBQUANTITIES_DURING_STORMPHASES__OVERLAY_PHASES, $
    HEMI=hemi, $
    LAYOUT=layout, $
    MAXIND=maxInd, $
+   CUSTOM_MAXIND=custom_maxInd, $
+   CUSTOM_MAXNAME=custom_maxName, $
    NORMALIZE_MAXIND_HIST=normalize_maxInd_hist, $
    HISTXRANGE_MAXIND=histXRange_maxInd, $
    HISTXTITLE_MAXIND=histXTitle_maxInd, $
@@ -168,14 +170,20 @@ EPOCHPLOT_COLORNAMES=epochPlot_colorNames,SCATTEROUTPREFIX=scatterOutPrefix, $
                'Recovery phase']
   alf_i_list=LIST()
 
-  IF NOT KEYWORD_SET(dataName) THEN dataName = (TAG_NAMES(maximus))[maxInd] ;;        = 'char_ion_energy'
+  IF KEYWORD_SET(custom_maxInd) THEN BEGIN
+     IF KEYWORD_SET(custom_maxName) THEN dataName = custom_maxName ELSE dataName = 'custom_maxInd'
+  ENDIF ELSE BEGIN
+     IF KEYWORD_SET(custom_maxName) THEN dataName = custom_maxName ELSE dataName = STRING(FORMAT='(I2)',maxInd) + '_' + (TAG_NAMES(maximus))[maxInd]
+  ENDELSE
+
   IF NOT KEYWORD_SET(plotSuffix) THEN tempSuffix = "" ELSE tempSuffix = '--' + plotSuffix
   ;;data out
   genFile_pref    = date + '--' + dataName + '--from_histoplot_alfvendbquantities_during_stormphases__overlaid_phases.pro'
   outstats        = date + '--' + dataName + '_moment_data_for_stormphases.sav'
+
   SET_PLOT_DIR,plotDir,/FOR_STORMS,/VERBOSE,/ADD_TODAY
-  saveName        = plotDir + 'stormphase_histos--overlaid_phases--' + STRING(FORMAT='(I2)',maxInd) + $
-                    '_' + dataName + tempSuffix + '.png' ;savePlotSuffix
+
+  saveName        = plotDir + 'stormphase_histos--overlaid_phases--' + dataName + tempSuffix + '.png' ;savePlotSuffix
   
 
   ;;declare the slice structure array, null lists
@@ -207,9 +215,18 @@ EPOCHPLOT_COLORNAMES=epochPlot_colorNames,SCATTEROUTPREFIX=scatterOutPrefix, $
         LIST_TO_ARR=1,$
         VERBOSE=verbose, DEBUG=debug, LUN=lun
      
+     ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+     ;;Now actually get the data
+     IF KEYWORD_SET(custom_maxInd) THEN BEGIN
+        tempData = GET_CUSTOM_ALFVENDB_QUANTITY(custom_maxInd,MAXIMUS=maximus,/VERBOSE)
+        tempData = tempData[alf_i]
+     ENDIF ELSE BEGIN
+        tempData = maximus.(maxInd)[alf_i]
+     ENDELSE
+     
      IF KEYWORD_SET(only_pos) OR KEYWORD_SET(only_neg) OR KEYWORD_SET(absVal) THEN BEGIN
         PRINT,"Splitting data..."
-        tempData = CONV_QUANTITY_TO_POS_NEG_OR_ABS(maximus.(maxInd)[alf_i], $
+        tempData = CONV_QUANTITY_TO_POS_NEG_OR_ABS(tempData, $
                    QUANTITY_NAME=dataName, $
                    ONLY_POS=only_pos, $
                    ONLY_NEG=only_neg, $
@@ -220,66 +237,73 @@ EPOCHPLOT_COLORNAMES=epochPlot_colorNames,SCATTEROUTPREFIX=scatterOutPrefix, $
                    LUN=lun)
 
         alf_i = alf_i[new_ii]
-     ENDIF ELSE BEGIN
-        tempData = maximus.(maxInd)[alf_i]
-     ENDELSE
+     ENDIF ;ELSE BEGIN
+     ;;    tempData = maximus.(maxInd)[alf_i]
+     ;; ENDELSE
 
-     IF KEYWORD_SET(divide_by_width_x) THEN BEGIN
-        PRINT,'Dividing by WIDTH_X!'
-        
-        inds_to_scale_to_cm       = [15,16,17,18,26,28,30]
-        scale_to_cm               = WHERE(maxInd EQ inds_to_scale_to_cm) 
-        IF scale_to_cm[0] EQ -1 THEN BEGIN
-           factor = 1.D
-        ENDIF ELSE BEGIN 
-           factor = .01D 
-           PRINT,'...Scaling WIDTH_X to centimeters for maxInd='+STRCOMPRESS(maxInd,/REMOVE_ALL)+'...'
-        ENDELSE
-        
-        inds_needing_scaled_width = [10,11,17,18]
-        need_to_scale_width       = WHERE(maxInd EQ inds_needing_scaled_width)
-        IF need_to_scale_width[0] EQ -1 THEN BEGIN
-           magFieldFactor         = 1.0D
-        ENDIF ELSE BEGIN
-           PRINT,'Scaling width to ionosphere before dividing!'
-           LOAD_MAPPING_RATIO_DB,mapRatio, $
-                                 DO_DESPUNDB=maximus.despun
-           magFieldFactor         = SQRT(mapRatio.ratio[WHERE(FINITE(tempData))]) ;This scales width_x to the ionosphere
-        ENDELSE
-
-        tempData[WHERE(FINITE(tempData))] = tempData[WHERE(FINITE(tempData))]*factor*magFieldFactor/maximus.width_x[WHERE(FINITE(tempData))]
-     ENDIF
-        
-     IF KEYWORD_SET(multiply_by_width_x) THEN BEGIN
-        PRINT,'Multiplying by WIDTH_X!'
-        
-        inds_to_scale_to_cm       = [999] ;Just ESA number flux, which isn't currently implemented
-        scale_to_cm               = WHERE(maxInd EQ inds_to_scale_to_cm) 
-        IF scale_to_cm[0] EQ -1 THEN BEGIN
-           factor = 1.D
-        ENDIF ELSE BEGIN 
-           factor = .01D 
-           PRINT,'...Scaling WIDTH_X to centimeters for maxInd='+STRCOMPRESS(maxInd,/REMOVE_ALL)+'...'
-        ENDELSE
-        
-        CASE maxInd OF
-           49: BEGIN
+     IF ~KEYWORD_SET(custom_maxInd) THEN BEGIN
+        IF KEYWORD_SET(divide_by_width_x) THEN BEGIN
+           PRINT,'Dividing by WIDTH_X!'
+           
+           inds_to_scale_to_cm       = [15,16,17,18,26,28,30]
+           scale_to_cm               = WHERE(maxInd EQ inds_to_scale_to_cm) 
+           IF scale_to_cm[0] EQ -1 THEN BEGIN
+              factor = 1.D
+           ENDIF ELSE BEGIN 
+              factor = .01D 
+              PRINT,'...Scaling WIDTH_X to centimeters for maxInd='+STRCOMPRESS(maxInd,/REMOVE_ALL)+'...'
+           ENDELSE
+           
+           inds_needing_scaled_width = [10,11,17,18]
+           need_to_scale_width       = WHERE(maxInd EQ inds_needing_scaled_width)
+           IF need_to_scale_width[0] EQ -1 THEN BEGIN
+              magFieldFactor         = 1.0D
+           ENDIF ELSE BEGIN
+              PRINT,'Scaling width to ionosphere before dividing!'
               LOAD_MAPPING_RATIO_DB,mapRatio, $
                                     DO_DESPUNDB=maximus.despun
-              IF maximus.corrected_fluxes THEN BEGIN ;Assume that pFlux has been multiplied by mapRatio
-                 PRINT,'Undoing a square-root factor of multiplication by magField ratio for Poynting flux ...'
-                 magFieldFactor        = 1.D/SQRT(mapRatio.ratio[WHERE(FINITE(tempData))]) ;This undoes the full multiplication by mapRatio performed in CORRECT_ALFVENDB_FLUXES
-              ENDIF ELSE BEGIN
-                 magFieldFactor        = SQRT(mapRatio.ratio[WHERE(FINITE(tempData))])
-              ENDELSE
-           END
-           ELSE: BEGIN
-              magFieldFactor           = 1.0
-           END
-        ENDCASE
+              magFieldFactor         = SQRT(mapRatio.ratio[WHERE(FINITE(tempData))]) ;This scales width_x to the ionosphere
+           ENDELSE
+           
+           tempData[WHERE(FINITE(tempData))] = tempData[WHERE(FINITE(tempData))]*factor*magFieldFactor/maximus.width_x[WHERE(FINITE(tempData))]
+        ENDIF
+        
+        IF KEYWORD_SET(multiply_by_width_x) THEN BEGIN
+           PRINT,'Multiplying by WIDTH_X!'
+           
+           inds_to_scale_to_cm       = [999] ;Just ESA number flux, which isn't currently implemented
+           scale_to_cm               = WHERE(maxInd EQ inds_to_scale_to_cm) 
+           IF scale_to_cm[0] EQ -1 THEN BEGIN
+              factor = 1.D
+           ENDIF ELSE BEGIN 
+              factor = .01D 
+              PRINT,'...Scaling WIDTH_X to centimeters for maxInd='+STRCOMPRESS(maxInd,/REMOVE_ALL)+'...'
+           ENDELSE
+           
+           CASE maxInd OF
+              49: BEGIN
+                 LOAD_MAPPING_RATIO_DB,mapRatio, $
+                                       DO_DESPUNDB=maximus.despun
+                 IF maximus.corrected_fluxes THEN BEGIN ;Assume that pFlux has been multiplied by mapRatio
+                    PRINT,'Undoing a square-root factor of multiplication by magField ratio for Poynting flux ...'
+                    magFieldFactor        = 1.D/SQRT(mapRatio.ratio[WHERE(FINITE(tempData))]) ;This undoes the full multiplication by mapRatio performed in CORRECT_ALFVENDB_FLUXES
+                 ENDIF ELSE BEGIN
+                    magFieldFactor        = SQRT(mapRatio.ratio[WHERE(FINITE(tempData))])
+                 ENDELSE
+              END
+              ELSE: BEGIN
+                 magFieldFactor           = 1.0
+              END
+           ENDCASE
 
-        tempData[WHERE(FINITE(tempData))] = tempData[WHERE(FINITE(tempData))]*factor*magFieldFactor*maximus.width_x[WHERE(FINITE(tempData))]
-     ENDIF
+           tempData[WHERE(FINITE(tempData))] = tempData[WHERE(FINITE(tempData))]*factor*magFieldFactor*maximus.width_x[WHERE(FINITE(tempData))]
+        ENDIF
+     ENDIF ELSE BEGIN
+        IF KEYWORD_SET(divide_by_width_x) OR KEYWORD_SET(multiply_by_width_x) THEN BEGIN
+           PRINT,"Can't divide or multiply by width_x! You're set for a custom maxInd!"
+           STOP
+        ENDIF
+     ENDELSE
 
      IF KEYWORD_SET(log_DBQuantity) THEN BEGIN
         PRINT,"Logging these data..."
