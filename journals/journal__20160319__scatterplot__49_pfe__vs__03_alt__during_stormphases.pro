@@ -1,20 +1,20 @@
-PRO JOURNAL__20160319__SCATTERPLOT__18_IIFU__VS__49_PFE__HIGH_ALTS__DURING_STORMPHASES
+PRO JOURNAL__20160319__SCATTERPLOT__49_PFE__VS__03_ALT__DURING_STORMPHASES
 
   hemi              = "NORTH"
   ;; restrict_altRange = [0000,1000]
   ;; restrict_altRange = [1000,2000]
   ;; restrict_altRange = [2000,3000]
   ;; restrict_altRange = [3000,4175]
-  restrict_altRange = [4000,4175]
+  ;; restrict_altRange = [4000,4175]
 
-  winTitle          = STRING(FORMAT='("Altitude Range: [",I0,", ",I0,"] km")',restrict_altRange[0],restrict_altRange[1])
+  winTitle          = STRING("Dayside & Nightside ") ;(Altitude Range: [",I0,", ",I0,"] km)")',restrict_altRange[0],restrict_altRange[1])
 
-  maxInd1           = 49
-  custom_maxInd2     = "maximus.(18)/(maximus.width_x*100.)*(mapRatio.ratio)^(0.5)"   ;;factor of 100 for conv to cm
-  custom_maxName2    = '18_integ_ion_flux_up__avgd'
-  ;; maxInd2           = 18  
+  maxInd1           = 03
+  ;; custom_maxInd2    = "maximus.(10)/(maximus.width_x)*(mapRatio.ratio)^(0.5)"   ;;factor of 100 for conv to cm
+  ;; custom_maxName2   = '10_eflux_losscone_integ__avgd'
+  maxInd2           = 49
 
-  log_maxInd1       = 1
+  log_maxInd1       = 0
   log_maxInd2       = 1
 
   logPlot_maxInd1   = 0
@@ -23,18 +23,24 @@ PRO JOURNAL__20160319__SCATTERPLOT__18_IIFU__VS__49_PFE__HIGH_ALTS__DURING_STORM
   only_pos1         = 1
   only_pos2         = 1
 
-  xTitle            = "Poynting Flux (mW/m) at 100 km"
-  yTitle            = "Spatially avgd upward ion flux (#/cm!U2!N-s) at 100 km"
+  xTitle            = "Altitude (km)"
+  yTitle            = "Poynting flux (mW/m!U2!N)"
+
   night_mlt         = [-6.0,6.0]
   day_mlt           = [6.0,18.0]
 
-  dayXRange         = [-3.0,4.0]
-  nightXRange       = [-3.0,4.0]
-  dayYRange         = [3.0,11.0]
-  nightYRange       = [3.0,11.0]
+  ;; night_mlt         = [19.5,24.0]
+  ;; night_ilat        = [60,84]
+  ;; day_mlt           = [11.5,17.0]
+  ;; day_ilat          = [60,80]
 
-  day_transp        = 96
-  night_transp      = 90
+  dayXRange         = [340,4175]
+  nightXRange       = [340,4175]
+  dayYRange         = [-3.0,4.0]
+  nightYRange       = [-3.0,4.0]
+
+  day_transp        = 97
+  night_transp      = 92
 
   ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
   ;;titles and suffixes
@@ -42,17 +48,18 @@ PRO JOURNAL__20160319__SCATTERPLOT__18_IIFU__VS__49_PFE__HIGH_ALTS__DURING_STORM
   ;; pT_night          = STRING(FORMAT='(F0.1,"-",F0.1," MLT")',24+night_mlt[0],night_mlt[1])
   pSuff             = STRING(FORMAT='(F0.1,"-",F0.1,"--",' + $
                                      'F0.1,"-",F0.1,"_MLT")',day_mlt[0],day_mlt[1], $
-                      24+night_mlt[0],night_mlt[1]) + ( KEYWORD_SET(despun) ? '--despun' : '') + $
-                      STRING(FORMAT='("altRange_",I0,"-",I0)',restrict_altRange[0],restrict_altRange[1])
+                      24+night_mlt[0],night_mlt[1]) + ( KEYWORD_SET(despun) ? '--despun' : '') $
+                      ;; + STRING(FORMAT='("--altRange_",I0,"-",I0)',restrict_altRange[0],restrict_altRange[1]) $
+                      + '--cusp_n_premidnight'
 
 
   ;;normalized dayside
   SCATTERPLOT_ALFVENDBQUANTITIES_DURING_STORMPHASES, $
      RESTRICT_ALTRANGE=restrict_altRange, $
      MAXIND1=maxInd1, $
-     ;; MAXIND2=maxInd2, $
-     CUSTOM_MAXIND2=custom_maxInd2, $
-     CUSTOM_MAXNAME2=custom_maxName2, $
+     MAXIND2=maxInd2, $
+     ;; CUSTOM_MAXIND2=custom_maxInd2, $
+     ;; CUSTOM_MAXNAME2=custom_maxName2, $
      RANGE_MAXIND1=dayXRange, $
      TITLE_MAXIND1=xTitle, $
      RANGE_MAXIND2=dayYRange, $
@@ -65,6 +72,8 @@ PRO JOURNAL__20160319__SCATTERPLOT__18_IIFU__VS__49_PFE__HIGH_ALTS__DURING_STORM
      PLOTTITLE=pT_day, $
      MINMLT=day_mlt[0], $
      MAXMLT=day_mlt[1], $
+     ;; MINILAT=day_ilat[0], $
+     ;; MAXILAT=day_ilat[1], $
      HEMI=hemi, $
      NPLOTROWS=2, $
      NPLOTCOLUMNS=3, $
@@ -82,9 +91,9 @@ PRO JOURNAL__20160319__SCATTERPLOT__18_IIFU__VS__49_PFE__HIGH_ALTS__DURING_STORM
   SCATTERPLOT_ALFVENDBQUANTITIES_DURING_STORMPHASES, $
      RESTRICT_ALTRANGE=restrict_altRange, $
      MAXIND1=maxInd1, $
-     ;; MAXIND2=maxInd2, $
-     CUSTOM_MAXIND2=custom_maxInd2, $
-     CUSTOM_MAXNAME2=custom_maxName2, $
+     MAXIND2=maxInd2, $
+     ;; CUSTOM_MAXIND2=custom_maxInd2, $
+     ;; CUSTOM_MAXNAME2=custom_maxName2, $
      RANGE_MAXIND1=nightXRange, $
      TITLE_MAXIND1=title_maxInd1, $
      RANGE_MAXIND2=nightYRange, $
@@ -97,6 +106,8 @@ PRO JOURNAL__20160319__SCATTERPLOT__18_IIFU__VS__49_PFE__HIGH_ALTS__DURING_STORM
      PLOTTITLE=pT_night, $
      MINMLT=night_mlt[0], $
      MAXMLT=night_mlt[1], $
+     ;; MINILAT=night_ilat[0], $
+     ;; MAXILAT=night_ilat[1], $
      HEMI=hemi, $
      NPLOTROWS=2, $
      NPLOTCOLUMNS=3, $
@@ -106,6 +117,7 @@ PRO JOURNAL__20160319__SCATTERPLOT__18_IIFU__VS__49_PFE__HIGH_ALTS__DURING_STORM
      CURRENT_WINDOW=window, $
      WINDOW_TITLE=winTitle, $
      /SAVEPLOT, $
+     PLOTSUFFIX=pSuff, $
      OUTPLOTARR=outPlotArr, $
      OUT_PLOT_I=out_plot_i, $
      OUTLINFITSTR_LIST=outLinFitStr_list, $

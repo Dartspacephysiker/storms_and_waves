@@ -1,5 +1,5 @@
 ;+
-; NAME:                           SCATTERPLOT_ALFVENDBQUANTITIES_DURING_STORMPHASE
+; NAME:                           SCATTERPLOT3D_ALFVENDBQUANTITIES_DURING_STORMPHASE
 ;
 ; PURPOSE:                        Take data acquired during geomagnetic storms, and plot the
 ;                                 observed quantities versus each other!
@@ -13,7 +13,7 @@
 ;                              MAXIND            : Index into maximus structure; plot corresponding quantity as a function of time
 ;                                                    since storm commencement (e.g., MAXIND=6 corresponds to mag current).
 ;                              PLOTTITLE         : Title of superposed plot
-;                              SAVEFILE          : Save scatter data. Note, it won't erase other saved scatterplot data provided
+;                              SAVEFILE          : Save scatter data. Note, it won't erase other saved scatterplot3D data provided
 ;                                                    they are stored in the variable 'saved_ssa_list'.
 ;                              SAVEPLOTNAME      : Name of outputted file
 ;
@@ -185,9 +185,9 @@ PRO SCATTERPLOT3D_THREE_ALFVENDBQUANTITIES_DURING_STORMPHASES, $
   ENDELSE
 
   IF KEYWORD_SET(custom_maxInd3) THEN BEGIN
-     IF KEYWORD_SET(custom_maxName2) THEN dataName2 = custom_maxName2 ELSE dataName2 = 'custom_maxInd3'
+     IF KEYWORD_SET(custom_maxName3) THEN dataName3 = custom_maxName3 ELSE dataName3 = 'custom_maxInd3'
   ENDIF ELSE BEGIN
-     IF KEYWORD_SET(custom_maxName2) THEN dataName2 = custom_maxName2 ELSE dataName2 = STRING(FORMAT='(I2)',maxInd3) + '_' + (TAG_NAMES(maximus))[maxInd3]
+     IF KEYWORD_SET(custom_maxName3) THEN dataName3 = custom_maxName3 ELSE dataName3 = STRING(FORMAT='(I2)',maxInd3) + '_' + (TAG_NAMES(maximus))[maxInd3]
   ENDELSE
 
   IF NOT KEYWORD_SET(plotSuffix) THEN tempSuffix = "" ELSE tempSuffix = '--' + plotSuffix
@@ -197,7 +197,7 @@ PRO SCATTERPLOT3D_THREE_ALFVENDBQUANTITIES_DURING_STORMPHASES, $
 
   SET_PLOT_DIR,plotDir,/FOR_STORMS,/VERBOSE,/ADD_TODAY
 
-  saveName        = plotDir + date + '--scatterplot_stormphases--' + dataName1 + '_vs_' + dataName2 + tempSuffix + '.png'
+  saveName        = plotDir + date + '--scatterplot3D_stormphases--' + dataName1 + '__' + dataName2 + '__' + dataName3 + tempSuffix + '.png'
   
   ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
   ;;declare the slice structure array, null lists
@@ -432,7 +432,7 @@ PRO SCATTERPLOT3D_THREE_ALFVENDBQUANTITIES_DURING_STORMPHASES, $
                                                      MOMENTSTRUCT3=MAKE_MOMENT_STRUCT(tempData3), $
                                                      GENERATING_FILE=genFile)
 
-     tempLinFitStruct = MAKE_MULTIPLE_LINREGRESSION_STRUCT([TRANSPOSE[tempData1],TRANSPOSE[tempData2]],tempData3,Y_ERRORS=tempdata3_errors)
+     tempLinFitStruct = MAKE_MULTIPLE_LINREGRESSION_STRUCT([TRANSPOSE(tempData1),TRANSPOSE(tempData2)],tempData3,Y_ERRORS=tempdata3_errors)
 
      ;;add 'em
      ssa              = [ssa,tempScatter3DStruct]
@@ -488,203 +488,164 @@ PRO SCATTERPLOT3D_THREE_ALFVENDBQUANTITIES_DURING_STORMPHASES, $
      plotColumn       = ( (plot_i - 1) MOD nPlotColumns )
      plotRow          = (plot_i - 1)/nPlotColumns
 
-     ;; IF nPlotColumns-1 GT 0 THEN BEGIN
-     CASE plotColumn OF
-        0: BEGIN
-           mLeft      = 0.12
-           mRight     = 0.0
-        END
-        nPlotColumns-1: BEGIN
-           mLeft      = 0.0
-           mRight     = 0.12
-        END
-        ELSE: BEGIN
-           mLeft  = 0.06
-           mRight = 0.06
-        END
-     ENDCASE
-     ;; ENDIF ELSE BEGIN
-     ;;    mLeft      = 0.12
-     ;;    mRight     = 0.0
-     ;; ENDELSE
+     ;;for titles
+     mLeft               = 0.14
+     mBottom             = 0.14
+     mRight              = 0.08
+     mTop                = KEYWORD_SET(window_title) ? 0.14 : 0.08
+     hSpaceTwixt         = 0.14
+     vSpaceTwixt         = 0.14
 
-     ;; IF nPlotRows-1 GT 0 THEN BEGIN
-     CASE plotRow OF
-        0: BEGIN
-           mBottom      = 0.04
-           mTop         = 0.06
-        END
-        nPlotRows-1: BEGIN
-           mBottom      = 0.10
-           mTop         = 0.00
-        END
-        ELSE: BEGIN
-           mBottom      = 0.06
-           mTop         = 0.04
-        END
-     ENDCASE
-     ;; ENDIF ELSE BEGIN
-     ;;       mBottom      = 0.04
-     ;;       mTop         = 0.06
-     ;; ENDELSE
+     plotPos             = CALC_PLOT_POSITION(plot_i,nPlotColumns,nPlotRows, $
+                                              WMARGIN_LEFT=mLeft, $
+                                              WMARGIN_RIGHT=mRight, $
+                                              WMARGIN_BOTTOM=mBottom, $
+                                              WMARGIN_TOP=mTop, $
+                                              SPACE_HORIZ_BETWEEN_COLS=hSpaceTwixt, $
+                                              SPACE_VERT_BETWEEN_ROWS=vSpaceTwixt)
 
-     ;; margin = [0.1,0.2,0.03,0.03]
-     margin = [mLeft,mBottom,mRight,mTop]
+
+     
+     x_faker    = MIN(x) + INDGEN(80)/80.*(MAX(x)-MIN(x))
+     y_faker    = MIN(y) + INDGEN(80)/80.*(MAX(y)-MIN(y))
+     z_faker    = linFitStr_list[plot_i-1].fitConst + linFitStr_list[plot_i-1].fitCoeffs[0]*x_faker + linFitStr_list[plot_i-1].fitCoeffs[1]*y_faker
+     ;; fit_sorted = SORT(linFitStr_list[plot_i-1].yFit)
+     ;; linePlotArr[plot_i-1] = PLOT3D(x[fit_sorted],y[fit_sorted],linFitStr_list[plot_i-1].yFit[fit_sorted], $
+     linePlotArr[plot_i-1] = PLOT3D(x_faker,y_faker,z_faker, $
+                                    NAME=niceStrings[i], $
+                                    XTITLE=xTitle, $
+                                    YTITLE=yTitle, $
+                                    ZTITLE=zTitle, $
+                                    XMINOR=xMinor, $
+                                    XRANGE=xRange, $
+                                    YMINOR=yMinor, $
+                                    YRANGE=yRange, $
+                                    ZMINOR=zMinor, $
+                                    ZRANGE=zRange, $
+                                    XLOG=logPlot_maxInd1, $
+                                    YLOG=logPlot_maxInd2, $
+                                    ZLOG=logPlot_maxInd3, $
+                                    ;; XSHOWTEXT=(plotRow EQ nPlotRows-1) ? !NULL : 0, $
+                                    ;; YSHOWTEXT=(plotColumn EQ 0) ? !NULL : 0, $
+                                    ;; ZSHOWTEXT=(plotColumn EQ 0) ? !NULL : 0, $
+                                    XSHOWTEXT=(plotRow EQ nPlotRows-1) ? !NULL : 0, $
+                                    YSHOWTEXT=(plotColumn EQ 0) ? !NULL : 0, $
+                                    ZSHOWTEXT=(plotColumn EQ 0) ? !NULL : 0, $
+                                    POSITION=plotPos, $
+                                    /PERSPECTIVE, $
+                                    AXIS_STYLE=2, $
+                                    DEPTH_CUE=[0,2], $
+                                    SHADOW_COLOR="deep sky blue", $
+                                    XY_SHADOW=1, $
+                                    YZ_SHADOW=1, $
+                                    XZ_SHADOW=1, $
+                                    LINESTYLE=0, $
+                                    THICK=1.5, $
+                                    CURRENT=window)
+
+     ax = linePlotArr[plot_i-1].axes
+     ax[2].HIDE = 1
+     ax[6].HIDE = 1
+     ax[7].HIDE = 1
 
      plotArr[plot_i-1]   = SCATTERPLOT3D(x,y,z, $
-                                         ;; TITLE=(i EQ 0 AND KEYWORD_SET(plotTitle)) ? plotTitle : !NULL, $
-                                         NAME=niceStrings[i], $
+                                         /OVERPLOT, $
                                          XTITLE=xTitle, $
                                          YTITLE=yTitle, $
                                          ZTITLE=zTitle, $
-                                         XMINOR=xMinor, $
                                          XRANGE=xRange, $
-                                         YMINOR=yMinor, $
                                          YRANGE=yRange, $
-                                         ZMINOR=zMinor, $
                                          ZRANGE=zRange, $
                                          XLOG=logPlot_maxInd1, $
                                          YLOG=logPlot_maxInd2, $
                                          ZLOG=logPlot_maxInd3, $
-                                         XSHOWTEXT=(plotRow EQ nPlotRows-1) ? !NULL : 0, $
-                                         YSHOWTEXT=(plotColumn EQ 0) ? !NULL : 0, $
-                                         ZSHOWTEXT=(plotColumn EQ 0) ? !NULL : 0, $
-                                         LAYOUT=layout, $
-                                         ;; FONT_SIZE=defHPlot_xTitle__fSize, $
-                                         MARGIN=margin, $
+                                         POSITION=plotPos, $
                                          MAGNITUDE=magnitudes, $
                                          CURRENT=window, $
                                          SYM_COLOR=sym_color, $
                                          SYM_FILLED=sym_filled, $
                                          SYM_TRANSPARENCY=KEYWORD_SET(sym_transparency) ? sym_transparency : 90) ; $
 
+
+     ;; plotArr[plot_i-1]   = SCATTERPLOT3D(x,y,z, $
+     ;;                                     ;; TITLE=(i EQ 0 AND KEYWORD_SET(plotTitle)) ? plotTitle : !NULL, $
+     ;;                                     NAME=niceStrings[i], $
+     ;;                                     XTITLE=xTitle, $
+     ;;                                     YTITLE=yTitle, $
+     ;;                                     ZTITLE=zTitle, $
+     ;;                                     XMINOR=xMinor, $
+     ;;                                     XRANGE=xRange, $
+     ;;                                     YMINOR=yMinor, $
+     ;;                                     YRANGE=yRange, $
+     ;;                                     ZMINOR=zMinor, $
+     ;;                                     ZRANGE=zRange, $
+     ;;                                     XLOG=logPlot_maxInd1, $
+     ;;                                     YLOG=logPlot_maxInd2, $
+     ;;                                     ZLOG=logPlot_maxInd3, $
+     ;;                                     XSHOWTEXT=(plotRow EQ nPlotRows-1) ? !NULL : 0, $
+     ;;                                     YSHOWTEXT=(plotColumn EQ 0) ? !NULL : 0, $
+     ;;                                     ZSHOWTEXT=(plotColumn EQ 0) ? !NULL : 0, $
+     ;;                                     ;; FONT_SIZE=defHPlot_xTitle__fSize, $
+     ;;                                     POSITION=plotPos, $
+     ;;                                     MAGNITUDE=magnitudes, $
+     ;;                                     CURRENT=window, $
+     ;;                                     SYM_COLOR=sym_color, $
+     ;;                                     SYM_FILLED=sym_filled, $
+     ;;                                     SYM_TRANSPARENCY=KEYWORD_SET(sym_transparency) ? sym_transparency : 90) ; $
+
      
-     linePlotArr[plot_i-1] = PLOT(x,linFitStr_list[plot_i-1].yFit, $
-                                /OVERPLOT, $
-                                LAYOUT=layout, $
-                                LINESTYLE=0, $
-                                XRANGE=xRange, $
-                                YRANGE=yRange, $
-                                XLOG=logPlot_maxInd1, $
-                                YLOG=logPlot_maxInd2, $
-                                ;; COLOR=stormColors[i], $
-                                ;; TRANSPARENCY=(i EQ 0) ? 80 : 80, $
-                                THICK=1.5, $
-                                CURRENT=window)
+     ;; linePlotArr[plot_i-1] = PLOT3D(x,y,linFitStr_list[plot_i-1].yFit, $
+     ;;                                /OVERPLOT, $
+     ;;                                POSITION=plotPos, $
+     ;;                                LINESTYLE=0, $
+     ;;                                XRANGE=xRange, $
+     ;;                                YRANGE=yRange, $
+     ;;                                zRANGE=zRange, $
+     ;;                                XLOG=logPlot_maxInd1, $
+     ;;                                YLOG=logPlot_maxInd2, $
+     ;;                                ZLOG=logPlot_maxInd3, $
+     ;;                                ;; COLOR=stormColors[i], $
+     ;;                                ;; TRANSPARENCY=(i EQ 0) ? 80 : 80, $
+     ;;                                THICK=1.5, $
+     ;;                                CURRENT=window)
      
 
      leText = TEXT(0.5,0.09, $
-                   STRING(FORMAT='("y = ",F0.3," + (",F0.3,")x",A0,' $
-                          + '"r = ",F0.3,A0,' $
-                          + '"p = ",F0.3)', $
-                          linFitStr_list[plot_i-1].fitParams[0], $
-                          linFitStr_list[plot_i-1].fitParams[1],newLine, $
+                   STRING(FORMAT='("y = ",F0.3," + (",F0.3,")x!D1!N + (",F0.3,")x!D2!N",A0,' $
+                          + '"R  = ",F0.3,A0,' $
+                          + '"r!D1!N = ",F0.3,A0,' $
+                          + '"r!D2!N = ",F0.3,A0,' $
+                          ;; + '"p = ",F0.3,A0,' $
+                          + '"N = ",I0)', $
+                          linFitStr_list[plot_i-1].fitConst, $
+                          linFitStr_list[plot_i-1].fitCoeffs[0], $
+                          linFitStr_list[plot_i-1].fitCoeffs[1],newLine, $
                           ;; linFitStr_list[plot_i-1].chiSqr, newLine, $
-                          CORRELATE(x,y), newLine, $
-                          linFitStr_list[plot_i-1].prob), $
+                          linFitStr_list[plot_i-1].mCorrCoeff, newLine, $
+                          linFitStr_list[plot_i-1].correlationVec[0], newLine, $
+                          linFitStr_list[plot_i-1].correlationVec[1], newLine, $
+                          ;; linFitStr_list[plot_i-1].prob,newLine, $
+                         N_ELEMENTS(z)), $
                    ;; FONT_COLOR='green', $
                    FONT_SIZE=10, $
                    FONT_STYLE='italic', $
                    /RELATIVE, $
                    TARGET=linePlotArr[plot_i-1])
 
-     ;;adjust axes
-     ax                   = plotArr[plot_i-1].axes
 
      IF plotRow EQ 0 THEN BEGIN
-        phaseText = TEXT(0.5+(i-1)*0.333,0.5,niceStrings[i], $
+        phaseText = TEXT(MEAN([plotPos[0],plotPos[2]]),plotPos[1]-0.55*hSpaceTwixt,niceStrings[i], $
                          FONT_SIZE=15, $
                          ALIGNMENT=0.5, $
                          TARGET=window)
      ENDIF
-
-
-     ;; CASE layout[2] OF
-     ;;    1: BEGIN
-     ;;       ax[1].showText = 1
-     ;;       ax[3].showText = 0
-     ;;    END
-     ;;    2: BEGIN
-     ;;       ax[1].showText = 0
-     ;;       ax[3].showText = 1
-     ;;    END
-     ;; ENDCASE
-
-     ;;;;;;;;;;;;;
-     ;;The new way
-     ;; IF N_ELEMENTS(outplotArr) EQ 0 THEN BEGIN
-     ;; IF ~KEYWORD_SET(no_statistics_text) THEN BEGIN
-     ;;    IF i EQ 0 THEN BEGIN
-     ;;       textStr     = STRING(FORMAT=$
-     ;;                            '(A0,I0,A0,' + $
-     ;;                            'A0,E0.2,A0,' + $
-     ;;                            'A0,E0.2,A0,' + $
-     ;;                            'A0,E0.2,A0,' + $
-     ;;                            'A0,E0.2,A0,' + $
-     ;;                            'A0,E0.2,A0)', $
-     ;;                            'Integral  : ', integral          , newLine, $
-     ;;                            'Mean      : ', ssa[i].moments.(0), newLine, $
-     ;;                            'Median    : ', ssa[i].moments.(4)[1], newLine, $
-     ;;                            'Std. dev. : ', ssa[i].moments.(1), newLine, $
-     ;;                            'Skewness  : ', ssa[i].moments.(2), newLine, $
-     ;;                            'Kurtosis  : ', ssa[i].moments.(3), newLine)
-           
-     ;;       ;; int_x       = 1/FLOAT(plotLayout[0]) + 0.14/plotLayout[0]
-     ;;       int_x       = (plotLayout[2]-1)/FLOAT(plotLayout[0]) + 0.08
-           
-     ;;    ENDIF ELSE BEGIN
-     ;;       textStr     = STRING(FORMAT=$
-     ;;                            '(I0,A0,' + $
-     ;;                            'E0.2,A0,' + $
-     ;;                            'E0.2,A0,' + $
-     ;;                            'E0.2,A0,' + $
-     ;;                            'E0.2,A0,' + $
-     ;;                            'E0.2,A0)', $
-     ;;                            integral          , newLine, $
-     ;;                            ssa[i].moments.(0), newLine, $
-     ;;                            ssa[i].moments.(4)[1], newLine, $
-     ;;                            ssa[i].moments.(1), newLine, $
-     ;;                            ssa[i].moments.(2), newLine, $
-     ;;                            ssa[i].moments.(3), newLine)
-           
-     ;;       ;; int_x       = ( ( (i) MOD plotLayout[0] )) * 1/FLOAT(plotLayout[0]) + 0.22
-     ;;       IF i EQ 1 THEN BEGIN
-     ;;          ;; int_x       = ( ( (i) MOD plotLayout[0] )) * 1/FLOAT(plotLayout[0]) + 0.14/plotLayout[0] + 0.19/plotLayout[0]
-     ;;          int_x       = (plotLayout[2]-1)/FLOAT(plotLayout[0]) + 0.08 + 0.19
-     ;;       ENDIF ELSE BEGIN
-     ;;          ;; int_x       = ( ( (i) MOD plotLayout[0] )) * 1/FLOAT(plotLayout[0]) + 0.14/plotLayout[0] + 0.28/plotLayout[0]
-     ;;          int_x       = (plotLayout[2]-1)/FLOAT(plotLayout[0]) + 0.08 + 0.28
-     ;;       ENDELSE
-     ;;    ENDELSE
-     ;;    int_y             = .75
-        
-        
-     ;;    intText           = text(int_x,int_y,$
-     ;;                             textStr, $
-     ;;                             FONT_NAME='Courier', $
-     ;;                             FONT_COLOR=stormColors[i], $
-     ;;                             /NORMAL, $
-     ;;                             TARGET=plotArr[plot_i])
-     ;; ENDIF
         
      plot_i++
 
   ENDFOR
 
-  IF plot_i EQ 2 AND ~KEYWORD_SET(no_legend) THEN BEGIN
-     legend         = LEGEND(TARGET=plotArr[3*(plotLayout[2]-1):3*(plotLayout[2]-1)+2], $
-                             POSITION=[0.58/plotLayout[0]+(plotLayout[0] GT 1 ? 0.1 : 0.0),0.875], $
-                             ;; POSITION=[0.87/plotLayout[0],0.87], $
-                             HORIZONTAL_ALIGNMENT=0.5, $
-                             VERTICAL_SPACING=defHPlot_legend__vSpace, $
-                             /NORMAL, $
-                             /AUTO_TEXT_COLOR)
-
-
-  ENDIF
-
   IF KEYWORD_SET(title_maxInd1) THEN BEGIN
-     xTitleText = text(0.5,0.013, $
+     xTitleText = text(mLeft+0.5*(1.0-mLeft-mRight),0.013, $
                       title_maxInd1, $
                       ;; FONT_NAME='Courier', $
                       ALIGNMENT=defHPlot_xTitle__hAlign, $
@@ -706,8 +667,9 @@ PRO SCATTERPLOT3D_THREE_ALFVENDBQUANTITIES_DURING_STORMPHASES, $
                        CLIP=0)
   ENDIF
 
+
   IF KEYWORD_SET(window_title) AND plotRow EQ 0 THEN BEGIN
-     winTitleText = TEXT(0.5,1.0-mTop/2., $
+     winTitleText = TEXT(mLeft+0.5*(1.0-mLeft-mRight),1.0-mTop*0.65, $
                          window_title, $
                          ALIGNMENT=0.5, $
                          FONT_SIZE=defHPlot_xTitle__fSize, $
@@ -715,14 +677,6 @@ PRO SCATTERPLOT3D_THREE_ALFVENDBQUANTITIES_DURING_STORMPHASES, $
                          TARGET=window, $
                          CLIP=0)
   ENDIF
-
-  ;; IF KEYWORD_SET(plotTitle) THEN BEGIN
-  ;;    titleText   = text(0.5,0.96,plotTitle, $
-  ;;                       FONT_SIZE=14, $
-  ;;                       /NORMAL, $
-  ;;                       TARGET=window, $
-  ;;                       CLIP=0)
-  ;; ENDIF
 
   IF KEYWORD_SET(savePlot) THEN BEGIN
      PRINT,'Saving plot to ' + saveName + '...'
@@ -737,7 +691,7 @@ PRO SCATTERPLOT3D_THREE_ALFVENDBQUANTITIES_DURING_STORMPHASES, $
   IF KEYWORD_SET(saveFile) THEN BEGIN
 
      IF N_ELEMENTS(saveFileName) EQ 0 THEN BEGIN
-        saveFileName        = date + plotDir + date + '--scatterplot_stormphases--' + dataName1 + '_vs_' + dataName2 + tempSuffix + '.sav'
+        saveFileName        = date + '--scatterplot3d_stormphases--' + dataName1 + '__' + dataName2 + '__' + dataName3 + tempSuffix + '.sav'
      ENDIF
 
      IF KEYWORD_SET(saveDir) THEN saveFileName = saveDir + '/' + saveFileName
@@ -756,11 +710,11 @@ PRO SCATTERPLOT3D_THREE_ALFVENDBQUANTITIES_DURING_STORMPHASES, $
         ENDELSE
 
      ENDIF ELSE BEGIN
-        PRINT,'scatterplot savefile "' + saveFileName + '" does not exist; creating a new one ...'
+        PRINT,'scatterplot3d savefile "' + saveFileName + '" does not exist; creating a new one ...'
         saved_ssa_list = LIST(ssa)
      ENDELSE 
 
-     PRINT,'Saving scatterplot data to "' + saveFileName + '" ...'
+     PRINT,'Saving scatterplot3d data to "' + saveFileName + '" ...'
      SAVE,saved_ssa_list,FILENAME=saveFileName
   ENDIF
 

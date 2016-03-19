@@ -24,7 +24,7 @@ PRO JOURNAL__20160319__SCATTERPLOT__18_IIFU__VS__10_EFLCI__HIGH_ALTS__CUSP_AND_P
   only_pos2         = 1
 
   xTitle            = "Spatially avgd e!U-!N flux (mW/m!U2!N)"
-  yTitle            = "Spatially avgd upward ion flux (#/cm!U2!N-s)"
+  yTitle            = "Spatially avgd upward ion flux (#/cm!U2!N-s) at 100 km"
   night_mlt         = [19.5,24.0]
   night_ilat        = [60,84]
   day_mlt           = [11.5,17.0]

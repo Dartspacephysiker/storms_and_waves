@@ -24,7 +24,7 @@ PRO JOURNAL__20160319__SCATTERPLOT__18_IIFU__VS__49_PFE__HIGH_ALTS__CUSP_AND_PRE
   only_pos2         = 1
 
   xTitle            = "Poynting Flux (mW/m) at 100 km"
-  yTitle            = "Spatially avgd upward ion flux (#/cm!U2!N-s)"
+  yTitle            = "Spatially avgd upward ion flux (#/cm!U2!N-s) at 100 km"
   night_mlt         = [19.5,24.0]
   night_ilat        = [60,84]
   day_mlt           = [11.5,17.0]

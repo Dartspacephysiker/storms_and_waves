@@ -522,14 +522,6 @@ PRO SCATTERPLOT_ALFVENDBQUANTITIES_DURING_STORMPHASES, $
                          CLIP=0)
   ENDIF
 
-  ;; IF KEYWORD_SET(plotTitle) THEN BEGIN
-  ;;    titleText   = text(0.5,0.96,plotTitle, $
-  ;;                       FONT_SIZE=14, $
-  ;;                       /NORMAL, $
-  ;;                       TARGET=window, $
-  ;;                       CLIP=0)
-  ;; ENDIF
-
   IF KEYWORD_SET(savePlot) THEN BEGIN
      PRINT,'Saving plot to ' + saveName + '...'
      window.save,saveName,RESOLUTION=300
