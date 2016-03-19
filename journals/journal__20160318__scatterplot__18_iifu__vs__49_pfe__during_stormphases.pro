@@ -1,9 +1,8 @@
-PRO JOURNAL__20160318__SCATTERPLOT__10_EFLCI__VS__18_IIFU__DURING_STORMPHASES
+PRO JOURNAL__20160318__SCATTERPLOT__18_IIFU__VS__49_PFE__DURING_STORMPHASES
 
   hemi              = "NORTH"
 
-  custom_maxInd1     = "maximus.(10)/(maximus.width_x)*(mapRatio.ratio)^(0.5)"   ;;factor of 100 for conv to cm
-  custom_maxName1    = '10_eflux_losscone_integ__avgd'
+  maxInd1           = 49
   custom_maxInd2     = "maximus.(18)/(maximus.width_x*100.)*(mapRatio.ratio)^(0.5)"   ;;factor of 100 for conv to cm
   custom_maxName2    = '18_integ_ion_flux_up__avgd'
   ;; maxInd2           = 18  
@@ -17,7 +16,7 @@ PRO JOURNAL__20160318__SCATTERPLOT__10_EFLCI__VS__18_IIFU__DURING_STORMPHASES
   only_pos1         = 1
   only_pos2         = 1
 
-  xTitle             = "Spatially avgd e!U-!N flux (mW/m!U2!N)"
+  xTitle            = "Poynting Flux (mW/m) at 100 km"
   yTitle            = "Spatially avgd upward ion flux (#/cm!U2!N-s)"
   night_mlt         = [-6.0,6.0]
   day_mlt           = [6.0,18.0]
@@ -46,14 +45,15 @@ PRO JOURNAL__20160318__SCATTERPLOT__10_EFLCI__VS__18_IIFU__DURING_STORMPHASES
 
   ;;normalized dayside
   SCATTERPLOT_ALFVENDBQUANTITIES_DURING_STORMPHASES, $
-     CUSTOM_MAXIND1=custom_maxInd1, $
-     CUSTOM_MAXNAME1=custom_maxName1, $
+     MAXIND1=maxInd1, $
+     ;; MAXIND2=maxInd2, $
      CUSTOM_MAXIND2=custom_maxInd2, $
      CUSTOM_MAXNAME2=custom_maxName2, $
      RANGE_MAXIND1=dayXRange, $
      TITLE_MAXIND1=xTitle, $
      RANGE_MAXIND2=dayYRange, $
      TITLE_MAXIND2=yTitle, $
+     ONLY_ONE__TITLE_MAXIND2=only_one__title_maxInd2, $
      LOG_MAXIND1=log_maxInd1, $
      LOG_MAXIND2=log_maxInd2, $
      LOGPLOT_MAXIND1=logPlot_maxInd1, $
@@ -77,14 +77,15 @@ PRO JOURNAL__20160318__SCATTERPLOT__10_EFLCI__VS__18_IIFU__DURING_STORMPHASES
 
   ;;normalized nightside
   SCATTERPLOT_ALFVENDBQUANTITIES_DURING_STORMPHASES, $
-     CUSTOM_MAXIND1=custom_maxInd1, $
-     CUSTOM_MAXNAME1=custom_maxName1, $
+     MAXIND1=maxInd1, $
+     ;; MAXIND2=maxInd2, $
      CUSTOM_MAXIND2=custom_maxInd2, $
      CUSTOM_MAXNAME2=custom_maxName2, $
      RANGE_MAXIND1=nightXRange, $
      TITLE_MAXIND1=title_maxInd1, $
      RANGE_MAXIND2=nightYRange, $
      TITLE_MAXIND2=title_maxInd2, $
+     ONLY_ONE__TITLE_MAXIND2=only_one__title_maxInd2, $
      LOG_MAXIND1=log_maxInd1, $
      LOG_MAXIND2=log_maxInd2, $
      LOGPLOT_MAXIND1=logPlot_maxInd1, $
