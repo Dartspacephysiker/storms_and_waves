@@ -1,11 +1,11 @@
 PRO JOURNAL__20160319__SCATTERPLOT__10_EFLCI__VS__49_PFE__HIGH_ALTS__CUSP_AND_PREMIDNIGHT__DURING_STORMPHASES
 
   hemi              = "NORTH"
-  ;; restrict_altRange = [0000,1000]
+  restrict_altRange = [0000,1000]
   ;; restrict_altRange = [1000,2000]
   ;; restrict_altRange = [2000,3000]
   ;; restrict_altRange = [3000,4175]
-  restrict_altRange = [4000,4175]
+  ;; restrict_altRange = [4000,4175]
 
   winTitle          = STRING(FORMAT='("Cusp and Pre-midnight (Altitude Range: [",I0,", ",I0,"] km)")',restrict_altRange[0],restrict_altRange[1])
 
@@ -32,11 +32,11 @@ PRO JOURNAL__20160319__SCATTERPLOT__10_EFLCI__VS__49_PFE__HIGH_ALTS__CUSP_AND_PR
 
   dayXRange         = [-3.0,4.0]
   nightXRange       = [-3.0,4.0]
-  dayXRange         = [-3.0,4.0]
-  nightXRange       = [-3.0,4.0]
+  dayYRange         = [-3.0,3.0]
+  nightYRange       = [-3.0,3.0]
 
-  day_transp        = 96
-  night_transp      = 92
+  day_transp        = 94
+  night_transp      = 89
 
   ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
   ;;titles and suffixes
