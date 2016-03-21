@@ -137,7 +137,10 @@ EPOCHPLOT_COLORNAMES=epochPlot_colorNames,SCATTEROUTPREFIX=scatterOutPrefix, $
                            DESPUNDB=do_despundb, $
                            USING_HEAVIES=using_heavies, $
                            HEMI=hemi, $
-                           ORBRANGE=orbRange, ALTITUDERANGE=altitudeRange, CHARERANGE=charERange,POYNTRANGE=poyntRange, $
+                           ORBRANGE=orbRange, $
+                           ALTITUDERANGE=N_ELEMENTS(restrict_altRange) EQ 1 ? [1000,5000] : (N_ELEMENTS(restrict_altRange) GT 1 ? restrict_altRange : !NULL), $
+                           CHARERANGE=N_ELEMENTS(restrict_charERange) EQ 1 ? [4,4000] : (N_ELEMENTS(restrict_charERange) GT 1 ? restrict_charERange : !NULL), $
+                           POYNTRANGE=poyntRange, $
                            MINMLT=minM,MAXMLT=maxM,BINM=binM,MINILAT=minI,MAXILAT=maxI,BINI=binI, $
                            DO_LSHELL=do_lshell,MINLSHELL=minL,MAXLSHELL=maxL,BINL=binL, $
                            HWMAUROVAL=HwMAurOval, HWMKPIND=HwMKpInd, $

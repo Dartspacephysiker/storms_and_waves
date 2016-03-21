@@ -31,13 +31,13 @@ PRO GET_EPOCH_T_AND_INDS_FOR_ALFVENDB,maximus,cdbTime,NEPOCHS=nEpochs,TBEFOREEPO
   alf_epoch_t = MAKE_ARRAY(nEpochs,2,/DOUBLE)
   alf_epoch_i = MAKE_ARRAY(nEpochs,2,/L64)
 
-  good_i=get_chaston_ind(maximus,"OMNI",-1, $
+  good_i=GET_CHASTON_IND(maximus,"OMNI",-1, $
                          BOTH_HEMIS=both_hemis, $
                          NORTH=north, $
                          SOUTH=south, $
                          HEMI=hemi, $ ;/BOTH_HEMIS, $
-                         ALTITUDERANGE=(restrict_altRange) ? [1000,5000] : !NULL, $
-                         CHARERANGE=(restrict_charERange) ? [4,4000] : !NULL, $
+                         ALTITUDERANGE=N_ELEMENTS(restrict_altRange) EQ 1 ? [1000,5000] : (N_ELEMENTS(restrict_altRange) GT 1 ? restrict_altRange : !NULL), $
+                         CHARERANGE=N_ELEMENTS(restrict_charERange) EQ 1 ? [4,4000] : (N_ELEMENTS(restrict_charERange) GT 1 ? restrict_charERange : !NULL), $ 
                          ;; CHARERANGE=(restrict_charERange) ? [300,4000] : !NULL, $
                          ;; CHARERANGE=(restrict_charERange) ? [4,300] : !NULL, $
                          MINMLT=minM,MAXMLT=maxM,BINM=binM,MINILAT=minI,MAXILAT=maxI,BINI=binI, $

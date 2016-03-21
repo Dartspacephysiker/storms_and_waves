@@ -143,6 +143,7 @@ PRO SUPERPOSE_STORMS_ALFVENDBQUANTITIES,stormTimeArray_utc, $
                                         YTITLE_MAXIND=yTitle_maxInd, $
                                         YRANGE_MAXIND=yRange_maxInd, $
                                         SYMTRANSP_MAXIND=symTransp_maxInd, $
+                                        YMINOR_MAXIND=yMinor_maxInd, $
                                         PRINT_MAXIND_SEA_STATS=print_maxInd_sea_stats, $
                                         ;; LEGEND_MAXIND__SUPPRESS=legend_maxInd__suppress, $
                                         BKGRND_HIST=bkgrnd_hist, BKGRND_MAXIND=bkgrnd_maxInd, $
@@ -989,7 +990,9 @@ PRO SUPERPOSE_STORMS_ALFVENDBQUANTITIES,stormTimeArray_utc, $
               IF N_ELEMENTS(alf_t) GT 0 AND ~(KEYWORD_SET(noPlots) OR KEYWORD_SET(noMaxPlots)) THEN BEGIN
                  IF KEYWORD_SET(log_DBQuantity) THEN alf_y =  10.0^(alf_y)
                  PLOT_ALFVENDBQUANTITY_SCATTER__EPOCH,maxInd,mTags,NAME=name,AXIS_STYLE=axis_Style, $
-                                                      SYMCOLOR=posneg_colors[j],SYMTRANSPARENCY=symTransp_maxInd,SYMBOL=symbol, $
+                                                      SYMCOLOR=posneg_colors[j], $
+                                                      SYMTRANSPARENCY=symTransp_maxInd, $
+                                                      SYMBOL=symbol, $
                                                       ;; ALFDBSTRUCT=maximus,ALFDBTIME=cdbTime,PLOT_I=plot_i,CENTERTIME=centerTime,$
                                                       ALF_T=alf_t,ALF_Y=alf_y, $
                                                       ;; PLOTTITLE=plotTitle, $
@@ -1004,6 +1007,7 @@ PRO SUPERPOSE_STORMS_ALFVENDBQUANTITIES,stormTimeArray_utc, $
                                                       CURRENT=N_ELEMENTS(maximusWindow) GT 0, $
                                                       MARGIN=margin__avg_plot, $
                                                       ;; MARGIN=margin__max_plot, $
+                                                      YMINOR=yMinor_maxInd, $
                                                       LAYOUT=pn_layout[*,j], $
                                                       CLIP=0, $
                                                       OUTPLOT=(j EQ 0) ? out_maxPlotPos : out_maxPlotNeg, $
@@ -1199,6 +1203,8 @@ PRO SUPERPOSE_STORMS_ALFVENDBQUANTITIES,stormTimeArray_utc, $
                     LAYOUT=layout, $
                     OUTPLOT=out_avg_plot, $
                     ADD_PLOT_TO_PLOT_ARRAY=KEYWORD_SET(accumulate__avg_plots)
+
+                 PRINT,FORMAT='("epochvar [max,min]: ",G13.4,TR8,G13.4)',MAX(total_epoch_histData),MIN(total_epoch_histData)
         ENDIF
 
         IF KEYWORD_SET(make_legend__avg_plot) THEN BEGIN
