@@ -190,6 +190,18 @@ PRO SCATTERPLOT3D_THREE_ALFVENDBQUANTITIES_DURING_STORMPHASES, $
      IF KEYWORD_SET(custom_maxName3) THEN dataName3 = custom_maxName3 ELSE dataName3 = STRING(FORMAT='(I2)',maxInd3) + '_' + (TAG_NAMES(maximus))[maxInd3]
   ENDELSE
 
+  IF KEYWORD_SET(only_pos1) THEN dataName1 = dataName1 + '__only_pos'
+  IF KEYWORD_SET(only_neg1) THEN dataName1 = dataName1 + '__only_neg'
+  IF KEYWORD_SET(absVal1) THEN dataName1 = dataName1 + '__absVal'
+
+  IF KEYWORD_SET(only_pos2) THEN dataName2 = dataName2 + '__only_pos'
+  IF KEYWORD_SET(only_neg2) THEN dataName2 = dataName2 + '__only_neg'
+  IF KEYWORD_SET(absVal2) THEN dataName2 = dataName2 + '__absVal'
+
+  IF KEYWORD_SET(only_pos3) THEN dataName3 = dataName3 + '__only_pos'
+  IF KEYWORD_SET(only_neg3) THEN dataName3 = dataName3 + '__only_neg'
+  IF KEYWORD_SET(absVal3) THEN dataName3 = dataName3 + '__absVal'
+
   IF NOT KEYWORD_SET(plotSuffix) THEN tempSuffix = "" ELSE tempSuffix = '--' + plotSuffix
   ;;data out
   genFile_pref    = date + '--scatterplot3d_stormphases--' + dataName1 + '__' + dataName2 + '__' + dataName3 +'.pro'

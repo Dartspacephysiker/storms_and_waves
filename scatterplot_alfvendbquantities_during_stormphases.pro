@@ -171,6 +171,14 @@ PRO SCATTERPLOT_ALFVENDBQUANTITIES_DURING_STORMPHASES, $
      IF KEYWORD_SET(custom_maxName2) THEN dataName2 = custom_maxName2 ELSE dataName2 = STRING(FORMAT='(I2)',maxInd2) + '_' + (TAG_NAMES(maximus))[maxInd2]
   ENDELSE
 
+  IF KEYWORD_SET(only_pos1) THEN dataName1 = dataName1 + '__only_pos'
+  IF KEYWORD_SET(only_neg1) THEN dataName1 = dataName1 + '__only_neg'
+  IF KEYWORD_SET(absVal1) THEN dataName1 = dataName1 + '__absVal'
+
+  IF KEYWORD_SET(only_pos2) THEN dataName2 = dataName2 + '__only_pos'
+  IF KEYWORD_SET(only_neg2) THEN dataName2 = dataName2 + '__only_neg'
+  IF KEYWORD_SET(absVal2) THEN dataName2 = dataName2 + '__absVal'
+
   IF NOT KEYWORD_SET(plotSuffix) THEN tempSuffix = "" ELSE tempSuffix = '--' + plotSuffix
   ;;data out
   genFile_pref    = date + '--scatterplot_stormphases--' + dataName1 + '_vs_' + dataName2 + '.pro'
@@ -243,6 +251,7 @@ PRO SCATTERPLOT_ALFVENDBQUANTITIES_DURING_STORMPHASES, $
                                                     USER_RESPONSE=user_response, $
                                                     ADD_SUFF_TO_THIS_STRING=temptempSuffix1, $
                                                     LUN=lun)
+        IF KEYWORD_SET(absVal1) THEN tempData1 = ABS(tempData1)
         edited1 = 1
      ENDIF ELSE edited1 = 0
 
@@ -257,6 +266,7 @@ PRO SCATTERPLOT_ALFVENDBQUANTITIES_DURING_STORMPHASES, $
                                                     USER_RESPONSE=user_response, $
                                                     ADD_SUFF_TO_THIS_STRING=temptempSuffix2, $
                                                     LUN=lun)
+        IF KEYWORD_SET(absVal2) THEN tempData2 = ABS(tempData2)
         edited2 = 1
      ENDIF ELSE edited2 = 0
 

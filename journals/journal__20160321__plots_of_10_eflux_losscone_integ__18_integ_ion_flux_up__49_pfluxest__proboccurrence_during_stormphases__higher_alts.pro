@@ -2,6 +2,7 @@
 ;plots that I made last weekend that the bimodality of the ion flux distribution disappears with altitude. What do MLT/ILAT dists look like?
 PRO JOURNAL__20160321__PLOTS_OF_10_EFLUX_LOSSCONE_INTEG__18_INTEG_ION_FLUX_UP__49_PFLUXEST__PROBOCCURRENCE_DURING_STORMPHASES__HIGHER_ALTS
   dstCutoff = -20
+  do_despun                      = 1
 
   ;;;;;;;;;;;;;;;;;
   ;;turn plots on and off
@@ -9,6 +10,7 @@ PRO JOURNAL__20160321__PLOTS_OF_10_EFLUX_LOSSCONE_INTEG__18_INTEG_ION_FLUX_UP__4
   probOccurrencePlot             = 1
   eNumFluxPlot                   = 1
   pFluxPlot                      = 1
+  charieplots                    = 1
 
   ;;Altitude is the focus here, after all
   ;; restrict_altRange = [0000,1000]
@@ -16,8 +18,8 @@ PRO JOURNAL__20160321__PLOTS_OF_10_EFLUX_LOSSCONE_INTEG__18_INTEG_ION_FLUX_UP__4
   ;; restrict_altRange = [2000,3000]
   ;; restrict_altRange = [3000,4175]
   ;; restrict_altRange = [4000,4175]
-  ;; restrict_altRange = [340,2000]
-  restrict_altRange = [2000,4175]
+  restrict_altRange = [340,2000]
+  ;; restrict_altRange = [2000,4175]
 
   ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
   ;;Hemi stuff
@@ -48,6 +50,12 @@ PRO JOURNAL__20160321__PLOTS_OF_10_EFLUX_LOSSCONE_INTEG__18_INTEG_ION_FLUX_UP__4
   iPlotRange                     = [10.^(11.0),10.^(14.0)]
 
   ;;;;;;;;;;;;;;;;;;;;;;
+  ;;19-CHAR_ION_ENERGY
+  maxInd                         = 19
+  charIEPlotRange                = [0,50]
+  logcharieplot                  = 0
+
+  ;;;;;;;;;;;;;;;;;;;;;;
   ;;49--PFLUXEST
   ;; pPlotRange                     = [10.^(2.5),10.^(4.5)] ;for pFlux multiplied by width_x
   pPlotRange                     = [10.^(2.0),10.^(4.0)] ;for pFlux multiplied by width_x AFTER I figured out I screwed up scaling with B
@@ -58,8 +66,6 @@ PRO JOURNAL__20160321__PLOTS_OF_10_EFLUX_LOSSCONE_INTEG__18_INTEG_ION_FLUX_UP__4
   ;PROBOCCURRENCE
   probOccurrenceRange            = [1e-3,1e-1]
   logProbOccurrence              = 1
-
-  do_despun                      = 0
 
   PLOT_ALFVEN_STATS_DURING_STORMPHASES, $
      ALTITUDERANGE=restrict_altRange, $
@@ -88,6 +94,9 @@ PRO JOURNAL__20160321__PLOTS_OF_10_EFLUX_LOSSCONE_INTEG__18_INTEG_ION_FLUX_UP__4
      PROBOCCURRENCEPLOT=probOccurrencePlot, $
      LOGPROBOCCURRENCE=logProbOccurrence, $
      PROBOCCURRENCERANGE=probOccurrenceRange, $
+     CHARIEPLOTS=charieplots, $
+     LOGCHARIEPLOT=logCharIEPlot, $
+     CHARIEPLOTRANGE=charIEPlotRange, $
      PLOTSUFFIX=plotSuff, $
      /LOGAVGPLOT, $
      /MIDNIGHT, $

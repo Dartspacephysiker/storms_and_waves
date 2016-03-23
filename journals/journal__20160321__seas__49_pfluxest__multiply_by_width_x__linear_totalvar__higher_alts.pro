@@ -26,7 +26,7 @@ PRO JOURNAL__20160321__SEAS__49_PFLUXEST__MULTIPLY_BY_WIDTH_X__LINEAR_TOTALVAR__
   total_epoch_do_histoPlot = 1
   do_two_panels         = 1
 
-  do_despun             = 0
+  do_despun             = 1
 
   probOccPref           = pref + '49_PFLUXEST_multiply_by_width_x__include_relative_variation--with_NOAA' + $
                           STRING(FORMAT='("altRange_",I0,"-",I0)',restrict_altRange[0],restrict_altRange[1])

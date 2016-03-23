@@ -11,8 +11,8 @@ PRO JOURNAL__20160321__SEAS__10_EFLUX_LOSSCONE_INTEG__LINEAR_TOTALVAR__HIGHER_AL
   ;; restrict_altRange = [2000,3000]
   ;; restrict_altRange = [3000,4175]
   ;; restrict_altRange = [4000,4175]
-  restrict_altRange = [0340,2000] & yRange_totalVar = [[0,1.0e3],[0,1.0e3]] ;day, then night
-  ;; restrict_altRange = [2000,4175] & yRange_totalVar = [[0,8.2e2],[0,2.2e2]] ;day, then night
+  ;; restrict_altRange = [0340,2000] & yRange_totalVar = [[0,1.0e3],[0,1.0e3]] ;day, then night
+  restrict_altRange = [2000,4175] & yRange_totalVar = [[0,8.2e2],[0,2.2e2]] ;day, then night
 
   symTransp            = 93
 
@@ -26,7 +26,7 @@ PRO JOURNAL__20160321__SEAS__10_EFLUX_LOSSCONE_INTEG__LINEAR_TOTALVAR__HIGHER_AL
   total_epoch_do_histoPlot = 1
   do_two_panels         = 1
 
-  do_despun             = 0
+  do_despun             = 1
 
   probOccPref           = pref + '10_EFLUX_LOSSCONE_INTEG__include_relative_variation--with_NOAA' + $
                           STRING(FORMAT='("altRange_",I0,"-",I0)',restrict_altRange[0],restrict_altRange[1])

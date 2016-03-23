@@ -6,18 +6,20 @@ PRO JOURNAL__20160321__SEAS__PROBOCCURRENCE__HIGHER_ALTS
 
   ;; window_sum        = running_logAvg          ;use the values that all the other plots do
   ;; window_sum        = 10                      ; ... or don't
-  histobinsize      = 5.0
+  histobinsize      = 2.5
 
   HEMI              = 'NORTH'
-  HEMI              = 'SOUTH'
+  ;; HEMI              = 'SOUTH'
+
+  do_despun         = 1
 
   ;; restrict_altRange = [0000,1000]
   ;; restrict_altRange = [1000,2000]
   ;; restrict_altRange = [2000,3000]
   ;; restrict_altRange = [3000,4175]
   ;; restrict_altRange = [4000,4175]
-  ;; restrict_altRange = [0000,2000] & histoRange = [0,0.03]
-  restrict_altRange = [2000,4175] & histoRange = [0,0.1]
+  ;; restrict_altRange = [0340,2000] & histoRange = [0,0.065]
+  restrict_altRange = [2000,4175] & histoRange = [0,0.065]
 
   ;;manual mod this
   IF do_despun THEN BEGIN
@@ -26,10 +28,8 @@ PRO JOURNAL__20160321__SEAS__PROBOCCURRENCE__HIGHER_ALTS
      plotSuff       = '--' + STRLOWCASE(hemi) + '_hemi.png'
   ENDELSE
 
-  do_despun         = 1
-
   probOccPref       = pref + 'PROBOCCURRENCE--with_NOAA--justhisto' + $
-                          STRING(FORMAT='("altRange_",I0,"-",I0)',restrict_altRange[0],restrict_altRange[1])
+                          STRING(FORMAT='("--altRange_",I0,"-",I0)',restrict_altRange[0],restrict_altRange[1])
 
   ptPref            = ''
 

@@ -1,10 +1,10 @@
 ;2016/03/21 The idea here is to see the way that outflow changes if I restrict altitude a bit. It's clear to me from the scatter
 ;plots that I made last weekend that the bimodality of the ion flux distribution disappears with altitude
-PRO JOURNAL__20160321__SEAS__18_INTEG_ION_FLUX_UP__LINEAR_TOTALVAR__HIGHER_ALTS
+PRO JOURNAL__20160321__SEAS__19_CHAR_ION_ENERGY__HIGHER_ALTS
 
   @journal__20160303__plot_defaults.pro
 
-  maxInd               = 18
+  maxInd               = 19
 
   ;; restrict_altRange = [0000,1000]
   ;; restrict_altRange = [1000,2000]
@@ -22,17 +22,17 @@ PRO JOURNAL__20160321__SEAS__18_INTEG_ION_FLUX_UP__LINEAR_TOTALVAR__HIGHER_ALTS
   avg_type_maxInd      = 2
   multiply_by_width_x  = 1
 
-  include_total_var     = 1
-  total_epoch_do_histoPlot = 1
-  do_two_panels         = 1
+  include_total_var     = 0
+  total_epoch_do_histoPlot = 0
+  do_two_panels         = 0
 
   do_despun             = 1
 
-  probOccPref           = pref + '18_INTEG_ION_FLUX_UP__include_relative_variation--with_NOAA--' + $
+  probOccPref           = pref + '19_CHAR_ION_ENERGY--with_NOAA--' + $
                           STRING(FORMAT='("altRange_",I0,"-",I0)',restrict_altRange[0],restrict_altRange[1])
 
-  yTitle                = "Integ. Up. Ion Flux (cm!U-1!Ns!U-1!N), 100 km"
-  yRange_maxInd         = [2e10,9e15]
+  yTitle                = "Characteristic Ion Energy (eV), 100 km"
+  yRange_maxInd         = [1e0,1e3]
 
   yLogScale_maxInd      = 1
 
@@ -102,3 +102,4 @@ PRO JOURNAL__20160321__SEAS__18_INTEG_ION_FLUX_UP__LINEAR_TOTALVAR__HIGHER_ALTS
   ENDFOR
 
 END
+
