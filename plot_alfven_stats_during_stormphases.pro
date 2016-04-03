@@ -222,7 +222,7 @@ PRO PLOT_ALFVEN_STATS_DURING_STORMPHASES,$
      plotFileArr = !NULL
      FOR i=0,2 DO BEGIN
         RESTORE,outTempFiles[i]
-        plotFileArr = [[plotFileArr],[plotDir + paramStr+'--'+dataNameArr[0:-3+KEYWORD_SET(nPlots)] + fileSuff]]
+        plotFileArr = [[plotFileArr],[plotDir + paramStr+'--'+dataNameArr[0:-2+KEYWORD_SET(nPlots)] + fileSuff]]
      ENDFOR
 
      IF ~KEYWORD_SET(save_combined_name) THEN BEGIN
@@ -236,7 +236,7 @@ PRO PLOT_ALFVEN_STATS_DURING_STORMPHASES,$
            ENDELSE
         ENDELSE
 
-        save_combined_name = paramStr + '--' + dataNameArr[0:-3+KEYWORD_SET(nPlots)] + $
+        save_combined_name = paramStr + '--' + dataNameArr[0:-2+KEYWORD_SET(nPlots)] + $
                              '--combined_phases' + fileSuff
         ;; save_combined_name = GET_TODAY_STRING() + '--' + dataNameArr[0:-3+KEYWORD_SET(nPlots)] + $
         ;;                      (KEYWORD_SET(plotSuffix) ? plotSuffix : '') + $
