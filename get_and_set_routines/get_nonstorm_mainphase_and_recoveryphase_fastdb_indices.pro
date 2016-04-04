@@ -1,7 +1,11 @@
 ;2015/10/14
 ;2016/01/01 If this has already been done once today, then don't do it again
 ;2016/01/01 Also output t1 and t2 for each phase, if desired
-PRO GET_NONSTORM_MAINPHASE_AND_RECOVERYPHASE_FASTDB_INDICES,NONSTORM_I=ns_i,MAINPHASE_I=mp_i,RECOVERYPHASE_I=rp_i, $
+;2016/04/04 Added DO_DESPUN keyword for fear
+PRO GET_NONSTORM_MAINPHASE_AND_RECOVERYPHASE_FASTDB_INDICES, $
+   NONSTORM_I=ns_i, $
+   MAINPHASE_I=mp_i, $
+   RECOVERYPHASE_I=rp_i, $
    DSTCUTOFF=dstCutoff, $
    STORM_DST_I=s_dst_i, $
    NONSTORM_DST_I=ns_dst_i, $
@@ -13,6 +17,7 @@ PRO GET_NONSTORM_MAINPHASE_AND_RECOVERYPHASE_FASTDB_INDICES,NONSTORM_I=ns_i,MAIN
    N_RECOVERYPHASE=n_rp, $
    NONSTORM_T1=ns_t1,MAINPHASE_T1=mp_t1,RECOVERYPHASE_T1=rp_t1, $
    NONSTORM_T2=ns_t2,MAINPHASE_T2=mp_t2,RECOVERYPHASE_T2=rp_t2, $
+   DO_DESPUN=do_despun, $
    LUN=lun
 
   IF N_ELEMENTS(lun) EQ 0 THEN lun = -1 ;stdout
@@ -36,7 +41,7 @@ PRO GET_NONSTORM_MAINPHASE_AND_RECOVERYPHASE_FASTDB_INDICES,NONSTORM_I=ns_i,MAIN
   dst_i_list=LIST(ns_dst_i,mp_dst_i,rp_dst_i)
   strings=["nonstorm","mainphase","recoveryphase"]
 
-  todaysFile = TODAYS_NONSTORM_MAINPHASE_AND_RECOVERYPHASE_FASTDB_INDICES()
+  todaysFile = TODAYS_NONSTORM_MAINPHASE_AND_RECOVERYPHASE_FASTDB_INDICES(DO_DESPUN=do_despun,DSTCUTOFF=dstCutoff)
 
   IF FILE_TEST(todaysFile) THEN BEGIN
      PRINTF,lun,"Already have nonstorm and storm FAST DB inds! Restoring today's file..."
@@ -82,7 +87,7 @@ PRO GET_NONSTORM_MAINPHASE_AND_RECOVERYPHASE_FASTDB_INDICES,NONSTORM_I=ns_i,MAIN
      ENDFOR
 
      PRINTF,lun,"Saving FAST nonstorm/storm indices for today..."
-     save,ns_i,rp_i,s_dst_i,ns_dst_i,mp_dst_i,rp_dst_i, $
+     save,ns_i,mp_i,rp_i,s_dst_i,ns_dst_i,mp_dst_i,rp_dst_i, $
           n_s,n_ns,n_mp,n_rp, $
           ns_t1,ns_t2,mp_t1,mp_t2,rp_t1,rp_t2, $
           FILENAME=todaysFile

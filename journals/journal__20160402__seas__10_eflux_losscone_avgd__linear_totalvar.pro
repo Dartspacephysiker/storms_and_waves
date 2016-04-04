@@ -17,10 +17,10 @@ PRO JOURNAL__20160402__SEAS__10_EFLUX_LOSSCONE_AVGD__LINEAR_TOTALVAR
   do_despun                = 0
 
   probOccPref              = pref + '10_EFLUX_LOSSCONE_INTEG__avgd__include_relative_variation--with_NOAA'
-  yTitle                   = "Losscone e!U-!N Flux (mW/m!U2!N), 100 km"
+  yTitle                   = "Losscone e!U-!N Flux (mW m!U-2!N), 100 km"
   yRange_maxInd            = [4e-2,2e2]
 
-  yRange_totalVar          = [[0,2e0],[0,2e0]] ;day, then night
+  yRange_totalVar          = [[0,2.5e0],[0,2.5e0]] ;day, then night
 
   yLogScale_maxInd         = 1
 
@@ -63,7 +63,8 @@ PRO JOURNAL__20160402__SEAS__10_EFLUX_LOSSCONE_AVGD__LINEAR_TOTALVAR
         SECOND_PANEL__PREP_FOR_SECONDARY_AXIS=(i EQ 0), $
         YRANGE_TOTALVAR=yRange_totalVar[*,i], $
         YLOGSCALE_TOTALVAR=0, $
-        SECONDARY_AXIS__TOTALVAR_PLOT=(i GT 0), $
+        ;; SECONDARY_AXIS__TOTALVAR_PLOT=(i GT 0), $
+        SECONDARY_AXIS__TOTALVAR_PLOT=0, $
         ;; SYMCOLOR__TOTAL_EPOCH_VAR=symColor__totalVar[i], $
         SYMCOLOR__TOTAL_EPOCH_VAR=symColor[i], $
         TOTAL_EPOCH__DO_HISTOPLOT=total_epoch_do_histoPlot, $

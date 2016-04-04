@@ -15,15 +15,15 @@ PRO JOURNAL__20160402__PLOTS_OF_10_EFLUX_LOSSCONE_INTEG__18_INTEG_ION_FLUX_UP__4
 
   ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
   ;;Hemi stuff
-  hemi                           = 'NORTH'
-  minILAT                        = 60
-  maxILAT                        = 84
-  binILAT                        = 2.0
+  ;; hemi                           = 'NORTH'
+  ;; minILAT                        = 60
+  ;; maxILAT                        = 85
+  ;; binILAT                        = 2.5
 
-  ;; hemi                           = 'SOUTH'
-  ;; minILAT                        = -84
-  ;; maxILAT                        = -60
-  ;; binILAT                        = 2.0
+  hemi                           = 'SOUTH'
+  minILAT                        = -85
+  maxILAT                        = -60
+  binILAT                        = 2.5
 
   binMLT                         = 1.5
 
@@ -53,8 +53,8 @@ PRO JOURNAL__20160402__PLOTS_OF_10_EFLUX_LOSSCONE_INTEG__18_INTEG_ION_FLUX_UP__4
   probOccurrenceRange            = [1e-3,1e-1]
   logProbOccurrence              = 1
 
-  do_despun                      = 1
-  maskMin                        = 5 ;since identification is better
+  do_despun                      = 0
+  maskMin                        = 10 ;since identification is better
 
   PLOT_ALFVEN_STATS_DURING_STORMPHASES, $
      DSTCUTOFF=dstCutoff, $

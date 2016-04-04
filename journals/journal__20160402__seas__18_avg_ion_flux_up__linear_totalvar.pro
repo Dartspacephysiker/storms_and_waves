@@ -17,10 +17,10 @@ PRO JOURNAL__20160402__SEAS__18_AVG_ION_FLUX_UP__LINEAR_TOTALVAR
   do_despun             = 0
 
   probOccPref           = pref + '18_INTEG_ION_FLUX_UP_avgd__include_relative_variation--with_NOAA'
-  yTitle                = "Upward Ion Flux (cm!U-1!Ns!U-1!N), 100 km"
+  yTitle                = "Upward Ion Flux (cm!U-1!Ns!U-2!N), 100 km"
   yRange_maxInd         = [4e5,2e10]
 
-  yRange_totalVar       = [[0,8e8],[0,8e7]] ;day, then night
+  yRange_totalVar       = [[0,1.2e9],[0,1.2e8]] ;day, then night
 
   yLogScale_maxInd      = 1
 
@@ -59,9 +59,11 @@ PRO JOURNAL__20160402__SEAS__18_AVG_ION_FLUX_UP__LINEAR_TOTALVAR
         SYMCOLOR__MAX_PLOT=symColor[i], $
         DO_TWO_PANELS=do_two_panels, $
         SECOND_PANEL__PREP_FOR_SECONDARY_AXIS=(i EQ 0), $
+        /DIFFCOLOR_SECONDARY_AXIS, $
         YRANGE_TOTALVAR=yRange_totalVar[*,i], $
         YLOGSCALE_TOTALVAR=0, $
         SECONDARY_AXIS__TOTALVAR_PLOT=(i GT 0), $
+        ;; SECONDARY_AXIS__TOTALVAR_PLOT=0, $
         OVERPLOT_TOTAL_EPOCH_VARIATION=include_total_var, $
         ;; SYMCOLOR__TOTAL_EPOCH_VAR=symColor__totalVar[i], $
         SYMCOLOR__TOTAL_EPOCH_VAR=symColor[i], $

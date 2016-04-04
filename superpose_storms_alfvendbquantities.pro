@@ -129,6 +129,7 @@ PRO SUPERPOSE_STORMS_ALFVENDBQUANTITIES,stormTimeArray_utc, $
                                         TITLE__AVG_PLOT=title__avg_plot, $
                                         SYMCOLOR__AVG_PLOT=symColor__avg_plot, $
                                         SECONDARY_AXIS__TOTALVAR_PLOT=secondary_axis__totalVar_plot, $
+                                        DIFFCOLOR_SECONDARY_AXIS=diffColor_secondary_axis, $
                                         MAKE_LEGEND__AVG_PLOT=make_legend__avg_plot, $
                                         MAKE_ERROR_BARS__AVG_PLOT=make_error_bars__avg_plot, $
                                         ERROR_BAR_NBOOT=error_bar_nBoot, $
@@ -1190,6 +1191,7 @@ PRO SUPERPOSE_STORMS_ALFVENDBQUANTITIES,stormTimeArray_utc, $
                     MAKE_SECOND_PANEL=1, $
                     SECOND_PANEL__PREP_FOR_SECONDARY_AXIS=second_panel__prep_for_secondary_axis, $
                     DO_SECONDARY_AXIS=secondary_axis__totalVar_plot, $
+                    DIFFCOLOR_SECONDARY_AXIS=diffColor_secondary_axis, $
                     XTITLE=xTitle, $
                     XRANGE=xRange, $
                     XHIDELABEL=xLabel_maxInd__suppress, $

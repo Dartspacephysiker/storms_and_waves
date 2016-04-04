@@ -8,8 +8,8 @@ PRO JOURNAL__20160402__HISTOPLOTS_OF_49_PFLUXEST_DURING_STORMPHASES
   fancy_plotNames   = 1
   @fluxplot_defaults
 
-  xTitle            = +'Log ' + title__alfDB_ind_49
-  ;; xTitle            = "Log Poynting Flux (mW/m) at 100 km"
+  ;; xTitle            = +'Log ' + title__alfDB_ind_49
+  xTitle            = "Log Poynting Flux (mW m!U-2!N) at 100 km"
 
   night_mlt         = [-6.0,6.0]
   day_mlt           = [6.0,18.0]
@@ -58,6 +58,7 @@ PRO JOURNAL__20160402__HISTOPLOTS_OF_49_PFLUXEST_DURING_STORMPHASES
      HISTYRANGE_MAXIND=dayYRange, $
      /HISTYTITLE__ONLY_ONE, $
      MULTIPLY_BY_WIDTH_X=multiply_by_width_x, $
+     /DO_LOGGED_STATISTICS, $
      /LOG_DBQUANTITY, $
      MINMLT=day_mlt[0], $
      MAXMLT=day_mlt[1], $
@@ -84,6 +85,7 @@ PRO JOURNAL__20160402__HISTOPLOTS_OF_49_PFLUXEST_DURING_STORMPHASES
      HISTYRANGE_MAXIND=pHP.yRange, $
      /HISTYTITLE__ONLY_ONE, $
      MULTIPLY_BY_WIDTH_X=multiply_by_width_x, $
+     /DO_LOGGED_STATISTICS, $
      /LOG_DBQUANTITY, $
      ;; /NIGHTSIDE, $
      MINMLT=night_mlt[0], $

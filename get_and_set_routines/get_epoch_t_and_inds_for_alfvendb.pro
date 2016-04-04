@@ -36,8 +36,8 @@ PRO GET_EPOCH_T_AND_INDS_FOR_ALFVENDB,maximus,cdbTime,NEPOCHS=nEpochs,TBEFOREEPO
                          NORTH=north, $
                          SOUTH=south, $
                          HEMI=hemi, $ ;/BOTH_HEMIS, $
-                         ALTITUDERANGE=N_ELEMENTS(restrict_altRange) EQ 1 ? [1000,5000] : (N_ELEMENTS(restrict_altRange) GT 1 ? restrict_altRange : !NULL), $
-                         CHARERANGE=N_ELEMENTS(restrict_charERange) EQ 1 ? [4,4000] : (N_ELEMENTS(restrict_charERange) GT 1 ? restrict_charERange : !NULL), $ 
+                         ALTITUDERANGE=N_ELEMENTS(restrict_altRange) EQ 1 ? [0000,5000] : (N_ELEMENTS(restrict_altRange) GT 1 ? restrict_altRange : !NULL), $
+                         CHARERANGE=N_ELEMENTS(restrict_charERange) EQ 1 ? [4,30000] : (N_ELEMENTS(restrict_charERange) GT 1 ? restrict_charERange : !NULL), $ 
                          ;; CHARERANGE=(restrict_charERange) ? [300,4000] : !NULL, $
                          ;; CHARERANGE=(restrict_charERange) ? [4,300] : !NULL, $
                          MINMLT=minM,MAXMLT=maxM,BINM=binM,MINILAT=minI,MAXILAT=maxI,BINI=binI, $
