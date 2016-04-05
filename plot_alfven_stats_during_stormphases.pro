@@ -8,7 +8,10 @@ PRO PLOT_ALFVEN_STATS_DURING_STORMPHASES,$
    DSTCUTOFF=dstCutoff, $
    CLOCKSTR=clockStr, ANGLELIM1=angleLim1, ANGLELIM2=angleLim2, $
    ORBRANGE=orbRange, ALTITUDERANGE=altitudeRange, CHARERANGE=charERange, POYNTRANGE=poyntRange, NUMORBLIM=numOrbLim, $
-   MINMLT=minMLT,MAXMLT=maxMLT,BINMLT=binMLT,MINILAT=minILAT,MAXILAT=maxILAT,BINILAT=binILAT, $
+   MINMLT=minMLT,MAXMLT=maxMLT, $
+   BINMLT=binMLT, $
+   SHIFTMLT=shiftM, $
+   MINILAT=minILAT,MAXILAT=maxILAT,BINILAT=binILAT, $
    DO_LSHELL=do_lShell, REVERSE_LSHELL=reverse_lShell, $
    MINLSHELL=minLshell,MAXLSHELL=maxLshell,BINLSHELL=binLshell, $
    BOTH_HEMIS=both_hemis, $
@@ -129,7 +132,10 @@ PRO PLOT_ALFVEN_STATS_DURING_STORMPHASES,$
      PLOT_ALFVEN_STATS_UTC_RANGES,maximus,T1_ARR=t1_arr,T2_ARR=t2_arr,$
                                   CLOCKSTR=clockStr, ANGLELIM1=angleLim1, ANGLELIM2=angleLim2, $
                                   ORBRANGE=orbRange, ALTITUDERANGE=altitudeRange, CHARERANGE=charERange, POYNTRANGE=poyntRange, NUMORBLIM=numOrbLim, $
-                                  MINMLT=minMLT,MAXMLT=maxMLT,BINMLT=binMLT,MINILAT=minILAT,MAXILAT=maxILAT,BINILAT=binILAT, $
+                                  MINMLT=minMLT,MAXMLT=maxMLT, $
+                                  BINMLT=binMLT, $
+                                  SHIFTMLT=shiftM, $
+                                  MINILAT=minILAT,MAXILAT=maxILAT,BINILAT=binILAT, $
                                   DO_LSHELL=do_lShell,REVERSE_LSHELL=reverse_lShell, $
                                   MINLSHELL=minLshell,MAXLSHELL=maxLshell,BINLSHELL=binLshell, $
                                   BOTH_HEMIS=both_hemis, $
