@@ -83,3 +83,27 @@
 ;;        1.2595052
 ;; 
 RESTORE,'/SPENCEdata/Research/Cusp/storms_Alfvens/journals/20160404--stormphase_histo_data--10_EFLCI_18_IIFU_49_PFE/20160404--stormphase_histos--overlaid_phases--49_49_PFLUXEST--6.0-18.0--18.0-6.0_MLT.sav'
+;dayside pFlux
+print,saved_ssa_list[0,1].yhiststr[0].locs[0,30]
+side = 0 
+stormphase = 1 
+plot=plot(saved_ssa_list[side,stormphase].yhiststr[0].locs[0],saved_ssa_list[0,stormphase].yhiststr[0].hist[0],/HISTOGRAM)
+
+
+daytotal = TOTAL(saved_ssa_list[0,2].yhiststr[0].hist[0])
+nighttotal = TOTAL(saved_ssa_list[1,2].yhiststr[0].hist[0])
+
+dayfracabove1=TOTAL(saved_ssa_list[0,2].yhiststr[0].hist[0,20:*])/daytotal
+nightfracabove1=TOTAL(saved_ssa_list[1,2].yhiststr[0].hist[0,20:*])/nighttotal
+
+dayfracabove5=TOTAL(saved_ssa_list[0,2].yhiststr[0].hist[0,27:*])/daytotal
+nightfracabove5=TOTAL(saved_ssa_list[1,2].yhiststr[0].hist[0,27:*])/nighttotal
+
+dayfracabove10=TOTAL(saved_ssa_list[0,2].yhiststr[0].hist[0,30:*])/daytotal
+nightfracabove10=TOTAL(saved_ssa_list[1,2].yhiststr[0].hist[0,30:*])/nighttotal
+
+dayfracabove50=TOTAL(saved_ssa_list[0,2].yhiststr[0].hist[0,37:*])/daytotal
+nightfracabove50=TOTAL(saved_ssa_list[1,2].yhiststr[0].hist[0,37:*])/nighttotal
+
+dayfracabove100=TOTAL(saved_ssa_list[0,2].yhiststr[0].hist[0,40:*])/daytotal
+nightfracabove100=TOTAL(saved_ssa_list[1,2].yhiststr[0].hist[0,40:*])/nighttotal

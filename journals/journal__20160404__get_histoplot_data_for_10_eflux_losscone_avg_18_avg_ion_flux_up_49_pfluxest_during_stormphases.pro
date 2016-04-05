@@ -18,9 +18,9 @@ PRO JOURNAL__20160404__GET_HISTOPLOT_DATA_FOR_10_EFLUX_LOSSCONE_AVG_18_AVG_ION_F
   ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
   ;;10-EFLUX_LOSSCONE_INTEG, 18-INTEG_ION_FLUX_UP, 49-PFLUXEST
   maxIndArr              = [       10,        18,       49]
-  histBinsizeArr         = [     0.20,      0.25,     0.15]
-  nightXRangeArr         = [[-3.6,2.6],[3,11],[-1.3,3.2]]
-  dayXRangeArr           = [[-3.6,2.6],[3,11],[-1.3,3.2]]
+  histBinsizeArr         = [     0.10,      0.1,     0.1]
+  nightXRangeArr         = [[-4.0,3.0],[2,12],[-2.0,4.0]]
+  dayXRangeArr           = [[-4.0,3.0],[2,12],[-2.0,4.0]]
   nightYRangeArr         = [ [0,0.12], [0,0.102],[0,0.13]]
   dayYRangeArr           = [ [0,0.12], [0,0.102],[0,0.13]]
   normalize              = 1
@@ -63,7 +63,9 @@ PRO JOURNAL__20160404__GET_HISTOPLOT_DATA_FOR_10_EFLUX_LOSSCONE_AVG_18_AVG_ION_F
         LAYOUT=[2,1,1], $
         NORMALIZE_MAXIND_HIST=normalize, $
         /ONLY_POS, $
+        SAVEDIR=saveDir, $
         /SAVEFILE, $
+        PLOTSUFFIX=pSuff, $
         /NO_STATISTICS_TEXT, $
         HISTOPLOT_PARAM_STRUCT=pHP, $
         CURRENT_WINDOW=window, $
