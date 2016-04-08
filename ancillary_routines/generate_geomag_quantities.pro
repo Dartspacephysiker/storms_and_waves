@@ -15,6 +15,7 @@ PRO GENERATE_GEOMAG_QUANTITIES,DATSTARTSTOP=datStartStop,NEPOCHS=nEpochs, $
                                SW_DATA=sw_data,DST=dst, $
                                USE_SYMH=use_SYMH,USE_AE=use_AE, $
                                OMNI_QUANTITY=omni_quantity,LOG_OMNI_QUANTITY=log_omni_quantity, $
+                               SMOOTHWINDOW=smoothWindow, $
                                GEOMAG_PLOT_I_LIST=geomag_plot_i_list,GEOMAG_DAT_LIST=geomag_dat_list,GEOMAG_TIME_LIST=geomag_time_list, $
                                GEOMAG_MIN=geomag_min,GEOMAG_MAX=geomag_max,DO_DST=do_Dst, $
                                YRANGE=yRange,SET_YRANGE=set_yRange,USE_DATA_MINMAX=use_data_minMax, $
@@ -307,6 +308,27 @@ PRO GENERATE_GEOMAG_QUANTITIES,DATSTARTSTOP=datStartStop,NEPOCHS=nEpochs, $
         yRange = KEYWORD_SET(yRange) ? yRange : [sw_data.epoch.validMin,sw_data.epoch.validMax]
      ENDIF
      
+     ;;Smooth, if requested
+     IF KEYWORD_SET(smoothWindow) THEN BEGIN
+        PRINT,'Smoothing ' + omni_quantity + ' with ' + STRCOMPRESS(smoothWindow,/REMOVE_ALL) + '-min window ...'
+        CASE SIZE(geomag_dat,/TYPE) OF 
+           2 OR 3: BEGIN
+              geomag_dat  = SMOOTH(geomag_dat,smoothWindow,/EDGE_TRUNCATE,MISSING=badVal)
+           END
+           4: BEGIN
+              badInds    = WHERE(ABS(geomag_dat-badVal) LE 0.1)
+              geomag_dat[badInds] = !VALUES.F_NaN
+              geomag_dat  = SMOOTH(geomag_dat,smoothWindow,/EDGE_TRUNCATE,/NAN)
+           END
+           5: BEGIN
+              badInds    = WHERE(ABS(geomag_dat-badVal) LE 0.01)
+              geomag_dat[badInds] = !VALUES.D_NaN
+              geomag_dat  = SMOOTH(geomag_dat,smoothWindow,/EDGE_TRUNCATE,/NAN)
+           END
+        ENDCASE
+     ENDIF
+     
+     ;;Junk the bad
      IF N_ELEMENTS(badVal) NE 0 THEN BEGIN
         goodInd=WHERE(geomag_dat LT badVal,nGood,NCOMPLEMENT=nBad)
         PRINT,'Removing ' + STRCOMPRESS(nBad,/REMOVE_ALL) + ' bad data points from ' + omni_quantity + '...'
