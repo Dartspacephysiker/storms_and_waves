@@ -13,25 +13,35 @@ PRO TILE_STORMPHASE_PLOTS,filenames,titles, $
   IF N_ELEMENTS(lun) EQ 0 THEN lun = -1 ;stdout
                           
 
+  ;;Old regime, pre-2016/04/09
+  ;; imHDim         = 800
+  ;; imVDim         = 640
+  ;; xRange         = [300,800]
+  ;; yRange         = [20,620]
+
   imHDim         = 800
-  imVDim         = 640
-  xRange         = [300,800]
-  yRange         = [20,620]
+  imVDim         = 800
+  ;; xRange         = [300,800]
+  ;; yRange         = [20,620]
+  xRange         = [10,790]
+  yRange         = [10,790]
 
   IF KEYWORD_SET(combined_to_buffer) THEN BEGIN
      hDim        = 800
-     vDim        = 640
+     ;; vDim        = 640
+     vDim        = 800
 
      scaleFactor = 1
   ENDIF ELSE BEGIN
      hDim        = 400
-     vDim        = 320
+     ;; vDim        = 320
+     vDim        = 400
      scaleFactor = 0.5
   ENDELSE
 
-  adjHDim     = hDim-300*scaleFactor
-  adjVDim     = vDim-40*scaleFactor
-  img_loc     = [150*scaleFactor,0]
+  adjHDim     = hDim-10*scaleFactor
+  adjVDim     = vDim-10*scaleFactor
+  img_loc     = [10*scaleFactor,10]
   ;; xRange      = [150*scaleFactor,650*scaleFactor]
   ;; yRange      = [0,600*scaleFactor]
 
@@ -73,11 +83,12 @@ PRO TILE_STORMPHASE_PLOTS,filenames,titles, $
      IF KEYWORD_SET(titles) THEN BEGIN
         ;; titleObjs[i] = TEXT(i*hDim + hDim/2., vDim*8./9., titles[i], $
         titleObjs[i] = TEXT(i*adjHDim + adjHDim/2., $
-                            500, $;adjVDim*8./9., $
+                            ;; 500, $;adjVDim*8./9., $
+                            655, $;adjVDim*8./9., $
                             titles[i], $
                             ALIGNMENT=0.5, $
                             /DEVICE, $
-                            FONT_SIZE=20.*scaleFactor)
+                            FONT_SIZE=30.*scaleFactor)
      ENDIF
   ENDFOR
   

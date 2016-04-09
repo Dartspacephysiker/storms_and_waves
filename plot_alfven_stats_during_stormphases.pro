@@ -78,6 +78,10 @@ PRO PLOT_ALFVEN_STATS_DURING_STORMPHASES,$
    COMBINED_TO_BUFFER=combined_to_buffer, $
    SAVE_COMBINED_WINDOW=save_combined_window, $
    SAVE_COMBINED_NAME=save_combined_name, $
+   TILE_IMAGES=tile_images, $
+   N_TILE_ROWS=n_tile_rows, $
+   N_TILE_COLUMNS=n_tile_columns, $
+   TILEPLOTSUFF=tilePlotSuff, $
    NO_COLORBAR=no_colorbar, $
    CB_FORCE_OOBHIGH=cb_force_oobHigh, $
    CB_FORCE_OOBLOW=cb_force_oobLow, $
@@ -198,6 +202,10 @@ PRO PLOT_ALFVEN_STATS_DURING_STORMPHASES,$
                                   DEL_PS=del_PS, $
                                   EPS_OUTPUT=eps_output, $
                                   OUT_TEMPFILE=out_tempFile, $
+                                  TILE_IMAGES=tile_images, $
+                                  N_TILE_ROWS=n_tile_rows, $
+                                  N_TILE_COLUMNS=n_tile_columns, $
+                                  TILEPLOTSUFF=tilePlotSuff, $
                                   NO_COLORBAR=no_colorbar[i], $
                                   CB_FORCE_OOBHIGH=cb_force_oobHigh, $
                                   CB_FORCE_OOBLOW=cb_force_oobLow, $
