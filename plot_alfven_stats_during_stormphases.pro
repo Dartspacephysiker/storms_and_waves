@@ -42,9 +42,12 @@ PRO PLOT_ALFVEN_STATS_DURING_STORMPHASES,$
    NEVENTPERORBPLOT=nEventPerOrbPlot, LOGNEVENTPERORB=logNEventPerOrb, NEVENTPERORBRANGE=nEventPerOrbRange, $
    DIVNEVBYAPPLICABLE=divNEvByApplicable, $
    NEVENTPERMINPLOT=nEventPerMinPlot, LOGNEVENTPERMIN=logNEventPerMin, $
+   NORBSWITHEVENTSPERCONTRIBORBSPLOT=nOrbsWithEventsPerContribOrbsPlot, $
+   NOWEPCO_RANGE=nowepco_range, $
    PROBOCCURRENCEPLOT=probOccurrencePlot, $
    PROBOCCURRENCERANGE=probOccurrenceRange, $
    LOGPROBOCCURRENCE=logProbOccurrence, $
+   THISTDENOMINATORPLOT=tHistDenominatorPlot, $
    TIMEAVGD_PFLUXPLOT=timeAvgd_pFluxPlot, $
    TIMEAVGD_PFLUXRANGE=timeAvgd_pFluxRange, $
    LOGTIMEAVGD_PFLUX=logTimeAvgd_PFlux, $
@@ -171,9 +174,12 @@ PRO PLOT_ALFVEN_STATS_DURING_STORMPHASES,$
                                   NEVENTPERORBPLOT=nEventPerOrbPlot, LOGNEVENTPERORB=logNEventPerOrb, NEVENTPERORBRANGE=nEventPerOrbRange, $
                                   DIVNEVBYAPPLICABLE=divNEvByApplicable, $
                                   NEVENTPERMINPLOT=nEventPerMinPlot, LOGNEVENTPERMIN=logNEventPerMin, $
+                                  NORBSWITHEVENTSPERCONTRIBORBSPLOT=nOrbsWithEventsPerContribOrbsPlot, $
+                                  NOWEPCO_RANGE=nowepco_range, $
                                   PROBOCCURRENCEPLOT=probOccurrencePlot, $
                                   PROBOCCURRENCERANGE=probOccurrenceRange, $
                                   LOGPROBOCCURRENCE=logProbOccurrence, $
+                                  THISTDENOMINATORPLOT=tHistDenominatorPlot, $
                                   TIMEAVGD_PFLUXPLOT=timeAvgd_pFluxPlot, $
                                   TIMEAVGD_PFLUXRANGE=timeAvgd_pFluxRange, $
                                   LOGTIMEAVGD_PFLUX=logTimeAvgd_PFlux, $
