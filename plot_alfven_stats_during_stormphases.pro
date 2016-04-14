@@ -81,6 +81,9 @@ PRO PLOT_ALFVEN_STATS_DURING_STORMPHASES,$
    COMBINED_TO_BUFFER=combined_to_buffer, $
    SAVE_COMBINED_WINDOW=save_combined_window, $
    SAVE_COMBINED_NAME=save_combined_name, $
+   NO_STORMPHASE_TITLES=no_stormphase_titles, $
+   SUPPRESS_GRIDLABELS=suppress_gridLabels, $
+   LABELS_FOR_PRESENTATION=labels_for_presentation, $
    TILE_IMAGES=tile_images, $
    N_TILE_ROWS=n_tile_rows, $
    N_TILE_COLUMNS=n_tile_columns, $
@@ -120,7 +123,12 @@ PRO PLOT_ALFVEN_STATS_DURING_STORMPHASES,$
   dst_i_list=LIST(ns_dst_i,mp_dst_i,rp_dst_i)
   suff = STRING(FORMAT='("--Dstcutoff_",I0)',dstCutoff)
   strings=["nonstorm"+suff,"mainphase"+suff,"recoveryphase"+suff]
-  niceStrings=["Non-storm","Main phase","Recovery phase"]
+
+  IF KEYWORD_SET(no_stormphase_titles) THEN BEGIN
+     niceStrings = !NULL
+  ENDIF ELSE BEGIN
+     niceStrings=["Non-storm","Main phase","Recovery phase"]
+  ENDELSE
 
   IF KEYWORD_SET(combine_stormphase_plots) THEN BEGIN
      outTempFiles = !NULL
@@ -208,6 +216,8 @@ PRO PLOT_ALFVEN_STATS_DURING_STORMPHASES,$
                                   DEL_PS=del_PS, $
                                   EPS_OUTPUT=eps_output, $
                                   OUT_TEMPFILE=out_tempFile, $
+                                  SUPPRESS_GRIDLABELS=suppress_gridLabels, $
+                                  LABELS_FOR_PRESENTATION=labels_for_presentation, $
                                   TILE_IMAGES=tile_images, $
                                   N_TILE_ROWS=n_tile_rows, $
                                   N_TILE_COLUMNS=n_tile_columns, $
