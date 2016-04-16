@@ -90,7 +90,10 @@ PRO PLOT_ALFVEN_STATS_DURING_STORMPHASES,$
    TILE_IMAGES=tile_images, $
    N_TILE_ROWS=n_tile_rows, $
    N_TILE_COLUMNS=n_tile_columns, $
+   TILING_ORDER=tiling_order, $
+   TILE__FAVOR_ROWS=tile__favor_rows, $
    TILEPLOTSUFF=tilePlotSuff, $
+   TILEPLOTTITLE=tilePlotTitle, $
    NO_COLORBAR=no_colorbar, $
    CB_FORCE_OOBHIGH=cb_force_oobHigh, $
    CB_FORCE_OOBLOW=cb_force_oobLow, $
@@ -227,7 +230,10 @@ PRO PLOT_ALFVEN_STATS_DURING_STORMPHASES,$
                                   TILE_IMAGES=tile_images, $
                                   N_TILE_ROWS=n_tile_rows, $
                                   N_TILE_COLUMNS=n_tile_columns, $
+                                  TILING_ORDER=tiling_order, $
+                                  TILE__FAVOR_ROWS=tile__favor_rows, $
                                   TILEPLOTSUFF=tilePlotSuff, $
+                                  TILEPLOTTITLE=tilePlotTitle, $
                                   NO_COLORBAR=no_colorbar[i], $
                                   CB_FORCE_OOBHIGH=cb_force_oobHigh, $
                                   CB_FORCE_OOBLOW=cb_force_oobLow, $
