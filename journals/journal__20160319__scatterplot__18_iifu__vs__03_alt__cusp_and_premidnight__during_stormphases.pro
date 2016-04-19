@@ -7,7 +7,8 @@ PRO JOURNAL__20160319__SCATTERPLOT__18_IIFU__VS__03_ALT__CUSP_AND_PREMIDNIGHT__D
   ;; restrict_altRange = [3000,4175]
   ;; restrict_altRange = [4000,4175]
 
-  winTitle          = STRING("Cusp and Pre-midnight ") ;(Altitude Range: [",I0,", ",I0,"] km)")',restrict_altRange[0],restrict_altRange[1])
+  ;; winTitle          = STRING("Cusp and Pre-midnight ") ;(Altitude Range: [",I0,", ",I0,"] km)")',restrict_altRange[0],restrict_altRange[1])
+  winTitle          = STRING("Dayside and Nightside") ;(Altitude Range: [",I0,", ",I0,"] km)")',restrict_altRange[0],restrict_altRange[1])
 
   maxInd1           = 03
   custom_maxInd2    = "maximus.(18)/(maximus.width_x*100.)*(mapRatio.ratio)^(0.5)"   ;;factor of 100 for conv to cm
@@ -26,13 +27,13 @@ PRO JOURNAL__20160319__SCATTERPLOT__18_IIFU__VS__03_ALT__CUSP_AND_PREMIDNIGHT__D
   xTitle            = "Altitude (km)"
   yTitle            = "Spatially avgd upward ion flux (#/cm!U2!N-s) at 100 km"
 
-  ;; night_mlt         = [-6.0,6.0]
-  ;; day_mlt           = [6.0,18.0]
+  night_mlt         = [-6.0,6.0]
+  day_mlt           = [6.0,18.0]
 
-  night_mlt         = [19.5,24.0]
+  ;; night_mlt         = [19.5,24.0]
   night_ilat        = [60,84]
-  day_mlt           = [11.5,17.0]
-  day_ilat          = [60,80]
+  ;; day_mlt           = [11.5,17.0]
+  day_ilat          = [60,84]
 
   dayXRange         = [340,4175]
   nightXRange       = [340,4175]
