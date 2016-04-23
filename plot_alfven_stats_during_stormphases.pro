@@ -28,7 +28,9 @@ PRO PLOT_ALFVEN_STATS_DURING_STORMPHASES,$
    EFLUXPLOTTYPE=eFluxPlotType, LOGEFPLOT=logEfPlot, $
    ABSEFLUX=abseflux, NOPOSEFLUX=noPosEFlux, NONEGEFLUX=noNegEflux, $
    ENUMFLPLOTS=eNumFlPlots, ENUMFLPLOTTYPE=eNumFlPlotType, LOGENUMFLPLOT=logENumFlPlot, ABSENUMFL=absENumFl, $
-   NONEGENUMFL=noNegENumFl, NOPOSENUMFL=noPosENumFl, ENUMFLPLOTRANGE=ENumFlPlotRange, $
+   NONEGENUMFL=noNegENumFl, NOPOSENUMFL=noPosENumFl, $
+   ENUMFLPLOTRANGE=ENumFlPlotRange, $
+   AUTOSCALE_ENUMFLPLOTS=autoscale_eNumFlplots, $
    PPLOTS=pPlots, LOGPFPLOT=logPfPlot, ABSPFLUX=absPflux, $
    NONEGPFLUX=noNegPflux, NOPOSPFLUX=noPosPflux, PPLOTRANGE=PPlotRange, $
    IONPLOTS=ionPlots, IFLUXPLOTTYPE=ifluxPlotType, LOGIFPLOT=logIfPlot, ABSIFLUX=absIflux, $
@@ -41,9 +43,14 @@ PRO PLOT_ALFVEN_STATS_DURING_STORMPHASES,$
    DIV_FLUXPLOTS_BY_ORBTOT=div_fluxPlots_by_orbTot, $
    DIV_FLUXPLOTS_BY_APPLICABLE_ORBS=div_fluxPlots_by_applicable_orbs, $
    ORBCONTRIBPLOT=orbContribPlot, $
+   ORBCONTRIBRANGE=orbContribRange, $
+   ORBCONTRIBAUTOSCALE=orbContribAutoscale, $
+   ORBCONTRIB_NOMASK=orbContrib_noMask, $
    LOGORBCONTRIBPLOT=logOrbContribPlot, $
-   ORBTOTPLOT=orbTotPlot, ORBFREQPLOT=orbFreqPlot, $
-   ORBCONTRIBRANGE=orbContribRange, ORBTOTRANGE=orbTotRange, ORBFREQRANGE=orbFreqRange, $
+   ORBTOTPLOT=orbTotPlot, $
+   ORBFREQPLOT=orbFreqPlot, $
+   ORBTOTRANGE=orbTotRange, $
+   ORBFREQRANGE=orbFreqRange, $
    NEVENTPERORBPLOT=nEventPerOrbPlot, $
    LOGNEVENTPERORB=logNEventPerOrb, $
    NEVENTPERORBRANGE=nEventPerOrbRange, $
@@ -58,6 +65,10 @@ PRO PLOT_ALFVEN_STATS_DURING_STORMPHASES,$
    PROBOCCURRENCEAUTOSCALE=probOccurrenceAutoscale, $
    LOGPROBOCCURRENCE=logProbOccurrence, $
    THISTDENOMINATORPLOT=tHistDenominatorPlot, $
+   THISTDENOMPLOTRANGE=tHistDenomPlotRange, $
+   THISTDENOMPLOTAUTOSCALE=tHistDenomPlotAutoscale, $
+   THISTDENOMPLOTNORMALIZE=tHistDenomPlotNormalize, $
+   THISTDENOMPLOT_NOMASK=tHistDenomPlot_noMask, $
    TIMEAVGD_PFLUXPLOT=timeAvgd_pFluxPlot, $
    TIMEAVGD_PFLUXRANGE=timeAvgd_pFluxRange, $
    LOGTIMEAVGD_PFLUX=logTimeAvgd_PFlux, $
@@ -67,6 +78,7 @@ PRO PLOT_ALFVEN_STATS_DURING_STORMPHASES,$
    DO_TIMEAVG_FLUXQUANTITIES=do_timeAvg_fluxQuantities, $
    DO_GROSSRATE_FLUXQUANTITIES=do_grossRate_fluxQuantities, $
    DO_GROSSRATE_WITH_LONG_WIDTH=do_grossRate_with_long_width, $
+   WRITE_GROSSRATE_INFO_TO_THIS_FILE=grossRate_info_file, $
    DO_LOGAVG_THE_TIMEAVG=do_logavg_the_timeAvg, $
    DIVIDE_BY_WIDTH_X=divide_by_width_x, $
    MULTIPLY_BY_WIDTH_X=multiply_by_width_x, $
@@ -75,6 +87,7 @@ PRO PLOT_ALFVEN_STATS_DURING_STORMPHASES,$
    VAR__PLOTRANGE=var__plotRange, $
    VAR__REL_TO_MEAN_VARIANCE=var__rel_to_mean_variance, $
    VAR__DO_STDDEV_INSTEAD=var__do_stddev_instead, $
+   VAR__AUTOSCALE=var__autoscale, $
    PLOT_CUSTOM_MAXIND=plot_custom_maxInd, $
    CUSTOM_MAXINDS=custom_maxInds, $
    CUSTOM_MAXIND_RANGE=custom_maxInd_range, $
@@ -199,8 +212,14 @@ PRO PLOT_ALFVEN_STATS_DURING_STORMPHASES,$
                                   EFLUXPLOTTYPE=eFluxPlotType, $
                                   LOGEFPLOT=logEfPlot, $
                                   ABSEFLUX=abseflux, NOPOSEFLUX=noPosEFlux, NONEGEFLUX=noNegEflux, $
-                                  ENUMFLPLOTS=eNumFlPlots, ENUMFLPLOTTYPE=eNumFlPlotType, LOGENUMFLPLOT=logENumFlPlot, ABSENUMFL=absENumFl, $
-                                  NONEGENUMFL=noNegENumFl, NOPOSENUMFL=noPosENumFl, ENUMFLPLOTRANGE=ENumFlPlotRange, $
+                                  ENUMFLPLOTS=eNumFlPlots, $
+                                  ENUMFLPLOTTYPE=eNumFlPlotType, $
+                                  LOGENUMFLPLOT=logENumFlPlot, $
+                                  ABSENUMFL=absENumFl, $
+                                  NONEGENUMFL=noNegENumFl, $
+                                  NOPOSENUMFL=noPosENumFl, $
+                                  ENUMFLPLOTRANGE=ENumFlPlotRange, $
+                                  AUTOSCALE_ENUMFLPLOTS=autoscale_eNumFlplots, $
                                   PPLOTS=pPlots, LOGPFPLOT=logPfPlot, ABSPFLUX=absPflux, $
                                   NONEGPFLUX=noNegPflux, NOPOSPFLUX=noPosPflux, PPLOTRANGE=PPlotRange, $
                                   IONPLOTS=ionPlots, IFLUXPLOTTYPE=ifluxPlotType, LOGIFPLOT=logIfPlot, ABSIFLUX=absIflux, $
@@ -213,13 +232,20 @@ PRO PLOT_ALFVEN_STATS_DURING_STORMPHASES,$
                                   DIV_FLUXPLOTS_BY_ORBTOT=div_fluxPlots_by_orbTot, $
                                   DIV_FLUXPLOTS_BY_APPLICABLE_ORBS=div_fluxPlots_by_applicable_orbs, $
                                   ORBCONTRIBPLOT=orbContribPlot, $
+                                  ORBCONTRIBRANGE=orbContribRange, $
+                                  ORBCONTRIBAUTOSCALE=orbContribAutoscale, $
+                                  ORBCONTRIB_NOMASK=orbContrib_noMask, $
                                   LOGORBCONTRIBPLOT=logOrbContribPlot, $
                                   ORBTOTPLOT=orbTotPlot, $
                                   ORBFREQPLOT=orbFreqPlot, $
-                                  ORBCONTRIBRANGE=orbContribRange, ORBTOTRANGE=orbTotRange, ORBFREQRANGE=orbFreqRange, $
-                                  NEVENTPERORBPLOT=nEventPerOrbPlot, LOGNEVENTPERORB=logNEventPerOrb, NEVENTPERORBRANGE=nEventPerOrbRange, $
+                                  ORBTOTRANGE=orbTotRange, $
+                                  ORBFREQRANGE=orbFreqRange, $
+                                  NEVENTPERORBPLOT=nEventPerOrbPlot, $
+                                  LOGNEVENTPERORB=logNEventPerOrb, $
+                                  NEVENTPERORBRANGE=nEventPerOrbRange, $
                                   DIVNEVBYAPPLICABLE=divNEvByApplicable, $
-                                  NEVENTPERMINPLOT=nEventPerMinPlot, LOGNEVENTPERMIN=logNEventPerMin, $
+                                  NEVENTPERMINPLOT=nEventPerMinPlot, $
+                                  LOGNEVENTPERMIN=logNEventPerMin, $
                                   NORBSWITHEVENTSPERCONTRIBORBSPLOT=nOrbsWithEventsPerContribOrbsPlot, $
                                   NOWEPCO_RANGE=nowepco_range, $
                                   NOWEPCO_AUTOSCALE=nowepco_autoscale, $
@@ -229,6 +255,10 @@ PRO PLOT_ALFVEN_STATS_DURING_STORMPHASES,$
                                   PROBOCCURRENCEAUTOSCALE=probOccurrenceAutoscale, $
                                   LOGPROBOCCURRENCE=logProbOccurrence, $
                                   THISTDENOMINATORPLOT=tHistDenominatorPlot, $
+                                  THISTDENOMPLOTRANGE=tHistDenomPlotRange, $
+                                  THISTDENOMPLOTAUTOSCALE=tHistDenomPlotAutoscale, $
+                                  THISTDENOMPLOTNORMALIZE=tHistDenomPlotNormalize, $
+                                  THISTDENOMPLOT_NOMASK=tHistDenomPlot_noMask, $
                                   TIMEAVGD_PFLUXPLOT=timeAvgd_pFluxPlot, $
                                   TIMEAVGD_PFLUXRANGE=timeAvgd_pFluxRange, $
                                   LOGTIMEAVGD_PFLUX=logTimeAvgd_PFlux, $
@@ -238,6 +268,7 @@ PRO PLOT_ALFVEN_STATS_DURING_STORMPHASES,$
                                   DO_TIMEAVG_FLUXQUANTITIES=do_timeAvg_fluxQuantities, $
                                   DO_GROSSRATE_FLUXQUANTITIES=do_grossRate_fluxQuantities, $
                                   DO_GROSSRATE_WITH_LONG_WIDTH=do_grossRate_with_long_width, $
+                                  WRITE_GROSSRATE_INFO_TO_THIS_FILE=grossRate_info_file, $
                                   DO_LOGAVG_THE_TIMEAVG=do_logavg_the_timeAvg, $
                                   DIVIDE_BY_WIDTH_X=divide_by_width_x, $
                                   MULTIPLY_BY_WIDTH_X=multiply_by_width_x, $
@@ -246,6 +277,7 @@ PRO PLOT_ALFVEN_STATS_DURING_STORMPHASES,$
                                   VAR__PLOTRANGE=var__plotRange, $
                                   VAR__REL_TO_MEAN_VARIANCE=var__rel_to_mean_variance, $
                                   VAR__DO_STDDEV_INSTEAD=var__do_stddev_instead, $
+                                  VAR__AUTOSCALE=var__autoscale, $
                                   PLOT_CUSTOM_MAXIND=plot_custom_maxInd, $
                                   CUSTOM_MAXINDS=custom_maxInds, $
                                   CUSTOM_MAXIND_RANGE=custom_maxInd_range, $
@@ -261,8 +293,11 @@ PRO PLOT_ALFVEN_STATS_DURING_STORMPHASES,$
                                   DBFILE=dbfile, NO_BURSTDATA=no_burstData, DATADIR=dataDir, $
                                   DO_CHASTDB=do_chastDB, $
                                   DO_DESPUNDB=do_despunDB, $
-                                  NEVENTSPLOTRANGE=nEventsPlotRange, LOGNEVENTSPLOT=logNEventsPlot, $
-                                  WRITEASCII=writeASCII, WRITEHDF5=writeHDF5, WRITEPROCESSEDH2D=writeProcessedH2d, $
+                                  NEVENTSPLOTRANGE=nEventsPlotRange, $
+                                  LOGNEVENTSPLOT=logNEventsPlot, $
+                                  WRITEASCII=writeASCII, $
+                                  WRITEHDF5=writeHDF5, $
+                                  WRITEPROCESSEDH2D=writeProcessedH2d, $
                                   SAVERAW=saveRaw, RAWDIR=rawDir, $
                                   JUSTDATA=justData, SHOWPLOTSNOSAVE=showPlotsNoSave, $
                                   PLOTDIR=plotDir, PLOTPREFIX=strings[i], PLOTSUFFIX=plotSuffix, $
