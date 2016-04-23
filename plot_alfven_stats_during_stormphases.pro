@@ -38,6 +38,8 @@ PRO PLOT_ALFVEN_STATS_DURING_STORMPHASES,$
    CHARIEPLOTS=chariePlots, LOGCHARIEPLOT=logChariePlot, ABSCHARIE=absCharie, $
    NONEGCHARIE=noNegCharie, NOPOSCHARIE=noPosCharie, CHARIEPLOTRANGE=ChariePlotRange, $
    AUTOSCALE_FLUXPLOTS=autoscale_fluxPlots, $
+   DIV_FLUXPLOTS_BY_ORBTOT=div_fluxPlots_by_orbTot, $
+   DIV_FLUXPLOTS_BY_APPLICABLE_ORBS=div_fluxPlots_by_applicable_orbs, $
    ORBCONTRIBPLOT=orbContribPlot, $
    LOGORBCONTRIBPLOT=logOrbContribPlot, $
    ORBTOTPLOT=orbTotPlot, ORBFREQPLOT=orbFreqPlot, $
@@ -64,6 +66,7 @@ PRO PLOT_ALFVEN_STATS_DURING_STORMPHASES,$
    LOGTIMEAVGD_EFLUXMAX=logtimeAvgd_eFluxMax, $
    DO_TIMEAVG_FLUXQUANTITIES=do_timeAvg_fluxQuantities, $
    DO_GROSSRATE_FLUXQUANTITIES=do_grossRate_fluxQuantities, $
+   DO_GROSSRATE_WITH_LONG_WIDTH=do_grossRate_with_long_width, $
    DO_LOGAVG_THE_TIMEAVG=do_logavg_the_timeAvg, $
    DIVIDE_BY_WIDTH_X=divide_by_width_x, $
    MULTIPLY_BY_WIDTH_X=multiply_by_width_x, $
@@ -78,6 +81,7 @@ PRO PLOT_ALFVEN_STATS_DURING_STORMPHASES,$
    CUSTOM_MAXIND_AUTOSCALE=custom_maxInd_autoscale, $
    CUSTOM_MAXIND_DATANAME=custom_maxInd_dataname, $
    CUSTOM_MAXIND_TITLE=custom_maxInd_title, $
+   CUSTOM_GROSSRATE_CONVFACTOR=custom_grossRate_convFactor, $
    LOG_CUSTOM_MAXIND=log_custom_maxInd, $
    MEDIANPLOT=medianPlot, LOGAVGPLOT=logAvgPlot, $
    ALL_LOGPLOTS=all_logPlots, $
@@ -206,6 +210,8 @@ PRO PLOT_ALFVEN_STATS_DURING_STORMPHASES,$
                                   CHARIEPLOTS=chariePlots, LOGCHARIEPLOT=logChariePlot, ABSCHARIE=absCharie, $
                                   NONEGCHARIE=noNegCharie, NOPOSCHARIE=noPosCharie, CHARIEPLOTRANGE=ChariePlotRange, $
                                   AUTOSCALE_FLUXPLOTS=autoscale_fluxPlots, $
+                                  DIV_FLUXPLOTS_BY_ORBTOT=div_fluxPlots_by_orbTot, $
+                                  DIV_FLUXPLOTS_BY_APPLICABLE_ORBS=div_fluxPlots_by_applicable_orbs, $
                                   ORBCONTRIBPLOT=orbContribPlot, $
                                   LOGORBCONTRIBPLOT=logOrbContribPlot, $
                                   ORBTOTPLOT=orbTotPlot, $
@@ -231,6 +237,7 @@ PRO PLOT_ALFVEN_STATS_DURING_STORMPHASES,$
                                   LOGTIMEAVGD_EFLUXMAX=logtimeAvgd_eFluxMax, $
                                   DO_TIMEAVG_FLUXQUANTITIES=do_timeAvg_fluxQuantities, $
                                   DO_GROSSRATE_FLUXQUANTITIES=do_grossRate_fluxQuantities, $
+                                  DO_GROSSRATE_WITH_LONG_WIDTH=do_grossRate_with_long_width, $
                                   DO_LOGAVG_THE_TIMEAVG=do_logavg_the_timeAvg, $
                                   DIVIDE_BY_WIDTH_X=divide_by_width_x, $
                                   MULTIPLY_BY_WIDTH_X=multiply_by_width_x, $
@@ -245,6 +252,7 @@ PRO PLOT_ALFVEN_STATS_DURING_STORMPHASES,$
                                   CUSTOM_MAXIND_AUTOSCALE=custom_maxInd_autoscale, $
                                   CUSTOM_MAXIND_DATANAME=custom_maxInd_dataname, $
                                   CUSTOM_MAXIND_TITLE=custom_maxInd_title, $
+                                  CUSTOM_GROSSRATE_CONVFACTOR=custom_grossRate_convFactor, $
                                   LOG_CUSTOM_MAXIND=log_custom_maxInd, $
                                   MEDIANPLOT=medianPlot, LOGAVGPLOT=logAvgPlot, $
                                   ALL_LOGPLOTS=all_logPlots, $

@@ -378,7 +378,7 @@ PRO SCATTERPLOT_ALFVENDBQUANTITIES_DURING_STORMPHASES, $
   ;;window setup
   IF N_ELEMENTS(window) EQ 0 THEN BEGIN
      wTitle        = 'Storm-phase Scatter Plots'
-     window     = WINDOW(WINDOW_TITLE=wTitle,DIMENSIONS=[1250,900])
+     window     = WINDOW(WINDOW_TITLE=wTitle,DIMENSIONS=[1250,800])
   ENDIF
 
   ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
