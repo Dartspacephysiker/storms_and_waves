@@ -28,6 +28,8 @@ PRO GET_DATA_FOR_ALFVENDB_EPOCH_PLOTS,MAXIMUS=maximus,CDBTIME=cdbTime, $
                                       SAVEFILE=saveFile,SAVESTR=saveStr, $
                                       LUN=lun
 
+  COMPILE_OPT idl2
+
   IF N_ELEMENTS(lun) EQ 0 THEN lun = -1
   
   ;;Data quantity
@@ -122,14 +124,14 @@ PRO GET_DATA_FOR_ALFVENDB_EPOCH_PLOTS,MAXIMUS=maximus,CDBTIME=cdbTime, $
   
   FOR i=0,nAlfEpochs-1 DO BEGIN
      
-     tempInds=cgsetintersection(good_i,[alf_epoch_i(i,0):alf_epoch_i(i,1):1])
-     minMaxDat(i,1)=MAX(maxData[tempInds],MIN=tempMin)
-     minMaxDat(i,0)=tempMin
+     tempInds       = CGSETINTERSECTION(good_i,[alf_epoch_i[i,0]:alf_epoch_i[i,1]:1])
+     minMaxDat[i,1] = MAX(maxData[tempInds],MIN=tempMin)
+     minMaxDat[i,0] = tempMin
 
      IF neg_and_pos_separ THEN BEGIN
         
         ;; get appropriate indices
-        plot_i=cgsetintersection(good_i,indgen(alf_epoch_i(i,1)-alf_epoch_i(i,0)+1)+alf_epoch_i(i,0))
+        plot_i      = CGSETINTERSECTION(good_i,LINDGEN(alf_epoch_i[i,1]-alf_epoch_i[i,0]+1)+alf_epoch_i[i,0])
         
         IF plot_i[0] EQ -1 THEN BEGIN
            PRINT,'No Alfven events for epoch #' + STRCOMPRESS(i,/REMOVE_ALL) + '!!!' 
@@ -138,22 +140,22 @@ PRO GET_DATA_FOR_ALFVENDB_EPOCH_PLOTS,MAXIMUS=maximus,CDBTIME=cdbTime, $
            print,'nAlfEpochs is now ' + STRCOMPRESS(nAlfEpochs,/REMOVE_ALL) + '...'
         ENDIF ELSE BEGIN
            
-           plot_i_list = LIST(cgsetintersection(plot_i,alf_ind_list[0])) ;pos and neg
-           plot_i_list.add,cgsetintersection(plot_i,alf_ind_list[1])
+           plot_i_list = LIST(CGSETINTERSECTION(plot_i,alf_ind_list[0])) ;pos and neg
+           plot_i_list.add,CGSETINTERSECTION(plot_i,alf_ind_list[1])
            
            ;; get relevant time range
-           alf_t=LIST( (DOUBLE(cdbTime[plot_i_list[0]])-DOUBLE(alf_centerTime[i]))/3600. )
+           alf_t       = LIST( (DOUBLE(cdbTime[plot_i_list[0]])-DOUBLE(alf_centerTime[i]))/3600. )
            alf_t.add,( (DOUBLE(cdbTime[plot_i_list[1]])-DOUBLE(alf_centerTime[i]))/3600. )
            
            ;; get corresponding data
-           alf_y=LIST(maxData[plot_i_list[0]])
+           alf_y       = LIST(maxData[plot_i_list[0]])
            alf_y.add,ABS(maxData[plot_i_list[1]])
            IF KEYWORD_SET(log_dbquantity) THEN BEGIN
               alf_y[0] = ALOG10(alf_y[0])
               alf_y[1] = ALOG10(alf_y[1])
            ENDIF
 
-           nEVTot = MAKE_ARRAY(2,/INTEGER,VALUE=0)
+           nEVTot      = MAKE_ARRAY(2,/INTEGER,VALUE=0)
            
            IF i EQ 0 THEN BEGIN
               tot_plot_i_pos_list=LIST(plot_i_list[0])
@@ -177,7 +179,8 @@ PRO GET_DATA_FOR_ALFVENDB_EPOCH_PLOTS,MAXIMUS=maximus,CDBTIME=cdbTime, $
         ENDELSE
      ENDIF ELSE BEGIN
         ;; get appropriate indices
-        plot_i=cgsetintersection(good_i,INDGEN(alf_epoch_i[i,1]-alf_epoch_i[i,0]+1)+alf_epoch_i[i,0])
+        plot_i    = CGSETINTERSECTION(good_i,LINDGEN(alf_epoch_i[i,1]-alf_epoch_i[i,0]+1)+alf_epoch_i[i,0])
+        plot_i    = CGSETINTERSECTION(good_i,LINDGEN(alf_epoch_i[i,1]-alf_epoch_i[i,0]+1)+alf_epoch_i[i,0])
         
         IF plot_i[0] EQ -1 THEN BEGIN
            PRINT,'No Alfven events for epoch #' + STRCOMPRESS(i,/REMOVE_ALL) + '!!!' 
@@ -187,7 +190,7 @@ PRO GET_DATA_FOR_ALFVENDB_EPOCH_PLOTS,MAXIMUS=maximus,CDBTIME=cdbTime, $
         ENDIF ELSE BEGIN
            
            ;; get relevant time range
-           alf_t=(DOUBLE(cdbTime[plot_i])-DOUBLE(alf_centerTime[i]))/3600.
+           alf_t  = (DOUBLE(cdbTime[plot_i])-DOUBLE(alf_centerTime[i]))/3600.
            
            ;; get corresponding data
            IF KEYWORD_SET(only_neg) THEN BEGIN

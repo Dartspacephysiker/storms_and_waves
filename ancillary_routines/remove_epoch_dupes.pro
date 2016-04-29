@@ -17,7 +17,7 @@ PRO REMOVE_EPOCH_DUPES,NEPOCHS=nEpochs, $
      tAftNoDupes = hours_aft_for_no_dupes
   ENDELSE
   
-  keep_arr = MAKE_ARRAY(nEpochs,/INTEGER,VALUE=1)
+  keep_arr = MAKE_ARRAY(nEpochs,/L64,VALUE=1)
   
   FOR i=0,nEpochs-1 DO BEGIN
      
