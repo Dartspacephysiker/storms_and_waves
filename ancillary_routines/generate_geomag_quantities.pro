@@ -329,6 +329,102 @@ PRO GENERATE_GEOMAG_QUANTITIES,DATSTARTSTOP=datStartStop,NEPOCHS=nEpochs, $
         yRange        = KEYWORD_SET(yRange) ? yRange : [-27,20.2]
      ENDIF
 
+     IF STRLOWCASE(omni_quantity) EQ 'cusploc_n_gsm__z' THEN BEGIN
+        LOAD_tiltAngle_DB,tiltAngle
+        geomag_dat    = tiltAngle.cusploc_n_GSM[2,*]
+        geomag_time_utc = tiltAngle.time
+        dataTitle     = 'Z comp. (GSM) of Northern Cusp '
+        yRange        = KEYWORD_SET(yRange) ? yRange : [0.8,1.0]
+     ENDIF
+
+     IF STRLOWCASE(omni_quantity) EQ 'cusploc_s_gsm__z' THEN BEGIN
+        LOAD_tiltAngle_DB,tiltAngle
+        geomag_dat    = tiltAngle.cusploc_n_GSM[2,*]
+        geomag_time_utc = tiltAngle.time
+        dataTitle     = 'Z comp. (GSM) of South Cusp '
+        yRange        = KEYWORD_SET(yRange) ? yRange : [-1.0,0.8]
+     ENDIF
+
+     IF STRLOWCASE(omni_quantity) EQ 'cusploc_n_geo__z' THEN BEGIN
+        LOAD_tiltAngle_DB,tiltAngle
+        geomag_dat    = tiltAngle.cusploc_n_GEO[2,*]
+        geomag_time_utc = tiltAngle.time
+        dataTitle     = 'Z comp. (GEO) of South Cusp '
+        yRange        = KEYWORD_SET(yRange) ? yRange : [0.8,1.0]
+     ENDIF
+
+     IF STRLOWCASE(omni_quantity) EQ 'cusploc_s_geo__z' THEN BEGIN
+        LOAD_tiltAngle_DB,tiltAngle
+        geomag_dat    = tiltAngle.cusploc_n_GEO[2,*]
+        geomag_time_utc = tiltAngle.time
+        dataTitle     = 'Z comp. (GEO) of South Cusp '
+        yRange        = KEYWORD_SET(yRange) ? yRange : [0.8,1.0]
+     ENDIF
+
+     IF STRLOWCASE(omni_quantity) EQ 'cusploc_n_gsm__x' THEN BEGIN
+        LOAD_tiltAngle_DB,tiltAngle
+        geomag_dat    = tiltAngle.cusploc_n_GSM[0,*]
+        geomag_time_utc = tiltAngle.time
+        dataTitle     = 'X comp. (GSM) of Northern Cusp '
+        yRange        = KEYWORD_SET(yRange) ? yRange : [-0.45,0.35]
+     ENDIF
+
+     IF STRLOWCASE(omni_quantity) EQ 'cusploc_s_gsm__x' THEN BEGIN
+        LOAD_tiltAngle_DB,tiltAngle
+        geomag_dat    = tiltAngle.cusploc_n_GSM[0,*]
+        geomag_time_utc = tiltAngle.time
+        dataTitle     = 'X comp. (GSM) of South Cusp '
+        yRange        = KEYWORD_SET(yRange) ? yRange : [-0.35,0.45]
+     ENDIF
+
+     IF STRLOWCASE(omni_quantity) EQ 'cusploc_n_geo__x' THEN BEGIN
+        LOAD_tiltAngle_DB,tiltAngle
+        geomag_dat    = tiltAngle.cusploc_n_GEO[0,*]
+        geomag_time_utc = tiltAngle.time
+        dataTitle     = 'X comp. (GEO) of South Cusp '
+        yRange        = KEYWORD_SET(yRange) ? yRange : [-0.1,0.1]
+     ENDIF
+
+     IF STRLOWCASE(omni_quantity) EQ 'cusploc_s_geo__x' THEN BEGIN
+        LOAD_tiltAngle_DB,tiltAngle
+        geomag_dat    = tiltAngle.cusploc_n_GEO[0,*]
+        geomag_time_utc = tiltAngle.time
+        dataTitle     = 'X comp. (GEO) of South Cusp '
+        yRange        = KEYWORD_SET(yRange) ? yRange : [-0.1,0.1]
+     ENDIF
+
+     IF STRLOWCASE(omni_quantity) EQ 'cusploc_n_gsm__y' THEN BEGIN
+        LOAD_tiltAngle_DB,tiltAngle
+        geomag_dat    = tiltAngle.cusploc_n_GSM[1,*]
+        geomag_time_utc = tiltAngle.time
+        dataTitle     = 'Y comp. (GSM) of Northern Cusp '
+        yRange        = KEYWORD_SET(yRange) ? yRange : [0.8,1.0]
+     ENDIF
+
+     IF STRLOWCASE(omni_quantity) EQ 'cusploc_s_gsm__y' THEN BEGIN
+        LOAD_tiltAngle_DB,tiltAngle
+        geomag_dat    = tiltAngle.cusploc_n_GSM[1,*]
+        geomag_time_utc = tiltAngle.time
+        dataTitle     = 'Y comp. (GSM) of South Cusp '
+        yRange        = KEYWORD_SET(yRange) ? yRange : [-1.0,0.8]
+     ENDIF
+
+     IF STRLOWCASE(omni_quantity) EQ 'cusploc_n_geo__y' THEN BEGIN
+        LOAD_tiltAngle_DB,tiltAngle
+        geomag_dat    = tiltAngle.cusploc_n_GEO[1,*]
+        geomag_time_utc = tiltAngle.time
+        dataTitle     = 'Y comp. (GEO) of South Cusp '
+        yRange        = KEYWORD_SET(yRange) ? yRange : [-0.2,0.2]
+     ENDIF
+
+     IF STRLOWCASE(omni_quantity) EQ 'cusploc_s_geo__y' THEN BEGIN
+        LOAD_tiltAngle_DB,tiltAngle
+        geomag_dat    = tiltAngle.cusploc_n_GEO[1,*]
+        geomag_time_utc = tiltAngle.time
+        dataTitle     = 'Y comp. (GEO) of South Cusp '
+        yRange        = KEYWORD_SET(yRange) ? yRange : [-0.2,0.2]
+     ENDIF
+
      IF STRLOWCASE(omni_quantity) EQ 'dst' THEN BEGIN
         LOAD_DST_AE_DBS,dst
         ;; do_DST        = 0
