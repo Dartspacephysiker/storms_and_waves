@@ -21,6 +21,8 @@ PRO GENERATE_GEOMAG_QUANTITIES,DATSTARTSTOP=datStartStop,NEPOCHS=nEpochs, $
                                YRANGE=yRange,SET_YRANGE=set_yRange,USE_DATA_MINMAX=use_data_minMax, $
                                DATATITLE=dataTitle
  
+  COMPILE_OPT idl2
+
   defUse_data_minMax = 0
 
   defDo_Dst = 0
@@ -46,268 +48,298 @@ PRO GENERATE_GEOMAG_QUANTITIES,DATSTARTSTOP=datStartStop,NEPOCHS=nEpochs, $
      yRange = defDstRange
      PRINT,'GENERATE_GEOMAG_QUANTITIES: Using Dst...'
   ENDIF ELSE BEGIN
-     geomag_time_utc = (sw_data.epoch.dat-62167219200000.0000D)/1000.0D ;For conversion between SW DB and ours
+     ;; geomag_time_utc = (sw_data.epoch.dat-62167219200000.0000D)/1000.0D ;For conversion between SW DB and ours
+     geomag_time_utc = CDF_EPOCH_TO_UTC(sw_data.epoch.dat) ;For conversion between SW DB and ours
      
-     IF STRLOWCASE(omni_quantity) EQ 'imf' THEN  BEGIN
-        badVal = sw_data.imf.fillVal
-        geomag_dat = sw_data.imf.dat
-        dataTitle = sw_data.imf.lablAxis + '(' + sw_data.imf.units + ')'
-        yRange = KEYWORD_SET(yRange) ? yRange : [sw_data.imf.validMin,sw_data.imf.validMax]
-     ENDIF
-     
-     IF STRLOWCASE(omni_quantity) EQ 'pls' THEN  BEGIN
-        badVal = sw_data.pls.fillVal
-        geomag_dat = sw_data.pls.dat
-        dataTitle = sw_data.pls.lablAxis + '(' + sw_data.pls.units + ')'
-        yRange = KEYWORD_SET(yRange) ? yRange : [sw_data.pls.validMin,sw_data.pls.validMax]
-     ENDIF
-     IF STRLOWCASE(omni_quantity) EQ 'imf_pts' THEN  BEGIN
-        badVal = sw_data.imf_pts.fillVal
-        geomag_dat = sw_data.imf_pts.dat
-        dataTitle = sw_data.imf_pts.lablAxis + '(' + sw_data.imf_pts.units + ')'
-        yRange = KEYWORD_SET(yRange) ? yRange : [sw_data.imf_pts.validMin,sw_data.imf_pts.validMax]
-     ENDIF
-     IF STRLOWCASE(omni_quantity) EQ 'pls_pts' THEN  BEGIN
-        badVal = sw_data.pls_pts.fillVal
-        geomag_dat = sw_data.pls_pts.dat
-        dataTitle = sw_data.pls_pts.lablAxis + '(' + sw_data.pls_pts.units + ')'
-        yRange = KEYWORD_SET(yRange) ? yRange : [sw_data.pls_pts.validMin,sw_data.pls_pts.validMax]
+     IF STRLOWCASE(omni_quantity) EQ 'imf' THEN BEGIN
+        badVal        = sw_data.imf.fillVal
+        geomag_dat    = sw_data.imf.dat
+        dataTitle     = sw_data.imf.lablAxis + '(' + sw_data.imf.units + ')'
+        yRange        = KEYWORD_SET(yRange) ? yRange : [sw_data.imf.validMin,sw_data.imf.validMax]
      ENDIF
      
-     IF STRLOWCASE(omni_quantity) EQ 'percent_interp' THEN  BEGIN
-        badVal = sw_data.percent_interp.fillVal
-        geomag_dat = sw_data.percent_interp.dat
-        dataTitle = sw_data.percent_interp.lablAxis + '(' + sw_data.percent_interp.units + ')'
-        yRange = KEYWORD_SET(yRange) ? yRange : [sw_data.percent_interp.validMin,sw_data.percent_interp.validMax]
+     IF STRLOWCASE(omni_quantity) EQ 'pls' THEN BEGIN
+        badVal        = sw_data.pls.fillVal
+        geomag_dat    = sw_data.pls.dat
+        dataTitle     = sw_data.pls.lablAxis + '(' + sw_data.pls.units + ')'
+        yRange        = KEYWORD_SET(yRange) ? yRange : [sw_data.pls.validMin,sw_data.pls.validMax]
      ENDIF
-     IF STRLOWCASE(omni_quantity) EQ 'timeshift' THEN  BEGIN
-        badVal = sw_data.timeshift.fillVal
-        geomag_dat = sw_data.timeshift.dat
-        dataTitle = sw_data.timeshift.lablAxis + '(' + sw_data.timeshift.units + ')'
-        yRange = KEYWORD_SET(yRange) ? yRange : [sw_data.timeshift.validMin,sw_data.timeshift.validMax]
+     IF STRLOWCASE(omni_quantity) EQ 'imf_pts' THEN BEGIN
+        badVal        = sw_data.imf_pts.fillVal
+        geomag_dat    = sw_data.imf_pts.dat
+        dataTitle     = sw_data.imf_pts.lablAxis + '(' + sw_data.imf_pts.units + ')'
+        yRange        = KEYWORD_SET(yRange) ? yRange : [sw_data.imf_pts.validMin,sw_data.imf_pts.validMax]
      ENDIF
-     IF STRLOWCASE(omni_quantity) EQ 'rms_timeshift' THEN  BEGIN
-        badVal = sw_data.rms_timeshift.fillVal
-        geomag_dat = sw_data.rms_timeshift.dat
-        dataTitle = sw_data.rms_timeshift.lablAxis + '(' + sw_data.rms_timeshift.units + ')'
-        yRange = KEYWORD_SET(yRange) ? yRange : [sw_data.rms_timeshift.validMin,sw_data.rms_timeshift.validMax]
-     ENDIF
-     IF STRLOWCASE(omni_quantity) EQ 'rms_phase' THEN  BEGIN
-        badVal = sw_data.rms_phase.fillVal
-        geomag_dat = sw_data.rms_phase.dat
-        dataTitle = sw_data.rms_phase.lablAxis + '(' + sw_data.rms_phase.units + ')'
-        yRange = KEYWORD_SET(yRange) ? yRange : [sw_data.rms_phase.validMin,sw_data.rms_phase.validMax]
-     ENDIF
-     IF STRLOWCASE(omni_quantity) EQ 'time_btwn_obs' THEN  BEGIN
-        badVal = sw_data.time_btwn_obs.fillVal
-        geomag_dat = sw_data.time_btwn_obs.dat
-        dataTitle = sw_data.time_btwn_obs.lablAxis + '(' + sw_data.time_btwn_obs.units + ')'
-        yRange = KEYWORD_SET(yRange) ? yRange : [sw_data.time_btwn_obs.validMin,sw_data.time_btwn_obs.validMax]
+     IF STRLOWCASE(omni_quantity) EQ 'pls_pts' THEN BEGIN
+        badVal        = sw_data.pls_pts.fillVal
+        geomag_dat    = sw_data.pls_pts.dat
+        dataTitle     = sw_data.pls_pts.lablAxis + '(' + sw_data.pls_pts.units + ')'
+        yRange        = KEYWORD_SET(yRange) ? yRange : [sw_data.pls_pts.validMin,sw_data.pls_pts.validMax]
      ENDIF
      
-     IF STRLOWCASE(omni_quantity) EQ 'f' THEN  BEGIN
-        badVal = sw_data.f.fillVal
-        geomag_dat = sw_data.f.dat
-        dataTitle = sw_data.f.lablAxis + '(' + sw_data.f.units + ')'
-        yRange = KEYWORD_SET(yRange) ? yRange : [sw_data.f.validMin,sw_data.f.validMax]
+     IF STRLOWCASE(omni_quantity) EQ 'percent_interp' THEN BEGIN
+        badVal        = sw_data.percent_interp.fillVal
+        geomag_dat    = sw_data.percent_interp.dat
+        dataTitle     = sw_data.percent_interp.lablAxis + '(' + sw_data.percent_interp.units + ')'
+        yRange        = KEYWORD_SET(yRange) ? yRange : [sw_data.percent_interp.validMin,sw_data.percent_interp.validMax]
+     ENDIF
+     IF STRLOWCASE(omni_quantity) EQ 'timeshift' THEN BEGIN
+        badVal        = sw_data.timeshift.fillVal
+        geomag_dat    = sw_data.timeshift.dat
+        dataTitle     = sw_data.timeshift.lablAxis + '(' + sw_data.timeshift.units + ')'
+        yRange        = KEYWORD_SET(yRange) ? yRange : [sw_data.timeshift.validMin,sw_data.timeshift.validMax]
+     ENDIF
+     IF STRLOWCASE(omni_quantity) EQ 'rms_timeshift' THEN BEGIN
+        badVal        = sw_data.rms_timeshift.fillVal
+        geomag_dat    = sw_data.rms_timeshift.dat
+        dataTitle     = sw_data.rms_timeshift.lablAxis + '(' + sw_data.rms_timeshift.units + ')'
+        yRange        = KEYWORD_SET(yRange) ? yRange : [sw_data.rms_timeshift.validMin,sw_data.rms_timeshift.validMax]
+     ENDIF
+     IF STRLOWCASE(omni_quantity) EQ 'rms_phase' THEN BEGIN
+        badVal        = sw_data.rms_phase.fillVal
+        geomag_dat    = sw_data.rms_phase.dat
+        dataTitle     = sw_data.rms_phase.lablAxis + '(' + sw_data.rms_phase.units + ')'
+        yRange        = KEYWORD_SET(yRange) ? yRange : [sw_data.rms_phase.validMin,sw_data.rms_phase.validMax]
+     ENDIF
+     IF STRLOWCASE(omni_quantity) EQ 'time_btwn_obs' THEN BEGIN
+        badVal        = sw_data.time_btwn_obs.fillVal
+        geomag_dat    = sw_data.time_btwn_obs.dat
+        dataTitle     = sw_data.time_btwn_obs.lablAxis + '(' + sw_data.time_btwn_obs.units + ')'
+        yRange        = KEYWORD_SET(yRange) ? yRange : [sw_data.time_btwn_obs.validMin,sw_data.time_btwn_obs.validMax]
      ENDIF
      
-     IF STRLOWCASE(omni_quantity) EQ 'bx_gse' THEN  BEGIN
-        badVal = sw_data.bx_gse.fillVal
-        geomag_dat = sw_data.bx_gse.dat
-        dataTitle = sw_data.bx_gse.lablAxis + '(' + sw_data.bx_gse.units + ')'
-        yRange = KEYWORD_SET(yRange) ? yRange : [sw_data.bx_gse.validMin,sw_data.bx_gse.validMax]
+     IF STRLOWCASE(omni_quantity) EQ 'f' THEN BEGIN
+        badVal        = sw_data.f.fillVal
+        geomag_dat    = sw_data.f.dat
+        dataTitle     = sw_data.f.lablAxis + '(' + sw_data.f.units + ')'
+        yRange        = KEYWORD_SET(yRange) ? yRange : [sw_data.f.validMin,sw_data.f.validMax]
      ENDIF
-     IF STRLOWCASE(omni_quantity) EQ 'by_gse' THEN  BEGIN
-        badVal = sw_data.by_gse.fillVal
-        geomag_dat = sw_data.by_gse.dat
-        dataTitle = sw_data.by_gse.lablAxis + '(' + sw_data.by_gse.units + ')'
-        yRange = KEYWORD_SET(yRange) ? yRange : [sw_data.by_gse.validMin,sw_data.by_gse.validMax]
+     
+     IF STRLOWCASE(omni_quantity) EQ 'bx_gse' THEN BEGIN
+        badVal        = sw_data.bx_gse.fillVal
+        geomag_dat    = sw_data.bx_gse.dat
+        dataTitle     = sw_data.bx_gse.lablAxis + '(' + sw_data.bx_gse.units + ')'
+        yRange        = KEYWORD_SET(yRange) ? yRange : [sw_data.bx_gse.validMin,sw_data.bx_gse.validMax]
      ENDIF
-     IF STRLOWCASE(omni_quantity) EQ 'bz_gse' THEN  BEGIN
-	badVal = sw_data.bz_gse.fillVal
-        geomag_dat = sw_data.bz_gse.dat
-        dataTitle = sw_data.bz_gse.lablAxis + '(' + sw_data.bz_gse.units + ')'
-        yRange = KEYWORD_SET(yRange) ? yRange : [sw_data.bz_gse.validMin,sw_data.bz_gse.validMax]
+     IF STRLOWCASE(omni_quantity) EQ 'by_gse' THEN BEGIN
+        badVal        = sw_data.by_gse.fillVal
+        geomag_dat    = sw_data.by_gse.dat
+        dataTitle     = sw_data.by_gse.lablAxis + '(' + sw_data.by_gse.units + ')'
+        yRange        = KEYWORD_SET(yRange) ? yRange : [sw_data.by_gse.validMin,sw_data.by_gse.validMax]
      ENDIF
-     IF STRLOWCASE(omni_quantity) EQ 'by_gsm' THEN  BEGIN
-        badVal = sw_data.by_gsm.fillVal
-        geomag_dat = sw_data.by_gsm.dat
-        dataTitle = sw_data.by_gsm.lablAxis + '(' + sw_data.by_gsm.units + ')'
-        yRange = KEYWORD_SET(yRange) ? yRange : [sw_data.by_gsm.validMin,sw_data.by_gsm.validMax]
+     IF STRLOWCASE(omni_quantity) EQ 'bz_gse' THEN BEGIN
+	badVal        = sw_data.bz_gse.fillVal
+        geomag_dat    = sw_data.bz_gse.dat
+        dataTitle     = sw_data.bz_gse.lablAxis + '(' + sw_data.bz_gse.units + ')'
+        yRange        = KEYWORD_SET(yRange) ? yRange : [sw_data.bz_gse.validMin,sw_data.bz_gse.validMax]
      ENDIF
-     IF STRLOWCASE(omni_quantity) EQ 'bz_gsm' THEN  BEGIN
-        badVal = sw_data.bz_gsm.fillVal
-        geomag_dat = sw_data.bz_gsm.dat
-        dataTitle = sw_data.bz_gsm.lablAxis + '(' + sw_data.bz_gsm.units + ')'
-        yRange = KEYWORD_SET(yRange) ? yRange : [sw_data.bz_gsm.validMin,sw_data.bz_gsm.validMax]
+     IF STRLOWCASE(omni_quantity) EQ 'by_gsm' THEN BEGIN
+        badVal        = sw_data.by_gsm.fillVal
+        geomag_dat    = sw_data.by_gsm.dat
+        dataTitle     = sw_data.by_gsm.lablAxis + '(' + sw_data.by_gsm.units + ')'
+        yRange        = KEYWORD_SET(yRange) ? yRange : [sw_data.by_gsm.validMin,sw_data.by_gsm.validMax]
      ENDIF
-     IF STRLOWCASE(omni_quantity) EQ 'rms_sd_b' THEN  BEGIN
-        badVal = sw_data.rms_sd_b.fillVal
-        geomag_dat = sw_data.rms_sd_b.dat
-        dataTitle = sw_data.rms_sd_b.lablAxis + '(' + sw_data.rms_sd_b.units + ')'
-        yRange = KEYWORD_SET(yRange) ? yRange : [sw_data.rms_sd_b.validMin,sw_data.rms_sd_b.validMax]
+     IF STRLOWCASE(omni_quantity) EQ 'bz_gsm' THEN BEGIN
+        badVal        = sw_data.bz_gsm.fillVal
+        geomag_dat    = sw_data.bz_gsm.dat
+        dataTitle     = sw_data.bz_gsm.lablAxis + '(' + sw_data.bz_gsm.units + ')'
+        yRange        = KEYWORD_SET(yRange) ? yRange : [sw_data.bz_gsm.validMin,sw_data.bz_gsm.validMax]
+     ENDIF
+     IF STRLOWCASE(omni_quantity) EQ 'rms_sd_b' THEN BEGIN
+        badVal        = sw_data.rms_sd_b.fillVal
+        geomag_dat    = sw_data.rms_sd_b.dat
+        dataTitle     = sw_data.rms_sd_b.lablAxis + '(' + sw_data.rms_sd_b.units + ')'
+        yRange        = KEYWORD_SET(yRange) ? yRange : [sw_data.rms_sd_b.validMin,sw_data.rms_sd_b.validMax]
      ENDIF
      
      IF STRLOWCASE(omni_quantity) EQ 'flow_speed' THEN BEGIN
-        badVal = 99999.8984375
-        geomag_dat = sw_data.flow_speed.dat
-        dataTitle = 'Flow Speed (km/s), GSE'
+        badVal        = 99999.8984375
+        geomag_dat    = sw_data.flow_speed.dat
+        dataTitle     = 'Flow Speed (km/s), GSE'
      ENDIF
      
-     IF STRLOWCASE(omni_quantity) EQ 'vx' THEN  BEGIN
-        badVal = sw_data.vx.fillVal
-        geomag_dat = sw_data.vx.dat
-        dataTitle = sw_data.vx.lablAxis + '(' + sw_data.vx.units + ')'
-        yRange = KEYWORD_SET(yRange) ? yRange : [sw_data.vx.validMin,sw_data.vx.validMax]
+     IF STRLOWCASE(omni_quantity) EQ 'vx' THEN BEGIN
+        badVal        = sw_data.vx.fillVal
+        geomag_dat    = sw_data.vx.dat
+        dataTitle     = sw_data.vx.lablAxis + '(' + sw_data.vx.units + ')'
+        yRange        = KEYWORD_SET(yRange) ? yRange : [sw_data.vx.validMin,sw_data.vx.validMax]
      ENDIF
-     IF STRLOWCASE(omni_quantity) EQ 'vy' THEN  BEGIN
-        badVal = sw_data.vy.fillVal
-        geomag_dat = sw_data.vy.dat
-        dataTitle = sw_data.vy.lablAxis + '(' + sw_data.vy.units + ')'
-        yRange = KEYWORD_SET(yRange) ? yRange : [sw_data.vy.validMin,sw_data.vy.validMax]
+     IF STRLOWCASE(omni_quantity) EQ 'vy' THEN BEGIN
+        badVal        = sw_data.vy.fillVal
+        geomag_dat    = sw_data.vy.dat
+        dataTitle     = sw_data.vy.lablAxis + '(' + sw_data.vy.units + ')'
+        yRange        = KEYWORD_SET(yRange) ? yRange : [sw_data.vy.validMin,sw_data.vy.validMax]
      ENDIF
-     IF STRLOWCASE(omni_quantity) EQ 'vz' THEN  BEGIN
-        badVal = sw_data.vz.fillVal
-        geomag_dat = sw_data.vz.dat
-        dataTitle = sw_data.vz.lablAxis + '(' + sw_data.vz.units + ')'
-        yRange = KEYWORD_SET(yRange) ? yRange : [sw_data.vz.validMin,sw_data.vz.validMax]
-     ENDIF
-     
-     IF STRLOWCASE(omni_quantity) EQ 'proton_density' THEN  BEGIN
-        badVal = sw_data.proton_density.fillVal
-        geomag_dat = sw_data.proton_density.dat
-        dataTitle = sw_data.proton_density.lablAxis + '(' + sw_data.proton_density.units + ')'
-        yRange = KEYWORD_SET(yRange) ? yRange : [sw_data.proton_density.validMin,sw_data.proton_density.validMax]
-     ENDIF
-     IF STRLOWCASE(omni_quantity) EQ 't' THEN  BEGIN
-        badVal = sw_data.t.fillVal
-        geomag_dat = sw_data.t.dat
-        dataTitle = sw_data.t.lablAxis + '(' + sw_data.t.units + ')'
-        yRange = KEYWORD_SET(yRange) ? yRange : [sw_data.t.validMin,sw_data.t.validMax]
+     IF STRLOWCASE(omni_quantity) EQ 'vz' THEN BEGIN
+        badVal        = sw_data.vz.fillVal
+        geomag_dat    = sw_data.vz.dat
+        dataTitle     = sw_data.vz.lablAxis + '(' + sw_data.vz.units + ')'
+        yRange        = KEYWORD_SET(yRange) ? yRange : [sw_data.vz.validMin,sw_data.vz.validMax]
      ENDIF
      
-     IF STRLOWCASE(omni_quantity) EQ 'pressure' THEN  BEGIN
-        badVal = sw_data.pressure.fillVal
-        geomag_dat = sw_data.pressure.dat
-        dataTitle = sw_data.pressure.lablAxis + '(' + sw_data.pressure.units + ')'
-        yRange = KEYWORD_SET(yRange) ? yRange : [sw_data.pressure.validMin,sw_data.pressure.validMax]
+     IF STRLOWCASE(omni_quantity) EQ 'proton_density' THEN BEGIN
+        badVal        = sw_data.proton_density.fillVal
+        geomag_dat    = sw_data.proton_density.dat
+        dataTitle     = sw_data.proton_density.lablAxis + '(' + sw_data.proton_density.units + ')'
+        yRange        = KEYWORD_SET(yRange) ? yRange : [sw_data.proton_density.validMin,sw_data.proton_density.validMax]
      ENDIF
-     ;; IF STRLOWCASE(omni_quantity) EQ 'pressure' THEN  BEGIN
-     ;;    badVal = 99.9900
+     IF STRLOWCASE(omni_quantity) EQ 't' THEN BEGIN
+        badVal        = sw_data.t.fillVal
+        geomag_dat    = sw_data.t.dat
+        dataTitle     = sw_data.t.lablAxis + '(' + sw_data.t.units + ')'
+        yRange        = KEYWORD_SET(yRange) ? yRange : [sw_data.t.validMin,sw_data.t.validMax]
+     ENDIF
+     
+     IF STRLOWCASE(omni_quantity) EQ 'pressure' THEN BEGIN
+        badVal        = sw_data.pressure.fillVal
+        geomag_dat    = sw_data.pressure.dat
+        dataTitle     = sw_data.pressure.lablAxis + '(' + sw_data.pressure.units + ')'
+        yRange        = KEYWORD_SET(yRange) ? yRange : [sw_data.pressure.validMin,sw_data.pressure.validMax]
+     ENDIF
+     ;; IF STRLOWCASE(omni_quantity) EQ 'pressure' THEN BEGIN
+     ;;    badVal     = 99.9900
      ;;    geomag_dat = sw_data.pressure.dat
-     ;;    dataTitle = 'Flow pressure (nPa)'
+     ;;    dataTitle  = 'Flow pressure (nPa)'
      ;; ENDIF
      
-     IF STRLOWCASE(omni_quantity) EQ 'e' THEN  BEGIN
-        badVal = sw_data.e.fillVal
-        geomag_dat = sw_data.e.dat
-        dataTitle = sw_data.e.lablAxis + '(' + sw_data.e.units + ')'
-        yRange = KEYWORD_SET(yRange) ? yRange : [sw_data.e.validMin,sw_data.e.validMax]
+     IF STRLOWCASE(omni_quantity) EQ 'e' THEN BEGIN
+        badVal        = sw_data.e.fillVal
+        geomag_dat    = sw_data.e.dat
+        dataTitle     = sw_data.e.lablAxis + '(' + sw_data.e.units + ')'
+        yRange        = KEYWORD_SET(yRange) ? yRange : [sw_data.e.validMin,sw_data.e.validMax]
      ENDIF
-     IF STRLOWCASE(omni_quantity) EQ 'beta' THEN  BEGIN
-        badVal = sw_data.beta.fillVal
-        geomag_dat = sw_data.beta.dat
-        dataTitle = sw_data.beta.lablAxis + '(' + sw_data.beta.units + ')'
-        yRange = KEYWORD_SET(yRange) ? yRange : [sw_data.beta.validMin,sw_data.beta.validMax]
+     IF STRLOWCASE(omni_quantity) EQ 'beta' THEN BEGIN
+        badVal        = sw_data.beta.fillVal
+        geomag_dat    = sw_data.beta.dat
+        dataTitle     = sw_data.beta.lablAxis + '(' + sw_data.beta.units + ')'
+        yRange        = KEYWORD_SET(yRange) ? yRange : [sw_data.beta.validMin,sw_data.beta.validMax]
      ENDIF
-     IF STRLOWCASE(omni_quantity) EQ 'mach_num' THEN  BEGIN
-        badVal = sw_data.mach_num.fillVal
-        geomag_dat = sw_data.mach_num.dat
-        dataTitle = sw_data.mach_num.lablAxis + '(' + sw_data.mach_num.units + ')'
-        yRange = KEYWORD_SET(yRange) ? yRange : [sw_data.mach_num.validMin,sw_data.mach_num.validMax]
+     IF STRLOWCASE(omni_quantity) EQ 'mach_num' THEN BEGIN
+        badVal        = sw_data.mach_num.fillVal
+        geomag_dat    = sw_data.mach_num.dat
+        dataTitle     = sw_data.mach_num.lablAxis + '(' + sw_data.mach_num.units + ')'
+        yRange        = KEYWORD_SET(yRange) ? yRange : [sw_data.mach_num.validMin,sw_data.mach_num.validMax]
      ENDIF
-     IF STRLOWCASE(omni_quantity) EQ 'mgs_mach_num' THEN  BEGIN
-        badVal = sw_data.mgs_mach_num.fillVal
-        geomag_dat = sw_data.mgs_mach_num.dat
-        dataTitle = sw_data.mgs_mach_num.lablAxis + '(' + sw_data.mgs_mach_num.units + ')'
-        yRange = KEYWORD_SET(yRange) ? yRange : [sw_data.mgs_mach_num.validMin,sw_data.mgs_mach_num.validMax]
-     ENDIF
-     
-     IF STRLOWCASE(omni_quantity) EQ 'bsn_x' THEN  BEGIN
-        badVal = sw_data.bsn_x.fillVal
-        geomag_dat = sw_data.bsn_x.dat
-        dataTitle = sw_data.bsn_x.lablAxis + '(' + sw_data.bsn_x.units + ')'
-        yRange = KEYWORD_SET(yRange) ? yRange : [sw_data.bsn_x.validMin,sw_data.bsn_x.validMax]
-     ENDIF
-     IF STRLOWCASE(omni_quantity) EQ 'bsn_y' THEN  BEGIN
-        badVal = sw_data.bsn_y.fillVal
-        geomag_dat = sw_data.bsn_y.dat
-        dataTitle = sw_data.bsn_y.lablAxis + '(' + sw_data.bsn_y.units + ')'
-        yRange = KEYWORD_SET(yRange) ? yRange : [sw_data.bsn_y.validMin,sw_data.bsn_y.validMax]
-     ENDIF
-     IF STRLOWCASE(omni_quantity) EQ 'bsn_z' THEN  BEGIN
-        badVal = sw_data.bsn_z.fillVal
-        geomag_dat = sw_data.bsn_z.dat
-        dataTitle = sw_data.bsn_z.lablAxis + '(' + sw_data.bsn_z.units + ')'
-        yRange = KEYWORD_SET(yRange) ? yRange : [sw_data.bsn_z.validMin,sw_data.bsn_z.validMax]
+     IF STRLOWCASE(omni_quantity) EQ 'mgs_mach_num' THEN BEGIN
+        badVal        = sw_data.mgs_mach_num.fillVal
+        geomag_dat    = sw_data.mgs_mach_num.dat
+        dataTitle     = sw_data.mgs_mach_num.lablAxis + '(' + sw_data.mgs_mach_num.units + ')'
+        yRange        = KEYWORD_SET(yRange) ? yRange : [sw_data.mgs_mach_num.validMin,sw_data.mgs_mach_num.validMax]
      ENDIF
      
-     IF STRLOWCASE(omni_quantity) EQ 'ae_index' THEN  BEGIN
-        badVal = sw_data.ae_index.fillVal
-        geomag_dat = sw_data.ae_index.dat
-        dataTitle = sw_data.ae_index.lablAxis + '(' + sw_data.ae_index.units + ')'
-        yRange = KEYWORD_SET(yRange) ? yRange : [sw_data.ae_index.validMin,sw_data.ae_index.validMax]
+     IF STRLOWCASE(omni_quantity) EQ 'bsn_x' THEN BEGIN
+        badVal        = sw_data.bsn_x.fillVal
+        geomag_dat    = sw_data.bsn_x.dat
+        dataTitle     = sw_data.bsn_x.lablAxis + '(' + sw_data.bsn_x.units + ')'
+        yRange        = KEYWORD_SET(yRange) ? yRange : [sw_data.bsn_x.validMin,sw_data.bsn_x.validMax]
      ENDIF
-     IF STRLOWCASE(omni_quantity) EQ 'al_index' THEN  BEGIN
-        badVal = sw_data.al_index.fillVal
-        geomag_dat = sw_data.al_index.dat
-        dataTitle = sw_data.al_index.lablAxis + '(' + sw_data.al_index.units + ')'
-        yRange = KEYWORD_SET(yRange) ? yRange : [sw_data.al_index.validMin,sw_data.al_index.validMax]
+     IF STRLOWCASE(omni_quantity) EQ 'bsn_y' THEN BEGIN
+        badVal        = sw_data.bsn_y.fillVal
+        geomag_dat    = sw_data.bsn_y.dat
+        dataTitle     = sw_data.bsn_y.lablAxis + '(' + sw_data.bsn_y.units + ')'
+        yRange        = KEYWORD_SET(yRange) ? yRange : [sw_data.bsn_y.validMin,sw_data.bsn_y.validMax]
      ENDIF
-     IF STRLOWCASE(omni_quantity) EQ 'au_index' THEN  BEGIN
-        badVal = sw_data.au_index.fillVal
-        geomag_dat = sw_data.au_index.dat
-        dataTitle = sw_data.au_index.lablAxis + '(' + sw_data.au_index.units + ')'
-        yRange = KEYWORD_SET(yRange) ? yRange : [sw_data.au_index.validMin,sw_data.au_index.validMax]
-     ENDIF
-     
-     IF STRLOWCASE(omni_quantity) EQ 'sym_d' THEN  BEGIN
-        badVal = sw_data.sym_d.fillVal
-        geomag_dat = sw_data.sym_d.dat
-        dataTitle = sw_data.sym_d.lablAxis + '(' + sw_data.sym_d.units + ')'
-        yRange = KEYWORD_SET(yRange) ? yRange : [sw_data.sym_d.validMin,sw_data.sym_d.validMax]
-     ENDIF
-     IF STRLOWCASE(omni_quantity) EQ 'sym_h' THEN  BEGIN
-        badVal = sw_data.sym_h.fillVal
-        geomag_dat = sw_data.sym_h.dat
-        dataTitle = sw_data.sym_h.lablAxis + '(' + sw_data.sym_h.units + ')'
-        yRange = KEYWORD_SET(yRange) ? yRange : [sw_data.sym_h.validMin,sw_data.sym_h.validMax]
+     IF STRLOWCASE(omni_quantity) EQ 'bsn_z' THEN BEGIN
+        badVal        = sw_data.bsn_z.fillVal
+        geomag_dat    = sw_data.bsn_z.dat
+        dataTitle     = sw_data.bsn_z.lablAxis + '(' + sw_data.bsn_z.units + ')'
+        yRange        = KEYWORD_SET(yRange) ? yRange : [sw_data.bsn_z.validMin,sw_data.bsn_z.validMax]
      ENDIF
      
-     IF STRLOWCASE(omni_quantity) EQ 'asy_d' THEN  BEGIN
-        badVal = sw_data.asy_d.fillVal
-        geomag_dat = sw_data.asy_d.dat
-        dataTitle = sw_data.asy_d.lablAxis + '(' + sw_data.asy_d.units + ')'
-        yRange = KEYWORD_SET(yRange) ? yRange : [sw_data.asy_d.validMin,sw_data.asy_d.validMax]
+     IF STRLOWCASE(omni_quantity) EQ 'ae_index' THEN BEGIN
+        badVal        = sw_data.ae_index.fillVal
+        geomag_dat    = sw_data.ae_index.dat
+        dataTitle     = sw_data.ae_index.lablAxis + '(' + sw_data.ae_index.units + ')'
+        yRange        = KEYWORD_SET(yRange) ? yRange : [sw_data.ae_index.validMin,sw_data.ae_index.validMax]
      ENDIF
-     IF STRLOWCASE(omni_quantity) EQ 'asy_h' THEN  BEGIN
-        badVal = sw_data.asy_h.fillVal
-        geomag_dat = sw_data.asy_h.dat
-        dataTitle = sw_data.asy_h.lablAxis + '(' + sw_data.asy_h.units + ')'
-        yRange = KEYWORD_SET(yRange) ? yRange : [sw_data.asy_h.validMin,sw_data.asy_h.validMax]
+     IF STRLOWCASE(omni_quantity) EQ 'al_index' THEN BEGIN
+        badVal        = sw_data.al_index.fillVal
+        geomag_dat    = sw_data.al_index.dat
+        dataTitle     = sw_data.al_index.lablAxis + '(' + sw_data.al_index.units + ')'
+        yRange        = KEYWORD_SET(yRange) ? yRange : [sw_data.al_index.validMin,sw_data.al_index.validMax]
+     ENDIF
+     IF STRLOWCASE(omni_quantity) EQ 'au_index' THEN BEGIN
+        badVal        = sw_data.au_index.fillVal
+        geomag_dat    = sw_data.au_index.dat
+        dataTitle     = sw_data.au_index.lablAxis + '(' + sw_data.au_index.units + ')'
+        yRange        = KEYWORD_SET(yRange) ? yRange : [sw_data.au_index.validMin,sw_data.au_index.validMax]
      ENDIF
      
-     IF STRLOWCASE(omni_quantity) EQ 'pc_n_index' THEN  BEGIN
-        badVal = sw_data.pc_n_index.fillVal
-        geomag_dat = sw_data.pc_n_index.dat
-        dataTitle = sw_data.pc_n_index.lablAxis + '(' + sw_data.pc_n_index.units + ')'
-        yRange = KEYWORD_SET(yRange) ? yRange : [sw_data.pc_n_index.validMin,sw_data.pc_n_index.validMax]
+     IF STRLOWCASE(omni_quantity) EQ 'sym_d' THEN BEGIN
+        badVal        = sw_data.sym_d.fillVal
+        geomag_dat    = sw_data.sym_d.dat
+        dataTitle     = sw_data.sym_d.lablAxis + '(' + sw_data.sym_d.units + ')'
+        yRange        = KEYWORD_SET(yRange) ? yRange : [sw_data.sym_d.validMin,sw_data.sym_d.validMax]
      ENDIF
-     ;; IF STRLOWCASE(omni_quantity) EQ 'pc_n_index' THEN  BEGIN
-     ;;    badVal = 999.990
+     IF STRLOWCASE(omni_quantity) EQ 'sym_h' THEN BEGIN
+        badVal        = sw_data.sym_h.fillVal
+        geomag_dat    = sw_data.sym_h.dat
+        dataTitle     = sw_data.sym_h.lablAxis + '(' + sw_data.sym_h.units + ')'
+        yRange        = KEYWORD_SET(yRange) ? yRange : [sw_data.sym_h.validMin,sw_data.sym_h.validMax]
+     ENDIF
+     
+     IF STRLOWCASE(omni_quantity) EQ 'asy_d' THEN BEGIN
+        badVal        = sw_data.asy_d.fillVal
+        geomag_dat    = sw_data.asy_d.dat
+        dataTitle     = sw_data.asy_d.lablAxis + '(' + sw_data.asy_d.units + ')'
+        yRange        = KEYWORD_SET(yRange) ? yRange : [sw_data.asy_d.validMin,sw_data.asy_d.validMax]
+     ENDIF
+     IF STRLOWCASE(omni_quantity) EQ 'asy_h' THEN BEGIN
+        badVal        = sw_data.asy_h.fillVal
+        geomag_dat    = sw_data.asy_h.dat
+        dataTitle     = sw_data.asy_h.lablAxis + '(' + sw_data.asy_h.units + ')'
+        yRange        = KEYWORD_SET(yRange) ? yRange : [sw_data.asy_h.validMin,sw_data.asy_h.validMax]
+     ENDIF
+     
+     IF STRLOWCASE(omni_quantity) EQ 'pc_n_index' THEN BEGIN
+        badVal        = sw_data.pc_n_index.fillVal
+        geomag_dat    = sw_data.pc_n_index.dat
+        dataTitle     = sw_data.pc_n_index.lablAxis + '(' + sw_data.pc_n_index.units + ')'
+        yRange        = KEYWORD_SET(yRange) ? yRange : [sw_data.pc_n_index.validMin,sw_data.pc_n_index.validMax]
+     ENDIF
+     ;; IF STRLOWCASE(omni_quantity) EQ 'pc_n_index' THEN BEGIN
+     ;;    badVal     = 999.990
      ;;    geomag_dat = sw_data.pc_n_index.dat
-     ;;    yRange = KEYWORD_SET(yRange) ? yRange : [-5.0,25.0]
-     ;;    dataTitle = 'PC(N) Index'
+     ;;    yRange     = KEYWORD_SET(yRange) ? yRange : [-5.0,25.0]
+     ;;    dataTitle  = 'PC(N) Index'
      ;; ENDIF
 
-     IF STRLOWCASE(omni_quantity) EQ 'epoch' THEN  BEGIN
-        badVal = sw_data.epoch.fillVal
-        geomag_dat = sw_data.epoch.dat
-        dataTitle = sw_data.epoch.lablAxis + '(' + sw_data.epoch.units + ')'
-        yRange = KEYWORD_SET(yRange) ? yRange : [sw_data.epoch.validMin,sw_data.epoch.validMax]
+     IF STRLOWCASE(omni_quantity) EQ 'epoch' THEN BEGIN
+        badVal        = sw_data.epoch.fillVal
+        geomag_dat    = sw_data.epoch.dat
+        dataTitle     = sw_data.epoch.lablAxis + '(' + sw_data.epoch.units + ')'
+        yRange        = KEYWORD_SET(yRange) ? yRange : [sw_data.epoch.validMin,sw_data.epoch.validMax]
      ENDIF
      
+     IF STRLOWCASE(omni_quantity) EQ 'ssn' THEN BEGIN
+        LOAD_SSN_DB,ssn
+        badVal        = -1
+        DO_alt_badval = 1
+        geomag_dat    = ssn.ssn
+        geomag_time_utc = ssn.time
+        dataTitle     = 'Sunspot number'
+        yRange        = KEYWORD_SET(yRange) ? yRange : [0,250]
+     ENDIF
+
+     IF STRLOWCASE(omni_quantity) EQ 'tiltangle' THEN BEGIN
+        LOAD_tiltAngle_DB,tiltAngle
+        geomag_dat    = tiltAngle.angle
+        geomag_time_utc = tiltAngle.time
+        dataTitle     = 'Dipole Tilt Angle (degrees)'
+        yRange        = KEYWORD_SET(yRange) ? yRange : [-27,20.2]
+     ENDIF
+
+     IF STRLOWCASE(omni_quantity) EQ 'dst' THEN BEGIN
+        LOAD_DST_AE_DBS,dst
+        ;; do_DST        = 0
+        omni_quantity = 'Dst'
+        dataTitle     = 'Dst (nT)'
+        geomag_time_utc = DST.time
+        geomag_dat    = DST.dst
+        yRange        = KEYWORD_SET(yRange) ? yRange : defDstRange
+        PRINT,'GENERATE_GEOMAG_QUANTITIES: Using Dst...'
+     ENDIF
+
      ;;Smooth, if requested
      IF KEYWORD_SET(smoothWindow) THEN BEGIN
         PRINT,'Smoothing ' + omni_quantity + ' with ' + STRCOMPRESS(smoothWindow,/REMOVE_ALL) + '-min window ...'
@@ -330,11 +362,15 @@ PRO GENERATE_GEOMAG_QUANTITIES,DATSTARTSTOP=datStartStop,NEPOCHS=nEpochs, $
      
      ;;Junk the bad
      IF N_ELEMENTS(badVal) NE 0 THEN BEGIN
-        goodInd=WHERE(geomag_dat LT badVal,nGood,NCOMPLEMENT=nBad)
+        IF KEYWORD_SET(do_alt_badval) THEN BEGIN
+           goodInd=WHERE(geomag_dat NE badVal,nGood,NCOMPLEMENT=nBad)
+        ENDIF ELSE BEGIN
+           goodInd=WHERE(geomag_dat LT badVal,nGood,NCOMPLEMENT=nBad)
+        ENDELSE
         PRINT,'Removing ' + STRCOMPRESS(nBad,/REMOVE_ALL) + ' bad data points from ' + omni_quantity + '...'
         PRINT,'Keeping ' + STRCOMPRESS(nGood,/REMOVE_ALL) + " good'ns points from " + omni_quantity + '...'
-        geomag_dat = geomag_dat(goodInd)
-        geomag_time_utc = geomag_time_utc(goodInd)
+        geomag_dat = geomag_dat[goodInd]
+        geomag_time_utc = geomag_time_utc[goodInd]
      ENDIF
      
   ENDELSE
@@ -385,6 +421,9 @@ PRO GENERATE_GEOMAG_QUANTITIES,DATSTARTSTOP=datStartStop,NEPOCHS=nEpochs, $
      PRINT,"ASY_H"
      PRINT,"PC_N_INDEX"
      PRINT,"EPOCH"
+     PRINT,"SSN"
+     PRINT,"TILTANGLE"
+     PRINT,"DST"
      PRINT,'Returning...'
      RETURN
   ENDIF ELSE BEGIN
@@ -396,34 +435,33 @@ PRO GENERATE_GEOMAG_QUANTITIES,DATSTARTSTOP=datStartStop,NEPOCHS=nEpochs, $
 
      PRINT,"Logging OMNI data!"
      PRINT,"Losing " + STRCOMPRESS(nBad,/REMOVE_ALL) + " unloggable points..."
-     geomag_dat = ALOG10(geomag_dat(goodDat_i))
-     geomag_time_utc = geomag_time_utc(goodDat_i)
+     geomag_dat           = ALOG10(geomag_dat[goodDat_i])
+     geomag_time_utc      = geomag_time_utc[goodDat_i]
      IF N_ELEMENTS(yRange) EQ 2 THEN BEGIN
-        logme=WHERE(ABS(yRange) GT 0.0,COMPLEMENT=dontlogme)
-        yRange(logMe) = ALOG10(yRange(logme))
-        yRange(dontLogMe) = -5.
+        logme             = WHERE(ABS(yRange) GT 0.0,COMPLEMENT=dontlogme)
+        yRange[logMe]     = ALOG10(yRange[logme])
+        yRange[dontLogMe] = -5.
         ENDIF
   ENDIF
-
      
   ;; Now get a list of indices for OMNI data to be plotted for the epoch start/stop times in datStartStop
-  geomag_plot_i_list = LIST(WHERE(geomag_time_utc GE datStartStop(0,0) AND $ ;first initialize the list
-                                  geomag_time_utc LE datStartStop(0,1)))
-  geomag_time_list = LIST(geomag_time_utc(geomag_plot_i_list(0)))
+  geomag_plot_i_list = LIST(WHERE(geomag_time_utc GE datStartStop[0,0] AND $ ;first initialize the list
+                                  geomag_time_utc LE datStartStop[0,1]))
+  geomag_time_list   = LIST(geomag_time_utc[geomag_plot_i_list[0]])
 
-  geomag_dat_list = LIST(geomag_dat(geomag_plot_i_list(0)))
+  geomag_dat_list    = LIST(geomag_dat[geomag_plot_i_list[0]])
   
-  IF N_ELEMENTS(geomag_min) EQ 0 THEN geomag_min = MIN(geomag_dat_list(0)) ;For plots, we need the range
-  IF N_ELEMENTS(geomag_max) EQ 0 THEN geomag_max = MAX(geomag_dat_list(0))
+  IF N_ELEMENTS(geomag_min) EQ 0 THEN geomag_min = MIN(geomag_dat_list[0]) ;For plots, we need the range
+  IF N_ELEMENTS(geomag_max) EQ 0 THEN geomag_max = MAX(geomag_dat_list[0])
   
   FOR i=1,nEpochs-1 DO BEGIN    ;Then update it
-     geomag_plot_i_list.add,WHERE(geomag_time_utc GE datStartStop(i,0) AND $
-                                  geomag_time_utc LE datStartStop(i,1))
-     geomag_dat_list.add,geomag_dat(geomag_plot_i_list(i))
+     geomag_plot_i_list.add,WHERE(geomag_time_utc GE datStartStop[i,0] AND $
+                                  geomag_time_utc LE datStartStop[i,1])
+     geomag_dat_list.add,geomag_dat[geomag_plot_i_list[i]]
      
-     geomag_time_list.add,geomag_time_utc(geomag_plot_i_list(i))
+     geomag_time_list.add,geomag_time_utc[geomag_plot_i_list[i]]
      
-     tempMin = MIN(geomag_dat_list(i),MAX=tempMax)
+     tempMin = MIN(geomag_dat_list[i],MAX=tempMax)
      IF tempMin LT geomag_min THEN geomag_min=tempMin
      IF tempMax GT geomag_max THEN geomag_max=tempMax
   ENDFOR
