@@ -67,6 +67,9 @@ PRO STACKPLOTS_STORMS_ALFVENDBQUANTITIES_OVERLAID,stormTimeArray_utc, $
                              USE_AE=use_AE, $
                              OMNI_QUANTITY=omni_quantity, $
                              LOG_OMNI_QUANTITY=log_omni_quantity, $
+                             SET_GEOMAG_YRANGE=set_geomag_yRange, $
+                             GEOMAG_YRANGE=geomag_yRange, $
+                             GEOMAG_LINETRANSP=geomag_lineTransp, $
                              USE_DATA_MINMAX=use_data_minMax, $
                              NEVENTHISTS=nEventHists, $
                              HISTOBINSIZE=histoBinSize, $
@@ -79,6 +82,7 @@ PRO STACKPLOTS_STORMS_ALFVENDBQUANTITIES_OVERLAID,stormTimeArray_utc, $
                              MAXIND=maxInd, AVG_TYPE_MAXIND=avg_type_maxInd, $
                              RESTRICT_ALTRANGE=restrict_altRange, $
                              RESTRICT_CHARERANGE=restrict_charERange, $
+                             RESTRICT_POYNTRANGE=restrict_poyntRange, $
                              LOG_DBQUANTITY=log_DBquantity, $
                              YTITLE_MAXIND=yTitle_maxInd, $
                              YRANGE_MAXIND=yRange_maxInd, $
@@ -105,6 +109,7 @@ PRO STACKPLOTS_STORMS_ALFVENDBQUANTITIES_OVERLAID,stormTimeArray_utc, $
                              OUT_GEOMAGPLOTS=out_geomagPlots,OUT_GEOMAGWINDOW=geomagWindow, $
                              OUT_DATSTARTSTOP=out_datStartStop, $
                              SHOW_DATA_AVAILABILITY= show_data_availability, $
+                             YEAR_AND_SEASON_MODE=year_and_season_mode, $
                              EPS_OUTPUT=eps_output
   
   
@@ -206,7 +211,9 @@ PRO STACKPLOTS_STORMS_ALFVENDBQUANTITIES_OVERLAID,stormTimeArray_utc, $
                              OMNI_QUANTITY=omni_quantity,LOG_OMNI_QUANTITY=log_omni_quantity, $
                              GEOMAG_PLOT_I_LIST=geomag_plot_i_list,GEOMAG_DAT_LIST=geomag_dat_list,GEOMAG_TIME_LIST=geomag_time_list, $
                              GEOMAG_MIN=geomag_min,GEOMAG_MAX=geomag_max,DO_DST=do_Dst, $
-                             YRANGE=yRange,/SET_YRANGE,USE_DATA_MINMAX=use_data_minMax, $
+                             YRANGE=geomag_yRange, $
+                             SET_YRANGE=set_geomag_yRange, $
+                             USE_DATA_MINMAX=use_data_minMax, $
                              DATATITLE=geomagTitle
 
   ;; ;Now plot geomag quantities
@@ -237,22 +244,24 @@ PRO STACKPLOTS_STORMS_ALFVENDBQUANTITIES_OVERLAID,stormTimeArray_utc, $
                                                      XTITLE='Hours since ' + tstamps[i], $
                                                      XRANGE=xRange, $
                                                      YTITLE=KEYWORD_SET(just_one_label) ? (i EQ 1 ? yTitle : !NULL ) : yTitle, $
-                                                     YRANGE=yRange, $
-                                                     YTICKNAME=['-100','-50','0'], $
-                                                     YTICKVALUES=[-100,-50,0], $
+                                                     YRANGE=geomag_yRange, $
+                                                     ;; YTICKNAME=['-100','-50','0'], $
+                                                     ;; YTICKVALUES=[-100,-50,0], $
                                                      ;; YTICKNAME=['-100','-75','-50','-25','0','25'], $
                                                      ;; YTICKVALUES=[-100,-75,-50,-25,0,25], $
                                                      YMINOR=4, $
                                                      LOGYPLOT=logYPlot, $
                                                      LINETHICK=lineThick, $
                                                      ;; LINETRANSP=lineTransp, $
-                                                     LINETRANSP=0, $
+                                                     LINETRANSP=KEYWORD_SET(geomag_lineTransp) ? geomag_lineTransp : 0, $
                                                      OVERPLOT=0, $
                                                      CURRENT=1, $
                                                      MARGIN=stackplotMargin, $
                                                      LAYOUT=[1,nEpochs,i+1], $
                                                      CLIP=0, $
-                                                     OUTPLOT=geomagPlot,ADD_PLOT_TO_PLOT_ARRAY=add_plot_to_plot_array
+                                                     OUTPLOT=geomagPlot, $
+                                                     ADD_PLOT_TO_PLOT_ARRAY=add_plot_to_plot_array, $
+                                                     YEAR_AND_SEASON_MODE=year_and_season_mode
 
               out_geomagPlots[i] = geomagPlot
 
@@ -271,7 +280,9 @@ PRO STACKPLOTS_STORMS_ALFVENDBQUANTITIES_OVERLAID,stormTimeArray_utc, $
                                        DATSTARTSTOP=datStartStop,TSTAMPS=tStamps,GOOD_I=good_i, $
                                        NALFEPOCHS=nAlfEpochs,ALF_EPOCH_T=alf_epoch_t,ALF_EPOCH_I=alf_epoch_i, $
                                        ALF_CENTERTIME=alf_centerTime,ALF_TSTAMPS=alf_tStamps, $
-                                       RESTRICT_ALTRANGE=restrict_altRange,RESTRICT_CHARERANGE=restrict_charERange, $
+                                       RESTRICT_ALTRANGE=restrict_altRange, $
+                                       RESTRICT_CHARERANGE=restrict_charERange, $
+                                       RESTRICT_POYNTRANGE=restrict_poyntRange, $
                                        MINMLT=minM,MAXMLT=maxM,BINM=binM,MINILAT=minI,MAXILAT=maxI,BINI=binI, $
                                        DO_LSHELL=do_lshell,MINLSHELL=minL,MAXLSHELL=maxL,BINL=binL, $
                                        DAYSIDE=dayside,NIGHTSIDE=nightside, $
@@ -583,6 +594,7 @@ PRO STACKPLOTS_STORMS_ALFVENDBQUANTITIES_OVERLAID,stormTimeArray_utc, $
         
         PLOT_ALFVENDB_DATA_AVAILABILITY__EPOCH,tRanges_orbs,centerTime[i], $
                                                XRANGE=xRange, $
+                                               YEAR_AND_SEASON_MODE=year_and_season_mode, $
                                                BOTTOM_YRANGE=KEYWORD_SET(yRange_maxInd) ? yRange_maxInd[0] : minDat, $
                                                CURRENT=1, $
                                                MARGIN=stackplotMargin, $
@@ -593,7 +605,7 @@ PRO STACKPLOTS_STORMS_ALFVENDBQUANTITIES_OVERLAID,stormTimeArray_utc, $
   ENDIF
 
   IF KEYWORD_SET(savePlot) THEN BEGIN
-     SET_PLOT_DIR,plotDir,/FOR_STORMS,/VERBOSE,/ADD_TODAY
+     SET_PLOT_DIR,plotDir,FOR_STORMS=~KEYWORD_SET(year_and_season_mode),FOR_ALFVENDB=KEYWORD_SET(year_and_season_mode),/VERBOSE,/ADD_TODAY
      PRINT,"Saving plot to file: " + plotDir + savePName
      geomagWindow.save,plotDir + savePName,RESOLUTION=defRes
 

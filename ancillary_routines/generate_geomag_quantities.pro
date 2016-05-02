@@ -45,7 +45,7 @@ PRO GENERATE_GEOMAG_QUANTITIES,DATSTARTSTOP=datStartStop,NEPOCHS=nEpochs, $
      dataTitle = 'Dst (nT)'
      geomag_time_utc = DST.time
      geomag_dat = DST.dst
-     yRange = defDstRange
+     yRange = KEYWORD_SET(yRange) ? yRange : defDstRange
      PRINT,'GENERATE_GEOMAG_QUANTITIES: Using Dst...'
   ENDIF ELSE BEGIN
      ;; geomag_time_utc = (sw_data.epoch.dat-62167219200000.0000D)/1000.0D ;For conversion between SW DB and ours
