@@ -16,6 +16,7 @@ PRO GET_EPOCH_T_AND_INDS_FOR_ALFVENDB,maximus,cdbTime,NEPOCHS=nEpochs,TBEFOREEPO
                                       CENTERTIME=centerTime, $
                                       DATSTARTSTOP=datStartStop,TSTAMPS=tStamps,GOOD_I=good_i, $
                                       NALFEPOCHS=nAlfEpochs,ALF_EPOCH_T=alf_epoch_t,ALF_EPOCH_I=alf_epoch_i, $
+                                      EMPTY_EPOCHS_I=empty_epochs_i, $
                                       ALF_CENTERTIME=alf_centerTime,ALF_TSTAMPS=alf_tStamps, $
                                       RESTRICT_ALTRANGE=restrict_altRange, $
                                       RESTRICT_CHARERANGE=restrict_charERange, $
@@ -33,6 +34,7 @@ PRO GET_EPOCH_T_AND_INDS_FOR_ALFVENDB,maximus,cdbTime,NEPOCHS=nEpochs,TBEFOREEPO
   include     = MAKE_ARRAY(nEpochs,/BYTE,VALUE=0)
   alf_epoch_t = MAKE_ARRAY(nEpochs,2,/DOUBLE)
   alf_epoch_i = MAKE_ARRAY(nEpochs,2,/L64)
+  empty_epochs_i = !NULL
 
   good_i      = GET_CHASTON_IND(maximus,"OMNI",-1, $
                                 BOTH_HEMIS=both_hemis, $
@@ -71,7 +73,9 @@ PRO GET_EPOCH_T_AND_INDS_FOR_ALFVENDB,maximus,cdbTime,NEPOCHS=nEpochs,TBEFOREEPO
      test               = WHERE( ( VALUE_LOCATE(datStartStop[i,*],cdbTime[plot_i]) ) EQ 0,count)
      IF count GT 0 THEN BEGIN
         include[i]      = 1
-     ENDIF
+     ENDIF ELSE BEGIN
+        empty_epochs_i  = [empty_epochs_i,i]
+     ENDELSE
      ;; include[i] = (tempClosest/3600. LE tBeforeEpoch AND tempClosest/3600. LE tAfterEpoch)
      ;; include[i]         = ((tempClosest/3600.0D GE (-tBeforeEpoch) AND tempClosest/3600.0D LE 0) $
      ;;                       OR (tempClosest/3600.0D LE tAfterEpoch AND tempClosest/3600.0D GE 0))

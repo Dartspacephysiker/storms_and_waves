@@ -180,7 +180,6 @@ PRO GET_DATA_FOR_ALFVENDB_EPOCH_PLOTS,MAXIMUS=maximus,CDBTIME=cdbTime, $
      ENDIF ELSE BEGIN
         ;; get appropriate indices
         plot_i    = CGSETINTERSECTION(good_i,LINDGEN(alf_epoch_i[i,1]-alf_epoch_i[i,0]+1)+alf_epoch_i[i,0])
-        plot_i    = CGSETINTERSECTION(good_i,LINDGEN(alf_epoch_i[i,1]-alf_epoch_i[i,0]+1)+alf_epoch_i[i,0])
         
         IF plot_i[0] EQ -1 THEN BEGIN
            PRINT,'No Alfven events for epoch #' + STRCOMPRESS(i,/REMOVE_ALL) + '!!!' 
