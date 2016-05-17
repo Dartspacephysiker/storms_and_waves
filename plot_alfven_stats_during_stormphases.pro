@@ -81,6 +81,7 @@ PRO PLOT_ALFVEN_STATS_DURING_STORMPHASES,$
    DO_GROSSRATE_FLUXQUANTITIES=do_grossRate_fluxQuantities, $
    DO_GROSSRATE_WITH_LONG_WIDTH=do_grossRate_with_long_width, $
    WRITE_GROSSRATE_INFO_TO_THIS_FILE=grossRate_info_file, $
+   WRITE_ORB_AND_OBS_INFO=write_obsArr_textFile, $
    DO_LOGAVG_THE_TIMEAVG=do_logavg_the_timeAvg, $
    DIVIDE_BY_WIDTH_X=divide_by_width_x, $
    MULTIPLY_BY_WIDTH_X=multiply_by_width_x, $
@@ -273,6 +274,7 @@ PRO PLOT_ALFVEN_STATS_DURING_STORMPHASES,$
                                   DO_GROSSRATE_FLUXQUANTITIES=do_grossRate_fluxQuantities, $
                                   DO_GROSSRATE_WITH_LONG_WIDTH=do_grossRate_with_long_width, $
                                   WRITE_GROSSRATE_INFO_TO_THIS_FILE=grossRate_info_file, $
+                                  WRITE_ORB_AND_OBS_INFO=write_obsArr_textFile, $
                                   DO_LOGAVG_THE_TIMEAVG=do_logavg_the_timeAvg, $
                                   DIVIDE_BY_WIDTH_X=divide_by_width_x, $
                                   MULTIPLY_BY_WIDTH_X=multiply_by_width_x, $
