@@ -110,8 +110,12 @@ PRO PLOT_ALFVEN_STATS_DURING_STORMPHASES,$
    WRITEASCII=writeASCII, WRITEHDF5=writeHDF5, WRITEPROCESSEDH2D=writeProcessedH2d, $
    SAVERAW=saveRaw, RAWDIR=rawDir, $
    JUSTDATA=justData, SHOWPLOTSNOSAVE=showPlotsNoSave, $
-   PLOTDIR=plotDir, PLOTPREFIX=plotPrefix, PLOTSUFFIX=plotSuffix, $
-   MEDHISTOUTDATA=medHistOutData, MEDHISTOUTTXT=medHistOutTxt, $
+   PLOTDIR=plotDir, $
+   PLOTPREFIX=plotPrefix, $
+   PLOTSUFFIX=plotSuffix, $
+   TXTOUTPUTDIR=txtOutputDir, $
+   MEDHISTOUTDATA=medHistOutData, $
+   MEDHISTOUTTXT=medHistOutTxt, $
    OUTPUTPLOTSUMMARY=outputPlotSummary, $
    DEL_PS=del_PS, $
    EPS_OUTPUT=eps_output, $
@@ -144,6 +148,7 @@ PRO PLOT_ALFVEN_STATS_DURING_STORMPHASES,$
   LOAD_DST_AE_DBS,dst,ae
 
   SET_PLOT_DIR,plotDir,/FOR_STORMS,/ADD_TODAY
+  SET_TXTOUTPUT_DIR,txtOutputDir,/FOR_STORMS,/ADD_TODAY
 
   IF NOT (KEYWORD_SET(hemi) OR $
           KEYWORD_SET(north) OR KEYWORD_SET(south) OR $
@@ -306,8 +311,12 @@ PRO PLOT_ALFVEN_STATS_DURING_STORMPHASES,$
                                   WRITEPROCESSEDH2D=writeProcessedH2d, $
                                   SAVERAW=saveRaw, RAWDIR=rawDir, $
                                   JUSTDATA=justData, SHOWPLOTSNOSAVE=showPlotsNoSave, $
-                                  PLOTDIR=plotDir, PLOTPREFIX=strings[i], PLOTSUFFIX=plotSuffix, $
-                                  MEDHISTOUTDATA=medHistOutData, MEDHISTOUTTXT=medHistOutTxt, $
+                                  PLOTDIR=plotDir, $
+                                  PLOTPREFIX=strings[i], $
+                                  PLOTSUFFIX=plotSuffix, $
+                                  TXTOUTPUTDIR=txtOutputDir, $
+                                  MEDHISTOUTDATA=medHistOutData, $
+                                  MEDHISTOUTTXT=medHistOutTxt, $
                                   OUTPUTPLOTSUMMARY=outputPlotSummary, $
                                   DEL_PS=del_PS, $
                                   EPS_OUTPUT=eps_output, $

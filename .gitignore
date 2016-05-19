@@ -3,4 +3,5 @@
 *.pro~
 
 #No temp dir
-temp/
+temp/#No txtOutput dir
+txtOutput/
