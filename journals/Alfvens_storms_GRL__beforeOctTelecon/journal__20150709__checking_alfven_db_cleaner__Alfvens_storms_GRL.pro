@@ -1,5 +1,5 @@
 
-restore,'../database/dartdb/saves/Dartdb_20150611--500-16361_inc_lower_lats--maximus.sav'
+restore,'../database/FAST/dartdb/saves/Dartdb_20150611--500-16361_inc_lower_lats--maximus.sav'
 
 maximus=resize_maximus(maximus,maximus_ind=6,max_for_ind=1.0e3,min_for_ind=10,/ONLY_ABSVALS)
 

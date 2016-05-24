@@ -55,7 +55,7 @@ PRO JOURNAL__20150702__produce_five_panel_plot__Alfven_storm_GRL
   sw_data_plotter_and_dartdb_ind_getter,prod='SYM-H',center_t=ct,before_t=1,after_t=1,DARTDB_INDS_LIST=storm_i_list
   storm_i=storm_i_list[0]
 
-  restore,'../database/dartdb/saves/Dartdb_20150611--500-16361_inc_lower_lats--maximus.sav'
+  restore,'../database/FAST/dartdb/saves/Dartdb_20150611--500-16361_inc_lower_lats--maximus.sav'
   print,maximus.time[storm_i]
 
   tmpTime=str_to_time(maximus.time[storm_i[0]])

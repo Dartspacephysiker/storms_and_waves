@@ -22,7 +22,7 @@ PRO JOURNAL__20150819__histos_of_all_maximus_quantities
   PRINT,FORMAT='("Below logHighLim (log, LT 0): ",I0)',N_ELEMENTS(WHERE(ALOG10(ABS(maximus.\1(WHERE(maximus.\1 LT 0)))) LE logHighLim))
   PRINT,''
 
-  DBFile = '/SPENCEdata/Research/database/dartdb/saves/Dartdb_20150814--500-16361_inc_lower_lats--burst_1000-16361--maximus.sav' 
+  DBFile = '/SPENCEdata/Research/database/FAST/dartdb/saves/Dartdb_20150814--500-16361_inc_lower_lats--burst_1000-16361--maximus.sav' 
   restore,DBFile
 
   date='20150819'

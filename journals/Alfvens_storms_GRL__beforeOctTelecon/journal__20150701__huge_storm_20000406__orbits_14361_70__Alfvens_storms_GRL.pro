@@ -5,7 +5,7 @@
 ;-
 PRO JOURNAL__20150701__huge_storm_20000406__orbits_14361_70__Alfven_storm_GRL
 
-restore,'../database/dartdb/saves/Dartdb_20150611--500-16361_inc_lower_lats--maximus--wpFlux.sav'
+restore,'../database/FAST/dartdb/saves/Dartdb_20150611--500-16361_inc_lower_lats--maximus--wpFlux.sav'
 
 minOrb=14368
 maxOrb=14369

@@ -17,6 +17,6 @@ sw_data_plotter_and_dartdb_ind_getter,center_t=myTime,prod='SYM-H',dartdb_inds_l
 
 bigStorm_i=dartDB_inds_list(0)
 bigStorm_OMNI_i=omni_inds_list(0)
-dbFile='../database/dartdb/saves/Dartdb_20150611--500-16361_inc_lower_lats--maximus.sav'
+dbFile='../database/FAST/dartdb/saves/Dartdb_20150611--500-16361_inc_lower_lats--maximus.sav'
 save,bigStorm_i,bigStorm_OMNI_i,dbFile,FILENAME='PLOT_INDICES--Huge_20000716_storm.sav'
 

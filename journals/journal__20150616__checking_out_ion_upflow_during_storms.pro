@@ -14,7 +14,7 @@ KEY_SCATTERPLOTS_POLARPROJ,/SOUTH,/OVERLAYAURZONE,PLOTSUFF='large_storms_-15_to_
 ;;All right, they reveal nothing interesting... So let's move on!
 ;;A look at ion outflow directly, perhaps?
 
-;; restore,'../database/dartdb/saves/Dartdb_20150611--500-16361_inc_lower_lats--maximus.sav'
+;; restore,'../database/FAST/dartdb/saves/Dartdb_20150611--500-16361_inc_lower_lats--maximus.sav'
 ;; mTags=tag_names(maximus)
 ;; print,mTags(14:19)
 ;;**************************************************
@@ -46,7 +46,7 @@ SUPERPOSE_STORMS_AND_ALFVEN_DB_QUANTITIES,MAXIND=12,STORMTYPE=1,/USE_DARTDB_STAR
                                           NEVBINSIZE=300,TBEFORESTORM=60,TAFTERSTORM=60
 
 
-restore,'../database/dartdb/saves/Dartdb_20150611--500-16361_inc_lower_lats--maximus.sav'
+restore,'../database/FAST/dartdb/saves/Dartdb_20150611--500-16361_inc_lower_lats--maximus.sav'
 largestorm_ind=cgsetintersection(largestorm_ind,where(maximus.max_chare_losscone GE 4 AND maximus.max_chare_losscone LE 5000))
 
 cghistoplot,maximus.ilat(largestorm_ind)

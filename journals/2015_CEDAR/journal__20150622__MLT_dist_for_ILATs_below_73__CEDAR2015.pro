@@ -6,7 +6,7 @@ PRO JOURNAL__20150622__MLT_dist_for_ILATs_below_73__CEDAR2015
   largeStorm_ind=tot_plot_i_list(0)
   FOR i=1,N_ELEMENTS(tot_plot_i_list)-1 DO largeStorm_ind=[largeStorm_ind,tot_plot_i_list(i)]
   
-  restore,'../database/dartdb/saves/Dartdb_20150611--500-16361_inc_lower_lats--maximus.sav'
+  restore,'../database/FAST/dartdb/saves/Dartdb_20150611--500-16361_inc_lower_lats--maximus.sav'
   largestorm_ind=cgsetintersection(largestorm_ind,where(maximus.max_chare_losscone GE 4 AND maximus.max_chare_losscone LE 5000 $
                                                         AND ABS(maximus.ILAT) LT 73))
   

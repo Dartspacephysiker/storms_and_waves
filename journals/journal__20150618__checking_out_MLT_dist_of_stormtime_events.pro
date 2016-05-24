@@ -8,7 +8,7 @@ restore,'superposed_largestorms_-15_to_5_hours.dat'
 largeStorm_ind=tot_plot_i_list(0)
 FOR i=1,N_ELEMENTS(tot_plot_i_list)-1 DO largeStorm_ind=[largeStorm_ind,tot_plot_i_list(i)]
 
-restore,'../database/dartdb/saves/Dartdb_20150611--500-16361_inc_lower_lats--maximus.sav'
+restore,'../database/FAST/dartdb/saves/Dartdb_20150611--500-16361_inc_lower_lats--maximus.sav'
 largestorm_ind=cgsetintersection(largestorm_ind,where(maximus.max_chare_losscone GE 4 AND maximus.max_chare_losscone LE 5000))
 
 pos=[0.15,0.15,0.95,0.925] ;Position of histos in window

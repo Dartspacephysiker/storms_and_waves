@@ -3,8 +3,8 @@
 
 PRO JOURNAL__20150820__generate_stats_on_some_thresholds_for_Alfvens_storms_GRL
   
-  DBFile ='/SPENCEdata/Research/database/dartdb/saves/Dartdb_20150814--500-16361_inc_lower_lats--burst_1000-16361--maximus.sav' 
-  DB_tFile = '/SPENCEdata/Research/database/dartdb/saves/Dartdb_20150814--500-16361_inc_lower_lats--burst_1000-16361--cdbtime.sav' 
+  DBFile ='/SPENCEdata/Research/database/FAST/dartdb/saves/Dartdb_20150814--500-16361_inc_lower_lats--burst_1000-16361--maximus.sav' 
+  DB_tFile = '/SPENCEdata/Research/database/FAST/dartdb/saves/Dartdb_20150814--500-16361_inc_lower_lats--burst_1000-16361--cdbtime.sav' 
   RESTORE,DBFile
   RESTORE,DB_tFile
 

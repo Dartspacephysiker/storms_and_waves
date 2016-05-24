@@ -4,7 +4,7 @@ PRO LOAD_NOAA_AND_BRETT_DBS_AND_QI,stormStruct,SSC1,SSC2,qi,DBDir=DBDir,DB_BRETT
 
   IF N_ELEMENTS(lun) EQ 0 THEN lun = -1
 
-  DBDIR = '/home/spencerh/Research/Cusp/database/sw_omnidata/'
+  DBDIR = '/home/spencerh/Research/Cusp/database/storm_data/'
   DB_Brett = 'large_and_small_storms--1985-2011--Anderson.sav'
   DB_NOAA = 'SSC_dbs--storm2_mods.txt__STORM2_MODS.SSC--idl.sav'
 
