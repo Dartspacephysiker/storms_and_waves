@@ -53,7 +53,7 @@ PRO GET_NONSTORM_MAINPHASE_AND_RECOVERYPHASE_FASTDB_INDICES, $
         help,inds
         GET_STREAKS,inds,START_I=start_dst_ii,STOP_I=stop_dst_ii,SINGLE_I=single_dst_ii
         
-        ;; OPENW,this,'/SPENCEdata/Research/Cusp/storms_Alfvens/get_and_set_routines/startstop_'+strings[i],/GET_LUN
+        ;; OPENW,this,'/SPENCEdata/Research/Satellites/FAST/storms_Alfvens/get_and_set_routines/startstop_'+strings[i],/GET_LUN
         ;; FOR j=0,N_ELEMENTS(start_dst_ii)-1 DO BEGIN
         ;;    printf,this,FORMAT='(I10,T15,I10)',inds[start_dst_ii[j]],inds[stop_dst_ii[j]]
         ;; ENDFOR

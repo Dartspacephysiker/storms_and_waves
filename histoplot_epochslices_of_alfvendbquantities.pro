@@ -91,7 +91,7 @@ PRO HISTOPLOT_EPOCHSLICES_OF_ALFVENDBQUANTITIES,RESTOREFILE=restoreFile, $
 
   IF NOT KEYWORD_SET(epochSlice_histBinsize) THEN epochSlice_histBinsize     = 0.25
 
-  dataDir='/SPENCEdata/Research/Cusp/database/'
+  dataDir='/SPENCEdata/Research/database/'
 
   ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
   ;defaults

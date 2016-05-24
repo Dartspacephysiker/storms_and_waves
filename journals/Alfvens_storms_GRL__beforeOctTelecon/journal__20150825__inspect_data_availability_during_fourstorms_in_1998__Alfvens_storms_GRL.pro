@@ -4,7 +4,7 @@
 
 PRO JOURNAL__20150825__inspect_data_availability_during_fourstorms_in_1998__Alfvens_storms_GRL
 
-  datDir = '/SPENCEdata/Research/Cusp/storms_Alfvens/saves_output_etc/'
+  datDir = '/SPENCEdata/Research/Satellites/FAST/storms_Alfvens/saves_output_etc/'
   datFile = 'data_availability_during_fourStorms_in_1998.sav'
   ;; datFile = 'data_availability_during_fourStorms_in_1998--GE32Hz.sav'
 

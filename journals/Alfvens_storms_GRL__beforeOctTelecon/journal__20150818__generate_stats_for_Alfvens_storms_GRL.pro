@@ -12,7 +12,7 @@
 
 PRO JOURNAL__20150818__GENERATE_STATS_FOR_ALFVENS_STORMS_GRL
 
-  dataDir='/SPENCEdata/Research/Cusp/database/'
+  dataDir='/SPENCEdata/Research/database/'
   DBFile='dartdb/saves/Dartdb_20150814--500-16361_inc_lower_lats--burst_1000-16361--maximus.sav'
   DB_tFile='dartdb/saves/Dartdb_20150814--500-16361_inc_lower_lats--burst_1000-16361--cdbtime.sav'
 

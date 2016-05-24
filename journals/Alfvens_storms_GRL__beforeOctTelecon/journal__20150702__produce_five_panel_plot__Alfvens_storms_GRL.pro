@@ -106,26 +106,26 @@ PRO JOURNAL__20150702__produce_five_panel_plot__Alfven_storm_GRL
   ;; The issue is to decide which data products are most relevant
   ;; FOR i=9,10 DO BEGIN
   FOR i=0,0 DO BEGIN
-     LOAD_FA_K0_ORB,FILENAMES=orb_p+STRCOMPRESS(orbs[i],/REMOVE_ALL)+orb_s,DIR='/SPENCEdata/Research/Cusp/database/FAST_sum_cdfs__20000524/'
+     LOAD_FA_K0_ORB,FILENAMES=orb_p+STRCOMPRESS(orbs[i],/REMOVE_ALL)+orb_s,DIR='/SPENCEdata/Research/database/FAST_sum_cdfs__20000524/'
      PLOT_FA_K0_ORB
 
-     LOAD_FA_K0_TMS,FILENAMES=tms_p+STRCOMPRESS(orbs[i],/REMOVE_ALL)+tms_s,DIR='/SPENCEdata/Research/Cusp/database/FAST_sum_cdfs__20000524/'
+     LOAD_FA_K0_TMS,FILENAMES=tms_p+STRCOMPRESS(orbs[i],/REMOVE_ALL)+tms_s,DIR='/SPENCEdata/Research/database/FAST_sum_cdfs__20000524/'
      PLOT_FA_K0_TMS
      GEN_FA_K0_TMS_GIFPS
 
-     LOAD_FA_K0_EES,FILENAMES=ees_p+STRCOMPRESS(orbs[i],/REMOVE_ALL)+ees_s,DIR='/SPENCEdata/Research/Cusp/database/FAST_sum_cdfs__20000524/'
+     LOAD_FA_K0_EES,FILENAMES=ees_p+STRCOMPRESS(orbs[i],/REMOVE_ALL)+ees_s,DIR='/SPENCEdata/Research/database/FAST_sum_cdfs__20000524/'
      PLOT_FA_K0_EES
      GEN_FA_K0_EES_GIFPS
 
-     LOAD_FA_K0_IES,FILENAMES=ies_p+STRCOMPRESS(orbs[i],/REMOVE_ALL)+ies_s,DIR='/SPENCEdata/Research/Cusp/database/FAST_sum_cdfs__20000524/'
+     LOAD_FA_K0_IES,FILENAMES=ies_p+STRCOMPRESS(orbs[i],/REMOVE_ALL)+ies_s,DIR='/SPENCEdata/Research/database/FAST_sum_cdfs__20000524/'
      PLOT_FA_K0_IES
      GEN_FA_K0_IES_GIFPS
 
-     LOAD_FA_K0_ACF,FILENAMES=acf_p+STRCOMPRESS(orbs[i],/REMOVE_ALL)+acf_s,DIR='/SPENCEdata/Research/Cusp/database/FAST_sum_cdfs__20000524/'
+     LOAD_FA_K0_ACF,FILENAMES=acf_p+STRCOMPRESS(orbs[i],/REMOVE_ALL)+acf_s,DIR='/SPENCEdata/Research/database/FAST_sum_cdfs__20000524/'
      PLOT_FA_K0_ACF
      GEN_FA_K0_ACF_GIFPS
 
-     LOAD_FA_K0_DCF,FILENAMES=dcf_p+STRCOMPRESS(orbs[i],/REMOVE_ALL)+dcf_s,DIR='/SPENCEdata/Research/Cusp/database/FAST_sum_cdfs__20000524/'
+     LOAD_FA_K0_DCF,FILENAMES=dcf_p+STRCOMPRESS(orbs[i],/REMOVE_ALL)+dcf_s,DIR='/SPENCEdata/Research/database/FAST_sum_cdfs__20000524/'
      GEN_FA_K0_DCF_GIFPS
 
   ENDFOR

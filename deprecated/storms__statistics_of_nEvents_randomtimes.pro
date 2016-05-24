@@ -10,7 +10,7 @@ PRO STORMS__STATISTICS_OF_NEVENTS_RANDOMTIMES,NRANDTIME=nRandTime,STARTDATE=star
    OVERLAY_NEVENTHISTS=overlay_nEventHists, NEVRANGE=nEvRange,RET_NEV_tbins_and_HIST=ret_nEv_tbins_and_Hist,RET_MAXIMUS_I_LIST=ret_maximus_i_list, $
    DST=dst,MAXIMUS=maximus,CDBTIME=cdbTime,SW_DATA=sw_data
   
-  dataDir='/SPENCEdata/Research/Cusp/database/'
+  dataDir='/SPENCEdata/Research/database/'
   date='20150615'
   ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
   ;defaults

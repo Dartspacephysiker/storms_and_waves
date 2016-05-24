@@ -4,7 +4,7 @@
 ;is lshell=(cos(ilat*!PI/180.))^(-2)
 
 ;All those storms
-dataDir='/SPENCEdata/Research/Cusp/database/'
+dataDir='/SPENCEdata/Research/database/'
 ;; restore,'superposed_largestorms_-15_to_5_hours.dat'
 restore,'superposed_large_storm_output_w_n_Alfven_events--arreglado--HEAVILY_PARED--neg5_to_20hours--20150701.dat'
 

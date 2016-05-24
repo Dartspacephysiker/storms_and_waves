@@ -9,7 +9,7 @@
 
 PRO JOURNAL__20150620__overlay_storm_plots__only40__CEDAR2015
 
-  dataDir='/SPENCEdata/Research/Cusp/database/'
+  dataDir='/SPENCEdata/Research/database/'
 
   plotScaleString='Hours'
   plotScaleString='Minutes'

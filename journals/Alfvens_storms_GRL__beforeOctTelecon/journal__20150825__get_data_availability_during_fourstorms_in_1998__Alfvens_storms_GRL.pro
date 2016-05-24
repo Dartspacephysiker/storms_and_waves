@@ -1,6 +1,6 @@
 PRO JOURNAL__20150825__get_data_availability_during_fourstorms_in_1998__Alfvens_storms_GRL
 
-  outDir = '/SPENCEdata/Research/Cusp/storms_Alfvens/saves_output_etc/'
+  outDir = '/SPENCEdata/Research/Satellites/FAST/storms_Alfvens/saves_output_etc/'
   ;; outFile = 'data_availability_during_fourStorms_in_1998--GE32Hz.sav'
   outFile = 'data_availability_during_fourStorms_in_1998.sav'
   journalFile= 'JOURNAL__20150825__get_data_availability_during_fourstorms_in_1998__Alfvens_storms_GRL.pro'

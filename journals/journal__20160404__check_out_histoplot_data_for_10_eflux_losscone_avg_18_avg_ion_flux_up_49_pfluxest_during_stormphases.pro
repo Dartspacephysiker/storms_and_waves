@@ -20,7 +20,7 @@
 ;;  1996-10- 2000-10-  9550       -0.04317    0.7564   -0.2539    0.2092  -0.01141
 ;;  ***   2 : 10_EFLUX_LOSSCONE_INTEG--recoveryphase--Dstcutoff_-20***
 ;;  1996-10- 2000-10-  6677        -0.2597    0.8606   -0.2955    0.2931   -0.2176
-;;  Saving plot to /SPENCEdata/Research/Cusp/storms_Alfvens/plots/20160404/stormphase_histos--overlaid_phases--10_EFLUX_LOSSCONE_INTEG--6.0-18.0--18.0-6.0_MLT.png...
+;;  Saving plot to /SPENCEdata/Research/Satellites/FAST/storms_Alfvens/plots/20160404/stormphase_histos--overlaid_phases--10_EFLUX_LOSSCONE_INTEG--6.0-18.0--18.0-6.0_MLT.png...
 ;;  IDL> 10.^(-0.4441)
 ;;        0.35966653
 ;;  IDL> 10.^(-0.04317)
@@ -82,7 +82,7 @@
 ;; 10.^(0.2641)/10.^(.1639)
 ;;        1.2595052
 ;; 
-RESTORE,'/SPENCEdata/Research/Cusp/storms_Alfvens/journals/20160404--stormphase_histo_data--10_EFLCI_18_IIFU_49_PFE/20160404--stormphase_histos--overlaid_phases--49_49_PFLUXEST--6.0-18.0--18.0-6.0_MLT.sav'
+RESTORE,'/SPENCEdata/Research/Satellites/FAST/storms_Alfvens/journals/20160404--stormphase_histo_data--10_EFLCI_18_IIFU_49_PFE/20160404--stormphase_histos--overlaid_phases--49_49_PFLUXEST--6.0-18.0--18.0-6.0_MLT.sav'
 ;dayside pFlux
 print,saved_ssa_list[0,1].yhiststr[0].locs[0,30]
 side = 0 

@@ -1,8 +1,8 @@
 PRO JOURNAL__20160116__PLOTS_OF_ONE_OVER_WIDTH_TIME_FOR_STORMPHASES
 
 
-  indDir  = '/SPENCEdata/Research/Cusp/storms_Alfvens/journals/20160109--indices_for_maximus_and_fastlocdb_during_stormphases/'
-  outDir  = '/SPENCEdata/Research/Cusp/storms_Alfvens/plots/20160116--histos_of_one_over_width_time_for_stormphases'
+  indDir  = '/SPENCEdata/Research/Satellites/FAST/storms_Alfvens/journals/20160109--indices_for_maximus_and_fastlocdb_during_stormphases/'
+  outDir  = '/SPENCEdata/Research/Satellites/FAST/storms_Alfvens/plots/20160116--histos_of_one_over_width_time_for_stormphases'
   outPref = '20160116--one_over_width_time_histo--'
 
   ;;Load all the inds plus DB

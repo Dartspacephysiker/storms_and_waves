@@ -2,7 +2,7 @@
 PRO JOURNAL__20160123__RESURRECT_MY_OLD_EYEBALLED_SSC_LIST
 
   ;;Get those oldies but goodies
-  commencementDir           = '/SPENCEdata/Research/Cusp/storms_Alfvens/saves_output_etc/'
+  commencementDir           = '/SPENCEdata/Research/Satellites/FAST/storms_Alfvens/saves_output_etc/'
   commencementFile          = commencementDir + 'commencement_offsets_for_largestorms--20150629--HEAVILY_PARED.sav'
   saveFile                  = commencementDir + 'commencement_offsets_for_largestorms--20160123--WITH_UTCs.sav'
 

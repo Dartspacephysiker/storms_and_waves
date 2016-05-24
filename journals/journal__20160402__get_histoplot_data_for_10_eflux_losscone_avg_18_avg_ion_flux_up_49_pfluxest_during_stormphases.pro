@@ -2,7 +2,7 @@ PRO JOURNAL__20160404__GET_HISTOPLOT_DATA_FOR_10_EFLUX_LOSSCONE_AVG_18_AVG_ION_F
 
   hemi                   = "NORTH"
 
-  saveDir                = '/SPENCEdata/Research/Cusp/storms_Alfvens/journals/20160404--stormphase_histo_data--10_EFLCI_18_IIFU_49_PFE/'
+  saveDir                = '/SPENCEdata/Research/Satellites/FAST/storms_Alfvens/journals/20160404--stormphase_histo_data--10_EFLCI_18_IIFU_49_PFE/'
 
   fancy_plotNames        = 1
   @fluxplot_defaults

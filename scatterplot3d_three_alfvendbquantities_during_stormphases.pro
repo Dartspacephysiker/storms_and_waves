@@ -101,7 +101,7 @@ PRO SCATTERPLOT3D_THREE_ALFVENDBQUANTITIES_DURING_STORMPHASES, $
   date            = GET_TODAY_STRING(/DO_YYYYMMDD_FMT)
   newLine         = '!C'
 
-  dataDir='/SPENCEdata/Research/Cusp/database/'
+  dataDir='/SPENCEdata/Research/database/'
 
   ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
   ;defaults

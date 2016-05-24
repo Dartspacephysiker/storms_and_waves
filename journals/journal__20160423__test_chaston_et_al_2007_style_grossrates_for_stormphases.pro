@@ -30,7 +30,7 @@ PRO JOURNAL__20160423__TEST_CHASTON_ET_AL_2007_STYLE_GROSSRATES_FOR_STORMPHASES
 
   colorbar_for_all               = 1
 
-  grossRate_info_file            = '/SPENCEdata/Research/Cusp/storms_Alfvens/journals/journal__' + GET_TODAY_STRING(/DO_YYYYMMDD_FMT) + '--storm_grossRates_estilo_Chaston_et_al_2007--' + altString + '.txt'
+  grossRate_info_file            = '/SPENCEdata/Research/Satellites/FAST/storms_Alfvens/journals/journal__' + GET_TODAY_STRING(/DO_YYYYMMDD_FMT) + '--storm_grossRates_estilo_Chaston_et_al_2007--' + altString + '.txt'
 
   ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
   ;;ILAT stuff

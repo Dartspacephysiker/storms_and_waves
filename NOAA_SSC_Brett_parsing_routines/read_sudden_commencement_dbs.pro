@@ -17,7 +17,7 @@
 
 PRO READ_SUDDEN_COMMENCEMENT_DBS
 
-  DBDIR='/SPENCEdata/Research/Cusp/database/sw_omnidata/'
+  DBDIR='/SPENCEdata/Research/database/sw_omnidata/'
 
   ;; Not currently sure what the difference between these two is
   SSC_FILE1 = DBDIR+'storm2_mods.txt'

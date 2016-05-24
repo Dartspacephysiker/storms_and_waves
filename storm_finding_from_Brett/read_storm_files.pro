@@ -3,11 +3,11 @@
 
 ;PRO read_storm_files,STORMFILENAME=stormFileName
 
-stormDir='/SPENCEdata/Research/Cusp/storms_Alfvens/storm_finding_from_Brett/'
+stormDir='/SPENCEdata/Research/Satellites/FAST/storms_Alfvens/storm_finding_from_Brett/'
 largeStormFile='Large_storms_from_20150513_list.txt'
 smallStormFile='Small_storms_from_20150513_list.txt'
 
-stormOutDir='/SPENCEdata/Research/Cusp/database/sw_omnidata/'
+stormOutDir='/SPENCEdata/Research/database/sw_omnidata/'
 stormOutFile='large_and_small_storms--1985-2011--Anderson.sav'
   
 ;; stormTemplate=ascii_template(stormDir+largeStormFile)

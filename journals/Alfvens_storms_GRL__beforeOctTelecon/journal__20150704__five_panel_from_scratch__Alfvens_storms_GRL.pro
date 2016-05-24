@@ -6,12 +6,12 @@ PRO JOURNAL__20150704__bring_together_cdfs_for_five_panel_plot__Alfven_storm_GRL
 
   ;; orbs=14369
 
-  ;; LOAD_FA_K0_ORB,FILENAMES=orb_p+STRCOMPRESS(orbs[0],/REMOVE_ALL)+orb_s,DIR='/SPENCEdata/Research/Cusp/database/FAST_sum_cdfs__20000406-07/'
-  ;; LOAD_FA_K0_EES,FILENAMES=ees_p+STRCOMPRESS(orbs[0],/REMOVE_ALL)+ees_s,DIR='/SPENCEdata/Research/Cusp/database/FAST_sum_cdfs__20000406-07/'
-  ;; LOAD_FA_K0_IES,FILENAMES=ies_p+STRCOMPRESS(orbs[0],/REMOVE_ALL)+ies_s,DIR='/SPENCEdata/Research/Cusp/database/FAST_sum_cdfs__20000406-07/'
-  ;; LOAD_FA_K0_TMS,FILENAMES=tms_p+STRCOMPRESS(orbs[0],/REMOVE_ALL)+tms_s,DIR='/SPENCEdata/Research/Cusp/database/FAST_sum_cdfs__20000406-07/'
-  ;; LOAD_FA_K0_ACF,FILENAMES=acf_p+STRCOMPRESS(orbs[0],/REMOVE_ALL)+acf_s,DIR='/SPENCEdata/Research/Cusp/database/FAST_sum_cdfs__20000406-07/'
-  ;; LOAD_FA_K0_DCF,FILENAMES=dcf_p+STRCOMPRESS(orbs[0],/REMOVE_ALL)+dcf_s,DIR='/SPENCEdata/Research/Cusp/database/FAST_sum_cdfs__20000406-07/'
+  ;; LOAD_FA_K0_ORB,FILENAMES=orb_p+STRCOMPRESS(orbs[0],/REMOVE_ALL)+orb_s,DIR='/SPENCEdata/Research/database/FAST_sum_cdfs__20000406-07/'
+  ;; LOAD_FA_K0_EES,FILENAMES=ees_p+STRCOMPRESS(orbs[0],/REMOVE_ALL)+ees_s,DIR='/SPENCEdata/Research/database/FAST_sum_cdfs__20000406-07/'
+  ;; LOAD_FA_K0_IES,FILENAMES=ies_p+STRCOMPRESS(orbs[0],/REMOVE_ALL)+ies_s,DIR='/SPENCEdata/Research/database/FAST_sum_cdfs__20000406-07/'
+  ;; LOAD_FA_K0_TMS,FILENAMES=tms_p+STRCOMPRESS(orbs[0],/REMOVE_ALL)+tms_s,DIR='/SPENCEdata/Research/database/FAST_sum_cdfs__20000406-07/'
+  ;; LOAD_FA_K0_ACF,FILENAMES=acf_p+STRCOMPRESS(orbs[0],/REMOVE_ALL)+acf_s,DIR='/SPENCEdata/Research/database/FAST_sum_cdfs__20000406-07/'
+  ;; LOAD_FA_K0_DCF,FILENAMES=dcf_p+STRCOMPRESS(orbs[0],/REMOVE_ALL)+dcf_s,DIR='/SPENCEdata/Research/database/FAST_sum_cdfs__20000406-07/'
      
 ;In Yao et al. [2008], Figure 2 has seven panels from orbit 16166 (with BG correction):
 ;!!!!!;  ) Electron energy          (eV)     [1e1,1e4], bar* [1e5,1e9]

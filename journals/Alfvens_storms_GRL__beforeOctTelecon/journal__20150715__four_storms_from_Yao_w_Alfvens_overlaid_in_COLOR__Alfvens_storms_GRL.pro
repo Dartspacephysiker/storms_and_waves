@@ -24,7 +24,7 @@
 
 PRO JOURNAL__20150715__four_storms_from_Yao_w_Alfvens_overlaid_in_COLOR__Alfven_storm_GRL,OUTFILENAME=outFileName
 
-  dataDir='/SPENCEdata/Research/Cusp/database/'
+  dataDir='/SPENCEdata/Research/database/'
 
   DBFile='dartdb/saves/Dartdb_20150611--500-16361_inc_lower_lats--maximus.sav'  
   DB_tFile='dartdb/saves/Dartdb_20150611--500-16361_inc_lower_lats--cdbtime.sav'

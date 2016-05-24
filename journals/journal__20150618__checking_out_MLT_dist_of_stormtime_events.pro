@@ -3,7 +3,7 @@
 ;is that the distribution won't differ significantly from the distribution with no screening whatsoever. I am prepared to be corrected.
 
 ;All those storms
-dataDir='/SPENCEdata/Research/Cusp/database/'
+dataDir='/SPENCEdata/Research/database/'
 restore,'superposed_largestorms_-15_to_5_hours.dat'
 largeStorm_ind=tot_plot_i_list(0)
 FOR i=1,N_ELEMENTS(tot_plot_i_list)-1 DO largeStorm_ind=[largeStorm_ind,tot_plot_i_list(i)]

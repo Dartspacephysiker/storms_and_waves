@@ -48,7 +48,7 @@ PRO superpose_randomtimes_and_alfven_db_quantities,NRANDTIME=nRandTime,STARTDATE
    SKIPPLOTS=skipPlots
    ;; DO_KSSTATS=do_ksstats
   
-  dataDir='/SPENCEdata/Research/Cusp/database/'
+  dataDir='/SPENCEdata/Research/database/'
   ;; hoyDia= STRCOMPRESS(STRMID(SYSTIME(0), 4, 3),/REMOVE_ALL) + "_" + $
   ;;         STRCOMPRESS(STRMID(SYSTIME(0), 8,2),/REMOVE_ALL) + "_" + STRCOMPRESS(STRMID(SYSTIME(0), 22, 2),/REMOVE_ALL)
   date='20150615'

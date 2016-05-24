@@ -21,7 +21,7 @@ PRO JOURNAL__20150620__OVERLAY_STORM_PLOTS__CEDAR2015,PS_OUTPUT=ps_output
      
   ENDIF
 
-  dataDir='/SPENCEdata/Research/Cusp/database/'
+  dataDir='/SPENCEdata/Research/database/'
 
   plotScaleString='Hours'
   plotScaleString='Minutes'

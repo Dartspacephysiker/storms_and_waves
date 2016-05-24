@@ -2,7 +2,7 @@
 ;2015/06/25 The idea is to identify the times of sudden commencement rather than using the minimum DST val.
 ;-
 PRO JOURNAL__20150625__identify_sudden_commencement_for_large_storms
-  dataDir='/SPENCEdata/Research/Cusp/database/'
+  dataDir='/SPENCEdata/Research/database/'
   
   ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
                                 ;defaults

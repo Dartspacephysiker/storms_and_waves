@@ -13,7 +13,7 @@ PRO JOURNAL__20160105__HISTOPLOTS_OF_18_INTEG_ION_FLUX_UP_DURING_STORMPHASES__OV
   night_mlt         = [-6.0,6.0]
   day_mlt           = [6.0,18.0]
 
-  saveDir           = '/SPENCEdata/Research/Cusp/storms_Alfvens/temp/'
+  saveDir           = '/SPENCEdata/Research/Satellites/FAST/storms_Alfvens/temp/'
   saveFile          = saveDir + 'journal__20160105--histoplot_data--'+dataName+'.sav'
 
   ;;titles and suffixes

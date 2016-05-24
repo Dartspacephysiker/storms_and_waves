@@ -1,7 +1,7 @@
 PRO JOURNAL__20150622__MLT_dist_for_ILATs_below_73__CEDAR2015
 
   ;;All those storms
-  dataDir='/SPENCEdata/Research/Cusp/database/'
+  dataDir='/SPENCEdata/Research/database/'
   restore,'superposed_largestorms_-15_to_5_hours.dat'
   largeStorm_ind=tot_plot_i_list(0)
   FOR i=1,N_ELEMENTS(tot_plot_i_list)-1 DO largeStorm_ind=[largeStorm_ind,tot_plot_i_list(i)]

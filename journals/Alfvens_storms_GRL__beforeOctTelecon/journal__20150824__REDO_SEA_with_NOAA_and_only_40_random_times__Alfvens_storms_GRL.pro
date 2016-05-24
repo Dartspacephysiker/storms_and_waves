@@ -23,8 +23,8 @@ PRO JOURNAL__20150824__REDO_SEA_with_NOAA_and_only_40_random_times__Alfven_storm
   outFile = 'Fig_2--SYMH_plus_nEventHistos--only_40_rand_times--'+date+'.png'
 ;;  scPlotPref = 'Fig_2--scatterplots--only_40_rand_times--'+date
 
-  tempOutFile = '/SPENCEdata/Research/Cusp/storms_Alfvens/saves_output_etc/superposed_large_storm_output_w_n_Alfven_events--'+date+'.dat'
-  sumHistFile = '/SPENCEdata/Research/Cusp/storms_Alfvens/saves_output_etc/sumHist--40_random_events--'+date+'.dat'
+  tempOutFile = '/SPENCEdata/Research/Satellites/FAST/storms_Alfvens/saves_output_etc/superposed_large_storm_output_w_n_Alfven_events--'+date+'.dat'
+  sumHistFile = '/SPENCEdata/Research/Satellites/FAST/storms_Alfvens/saves_output_etc/sumHist--40_random_events--'+date+'.dat'
 
   DBDIR = '/home/spencerh/Research/Cusp/database/sw_omnidata/'
   DB_BRETT = 'large_and_small_storms--1985-2011--Anderson.sav'

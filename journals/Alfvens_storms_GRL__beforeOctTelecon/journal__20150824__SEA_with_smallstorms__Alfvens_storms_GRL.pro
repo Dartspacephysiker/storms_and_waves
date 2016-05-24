@@ -13,7 +13,7 @@ PRO JOURNAL__20150824__SEA_with_smallstorms__Alfvens_storms_GRL
   outFile = 'Fig_2--SYMH_plus_nEventHistos--small_storms--'+date+'.png'
   scPlotPref = 'Fig_2--scatterplots--small_storms--'+date
 
-  tempOutFile = '/SPENCEdata/Research/Cusp/storms_Alfvens/saves_output_etc/superposed_small_storm_output_w_n_Alfven_events--'+date+'.dat'
+  tempOutFile = '/SPENCEdata/Research/Satellites/FAST/storms_Alfvens/saves_output_etc/superposed_small_storm_output_w_n_Alfven_events--'+date+'.dat'
 
   DBDIR = '/home/spencerh/Research/Cusp/database/sw_omnidata/'
   DB_BRETT = 'large_and_small_storms--1985-2011--Anderson.sav'

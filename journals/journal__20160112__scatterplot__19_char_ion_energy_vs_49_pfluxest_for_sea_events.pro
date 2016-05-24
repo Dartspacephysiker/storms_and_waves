@@ -1,7 +1,7 @@
 ;2016/01/12 I have a hunch that these two quantities are inversely related
 PRO JOURNAL__20160112__SCATTERPLOT__19_CHAR_ION_ENERGY_VS_49_PFLUXEST_FOR_SEA_EVENTS
 
-  indFile                    = '/SPENCEdata/Research/Cusp/storms_Alfvens/temp/20160112--AlfDB_plot_i_and_epoch_times_for_SEAs.sav'
+  indFile                    = '/SPENCEdata/Research/Satellites/FAST/storms_Alfvens/temp/20160112--AlfDB_plot_i_and_epoch_times_for_SEAs.sav'
   
   load_maximus_and_cdbtime,maximus
 

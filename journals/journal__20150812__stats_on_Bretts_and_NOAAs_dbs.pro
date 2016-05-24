@@ -1067,12 +1067,12 @@ print,ssc2.hour
 ;          13           9           2           6          17          10
 ;          10           7          17          21          17          16
 .full_reset_session
-;Data dir set to /SPENCEdata/Research/Cusp/database/
+;Data dir set to /SPENCEdata/Research/database/
 .run "/tmp/idltemp4543b31"
-; % READ_ASCII: File "/SPENCEdata/Research/Cusp/database/sw_omnidata/storm2_mods.
+; % READ_ASCII: File "/SPENCEdata/Research/database/sw_omnidata/storm2_mods.
 ;               txt" not found.
 .full_reset_session
-;Data dir set to /SPENCEdata/Research/Cusp/database/
+;Data dir set to /SPENCEdata/Research/database/
 .run "/tmp/idltemp4543b31"
 ; % Program caused arithmetic error: Floating illegal operand
 help,ssc1
@@ -1449,7 +1449,7 @@ print,ssc1.hour
 ;           6           6           5           8          19           1
 ;           9          14           2          20           8          16
 .full_reset_session
-;Data dir set to /SPENCEdata/Research/Cusp/database/
+;Data dir set to /SPENCEdata/Research/database/
 .run "/tmp/idltemp4543b31"
 ;Restoring large_and_small_storms--1985-2011--Anderson.sav...
 ;Finished sorting Brett's DB by year!
@@ -2292,13 +2292,13 @@ print,array_equal(year,ssc1.year)
 ;   1
 print,array_equal(minute,ssc1.minute)
 ;   1
-.run "/SPENCEdata/Research/Cusp/storms_Alfvens/compare_brett_and_NOAA_dbs.pro"
+.run "/SPENCEdata/Research/Satellites/FAST/storms_Alfvens/compare_brett_and_NOAA_dbs.pro"
 help,/breakpoints
 if execute("_v=routine_info('idlwave_routine_info',/SOURCE)") eq 0 then restore,'/tmp/idltemp4543s6l' else if _v.path eq '' then restore,'/tmp/idltemp4543s6l'
 ; % Attempt to call undefined procedure: 'IDLWAVE_ROUTINE_INFO'.
-idlwave_routine_info,'/SPENCEdata/Research/Cusp/storms_Alfvens/compare_brett_and_NOAA_dbs.pro'
+idlwave_routine_info,'/SPENCEdata/Research/Satellites/FAST/storms_Alfvens/compare_brett_and_NOAA_dbs.pro'
 ;>>>BEGIN OF IDLWAVE ROUTINE INFO ("<@>" IS THE SEPARATOR)
-;IDLWAVE-PRO: COMPARE_BRETT_AND_NOAA_DBS<@><@>/SPENCEdata/Research/Cusp/storms_Alfvens/compare_brett_and_NOAA_dbs.pro<@>%s<@>
+;IDLWAVE-PRO: COMPARE_BRETT_AND_NOAA_DBS<@><@>/SPENCEdata/Research/Satellites/FAST/storms_Alfvens/compare_brett_and_NOAA_dbs.pro<@>%s<@>
 ;>>>END OF IDLWAVE ROUTINE INFO
 .full_reset_session
-;Data dir set to /SPENCEdata/Research/Cusp/database/
+;Data dir set to /SPENCEdata/Research/database/

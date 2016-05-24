@@ -10,7 +10,7 @@
 
 PRO JOURNAL__20150711__calc_randomtime_spread_of_nEvents_and_stddev__Alfven_storm_GRL,N_ITER=n_iter,nRandTimePerSlag=nRandTimePerSlag,RET_I_MASTER_LIST=ret_i_list
 
-  dataDir='/SPENCEdata/Research/Cusp/database/'
+  dataDir='/SPENCEdata/Research/database/'
   date='20150615'
 
   defswDBDir       = 'sw_omnidata/'

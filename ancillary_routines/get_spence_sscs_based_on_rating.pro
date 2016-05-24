@@ -1,7 +1,7 @@
 ;;2016/01/23 So what about those old Spence ratings?
 PRO GET_SPENCE_SSCS_BASED_ON_RATING,storm_inds,storm_utcs,STORMRATING=stormRating
 
-  commencementDir           = '/SPENCEdata/Research/Cusp/storms_Alfvens/saves_output_etc/'
+  commencementDir           = '/SPENCEdata/Research/Satellites/FAST/storms_Alfvens/saves_output_etc/'
   commencementFile          = commencementDir + 'commencement_offsets_for_largestorms--20160123--WITH_UTCs.sav'
   restore,commencementFile
 

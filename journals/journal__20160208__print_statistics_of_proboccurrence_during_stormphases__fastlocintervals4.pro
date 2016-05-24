@@ -15,7 +15,7 @@ PRO JOURNAL__20160208__PRINT_STATISTICS_OF_PROBOCCURRENCE_DURING_STORMPHASES__FA
   maxI_sum         = [74,78,70,74]
   regDescr         = ['pre-midnight','post-noon','low-lat_dusk','pre-mid_to_dawn']
   ;; output files
-  outDir           = '/SPENCEdata/Research/Cusp/storms_Alfvens/saves_output_etc/journal__20160208--print_probOccurrence_stats/'
+  outDir           = '/SPENCEdata/Research/Satellites/FAST/storms_Alfvens/saves_output_etc/journal__20160208--print_probOccurrence_stats/'
   outPref          = 'journal__20160208__print_statistics_of_probOccurrence--' + GET_TODAY_STRING(/DO_YYYYMMDD_FMT)
 
   FOR j=0,N_ELEMENTS(minM_sum)-1 DO BEGIN

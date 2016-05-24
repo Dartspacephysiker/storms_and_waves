@@ -15,7 +15,7 @@ PRO JOURNAL__20160211__PRINT_STATISTICS_OF_DAYSIDE_PROBOCCURRENCE_DURING_STORMPH
   maxI_sum         = [74]
   regDescr         = ['cusp-region']
   ;; output files
-  outDir           = '/SPENCEdata/Research/Cusp/storms_Alfvens/saves_output_etc/journal__20160211--print_probOccurrence_stats/'
+  outDir           = '/SPENCEdata/Research/Satellites/FAST/storms_Alfvens/saves_output_etc/journal__20160211--print_probOccurrence_stats/'
   outPref          = 'journal__20160211__print_statistics_of_probOccurrence--' + GET_TODAY_STRING(/DO_YYYYMMDD_FMT)
 
   FOR j=0,N_ELEMENTS(minM_sum)-1 DO BEGIN

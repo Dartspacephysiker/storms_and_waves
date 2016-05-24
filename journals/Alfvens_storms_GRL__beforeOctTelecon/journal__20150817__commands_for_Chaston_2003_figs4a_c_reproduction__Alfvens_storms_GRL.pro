@@ -11,9 +11,9 @@ PRO JOURNAL__20150817__commands_for_Chaston_2003_figs4a_c_reproduction__Alfvens_
   dirs='all_IMF'
   ;; dirs=['duskward', 'dawnward']
 
-  ;; plotDir="/SPENCEdata/Research/Cusp/storms_Alfvens/plots/20150817--Chaston_2003_fig4a__Alfvens_storms_GRL/"
-  ;; plotDir="/SPENCEdata/Research/Cusp/storms_Alfvens/plots/20150819--Chaston_2003_fig4a__Alfvens_storms_GRL--RELAXED_ALFVEN_DB_CLEANER/"
-  plotDir="/SPENCEdata/Research/Cusp/storms_Alfvens/plots/20150820--Chaston_2003_fig4a__Alfvens_storms_GRL--TIGHTENED_DB_CLEANER/"
+  ;; plotDir="/SPENCEdata/Research/Satellites/FAST/storms_Alfvens/plots/20150817--Chaston_2003_fig4a__Alfvens_storms_GRL/"
+  ;; plotDir="/SPENCEdata/Research/Satellites/FAST/storms_Alfvens/plots/20150819--Chaston_2003_fig4a__Alfvens_storms_GRL--RELAXED_ALFVEN_DB_CLEANER/"
+  plotDir="/SPENCEdata/Research/Satellites/FAST/storms_Alfvens/plots/20150820--Chaston_2003_fig4a__Alfvens_storms_GRL--TIGHTENED_DB_CLEANER/"
 
   plotSuff="Dartdb_" + dbDate 
   ;; plotDir="LaBelle_Bin_mtg--02042015/Chaston_2003_fig4a-d/"
