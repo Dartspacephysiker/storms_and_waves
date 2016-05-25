@@ -661,16 +661,27 @@ PRO STACKPLOTS_STORMS_ALFVENDBQUANTITIES_OVERLAID,stormTimeArray_utc, $
 
   IF do_ScatterPlots THEN BEGIN
      KEY_SCATTERPLOTS_POLARPROJ,MAXIMUS=maximus,$
-                                /OVERLAYAURZONE,PLOT_I_LIST=tot_plot_i_list,COLOR_LIST=epochPlot_colorNames,STRANS=95, $
-                                ;; OUTFILE='scatterplot--northern--four_epochs--Yao_et_al_2008.png'
-                                SPNAME=N_ELEMENTS(scatterOutPrefix) GT 0 ? scatterOutPrefix+'--north.png' : !NULL, $
+                                /NORTH, $
+                                /OVERLAYAURZONE, $
+                                PLOT_I_LIST=tot_plot_i_list, $
+                                COLOR_LIST=epochPlot_colorNames, $
+                                STRANS=95, $
+                                SPNAME=N_ELEMENTS(scatterOutPrefix) GT 0 ? $
+                                scatterOutPrefix+'--north.png' : !NULL, $
                                 SAVEPLOT=savePlot, $
+                                PLOTDIR=plotDir, $
                                 CLOSE_AFTER_SAVE=close_window_after_save
 
-     KEY_SCATTERPLOTS_POLARPROJ,MAXIMUS=maximus,/SOUTH, $
-                                /OVERLAYAURZONE,PLOT_I_LIST=tot_plot_i_list,COLOR_LIST=epochPlot_colorNames,STRANS=95, $
-                                SPNAME=N_ELEMENTS(scatterOutPrefix) GT 0 ? scatterOutPrefix+'--south.png' : !NULL, $
+     KEY_SCATTERPLOTS_POLARPROJ,MAXIMUS=maximus, $
+                                /SOUTH, $
+                                /OVERLAYAURZONE, $
+                                PLOT_I_LIST=tot_plot_i_list, $
+                                COLOR_LIST=epochPlot_colorNames, $
+                                STRANS=95, $
+                                SPNAME=N_ELEMENTS(scatterOutPrefix) GT 0 ? $
+                                scatterOutPrefix+'--south.png' : !NULL, $
                                 SAVEPLOT=savePlot, $
+                                PLOTDIR=plotDir, $
                                 CLOSE_AFTER_SAVE=close_window_after_save
   ENDIF
 
