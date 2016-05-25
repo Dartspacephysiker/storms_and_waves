@@ -1,7 +1,7 @@
 
 PRO JOURNAL__20150825__ion_upflow_boxplots__stormtime_vs_othertimes__Alfvens_storms_GRL
 
-  dataDir='/SPENCEdata/Research/Cusp/database'
+  dataDir='/SPENCEdata/Research/database'
   dbFile = 'Dartdb_20150814--500-16361_inc_lower_lats--burst_1000-16361--maximus.sav'
 
   indsFile = 'superposed_large_storm_output_w_n_Alfven_events--quadrant1--0_to_20_hours--20150824.dat'

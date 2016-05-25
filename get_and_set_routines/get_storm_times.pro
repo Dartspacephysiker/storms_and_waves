@@ -5,7 +5,7 @@
 pro get_storm_times
 
 ;go where is the data
-cd, '/home/spencerh/Research/Cusp/database/'
+cd, '/home/spencerh/Research/database/'
 
 ;look for indices 
 dst_thresh =  -40.0 ;

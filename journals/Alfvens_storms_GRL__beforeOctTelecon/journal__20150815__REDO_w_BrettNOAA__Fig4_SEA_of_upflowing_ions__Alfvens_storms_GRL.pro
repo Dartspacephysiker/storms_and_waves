@@ -15,7 +15,7 @@ PRO JOURNAL__20150815__REDO_w_BrettNOAA__Fig4_SEA_of_upflowing_ions__Alfven_stor
   outMaxFile='Fig_4--ion_flux_up--no_restriction_on_chare_or_alt--'+ STRING(FORMAT='(I0)',nEvBinsize/60) + $
              '-HOUR_AVG--proper_storm_commencement_smaller.png'
 
-  DBDIR = '/home/spencerh/Research/Cusp/database/sw_omnidata/'
+  DBDIR = '/home/spencerh/Research/database/sw_omnidata/'
   DB_BRETT = 'large_and_small_storms--1985-2011--Anderson.sav'
   DB_NOAA = 'SSC_dbs--storm2_mods.txt__STORM2_MODS.SSC--idl.sav'
   DB_NOAA = 'SSC_dbs--storm2_mods.txt__STORM2_MODS.SSC--idl.sav'

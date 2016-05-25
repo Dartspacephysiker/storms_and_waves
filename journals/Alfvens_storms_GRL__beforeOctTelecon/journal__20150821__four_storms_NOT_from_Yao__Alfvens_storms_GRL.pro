@@ -17,7 +17,7 @@ PRO JOURNAL__20150821__four_storms_NOT_from_Yao__Alfven_storm_GRL
   scOutPref='Fig_1--scatterplots--four_storms_in_1998--20150822'
   
 
-  DBDIR = '/home/spencerh/Research/Cusp/database/sw_omnidata/'
+  DBDIR = '/home/spencerh/Research/database/sw_omnidata/'
   DB_BRETT = 'large_and_small_storms--1985-2011--Anderson.sav'
   DB_NOAA = 'SSC_dbs--storm2_mods.txt__STORM2_MODS.SSC--idl.sav'
 

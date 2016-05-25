@@ -27,7 +27,7 @@ PRO JOURNAL__20150817__GET_HOURS_0BEFORE_TO_20AFTER_STORMTIME
   ;;the file_ins
   dbFile = 'Dartdb_20150814--500-16361_inc_lower_lats--burst_1000-16361--maximus.sav'
   
-  DBDIR = '/home/spencerh/Research/Cusp/database/sw_omnidata/'
+  DBDIR = '/home/spencerh/Research/database/sw_omnidata/'
   DB_BRETT = 'large_and_small_storms--1985-2011--Anderson.sav'
   DB_NOAA = 'SSC_dbs--storm2_mods.txt__STORM2_MODS.SSC--idl.sav'
 

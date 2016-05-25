@@ -11,7 +11,7 @@ PRO JOURNAL__20150825__GET_STARTSTOP_FOR_FOUR_STORMS__ALFVENS_STORMS_GRL, $
 
   date = '20150825'
 
-  DBDIR = '/home/spencerh/Research/Cusp/database/sw_omnidata/'
+  DBDIR = '/home/spencerh/Research/database/sw_omnidata/'
   DB_BRETT = 'large_and_small_storms--1985-2011--Anderson.sav'
   DB_NOAA = 'SSC_dbs--storm2_mods.txt__STORM2_MODS.SSC--idl.sav'
 

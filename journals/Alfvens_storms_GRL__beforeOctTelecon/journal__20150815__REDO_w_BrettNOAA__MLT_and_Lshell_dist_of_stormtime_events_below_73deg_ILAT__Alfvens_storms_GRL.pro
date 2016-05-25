@@ -10,7 +10,7 @@
 ;;            Also, there's some discrepancy... 
 PRO JOURNAL__20150815__REDO_w_BrettNOAA__MLT_and_Lshell_dist_of_stormtime_events_below_73deg_ILAT__Alfven_storm_GRL
   
-  dataDir='/SPENCEdata/Research/Cusp/database'
+  dataDir='/SPENCEdata/Research/database'
   dbFile = 'Dartdb_20150814--500-16361_inc_lower_lats--burst_1000-16361--maximus.sav'
 
   ;; indsFile = 'superposed_large_storm_output_w_n_Alfven_events--quadrant1--0_to_20_hours--20150817.dat'

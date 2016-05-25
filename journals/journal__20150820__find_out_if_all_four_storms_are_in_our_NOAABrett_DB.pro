@@ -22,7 +22,7 @@
 ;4. 
 PRO JOURNAL__20150820__find_out_if_all_four_storms_are_in_our_NOAABrett_DB
 
-  dataDir='/SPENCEdata/Research/Cusp/database'
+  dataDir='/SPENCEdata/Research/database'
   ;; dbFile = 'Dartdb_20150814--500-16361_inc_lower_lats--burst_1000-16361--maximus.sav'
   indFile = 'large_and_small_storms--Oct1996-Oct2000--indices_for_four_quadrants--Anderson.sav'
   SSCFile = 'SSC_dbs--storm2_mods.txt__STORM2_MODS.SSC--idl.sav'

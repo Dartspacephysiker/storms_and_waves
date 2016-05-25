@@ -14,7 +14,7 @@ PRO JOURNAL__20150826__FOUR_STORMS_WITH_DATA_AVAILABILITY
   ;; savePlotName='Fig_1--four_storms_from_1998--data_avail_overlaid--GE8Hz--'+date+'.png'
   savePlotName='Fig_1--four_storms_from_1998--data_avail_overlaid--GE128Hz--'+date+'.png'
 
-  DBDIR = '/home/spencerh/Research/Cusp/database/sw_omnidata/'
+  DBDIR = '/home/spencerh/Research/database/sw_omnidata/'
   DB_BRETT = 'large_and_small_storms--1985-2011--Anderson.sav'
   DB_NOAA = 'SSC_dbs--storm2_mods.txt__STORM2_MODS.SSC--idl.sav'
 

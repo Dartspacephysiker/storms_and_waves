@@ -33,7 +33,7 @@ PRO PLOT_OMNI_QUANTITY_DURING_FOUR_1998_STORMS__ALFVENS_STORMS_GRL,OMNI_QUANTITY
      ;; scOutPref='scatterplots--four_storms_in_1998--' + omni_quantity + '--' + date
   ENDIF
   
-  DBDIR = '/home/spencerh/Research/Cusp/database/sw_omnidata/'
+  DBDIR = '/home/spencerh/Research/database/sw_omnidata/'
   DB_BRETT = 'large_and_small_storms--1985-2011--Anderson.sav'
   DB_NOAA = 'SSC_dbs--storm2_mods.txt__STORM2_MODS.SSC--idl.sav'
 
