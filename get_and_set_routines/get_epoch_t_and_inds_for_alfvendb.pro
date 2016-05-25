@@ -37,6 +37,7 @@ PRO GET_EPOCH_T_AND_INDS_FOR_ALFVENDB,maximus,cdbTime,NEPOCHS=nEpochs,TBEFOREEPO
   empty_epochs_i = !NULL
 
   good_i      = GET_CHASTON_IND(maximus,"OMNI",-1, $
+                                DBTIMES=cdbTime, $
                                 BOTH_HEMIS=both_hemis, $
                                 NORTH=north, $
                                 SOUTH=south, $

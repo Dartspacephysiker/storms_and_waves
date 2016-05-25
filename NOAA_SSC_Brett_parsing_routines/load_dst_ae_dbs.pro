@@ -5,7 +5,7 @@ PRO LOAD_DST_AE_DBS,dst,ae,LUN=lun,DST_AE_DIR=dst_AE_dir,DST_AE_FILE=dst_AE_file
 
   IF N_ELEMENTS(lun) EQ 0 THEN lun = -1         ;stdout
 
-  DefDst_AE_dir         = '/SPENCEdata/Research/database/processed/'
+  DefDst_AE_dir         = '/SPENCEdata/Research/database/geomag_indices__1999-2009/processed/'
   ;;defDST_AE_file        = 'idl_ae_dst_data.dat'
   ;; defDST_AE_smoothedFile= 'idl_ae_dst_data--smoothed.dat'
   ;; defDST_AE_file= 'idl_ae_dst_data--smoothed.dat'

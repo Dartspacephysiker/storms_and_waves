@@ -3,8 +3,13 @@ PRO JOURNAL__20160525__PNG_OF_EACH_DST_TRACE_OF_EACH_STORM_USED_IN_OUR_STUDY
   ;;************************************************************
   ;;to be outputted
   todayStr          = GET_TODAY_STRING(/DO_YYYYMMDD_FMT)
+  savePlot          = 1
   savePlotPref      = todayStr + '--Largestorms_combinee--'
-  scOutPref         = todayStr + '--Largestorms_combinee--scatterplots--'  ;scatter plots, N and S Hemi
+  scOutPref         = todayStr + '--Largestorms_combinee--'  ;scatter plots, N and S Hemi
+
+  hemi              = 'BOTH'
+
+  close_window_after_save = 1
 
   LOAD_NOAA_AND_BRETT_DBS_AND_QI,stormStruct,SSC1,SSC2,qi,DBDir=DBDir,DB_BRETT=DB_Brett,DB_NOAA=DB_NOAA,INDS_FILE=inds_file
 
@@ -24,28 +29,35 @@ PRO JOURNAL__20160525__PNG_OF_EACH_DST_TRACE_OF_EACH_STORM_USED_IN_OUR_STUDY
   yRange_maxInd     = [-200,200]
   symTransparency   = 92
   ;; FOR i = 0, N_ELEMENTS(q1_st)-1,nPlotsPerWindow DO BEGIN
-  ;; FOR i = 0, N_ELEMENTS(q1_st)-1,nPlotsPerWindow DO BEGIN
-  FOR i = 0, 3,nPlotsPerWindow DO BEGIN
-  ;;SSC-centered here
+  FOR i = 0,N_ELEMENTS(q1_st)-1 DO BEGIN
+     ;;SSC-centered here
      iFirst         = i
-     iLast          = i + nPlotsPerWindow - 1
-     scOutFilePref  = STRING(FORMAT='(A0,I0,"-",I0,".png")',scOutPref,iFirst,iLast)
-     savePlotFile   = STRING(FORMAT='(A0,I0,"-",I0,".png")',savePlotPref,iFirst,iLast)
+     ;; iLast          = i + nPlotsPerWindow - 1
+     ;; scOutFilePref  = STRING(FORMAT='(A0,I0,"-",I0,".png")',scOutPref,iFirst,iLast)
+     ;; savePlotFile   = STRING(FORMAT='(A0,I0,"-",I0,".png")',savePlotPref,iFirst,iLast)
+     scOutFilePref  = STRING(FORMAT='(A0,"Storm_",I0,A0)',scOutPref,iFirst,'--scatterplots')
+     savePlotFile   = STRING(FORMAT='(A0,"Storm_",I0,".png")',savePlotPref,iFirst)
      
      STACKPLOTS_STORMS_ALFVENDBQUANTITIES_OVERLAID, $
-        q1_utc[iFirst:iLast], $
+        ;; q1_utc[iFirst:iLast], $
+        q1_utc[iFirst], $
         STORMTYPE=1, $
-        EPOCHINDS=q1_st[iFirst:iLast], $
+        HEMI=hemi, $
+        ;; EPOCHINDS=q1_st[iFirst:iLast], $
+        EPOCHINDS=q1_st[iFirst], $
         /USE_DARTDB_START_ENDDATE, $
         TBEFOREEPOCH=15., $
         TAFTEREPOCH=60., $
         MAXIND=maxInd, $
+        PLOTTITLE='Storm #' + STRCOMPRESS(iFirst,/REMOVE_ALL), $
         YRANGE_MAXIND=yRange_maxInd, $
         YTITLE_MAXIND='Current density ($\muA/m^2$)', $
         REMOVE_DUPES=rmDupes, $
         ;; RETURNED_NEV_TBINS_AND_HIST=stormtime_returned_tbins_and_nevhist, $
-        SAVEPLOTNAME=savePlotFile, $
+        SAVEPLOT=savePlot, $
+        SAVEPNAME=savePlotFile, $
         /DO_SCATTERPLOTS, $
+        CLOSE_WINDOW_AFTER_SAVE=close_window_after_save, $
         EPOCHPLOT_COLORNAMES=colors, $
         SYMTRANSPARENCY=symTransparency, $
         SCATTEROUTPREFIX=scOutFilePref, $

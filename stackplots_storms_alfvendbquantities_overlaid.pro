@@ -58,6 +58,7 @@ PRO STACKPLOTS_STORMS_ALFVENDBQUANTITIES_OVERLAID,stormTimeArray_utc, $
                              STOPDATE=stopDate, $
                              DAYSIDE=dayside, $
                              NIGHTSIDE=nightside, $
+                             HEMI=hemi, $
                              EPOCHINDS=epochInds, $
                              SSC_TIMES_UTC=ssc_times_utc, $
                              REMOVE_DUPES=remove_dupes, $
@@ -139,9 +140,9 @@ PRO STACKPLOTS_STORMS_ALFVENDBQUANTITIES_OVERLAID,stormTimeArray_utc, $
 
   ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
   ;Now restore 'em
-  LOAD_OMNI_DB,sw_data,SWDBDIR=swDBDir,SWDBFILE=swDBFile
+  LOAD_OMNI_DB,sw_data,SWDBDIR=swDBDir,SWDBFILE=swDBFile,/LOAD_CULLED_OMNI_DB
   LOAD_NOAA_AND_BRETT_DBS_AND_QI,stormStruct,DB_BRETT=stormFile,DBDIR=stormDir
-  LOAD_MAXIMUS_AND_CDBTIME,maximus,cdbTime,DB_TFILE=DB_tFile,DBDIR=DBDir,DBFILE=DBFile,DO_DESPUNDB=do_despunDB
+  ;; LOAD_MAXIMUS_AND_CDBTIME,maximus,cdbTime,DB_TFILE=DB_tFile,DBDIR=DBDir,DBFILE=DBFile,DO_DESPUNDB=do_despunDB
 
   IF ~use_SYMH AND ~use_AE AND ~omni_Quantity THEN BEGIN
      LOAD_DST_AE_DBS,dst,ae,DST_AE_DIR=DST_AEDir,DST_AE_FILE=DST_AEFile
@@ -289,6 +290,7 @@ PRO STACKPLOTS_STORMS_ALFVENDBQUANTITIES_OVERLAID,stormTimeArray_utc, $
                                        RESTRICT_POYNTRANGE=restrict_poyntRange, $
                                        MINMLT=minM,MAXMLT=maxM,BINM=binM,MINILAT=minI,MAXILAT=maxI,BINI=binI, $
                                        DO_LSHELL=do_lshell,MINLSHELL=minL,MAXLSHELL=maxL,BINL=binL, $
+                                       HEMI=hemi, $
                                        DAYSIDE=dayside,NIGHTSIDE=nightside, $
                                        SAVEFILE=saveFile,SAVESTR=saveStr
   ENDIF 
@@ -605,9 +607,9 @@ PRO STACKPLOTS_STORMS_ALFVENDBQUANTITIES_OVERLAID,stormTimeArray_utc, $
   
   IF KEYWORD_SET(show_data_availability) THEN BEGIN
      ;;First, find out where we had data
-     LOAD_FASTLOC_AND_FASTLOC_TIMES,fastLoc,fastLoc_times
+     ;; LOAD_FASTLOC_AND_FASTLOC_TIMES,fastLoc,fastLoc_times
      avail_i = GET_CHASTON_IND(fastloc,"OMNI", $
-                               DBFILE=dbfile,DBTIMES=dbTimes, $
+                               DBFILE=dbfile,DBTIMES=fastLoc_times, $
                                ORBRANGE=orbRange, $
                                ALTITUDERANGE=restrict_altRange, $
                                HEMI=hemi, $
@@ -618,7 +620,8 @@ PRO STACKPLOTS_STORMS_ALFVENDBQUANTITIES_OVERLAID,stormTimeArray_utc, $
                                /GET_TIME_I_NOT_ALFVENDB_I, $
                                /RESET_GOOD_INDS, $
                                /PRINT_PARAM_SUMMARY, $
-                               FASTLOC_DELTA_T=fastloc_delta_t)
+                               ;; FASTLOC_DELTA_T=fastloc_delta_t, $
+                               OUT_TIMES_FASTLOC=fastLoc_times)
                                
      FOR i=0,nEpochs-1 DO BEGIN
         
@@ -660,11 +663,15 @@ PRO STACKPLOTS_STORMS_ALFVENDBQUANTITIES_OVERLAID,stormTimeArray_utc, $
      KEY_SCATTERPLOTS_POLARPROJ,MAXIMUS=maximus,$
                                 /OVERLAYAURZONE,PLOT_I_LIST=tot_plot_i_list,COLOR_LIST=epochPlot_colorNames,STRANS=95, $
                                 ;; OUTFILE='scatterplot--northern--four_epochs--Yao_et_al_2008.png'
-                                OUTFILE=N_ELEMENTS(scatterOutPrefix) GT 0 ? scatterOutPrefix+'--north.png' : !NULL
+                                SPNAME=N_ELEMENTS(scatterOutPrefix) GT 0 ? scatterOutPrefix+'--north.png' : !NULL, $
+                                SAVEPLOT=savePlot, $
+                                CLOSE_AFTER_SAVE=close_window_after_save
 
      KEY_SCATTERPLOTS_POLARPROJ,MAXIMUS=maximus,/SOUTH, $
                                 /OVERLAYAURZONE,PLOT_I_LIST=tot_plot_i_list,COLOR_LIST=epochPlot_colorNames,STRANS=95, $
-                                OUTFILE=N_ELEMENTS(scatterOutPrefix) GT 0 ? scatterOutPrefix+'--south.png' : !NULL
+                                SPNAME=N_ELEMENTS(scatterOutPrefix) GT 0 ? scatterOutPrefix+'--south.png' : !NULL, $
+                                SAVEPLOT=savePlot, $
+                                CLOSE_AFTER_SAVE=close_window_after_save
   ENDIF
 
   IF saveFile THEN BEGIN
