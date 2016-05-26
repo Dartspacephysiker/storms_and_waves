@@ -106,7 +106,10 @@ PRO PLOT_ALFVEN_STATS_DURING_STORMPHASES,$
    DBFILE=dbfile, NO_BURSTDATA=no_burstData, DATADIR=dataDir, $
    DO_CHASTDB=do_chastDB, $
    DO_DESPUNDB=do_despunDB, $
-   NEVENTSPLOTRANGE=nEventsPlotRange, LOGNEVENTSPLOT=logNEventsPlot, $
+   NEVENTSPLOTRANGE=nEventsPlotRange, $
+   LOGNEVENTSPLOT=logNEventsPlot, $
+   NEVENTSPLOTAUTOSCALE=nEventsPlotAutoscale, $
+   NEVENTSPLOTNORMALIZE=nEventsPlotNormalize, $
    WRITEASCII=writeASCII, WRITEHDF5=writeHDF5, WRITEPROCESSEDH2D=writeProcessedH2d, $
    SAVERAW=saveRaw, RAWDIR=rawDir, $
    JUSTDATA=justData, SHOWPLOTSNOSAVE=showPlotsNoSave, $
@@ -306,6 +309,8 @@ PRO PLOT_ALFVEN_STATS_DURING_STORMPHASES,$
                                   DO_DESPUNDB=do_despunDB, $
                                   NEVENTSPLOTRANGE=nEventsPlotRange, $
                                   LOGNEVENTSPLOT=logNEventsPlot, $
+                                  NEVENTSPLOTAUTOSCALE=nEventsPlotAutoscale, $
+                                  NEVENTSPLOTNORMALIZE=nEventsPlotNormalize, $
                                   WRITEASCII=writeASCII, $
                                   WRITEHDF5=writeHDF5, $
                                   WRITEPROCESSEDH2D=writeProcessedH2d, $

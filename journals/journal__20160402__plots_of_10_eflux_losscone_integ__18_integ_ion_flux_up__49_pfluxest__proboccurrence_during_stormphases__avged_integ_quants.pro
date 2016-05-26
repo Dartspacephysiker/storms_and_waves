@@ -15,15 +15,15 @@ PRO JOURNAL__20160402__PLOTS_OF_10_EFLUX_LOSSCONE_INTEG__18_INTEG_ION_FLUX_UP__4
 
   ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
   ;;Hemi stuff
-  ;; hemi                           = 'NORTH'
-  ;; minILAT                        = 60
-  ;; maxILAT                        = 85
-  ;; binILAT                        = 2.5
-
-  hemi                           = 'SOUTH'
-  minILAT                        = -85
-  maxILAT                        = -60
+  hemi                           = 'NORTH'
+  minILAT                        = 60
+  maxILAT                        = 85
   binILAT                        = 2.5
+
+  ;; hemi                           = 'SOUTH'
+  ;; minILAT                        = -85
+  ;; maxILAT                        = -60
+  ;; binILAT                        = 2.5
 
   binMLT                         = 1.5
 
