@@ -1,5 +1,5 @@
 ;;This thing will do versions of Fig 1 for both hemispheres
-PRO JOURNAL__20160402__PLOTS_OF_10_EFLUX_LOSSCONE_INTEG__18_INTEG_ION_FLUX_UP__49_PFLUXEST__PROBOCCURRENCE_DURING_STORMPHASES__AVGED_INTEG_QUANTS
+PRO JOURNAL__20160530__PLOTS_OF_10_18_49_PROBOCCURRENCE_NPLOTS_DURING_STORMPHASES__SAVE_INDICES
   dstCutoff = -20
 
   ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
@@ -8,22 +8,28 @@ PRO JOURNAL__20160402__PLOTS_OF_10_EFLUX_LOSSCONE_INTEG__18_INTEG_ION_FLUX_UP__4
   probOccurrencePlot             = 1
   eNumFluxPlot                   = 1
   pFluxPlot                      = 1
+  nPlots                         = 1
 
   ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
   ;;bonus
+  do_despun                      = 0
+
   divide_by_width_x              = 1
 
+  save_alf_stormphase_indices    = 1
+
+  fancyPresentationMode          = 1 ;Erases stormphase titles, suppresses gridlabels, and blows up plot titles. Keep it.
   ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
   ;;Hemi stuff
-  ;; hemi                           = 'NORTH'
-  ;; minILAT                        = 60
-  ;; maxILAT                        = 85
-  ;; binILAT                        = 2.5
-
-  hemi                           = 'SOUTH'
-  minILAT                        = -85
-  maxILAT                        = -60
+  hemi                           = 'NORTH'
+  minILAT                        = 60
+  maxILAT                        = 85
   binILAT                        = 2.5
+
+  ;; hemi                           = 'SOUTH'
+  ;; minILAT                        = -85
+  ;; maxILAT                        = -60
+  ;; binILAT                        = 2.5
 
   binMLT                         = 1.5
 
@@ -53,8 +59,12 @@ PRO JOURNAL__20160402__PLOTS_OF_10_EFLUX_LOSSCONE_INTEG__18_INTEG_ION_FLUX_UP__4
   probOccurrenceRange            = [1e-3,1e-1]
   logProbOccurrence              = 1
 
-  do_despun                      = 1
   maskMin                        = 10 ;since identification is better
+
+  ;;;;;;;;;;;;;;;;;;;;;
+  ;;N events
+  nEventsPlotRange               = [10,5000]
+  logNEventsPlot                 = 1
 
   PLOT_ALFVEN_STATS_DURING_STORMPHASES, $
      DSTCUTOFF=dstCutoff, $
@@ -83,11 +93,20 @@ PRO JOURNAL__20160402__PLOTS_OF_10_EFLUX_LOSSCONE_INTEG__18_INTEG_ION_FLUX_UP__4
      PROBOCCURRENCEPLOT=probOccurrencePlot, $
      LOGPROBOCCURRENCE=logProbOccurrence, $
      PROBOCCURRENCERANGE=probOccurrenceRange, $
+     NPLOTS=nPlots, $
+     NEVENTSPLOTRANGE=nEventsPlotRange, $
+     LOGNEVENTSPLOT=logNEventsPlot, $
+     NEVENTSPLOTAUTOSCALE=nEventsPlotAutoscale, $
+     NEVENTSPLOTNORMALIZE=nEventsPlotNormalize, $
      PLOTSUFFIX=plotSuff, $
+     SAVE_ALF_STORMPHASE_INDICES=save_alf_stormphase_indices, $
      /LOGAVGPLOT, $
      /MIDNIGHT, $
      /CB_FORCE_OOBLOW, $
      /CB_FORCE_OOBHIGH, $
+     NO_STORMPHASE_TITLES=fancyPresentationMode, $
+     SUPPRESS_GRIDLABELS=fancyPresentationMode, $
+     LABELS_FOR_PRESENTATION=fancyPresentationMode, $
      /COMBINE_STORMPHASE_PLOTS, $
      /SAVE_COMBINED_WINDOW, $
      /COMBINED_TO_BUFFER

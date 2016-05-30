@@ -116,6 +116,7 @@ PRO PLOT_ALFVEN_STATS_DURING_STORMPHASES,$
    PLOTDIR=plotDir, $
    PLOTPREFIX=plotPrefix, $
    PLOTSUFFIX=plotSuffix, $
+   SAVE_ALF_STORMPHASE_INDICES=save_alf_stormphase_indices, $
    TXTOUTPUTDIR=txtOutputDir, $
    MEDHISTOUTDATA=medHistOutData, $
    MEDHISTOUTTXT=medHistOutTxt, $
@@ -319,6 +320,7 @@ PRO PLOT_ALFVEN_STATS_DURING_STORMPHASES,$
                                   PLOTDIR=plotDir, $
                                   PLOTPREFIX=strings[i], $
                                   PLOTSUFFIX=plotSuffix, $
+                                  SAVE_ALF_INDICES=save_alf_stormphase_indices, $
                                   TXTOUTPUTDIR=txtOutputDir, $
                                   MEDHISTOUTDATA=medHistOutData, $
                                   MEDHISTOUTTXT=medHistOutTxt, $
