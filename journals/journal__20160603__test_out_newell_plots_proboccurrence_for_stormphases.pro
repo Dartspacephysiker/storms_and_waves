@@ -1,6 +1,6 @@
-;;06/02/16
+;;06/03/16
 ;;Now you know
-PRO JOURNAL__20160602__TEST_OUT_NEWELL_PLOTS_FOR_STORMPHASES
+PRO JOURNAL__20160603__TEST_OUT_NEWELL_PLOTS_PROBOCCURRENCE_FOR_STORMPHASES
 
   COMPILE_OPT IDL2
 
@@ -44,9 +44,11 @@ PRO JOURNAL__20160602__TEST_OUT_NEWELL_PLOTS_FOR_STORMPHASES
   ;;NEWELL PLOTS
   ;; newell_plotRange               = [1,1000] ;for pFlux multiplied by width_x
   ;; log_newellPlot                 = 1
-  newellPlot_autoscale           = 0
-  newellPlot_normalize           = 1
-  colorBar_for_all               = 1
+  ;; newellPlot_autoscale           = 0
+  ;; newellPlot_normalize           = 1
+  ;; colorBar_for_all               = 1
+
+  newellPlot_probOccurrence      = 1
 
   ;;;;;;;;;;;;;;;;;;;;;;
   ;;10-EFLUX_LOSSCONE_INTEG
@@ -111,7 +113,7 @@ PRO JOURNAL__20160602__TEST_OUT_NEWELL_PLOTS_FOR_STORMPHASES
      LOG_NEWELLPLOT=log_newellPlot, $
      NEWELLPLOT_AUTOSCALE=newellPlot_autoscale, $
      NEWELLPLOT_NORMALIZE=newellPlot_normalize, $
-     NEWELLPLOT_PROBOCCURENCE=newellPlot_probOccurrence, $
+     NEWELLPLOT_PROBOCCURRENCE=newellPlot_probOccurrence, $
      NPLOTS=nPlots, $
      NEVENTSPLOTRANGE=nEventsPlotRange, $
      LOGNEVENTSPLOT=logNEventsPlot, $

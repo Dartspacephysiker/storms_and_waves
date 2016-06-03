@@ -76,6 +76,7 @@ PRO PLOT_ALFVEN_STATS_DURING_STORMPHASES,$
    LOG_NEWELLPLOT=log_newellPlot, $
    NEWELLPLOT_AUTOSCALE=newellPlot_autoscale, $
    NEWELLPLOT_NORMALIZE=newellPlot_normalize, $
+   NEWELLPLOT_PROBOCCURRENCE=newellPlot_probOccurrence, $
    TIMEAVGD_PFLUXPLOT=timeAvgd_pFluxPlot, $
    TIMEAVGD_PFLUXRANGE=timeAvgd_pFluxRange, $
    LOGTIMEAVGD_PFLUX=logTimeAvgd_PFlux, $
@@ -283,6 +284,7 @@ PRO PLOT_ALFVEN_STATS_DURING_STORMPHASES,$
                                   LOG_NEWELLPLOT=log_newellPlot, $
                                   NEWELLPLOT_AUTOSCALE=newellPlot_autoscale, $
                                   NEWELLPLOT_NORMALIZE=newellPlot_normalize, $
+                                  NEWELLPLOT_PROBOCCURRENCE=newellPlot_probOccurrence, $
                                   TIMEAVGD_PFLUXPLOT=timeAvgd_pFluxPlot, $
                                   TIMEAVGD_PFLUXRANGE=timeAvgd_pFluxRange, $
                                   LOGTIMEAVGD_PFLUX=logTimeAvgd_PFlux, $
