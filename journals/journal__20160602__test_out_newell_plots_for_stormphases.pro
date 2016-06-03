@@ -41,6 +41,14 @@ PRO JOURNAL__20160602__TEST_OUT_NEWELL_PLOTS_FOR_STORMPHASES
   maskMin                        = 10
 
   ;;;;;;;;;;;;;;;;;;;;;;
+  ;;NEWELL PLOTS
+  ;; newell_plotRange               = [1,1000] ;for pFlux multiplied by width_x
+  ;; log_newellPlot                 = 1
+  newellPlot_autoscale           = 0
+  newellPlot_normalize           = 1
+  colorBar_for_all               = 1
+
+  ;;;;;;;;;;;;;;;;;;;;;;
   ;;10-EFLUX_LOSSCONE_INTEG
   maxInd                         = 10
   enumfpt                        = 'eflux_losscone_integ'
@@ -51,12 +59,6 @@ PRO JOURNAL__20160602__TEST_OUT_NEWELL_PLOTS_FOR_STORMPHASES
   maxInd                         = 18
   ifpt                           = 'INTEG_UP'
   iPlotRange                     = [10.^(6.0),10.^(9.0)]
-
-  ;;;;;;;;;;;;;;;;;;;;;;
-  ;;NEWELL PLOTS
-  ;; newell_plotRange               = [1,5000] ;for pFlux multiplied by width_x
-  log_newellPlot                 = 0
-  newellPlot_autoscale           = 1
 
   ;;;;;;;;;;;;;;;;;;;;;;
   ;;49--PFLUXEST
@@ -123,6 +125,7 @@ PRO JOURNAL__20160602__TEST_OUT_NEWELL_PLOTS_FOR_STORMPHASES
      NO_STORMPHASE_TITLES=fancyPresentationMode, $
      SUPPRESS_GRIDLABELS=fancyPresentationMode, $
      LABELS_FOR_PRESENTATION=fancyPresentationMode, $
+     COLORBAR_FOR_ALL=colorBar_for_all, $
      /COMBINE_STORMPHASE_PLOTS, $
      /SAVE_COMBINED_WINDOW, $
      /COMBINED_TO_BUFFER
