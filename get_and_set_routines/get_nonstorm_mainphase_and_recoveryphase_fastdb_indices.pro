@@ -23,7 +23,7 @@ PRO GET_NONSTORM_MAINPHASE_AND_RECOVERYPHASE_FASTDB_INDICES, $
   IF N_ELEMENTS(lun) EQ 0 THEN lun = -1 ;stdout
 
   LOAD_DST_AE_DBS,dst,ae,LUN=lun
-  LOAD_MAXIMUS_AND_CDBTIME,maximus,cdbtime,LUN=lun
+  LOAD_MAXIMUS_AND_CDBTIME,maximus,cdbtime,LUN=lun,DO_DESPUNDB=do_despun
 
   good_i=alfven_db_cleaner(maximus)
 
