@@ -34,6 +34,7 @@ PRO PLOT_ALFVEN_STATS_DURING_STORMPHASES,$
    ENUMFLPLOTRANGE=ENumFlPlotRange, $
    AUTOSCALE_ENUMFLPLOTS=autoscale_eNumFlplots, $
    NEWELL_ANALYZE_EFLUX=newell_analyze_eFlux, $
+   NEWELL_ANALYSIS__OUTPUT_SUMMARY=newell_analysis__output_summary, $
    PPLOTS=pPlots, LOGPFPLOT=logPfPlot, ABSPFLUX=absPflux, $
    NONEGPFLUX=noNegPflux, NOPOSPFLUX=noPosPflux, PPLOTRANGE=PPlotRange, $
    IONPLOTS=ionPlots, IFLUXPLOTTYPE=ifluxPlotType, LOGIFPLOT=logIfPlot, ABSIFLUX=absIflux, $
@@ -242,6 +243,7 @@ PRO PLOT_ALFVEN_STATS_DURING_STORMPHASES,$
                                   ENUMFLPLOTRANGE=ENumFlPlotRange, $
                                   AUTOSCALE_ENUMFLPLOTS=autoscale_eNumFlplots, $
                                   NEWELL_ANALYZE_EFLUX=newell_analyze_eFlux, $
+                                  NEWELL_ANALYSIS__OUTPUT_SUMMARY=newell_analysis__output_summary, $
                                   PPLOTS=pPlots, LOGPFPLOT=logPfPlot, ABSPFLUX=absPflux, $
                                   NONEGPFLUX=noNegPflux, NOPOSPFLUX=noPosPflux, PPLOTRANGE=PPlotRange, $
                                   IONPLOTS=ionPlots, IFLUXPLOTTYPE=ifluxPlotType, LOGIFPLOT=logIfPlot, ABSIFLUX=absIflux, $

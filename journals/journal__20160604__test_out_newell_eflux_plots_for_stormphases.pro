@@ -28,15 +28,15 @@ PRO JOURNAL__20160604__TEST_OUT_NEWELL_EFLUX_PLOTS_FOR_STORMPHASES
   fancyPresentationMode          = 0 ;Erases stormphase titles, suppresses gridlabels, and blows up plot titles. Keep it.
   ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
   ;;Hemi stuff
-  ;; hemi                           = 'NORTH'
-  ;; minILAT                        = 60
-  ;; maxILAT                        = 85
-  ;; binILAT                        = 2.5
-
-  hemi                           = 'SOUTH'
-  minILAT                        = -85
-  maxILAT                        = -60
+  hemi                           = 'NORTH'
+  minILAT                        = 60
+  maxILAT                        = 85
   binILAT                        = 2.5
+
+  ;; hemi                           = 'SOUTH'
+  ;; minILAT                        = -85
+  ;; maxILAT                        = -60
+  ;; binILAT                        = 2.5
 
   binMLT                         = 1.5
 
