@@ -4,10 +4,10 @@ PRO JOURNAL__20160530__PLOTS_OF_10_18_49_PROBOCCURRENCE_NPLOTS_DURING_STORMPHASE
 
   ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
   ;;turn plots on and off
-  ionPlots                       = 1
-  probOccurrencePlot             = 1
-  eNumFluxPlot                   = 1
-  pFluxPlot                      = 1
+  ionPlots                       = 0
+  probOccurrencePlot             = 0
+  eNumFluxPlot                   = 0
+  pFluxPlot                      = 0
   nPlots                         = 1
 
   ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;

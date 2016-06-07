@@ -35,6 +35,7 @@ PRO PLOT_ALFVEN_STATS_DURING_STORMPHASES,$
    AUTOSCALE_ENUMFLPLOTS=autoscale_eNumFlplots, $
    NEWELL_ANALYZE_EFLUX=newell_analyze_eFlux, $
    NEWELL_ANALYSIS__OUTPUT_SUMMARY=newell_analysis__output_summary, $
+   NONALFVEN_FLUX_PLOTS=nonAlfven_flux_plots, $
    PPLOTS=pPlots, LOGPFPLOT=logPfPlot, ABSPFLUX=absPflux, $
    NONEGPFLUX=noNegPflux, NOPOSPFLUX=noPosPflux, PPLOTRANGE=PPlotRange, $
    IONPLOTS=ionPlots, IFLUXPLOTTYPE=ifluxPlotType, LOGIFPLOT=logIfPlot, ABSIFLUX=absIflux, $
@@ -183,7 +184,8 @@ PRO PLOT_ALFVEN_STATS_DURING_STORMPHASES,$
   ;; justData = 1
   dst_i_list=LIST(ns_dst_i,mp_dst_i,rp_dst_i)
   suff = STRING(FORMAT='("--Dstcutoff_",I0)',dstCutoff)
-  strings=["nonstorm"+suff,"mainphase"+suff,"recoveryphase"+suff]
+  phases = ["nonstorm","mainphase","recoveryphase"]
+  strings=[phases[0]+suff,phases[1]+suff,phases[2]+suff]
 
   IF KEYWORD_SET(no_stormphase_titles) THEN BEGIN
      niceStrings = !NULL
@@ -244,6 +246,8 @@ PRO PLOT_ALFVEN_STATS_DURING_STORMPHASES,$
                                   AUTOSCALE_ENUMFLPLOTS=autoscale_eNumFlplots, $
                                   NEWELL_ANALYZE_EFLUX=newell_analyze_eFlux, $
                                   NEWELL_ANALYSIS__OUTPUT_SUMMARY=newell_analysis__output_summary, $
+                                  NONALFVEN_FLUX_PLOTS=nonAlfven_flux_plots, $
+                                  NONALFVEN_FOR_STORMS=KEYWORD_SET(nonAlfven_flux_plots) ? phases[i] : !NULL, $
                                   PPLOTS=pPlots, LOGPFPLOT=logPfPlot, ABSPFLUX=absPflux, $
                                   NONEGPFLUX=noNegPflux, NOPOSPFLUX=noPosPflux, PPLOTRANGE=PPlotRange, $
                                   IONPLOTS=ionPlots, IFLUXPLOTTYPE=ifluxPlotType, LOGIFPLOT=logIfPlot, ABSIFLUX=absIflux, $
