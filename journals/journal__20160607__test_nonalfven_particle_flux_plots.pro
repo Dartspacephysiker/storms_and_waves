@@ -7,9 +7,9 @@ PRO JOURNAL__20160607__TEST_NONALFVEN_PARTICLE_FLUX_PLOTS
 
   ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
   ;;turn plots on and off
-  ionPlots                       = 0
-  eNumFluxPlot                   = 1
-  ePlots                         = 1
+  ionPlots                       = 1
+  eNumFluxPlot                   = 0
+  ePlots                         = 0
   nonAlfven_flux_plots           = 1
 
   ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
@@ -50,7 +50,7 @@ PRO JOURNAL__20160607__TEST_NONALFVEN_PARTICLE_FLUX_PLOTS
   ;;18-INTEG_ION_FLUX_UP
   maxInd                         = 18
   ifpt                           = 'INTEG_UP'
-  iPlotRange                     = [10.^(6.0),10.^(9.0)]
+  iPlotRange                     = [10.^(5.0),10.^(9.0)]
 
   PLOT_ALFVEN_STATS_DURING_STORMPHASES, $
      DSTCUTOFF=dstCutoff, $
