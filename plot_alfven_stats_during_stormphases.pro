@@ -36,6 +36,7 @@ PRO PLOT_ALFVEN_STATS_DURING_STORMPHASES,$
    NEWELL_ANALYZE_EFLUX=newell_analyze_eFlux, $
    NEWELL_ANALYSIS__OUTPUT_SUMMARY=newell_analysis__output_summary, $
    NONALFVEN_FLUX_PLOTS=nonAlfven_flux_plots, $
+   NONALFVEN__JUNK_ALFVEN_CANDIDATES=nonAlfven__junk_alfven_candidates, $
    PPLOTS=pPlots, LOGPFPLOT=logPfPlot, ABSPFLUX=absPflux, $
    NONEGPFLUX=noNegPflux, NOPOSPFLUX=noPosPflux, PPLOTRANGE=PPlotRange, $
    IONPLOTS=ionPlots, IFLUXPLOTTYPE=ifluxPlotType, LOGIFPLOT=logIfPlot, ABSIFLUX=absIflux, $
@@ -252,6 +253,7 @@ PRO PLOT_ALFVEN_STATS_DURING_STORMPHASES,$
                                   NEWELL_ANALYSIS__OUTPUT_SUMMARY=newell_analysis__output_summary, $
                                   NONALFVEN_FLUX_PLOTS=nonAlfven_flux_plots, $
                                   NONALFVEN_FOR_STORMS=KEYWORD_SET(nonAlfven_flux_plots) ? phases[i] : !NULL, $
+                                  NONALFVEN__JUNK_ALFVEN_CANDIDATES=nonAlfven__junk_alfven_candidates, $
                                   PPLOTS=pPlots, LOGPFPLOT=logPfPlot, ABSPFLUX=absPflux, $
                                   NONEGPFLUX=noNegPflux, NOPOSPFLUX=noPosPflux, PPLOTRANGE=PPlotRange, $
                                   IONPLOTS=ionPlots, IFLUXPLOTTYPE=ifluxPlotType, LOGIFPLOT=logIfPlot, ABSIFLUX=absIflux, $
@@ -411,8 +413,8 @@ PRO PLOT_ALFVEN_STATS_DURING_STORMPHASES,$
            ENDELSE
         ENDELSE
 
-        save_combined_name = paramStr + '--' + dataNameArr[0:-2+KEYWORD_SET(nPlots)] + $
-                             '--combined_phases' + fileSuff
+        save_combined_name = paramStr.REPLACE('recoveryphase','combined_phases',/FOLD_CASE) + '--' + $
+                             dataNameArr[0:-2+KEYWORD_SET(nPlots)] + fileSuff
         ;; save_combined_name = GET_TODAY_STRING() + '--' + dataNameArr[0:-3+KEYWORD_SET(nPlots)] + $
         ;;                      (KEYWORD_SET(plotSuffix) ? plotSuffix : '') + $
         ;;                      '--' + statType + '--combined_phases' + fileSuff
