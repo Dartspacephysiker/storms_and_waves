@@ -1,6 +1,7 @@
 ;2015/12/07
 ;It's way better to see all plots together, of course
 PRO TILE_STORMPHASE_PLOTS,filenames,titles, $
+                          ADD_CENTER_TITLE=add_center_title, $
                           OUT_IMGARR=out_imgArr, $
                           OUT_TITLEOBJS=out_titleObjs, $
                           COMBINED_TO_BUFFER=combined_to_buffer, $
@@ -92,6 +93,15 @@ PRO TILE_STORMPHASE_PLOTS,filenames,titles, $
      ENDIF
   ENDFOR
   
+  IF KEYWORD_SET(add_center_title) THEN BEGIN
+     title          = TEXT(adjHDim*1.535,  $
+                           735, $
+                           add_center_title, $
+                           ALIGNMENT=0.5, $
+                           /DEVICE, $
+                           FONT_SIZE=37.*scaleFactor)
+  ENDIF
+
   IF KEYWORD_SET(save_combined_window) THEN BEGIN
      IF ~KEYWORD_SET(plotDir) THEN plotDir = './'
      IF ~KEYWORD_SET(save_combined_name) THEN save_combined_name = plotDir + 'combined_stormphases.png'

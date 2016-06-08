@@ -4,11 +4,11 @@ PRO JOURNAL__20160530__PLOTS_OF_10_18_49_PROBOCCURRENCE_NPLOTS_DURING_STORMPHASE
 
   ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
   ;;turn plots on and off
-  ionPlots                       = 0
-  probOccurrencePlot             = 0
-  eNumFluxPlot                   = 0
-  pFluxPlot                      = 0
-  nPlots                         = 1
+  ionPlots                       = 1
+  probOccurrencePlot             = 1
+  eNumFluxPlot                   = 1
+  pFluxPlot                      = 1
+  nPlots                         = 0
 
   ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
   ;;bonus
@@ -19,17 +19,18 @@ PRO JOURNAL__20160530__PLOTS_OF_10_18_49_PROBOCCURRENCE_NPLOTS_DURING_STORMPHASE
   save_alf_stormphase_indices    = 1
 
   fancyPresentationMode          = 1 ;Erases stormphase titles, suppresses gridlabels, and blows up plot titles. Keep it.
+  ;; add_center_title               = 1
   ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
   ;;Hemi stuff
-  hemi                           = 'NORTH'
-  minILAT                        = 60
-  maxILAT                        = 85
-  binILAT                        = 2.5
-
-  ;; hemi                           = 'SOUTH'
-  ;; minILAT                        = -85
-  ;; maxILAT                        = -60
+  ;; hemi                           = 'NORTH'
+  ;; minILAT                        = 60
+  ;; maxILAT                        = 85
   ;; binILAT                        = 2.5
+
+  hemi                           = 'SOUTH'
+  minILAT                        = -85
+  maxILAT                        = -60
+  binILAT                        = 2.5
 
   binMLT                         = 1.5
 
@@ -106,6 +107,8 @@ PRO JOURNAL__20160530__PLOTS_OF_10_18_49_PROBOCCURRENCE_NPLOTS_DURING_STORMPHASE
      /CB_FORCE_OOBHIGH, $
      NO_STORMPHASE_TITLES=fancyPresentationMode, $
      SUPPRESS_GRIDLABELS=fancyPresentationMode, $
+     SUPPRESS_TITLES=fancyPresentationMode, $
+     ADD_CENTER_TITLE__STORMPHASE_PLOTS=fancyPresentationMode, $
      LABELS_FOR_PRESENTATION=fancyPresentationMode, $
      /COMBINE_STORMPHASE_PLOTS, $
      /SAVE_COMBINED_WINDOW, $

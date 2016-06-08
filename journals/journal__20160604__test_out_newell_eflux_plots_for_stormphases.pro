@@ -25,18 +25,18 @@ PRO JOURNAL__20160604__TEST_OUT_NEWELL_EFLUX_PLOTS_FOR_STORMPHASES
 
   save_alf_stormphase_indices    = 0
 
-  fancyPresentationMode          = 0 ;Erases stormphase titles, suppresses gridlabels, and blows up plot titles. Keep it.
+  fancyPresentationMode          = 1 ;Erases stormphase titles, suppresses gridlabels, and blows up plot titles. Keep it.
   ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
   ;;Hemi stuff
-  hemi                           = 'NORTH'
-  minILAT                        = 60
-  maxILAT                        = 85
-  binILAT                        = 2.5
-
-  ;; hemi                           = 'SOUTH'
-  ;; minILAT                        = -85
-  ;; maxILAT                        = -60
+  ;; hemi                           = 'NORTH'
+  ;; minILAT                        = 60
+  ;; maxILAT                        = 85
   ;; binILAT                        = 2.5
+
+  hemi                           = 'SOUTH'
+  minILAT                        = -85
+  maxILAT                        = -60
+  binILAT                        = 2.5
 
   binMLT                         = 1.5
 
@@ -130,6 +130,8 @@ PRO JOURNAL__20160604__TEST_OUT_NEWELL_EFLUX_PLOTS_FOR_STORMPHASES
      /CB_FORCE_OOBHIGH, $
      NO_STORMPHASE_TITLES=fancyPresentationMode, $
      SUPPRESS_GRIDLABELS=fancyPresentationMode, $
+     SUPPRESS_TITLES=fancyPresentationMode, $
+     ADD_CENTER_TITLE__STORMPHASE_PLOTS=fancyPresentationMode, $
      LABELS_FOR_PRESENTATION=fancyPresentationMode, $
      COLORBAR_FOR_ALL=colorBar_for_all, $
      /COMBINE_STORMPHASE_PLOTS, $

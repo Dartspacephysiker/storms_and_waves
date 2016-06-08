@@ -135,11 +135,13 @@ PRO PLOT_ALFVEN_STATS_DURING_STORMPHASES,$
    LUN=lun, $
    PRINT_DATA_AVAILABILITY=print_data_availability, $
    COMBINE_STORMPHASE_PLOTS=combine_stormphase_plots, $
+   ADD_CENTER_TITLE__STORMPHASE_PLOTS=add_center_title, $
    COMBINED_TO_BUFFER=combined_to_buffer, $
    SAVE_COMBINED_WINDOW=save_combined_window, $
    SAVE_COMBINED_NAME=save_combined_name, $
    NO_STORMPHASE_TITLES=no_stormphase_titles, $
    SUPPRESS_GRIDLABELS=suppress_gridLabels, $
+   SUPPRESS_TITLES=suppress_titles, $
    LABELS_FOR_PRESENTATION=labels_for_presentation, $
    TILE_IMAGES=tile_images, $
    N_TILE_ROWS=n_tile_rows, $
@@ -351,6 +353,7 @@ PRO PLOT_ALFVEN_STATS_DURING_STORMPHASES,$
                                   EPS_OUTPUT=eps_output, $
                                   OUT_TEMPFILE=out_tempFile, $
                                   SUPPRESS_GRIDLABELS=suppress_gridLabels, $
+                                  SUPPRESS_TITLES=KEYWORD_SET(add_center_title), $
                                   LABELS_FOR_PRESENTATION=labels_for_presentation, $
                                   TILE_IMAGES=tile_images, $
                                   N_TILE_ROWS=n_tile_rows, $
@@ -392,6 +395,11 @@ PRO PLOT_ALFVEN_STATS_DURING_STORMPHASES,$
         plotFileArr = [[plotFileArr],[plotDir + paramStr+'--'+dataNameArr[0:-2+KEYWORD_SET(nPlots)] + fileSuff]]
      ENDFOR
 
+     ctrTitleArr       = !NULL
+     FOR i=0,(N_ELEMENTS(dataNameArr)-2+KEYWORD_SET(nPlots)) DO BEGIN
+        ctrTitleArr    = [ctrTitleArr,h2dStrArr[i].title]
+     ENDFOR
+
      IF ~KEYWORD_SET(save_combined_name) THEN BEGIN
         IF KEYWORD_SET(logAvgPlot) THEN BEGIN
            statType = 'log_avg'
@@ -414,6 +422,7 @@ PRO PLOT_ALFVEN_STATS_DURING_STORMPHASES,$
 
         PRINT,"Saving to " + save_combined_name[i] + "..."
         TILE_STORMPHASE_PLOTS,plotFileArr[i,*],niceStrings, $
+                              ADD_CENTER_TITLE=KEYWORD_SET(add_center_title) ? ctrTitleArr[i] : !NULL, $
                               OUT_IMGARR=out_imgArr, $
                               OUT_TITLEOBJS=out_titleObjs, $
                               COMBINED_TO_BUFFER=combined_to_buffer, $

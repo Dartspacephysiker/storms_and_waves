@@ -18,18 +18,18 @@ PRO JOURNAL__20160607__TEST_NONALFVEN_PARTICLE_FLUX_PLOTS
 
   divide_by_width_x              = 0
 
-  fancyPresentationMode          = 0 ;Erases stormphase titles, suppresses gridlabels, and blows up plot titles. Keep it.
+  fancyPresentationMode          = 1 ;Erases stormphase titles, suppresses gridlabels, and blows up plot titles. Keep it.
   ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
   ;;Hemi stuff
-  hemi                           = 'NORTH'
-  minILAT                        = 60
-  maxILAT                        = 85
-  binILAT                        = 2.5
-
-  ;; hemi                           = 'SOUTH'
-  ;; minILAT                        = -85
-  ;; maxILAT                        = -60
+  ;; hemi                           = 'NORTH'
+  ;; minILAT                        = 60
+  ;; maxILAT                        = 85
   ;; binILAT                        = 2.5
+
+  hemi                           = 'SOUTH'
+  minILAT                        = -85
+  maxILAT                        = -60
+  binILAT                        = 2.5
 
   binMLT                         = 1.5
 
@@ -50,7 +50,7 @@ PRO JOURNAL__20160607__TEST_NONALFVEN_PARTICLE_FLUX_PLOTS
   ;;18-INTEG_ION_FLUX_UP
   maxInd                         = 18
   ifpt                           = 'INTEG_UP'
-  iPlotRange                     = [10.^(5.0),10.^(9.0)]
+  iPlotRange                     = [10.^(6.0),10.^(9.0)]
 
   PLOT_ALFVEN_STATS_DURING_STORMPHASES, $
      DSTCUTOFF=dstCutoff, $
@@ -104,6 +104,8 @@ PRO JOURNAL__20160607__TEST_NONALFVEN_PARTICLE_FLUX_PLOTS
      /CB_FORCE_OOBHIGH, $
      NO_STORMPHASE_TITLES=fancyPresentationMode, $
      SUPPRESS_GRIDLABELS=fancyPresentationMode, $
+     SUPPRESS_TITLES=fancyPresentationMode, $
+     ADD_CENTER_TITLE__STORMPHASE_PLOTS=fancyPresentationMode, $
      LABELS_FOR_PRESENTATION=fancyPresentationMode, $
      COLORBAR_FOR_ALL=colorBar_for_all, $
      /COMBINE_STORMPHASE_PLOTS, $
