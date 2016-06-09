@@ -8,9 +8,9 @@ PRO JOURNAL__20160608__TEST_OUT_NEWELL_EFLUX_PLOTS_FOR_STORMPHASES__NONALFVEN
 
   ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
   ;;turn plots on and off
-  ionPlots                       = 1
-  eNumFluxPlot                   = 0
-  ePlots                         = 0
+  ionPlots                       = 0
+  eNumFluxPlot                   = 1
+  ePlots                         = 1
 
   nonAlfven_flux_plots           = 1
   newell_analyze_eFlux           = 1
@@ -26,15 +26,15 @@ PRO JOURNAL__20160608__TEST_OUT_NEWELL_EFLUX_PLOTS_FOR_STORMPHASES__NONALFVEN
   fancyPresentationMode          = 1 ;Erases stormphase titles, suppresses gridlabels, and blows up plot titles. Keep it.
   ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
   ;;Hemi stuff
-  ;; hemi                           = 'NORTH'
-  ;; minILAT                        = 60
-  ;; maxILAT                        = 85
-  ;; binILAT                        = 2.5
-
-  hemi                           = 'SOUTH'
-  minILAT                        = -85
-  maxILAT                        = -60
+  hemi                           = 'NORTH'
+  minILAT                        = 60
+  maxILAT                        = 85
   binILAT                        = 2.5
+
+  ;; hemi                           = 'SOUTH'
+  ;; minILAT                        = -85
+  ;; maxILAT                        = -60
+  ;; binILAT                        = 2.5
 
   binMLT                         = 1.5
 
