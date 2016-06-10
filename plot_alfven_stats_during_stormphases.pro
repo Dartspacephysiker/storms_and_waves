@@ -6,29 +6,48 @@
 ;;
 PRO PLOT_ALFVEN_STATS_DURING_STORMPHASES,$
    DSTCUTOFF=dstCutoff, $
-   CLOCKSTR=clockStr, ANGLELIM1=angleLim1, ANGLELIM2=angleLim2, $
-   ORBRANGE=orbRange, ALTITUDERANGE=altitudeRange, CHARERANGE=charERange, POYNTRANGE=poyntRange, NUMORBLIM=numOrbLim, $
-   MINMLT=minMLT,MAXMLT=maxMLT, $
+   CLOCKSTR=clockStr, $
+   ANGLELIM1=angleLim1, $
+   ANGLELIM2=angleLim2, $
+   ORBRANGE=orbRange, $
+   ALTITUDERANGE=altitudeRange, $
+   CHARERANGE=charERange, $
+   POYNTRANGE=poyntRange, $
+   NUMORBLIM=numOrbLim, $
+   MINMLT=minMLT, $
+   MAXMLT=maxMLT, $
    BINMLT=binMLT, $
    SHIFTMLT=shiftM, $
-   MINILAT=minILAT,MAXILAT=maxILAT,BINILAT=binILAT, $
-   DO_LSHELL=do_lShell, REVERSE_LSHELL=reverse_lShell, $
-   MINLSHELL=minLshell,MAXLSHELL=maxLshell,BINLSHELL=binLshell, $
+   MINILAT=minILAT, $
+   MAXILAT=maxILAT, $
+   BINILAT=binILAT, $
+   DO_LSHELL=do_lShell, $
+   REVERSE_LSHELL=reverse_lShell, $
+   MINLSHELL=minLshell, $
+   MAXLSHELL=maxLshell, $
+   BINLSHELL=binLshell, $
    MIN_MAGCURRENT=minMC, $
    MAX_NEGMAGCURRENT=maxNegMC, $
    BOTH_HEMIS=both_hemis, $
    NORTH=north, $
    SOUTH=south, $
    HEMI=hemi, $
-   HWMAUROVAL=HwMAurOval,HWMKPIND=HwMKpInd, $
+   HWMAUROVAL=HwMAurOval, $
+   HWMKPIND=HwMKpInd, $
    ;; MIN_NEVENTS=min_nEvents, $
    MASKMIN=maskMin, $
-   DELAY=delay, STABLEIMF=stableIMF, SMOOTHWINDOW=smoothWindow, INCLUDENOCONSECDATA=includeNoConsecData, $
+   DELAY=delay, $
+   STABLEIMF=stableIMF, $
+   SMOOTHWINDOW=smoothWindow, $
+   INCLUDENOCONSECDATA=includeNoConsecData, $
    NPLOTS=nPlots, $
    EPLOTS=ePlots, $
    EPLOTRANGE=ePlotRange, $
-   EFLUXPLOTTYPE=eFluxPlotType, LOGEFPLOT=logEfPlot, $
-   ABSEFLUX=abseflux, NOPOSEFLUX=noPosEFlux, NONEGEFLUX=noNegEflux, $
+   EFLUXPLOTTYPE=eFluxPlotType, $
+   LOGEFPLOT=logEfPlot, $
+   ABSEFLUX=abseflux, $
+   NOPOSEFLUX=noPosEFlux, $
+   NONEGEFLUX=noNegEflux, $
    ENUMFLPLOTS=eNumFlPlots, ENUMFLPLOTTYPE=eNumFlPlotType, LOGENUMFLPLOT=logENumFlPlot, ABSENUMFL=absENumFl, $
    NONEGENUMFL=noNegENumFl, NOPOSENUMFL=noPosENumFl, $
    ENUMFLPLOTRANGE=ENumFlPlotRange, $
