@@ -84,6 +84,7 @@ PRO STACKPLOTS_STORMS_ALFVENDBQUANTITIES_OVERLAID,stormTimeArray_utc, $
                              RESTRICT_ALTRANGE=restrict_altRange, $
                              RESTRICT_CHARERANGE=restrict_charERange, $
                              RESTRICT_POYNTRANGE=restrict_poyntRange, $
+                             ORBRANGE=orbRange, $
                              LOG_DBQUANTITY=log_DBquantity, $
                              YTITLE_MAXIND=yTitle_maxInd, $
                              YRANGE_MAXIND=yRange_maxInd, $
@@ -140,9 +141,20 @@ PRO STACKPLOTS_STORMS_ALFVENDBQUANTITIES_OVERLAID,stormTimeArray_utc, $
 
   ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
   ;Now restore 'em
-  LOAD_OMNI_DB,sw_data,SWDBDIR=swDBDir,SWDBFILE=swDBFile,/LOAD_CULLED_OMNI_DB
-  LOAD_NOAA_AND_BRETT_DBS_AND_QI,stormStruct,DB_BRETT=stormFile,DBDIR=stormDir
-  ;; LOAD_MAXIMUS_AND_CDBTIME,maximus,cdbTime,DB_TFILE=DB_tFile,DBDIR=DBDir,DBFILE=DBFile,DO_DESPUNDB=do_despunDB
+  LOAD_OMNI_DB,sw_data, $
+               SWDBDIR=swDBDir, $
+               SWDBFILE=swDBFile, $
+               /LOAD_CULLED_OMNI_DB
+
+  LOAD_NOAA_AND_BRETT_DBS_AND_QI,stormStruct, $
+                                 DB_BRETT=stormFile, $
+                                 DBDIR=stormDir
+
+  LOAD_MAXIMUS_AND_CDBTIME,maximus,cdbTime, $
+                           DB_TFILE=AlfDB_tFile, $
+                           DBDIR=AlfDBDir, $
+                           DBFILE=AlfDBFile, $
+                           DO_DESPUNDB=do_despunDB
 
   IF ~use_SYMH AND ~use_AE AND ~omni_Quantity THEN BEGIN
      LOAD_DST_AE_DBS,dst,ae,DST_AE_DIR=DST_AEDir,DST_AE_FILE=DST_AEFile
@@ -394,13 +406,23 @@ PRO STACKPLOTS_STORMS_ALFVENDBQUANTITIES_OVERLAID,stormTimeArray_utc, $
                  alf_y     = (N_ELEMENTS(tot_alf_y_neg_list) GT 0 ? tot_alf_y_neg_list[i] : !NULL )
               ENDELSE
               IF N_ELEMENTS(alf_t) GT 0 THEN BEGIN
-                 PLOT_ALFVENDBQUANTITY_SCATTER__EPOCH,maxInd,mTags,NAME=name,AXIS_STYLE=axis_Style, $
-                                                      SYMCOLOR=posneg_colors[j],SYMTRANSPARENCY=symTransparency,SYMBOL=symbol, $
-                                                      ALFDBSTRUCT=maximus,ALFDBTIME=cdbTime,PLOT_I=plot_i,CENTERTIME=centerTime,$
-                                                      ALF_T=alf_t,ALF_Y=alf_y, $
+                 PLOT_ALFVENDBQUANTITY_SCATTER__EPOCH,maxInd,mTags, $
+                                                      NAME=name, $
+                                                      AXIS_STYLE=axis_Style, $
+                                                      SYMCOLOR=posneg_colors[j], $
+                                                      SYMTRANSPARENCY=symTransparency, $
+                                                      SYMBOL=symbol, $
+                                                      ALFDBSTRUCT=maximus, $
+                                                      ALFDBTIME=cdbTime, $
+                                                      PLOT_I=plot_i, $
+                                                      CENTERTIME=centerTime,$
+                                                      ALF_T=alf_t, $
+                                                      ALF_Y=alf_y, $
                                                       PLOTTITLE=plotTitle, $
-                                                      XTITLE=xTitle,XRANGE=xRange, $
-                                                      YTITLE=KEYWORD_SET(just_one_label) ? (i EQ 1 ? yTitle_maxInd : !NULL ) : !NULL, $
+                                                      XTITLE=xTitle, $
+                                                      XRANGE=xRange, $
+                                                      YTITLE=KEYWORD_SET(just_one_label) ? $
+                                                      (i EQ 1 ? yTitle_maxInd : !NULL ) : !NULL, $
                                                       YRANGE=[minDat[j],maxDat[j]], $
                                                       LOGYPLOT=logYPlot, $
                                                       OVERPLOT_ALFVENDBQUANTITY=overplot_alfvendbquantity, $
@@ -408,7 +430,8 @@ PRO STACKPLOTS_STORMS_ALFVENDBQUANTITIES_OVERLAID,stormTimeArray_utc, $
                                                       MARGIN=stackplotMargin, $
                                                       LAYOUT=[1,nEpochs,i+skipPlotCount+1], $
                                                       CLIP=0, $
-                                                      OUTPLOT=outPlot,ADD_PLOT_TO_PLOT_ARRAY=add_plot_to_plot_array ;; Add the legend, if neg_and_pos_separ
+                                                      OUTPLOT=outPlot, $
+                                                      ADD_PLOT_TO_PLOT_ARRAY=add_plot_to_plot_array ;; Add the legend, if neg_and_pos_separ
               ENDIF
            ENDFOR
         ENDIF ELSE BEGIN
@@ -607,21 +630,34 @@ PRO STACKPLOTS_STORMS_ALFVENDBQUANTITIES_OVERLAID,stormTimeArray_utc, $
   
   IF KEYWORD_SET(show_data_availability) THEN BEGIN
      ;;First, find out where we had data
-     ;; LOAD_FASTLOC_AND_FASTLOC_TIMES,fastLoc,fastLoc_times
+     LOAD_FASTLOC_AND_FASTLOC_TIMES,fastLoc,fastLoc_times, $
+                                    DBDIR=fastLocDBDir, $
+                                    DBFILE=fastLocDBFile, $
+                                    DB_TFILE=fastLocDB_tFile
      avail_i = GET_CHASTON_IND(fastloc,"OMNI", $
-                               DBFILE=dbfile,DBTIMES=fastLoc_times, $
+                               DBTIMES=fastLoc_times, $
+                               DBFILE=fastLocDBFile, $
+                               ;; DBDIR=fastLocDBDir, $
                                ORBRANGE=orbRange, $
                                ALTITUDERANGE=restrict_altRange, $
                                HEMI=hemi, $
                                HWMAUROVAL=HwMAurOval,HWMKPIND=HwMKpInd, $
-                               MINMLT=minM,MAXMLT=maxM,BINM=binM,MINILAT=minI,MAXILAT=maxI,BINILAT=binI, $
-                               DO_LSHELL=do_lshell,MINLSHELL=minL,MAXLSHELL=maxL,BINLSHELL=binL, $
+                               MINMLT=minM, $
+                               MAXMLT=maxM, $
+                               BINM=binM, $
+                               MINILAT=minI, $
+                               MAXILAT=maxI, $
+                               BINILAT=binI, $
+                               DO_LSHELL=do_lshell, $
+                               MINLSHELL=minL, $
+                               MAXLSHELL=maxL, $
+                               BINLSHELL=binL, $
                                DAYSIDE=dayside,NIGHTSIDE=nightside, $
                                /GET_TIME_I_NOT_ALFVENDB_I, $
                                /RESET_GOOD_INDS, $
-                               /PRINT_PARAM_SUMMARY, $
+                               /PRINT_PARAM_SUMMARY) ;, $
                                ;; FASTLOC_DELTA_T=fastloc_delta_t, $
-                               OUT_TIMES_FASTLOC=fastLoc_times)
+                               ;; OUT_TIMES_FASTLOC=fastLoc_times)
                                
      FOR i=0,nEpochs-1 DO BEGIN
         
