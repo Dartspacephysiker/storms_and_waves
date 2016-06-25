@@ -2,7 +2,9 @@
 ;Stop trying to maintain the various versions of this thing called by SUPERPOSE_STORMS_ALFVENDBQUANTITIES and STACKPLOTS_STORMS_ALFVENDBQUANTITIES_OVERLAID
 
 PRO GET_STORMTIME_UTC,nEpochs=nEpochs,EPOCHINDS=epochInds,STORMFILE=stormFile, $
-                      MAXIMUS=maximus,STORMSTRUCTURE=stormStructure,USE_DARTDB_START_ENDDATE=use_dartDB_start_endDate, $      ;DBs
+                      MAXIMUS=maximus,STORMSTRUCTURE=stormStructure, $
+                      USE_DARTDB_START_ENDDATE=use_dartDB_start_endDate, $
+                      USE_DARTDB__BEF_NOV1999=use_dartDB__bef_nov1999, $
                       STORMTYPE=stormType,STARTDATE=startDate,STOPDATE=stopDate,SSC_TIMES_UTC=ssc_times_utc, $          ;extra info
                       CENTERTIME=centerTime, TSTAMPS=tStamps, STORMSTRING=stormString,STORMSTRUCT_INDS=stormStruct_inds, $ ; outs
                       RANDOMTIMES=randomTimes
@@ -10,9 +12,19 @@ PRO GET_STORMTIME_UTC,nEpochs=nEpochs,EPOCHINDS=epochInds,STORMFILE=stormFile, $
   IF KEYWORD_SET(use_dartdb_start_enddate) THEN BEGIN
      startDate=str_to_time(maximus.time(0))
      stopDate=str_to_time(maximus.time(-1))
+     ;; stopDate=str_to_time(maximus.time[MIN(WHERE(maximus.orbit EQ 12670))])
      PRINT,'Using start and stop time from Dartmouth/Chaston database.'
      PRINT,'Start time: ' + maximus.time(0)
      PRINT,'Stop time: ' + maximus.time(-1)
+  ENDIF
+  
+  IF KEYWORD_SET(use_dartdb__bef_nov1999) THEN BEGIN
+     last_i = MAX(WHERE(maximus.orbit EQ 12670))
+     startDate = STR_TO_TIME(maximus.time(0))
+     stopDate = STR_TO_TIME(maximus.time[last_i])
+     PRINT,'Using start and stop time from Alfvén database before Nov 1999...'
+     PRINT,'Start time: ' + maximus.time[0]
+     PRINT,'Stop time: ' + maximus.time[last_i]
   ENDIF
   
   IF KEYWORD_SET(STARTDATE) THEN BEGIN

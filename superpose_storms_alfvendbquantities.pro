@@ -66,7 +66,8 @@
 ;-
 PRO SUPERPOSE_STORMS_ALFVENDBQUANTITIES,stormTimeArray_utc, $
                                         TBEFOREEPOCH=tBeforeEpoch,TAFTEREPOCH=tAfterEpoch, $
-                                        STARTDATE=startDate, STOPDATE=stopDate, $
+                                        STARTDATE=startDate, $
+                                        STOPDATE=stopDate, $
                                         DAYSIDE=dayside,NIGHTSIDE=nightside, $
                                         EPOCHINDS=epochInds, SSC_TIMES_UTC=ssc_times_utc, $
                                         REMOVE_DUPES=remove_dupes, $
@@ -137,7 +138,9 @@ PRO SUPERPOSE_STORMS_ALFVENDBQUANTITIES,stormTimeArray_utc, $
                                         NAME__AVG_PLOT=name__avg_plot, $
                                         N__AVG_PLOTS=n__avg_plots, $
                                         ACCUMULATE__AVG_PLOTS=accumulate__avg_plots, $
-                                        RESTRICT_ALTRANGE=restrict_altRange,RESTRICT_CHARERANGE=restrict_charERange, $
+                                        RESTRICT_ALTRANGE=restrict_altRange, $
+                                        RESTRICT_CHARERANGE=restrict_charERange, $
+                                        RESTRICT_ORBRANGE=restrict_orbRange, $
                                         LOG_DBQUANTITY=log_DBQuantity, $
                                         YLOGSCALE_MAXIND=yLogScale_maxInd, $
                                         XLABEL_MAXIND__SUPPRESS=xLabel_maxInd__suppress, $
@@ -157,6 +160,7 @@ PRO SUPERPOSE_STORMS_ALFVENDBQUANTITIES,stormTimeArray_utc, $
                                         NOMAXPLOTS=noMaxPlots, $
                                         NOAVGPLOTS=noAvgPlots, $
                                         USE_DARTDB_START_ENDDATE=use_dartdb_start_enddate, $
+                                        USE_DARTDB__BEF_NOV1999=use_dartDB__bef_nov1999, $
                                         DO_DESPUNDB=do_despunDB, $
                                         USING_HEAVIES=using_heavies, $
                                         SAVEFILE=saveFile, $
@@ -193,7 +197,9 @@ PRO SUPERPOSE_STORMS_ALFVENDBQUANTITIES,stormTimeArray_utc, $
   ;defaults
   SET_STORMS_NEVENTS_DEFAULTS,TBEFOREEPOCH=tBeforeEpoch,TAFTEREPOCH=tAfterEpoch,$
                               DAYSIDE=dayside,NIGHTSIDE=nightside, $
-                              RESTRICT_CHARERANGE=restrict_charERange,RESTRICT_ALTRANGE=restrict_altRange, $
+                              RESTRICT_CHARERANGE=restrict_charERange, $
+                              RESTRICT_ALTRANGE=restrict_altRange, $
+                              RESTRICT_ORBRANGE=restrict_orbRange, $
                               MAXIND=maxInd,AVG_TYPE_MAXIND=avg_type_maxInd,LOG_DBQUANTITY=log_DBQuantity, $
                               USING_HEAVIES=using_heavies, $
                               YLOGSCALE_MAXIND=yLogScale_maxInd, $
@@ -247,15 +253,22 @@ PRO SUPERPOSE_STORMS_ALFVENDBQUANTITIES,stormTimeArray_utc, $
   ;Get all storms occuring within specified date range, if an array of times hasn't been provided
   
 
-  SETUP_STORMTIMEARRAY_UTC,stormTimeArray_utc,TBEFOREEPOCH=tBeforeEpoch,TAFTEREPOCH=tAfterEpoch, $
-                             NEPOCHS=nEpochs,EPOCHINDS=epochInds,STORMFILE=stormFile, $
-                             MAXIMUS=maximus,STORMSTRUCTURE=stormStruct,USE_DARTDB_START_ENDDATE=use_dartDB_start_endDate, $   ;DBs
-                             STORMTYPE=stormType,STARTDATE=startDate,STOPDATE=stopDate,SSC_TIMES_UTC=ssc_times_utc, $          ;extra info
-                             CENTERTIME=centerTime, DATSTARTSTOP=datStartStop, TSTAMPS=tStamps, $
-                             STORMSTRING=stormString,STORMSTRUCT_INDS=stormStruct_inds, $ ; outs
-                             RANDOMTIMES=randomTimes, $
-                             SAVEFILE=saveFile,SAVESTR=saveString
-
+  SETUP_STORMTIMEARRAY_UTC,stormTimeArray_utc, $
+                           TBEFOREEPOCH=tBeforeEpoch, $
+                           TAFTEREPOCH=tAfterEpoch, $
+                           NEPOCHS=nEpochs,EPOCHINDS=epochInds,STORMFILE=stormFile, $
+                           MAXIMUS=maximus,STORMSTRUCTURE=stormStruct, $
+                           USE_DARTDB_START_ENDDATE=use_dartDB_start_endDate, $
+                           USE_DARTDB__BEF_NOV1999=use_dartDB__bef_nov1999, $
+                           STORMTYPE=stormType, $
+                           STARTDATE=startDate, $
+                           STOPDATE=stopDate, $
+                           SSC_TIMES_UTC=ssc_times_utc, $ ;extra info
+                           CENTERTIME=centerTime, DATSTARTSTOP=datStartStop, TSTAMPS=tStamps, $
+                           STORMSTRING=stormString,STORMSTRUCT_INDS=stormStruct_inds, $ ; outs
+                           RANDOMTIMES=randomTimes, $
+                           SAVEFILE=saveFile,SAVESTR=saveString
+  
   IF KEYWORD_SET(remove_dupes) THEN BEGIN
      REMOVE_EPOCH_DUPES,NEPOCHS=nEpochs, $
                         CENTERTIME=centerTime, $
@@ -297,7 +310,9 @@ PRO SUPERPOSE_STORMS_ALFVENDBQUANTITIES,stormTimeArray_utc, $
                                        DATSTARTSTOP=datStartStop,TSTAMPS=tStamps,GOOD_I=good_i, $
                                        NALFEPOCHS=nAlfEpochs,ALF_EPOCH_T=alf_epoch_t,ALF_EPOCH_I=alf_epoch_i, $
                                        ALF_CENTERTIME=alf_centerTime,ALF_TSTAMPS=alf_tStamps, $
-                                       RESTRICT_ALTRANGE=restrict_altRange,RESTRICT_CHARERANGE=restrict_charERange, $
+                                       RESTRICT_ALTRANGE=restrict_altRange, $
+                                       RESTRICT_CHARERANGE=restrict_charERange, $
+                                       RESTRICT_ORBRANGE=restrict_orbRange, $
                                        MINMLT=minM,MAXMLT=maxM,BINM=binM,MINILAT=minI,MAXILAT=maxI,BINI=binI, $
                                        DO_LSHELL=do_lshell,MINLSHELL=minL,MAXLSHELL=maxL,BINL=binL, $
                                        BOTH_HEMIS=both_hemis, $
@@ -590,7 +605,9 @@ PRO SUPERPOSE_STORMS_ALFVENDBQUANTITIES,stormTimeArray_utc, $
               T1_ARR=datStartStop[*,0], $
               T2_ARR=datStartStop[*,1], $
               CENTERTIME=centerTime, $
-              RESTRICT_ALTRANGE=restrict_altRange,RESTRICT_CHARERANGE=restrict_charERange, $
+              RESTRICT_ALTRANGE=restrict_altRange, $
+              RESTRICT_CHARERANGE=restrict_charERange, $
+              RESTRICT_ORBRANGE=restrict_orbRange, $
               MINMLT=minM,MAXMLT=maxM,BINM=binM,MINILAT=minI,MAXILAT=maxI,BINI=binI, $
               DO_LSHELL=do_lshell,MINLSHELL=minL,MAXLSHELL=maxL,BINL=binL, $
               ;; BOTH_HEMIS=both_hemis, $
@@ -612,6 +629,7 @@ PRO SUPERPOSE_STORMS_ALFVENDBQUANTITIES,stormTimeArray_utc, $
               FASTLOC_I_LIST=fastLoc_i_list,FASTLOC_T_LIST=fastLoc_t_list,FASTLOC_DT_LIST=fastLoc_dt_list, $
               NONZERO_I=nz_i_fastLoc, $
               PRINT_MAXIND_SEA_STATS=print_maxInd_sea_stats, $
+              /LET_OVERLAPS_FLY__FOR_SEA, $
               LUN=lun
            ;; FASTLOC_STRUCT=fastLoc,FASTLOC_TIMES=fastLoc_times,FASTLOC_DELTA_T=fastLoc_delta_t
            
@@ -634,7 +652,9 @@ PRO SUPERPOSE_STORMS_ALFVENDBQUANTITIES,stormTimeArray_utc, $
               T1_ARR=datStartStop[*,0], $
               T2_ARR=datStartStop[*,1], $
               CENTERTIME=centerTime, $
-              RESTRICT_ALTRANGE=restrict_altRange,RESTRICT_CHARERANGE=restrict_charERange, $
+              RESTRICT_ALTRANGE=restrict_altRange, $
+              RESTRICT_CHARERANGE=restrict_charERange, $
+              RESTRICT_ORBRANGE=restrict_orbRange, $
               MINMLT=minM,MAXMLT=maxM,BINM=binM,MINILAT=minI,MAXILAT=maxI,BINI=binI, $
               DO_LSHELL=do_lshell,MINLSHELL=minL,MAXLSHELL=maxL,BINL=binL, $
               ;; BOTH_HEMIS=both_hemis, $
@@ -651,6 +671,7 @@ PRO SUPERPOSE_STORMS_ALFVENDBQUANTITIES,stormTimeArray_utc, $
               FASTLOC_I_LIST=fastLoc_i_list,FASTLOC_T_LIST=fastLoc_t_list,FASTLOC_DT_LIST=fastLoc_dt_list, $
               NONZERO_I=nz_i_fastLoc, $
               PRINT_MAXIND_SEA_STATS=print_maxInd_sea_stats, $
+              /LET_OVERLAPS_FLY__FOR_SEA, $
               LUN=lun
               ;; FASTLOC_STRUCT=fastLoc,FASTLOC_TIMES=fastLoc_times,FASTLOC_DELTA_T=fastLoc_delta_t
            

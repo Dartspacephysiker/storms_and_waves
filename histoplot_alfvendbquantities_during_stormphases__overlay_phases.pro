@@ -37,8 +37,8 @@
 ;                         2016/01/26 Added USING_HEAVIES keywords below in case we're using heavy-ion data
 ;-
 PRO HISTOPLOT_ALFVENDBQUANTITIES_DURING_STORMPHASES__OVERLAY_PHASES, $
-   RESTOREFILE=restoreFile, $
    stormTimeArray_utc, $
+   RESTOREFILE=restoreFile, $
    START_UTC=start_UTC, STOP_UTC=stop_UTC, $
    DAYSIDE=dayside,NIGHTSIDE=nightside, $
    HEMI=hemi, $
@@ -58,14 +58,17 @@ PRO HISTOPLOT_ALFVENDBQUANTITIES_DURING_STORMPHASES__OVERLAY_PHASES, $
    ONLY_NEG=only_neg, $
    ABSVAL=absVal, $
    AVG_TYPE_MAXIND=avg_type_maxInd, $
-   RESTRICT_ALTRANGE=restrict_altRange,RESTRICT_CHARERANGE=restrict_charERange, $
+   RESTRICT_ORBRANGE=orbRange, $
+   RESTRICT_ALTRANGE=restrict_altRange, $
+   RESTRICT_CHARERANGE=restrict_charERange, $
    LOG_DBQUANTITY=log_DBQuantity, $
    DO_UNLOGGED_STATISTICS=unlog_statistics, $
    DO_LOGGED_STATISTICS=log_statistics, $
    DO_BOOTSTRAP_MEDIAN=bootstrap_median, $
    TBINS=tBins, $
    DBFILE=dbFile,DB_TFILE=db_tFile, $
-   USE_DARTDB_START_ENDDATE=use_dartdb_start_enddate, $
+   ;; USE_DARTDB_START_ENDDATE=use_dartdb_start_enddate, $
+   ;; USE_DARTDB__BEF_NOV1999=use_dartDB__bef_nov1999, $
    DO_DESPUNDB=do_despundb, $
    SAVEFILE=saveFile, $
    SAVEDIR=saveDir, $
@@ -108,7 +111,8 @@ PRO HISTOPLOT_ALFVENDBQUANTITIES_DURING_STORMPHASES__OVERLAY_PHASES, $
                               ;; POS_LAYOUT=pos_layout, $
                               ;; NEG_LAYOUT=neg_layout, $
                               USE_SYMH=use_SYMH,USE_AE=use_AE, $
-                              OMNI_QUANTITY=omni_quantity,LOG_OMNI_QUANTITY=log_omni_quantity,USE_DATA_MINMAX=use_data_minMax, $
+                              OMNI_QUANTITY=omni_quantity,LOG_OMNI_QUANTITY=log_omni_quantity, $
+                              USE_DATA_MINMAX=use_data_minMax, $
                               SAVEMPNAME=saveMPName, $
                               SAVEFILE=saveFile,SAVESTR=saveStr, $
                               PLOTTITLE=plotTitle,SAVEPNAME=savePName, $
@@ -163,7 +167,7 @@ EPOCHPLOT_COLORNAMES=epochPlot_colorNames,SCATTEROUTPREFIX=scatterOutPrefix, $
 
   ;;******************************
   ;;Some setup stuff
-  justData = 1
+  ;; justData = 1
   dst_i_list=LIST(ns_dst_i,mp_dst_i,rp_dst_i)
   suff = STRING(FORMAT='("--Dstcutoff_",I0)',dstCutoff)
   strings=["nonstorm"+suff,"mainphase"+suff,"recoveryphase"+suff]

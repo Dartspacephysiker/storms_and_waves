@@ -1,14 +1,22 @@
-;;This thing will do versions of Fig 1 for both hemispheres
-PRO JOURNAL__20160530__PLOTS_OF_10_18_49_PROBOCCURRENCE_NPLOTS_DURING_STORMPHASES__SAVE_INDICES
-  dstCutoff = -20
+;;06/25/16
+PRO JOURNAL__20160625__TEST_OUT_NEWELL_EFLUX_PLOTS_FOR_STORMPHASES__PRE_NOV1999
+
+  COMPILE_OPT IDL2
+
+  dstCutoff                      = -20
+
+  orbRange          = [500,12670]
 
   ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
   ;;turn plots on and off
-  ionPlots                       = 1
-  probOccurrencePlot             = 1
-  eNumFluxPlot                   = 1
-  pFluxPlot                      = 1
+  ionPlots                       = 0
+  probOccurrencePlot             = 0
+  pFluxPlot                      = 0
   nPlots                         = 0
+  newellPlots                    = 0
+
+  eNumFluxPlot                   = 1
+  newell_analyze_eFlux           = 1
 
   ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
   ;;bonus
@@ -19,7 +27,6 @@ PRO JOURNAL__20160530__PLOTS_OF_10_18_49_PROBOCCURRENCE_NPLOTS_DURING_STORMPHASE
   save_alf_stormphase_indices    = 0
 
   fancyPresentationMode          = 1 ;Erases stormphase titles, suppresses gridlabels, and blows up plot titles. Keep it.
-  ;; add_center_title               = 1
   ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
   ;;Hemi stuff
   hemi                           = 'NORTH'
@@ -35,6 +42,16 @@ PRO JOURNAL__20160530__PLOTS_OF_10_18_49_PROBOCCURRENCE_NPLOTS_DURING_STORMPHASE
   binMLT                         = 1.5
 
   maskMin                        = 10
+
+  ;;;;;;;;;;;;;;;;;;;;;;
+  ;;NEWELL PLOTS
+  ;; newell_plotRange               = [1,1000] ;for pFlux multiplied by width_x
+  ;; log_newellPlot                 = 1
+  ;; newellPlot_autoscale           = 0
+  ;; newellPlot_normalize           = 1
+  ;; colorBar_for_all               = 1
+
+  newellPlot_probOccurrence      = 0
 
   ;;;;;;;;;;;;;;;;;;;;;;
   ;;10-EFLUX_LOSSCONE_INTEG
@@ -86,6 +103,7 @@ PRO JOURNAL__20160530__PLOTS_OF_10_18_49_PROBOCCURRENCE_NPLOTS_DURING_STORMPHASE
      /NONEGENUMFL, $            ;Because we're not interested in upflowing electrons
      /LOGENUMFLPLOT, $
      ENUMFLPLOTRANGE=eNumFlPlotRange, $
+     NEWELL_ANALYZE_EFLUX=newell_analyze_eFlux, $
      PPLOTS=pFluxPlot, $
      LOGPFPLOT=logPFPlot, $
      PPLOTRANGE=pPlotRange, $
@@ -94,6 +112,12 @@ PRO JOURNAL__20160530__PLOTS_OF_10_18_49_PROBOCCURRENCE_NPLOTS_DURING_STORMPHASE
      PROBOCCURRENCEPLOT=probOccurrencePlot, $
      LOGPROBOCCURRENCE=logProbOccurrence, $
      PROBOCCURRENCERANGE=probOccurrenceRange, $
+     NEWELLPLOTS=newellPlots, $
+     NEWELL_PLOTRANGE=newell_plotRange, $
+     LOG_NEWELLPLOT=log_newellPlot, $
+     NEWELLPLOT_AUTOSCALE=newellPlot_autoscale, $
+     NEWELLPLOT_NORMALIZE=newellPlot_normalize, $
+     NEWELLPLOT_PROBOCCURRENCE=newellPlot_probOccurrence, $
      NPLOTS=nPlots, $
      NEVENTSPLOTRANGE=nEventsPlotRange, $
      LOGNEVENTSPLOT=logNEventsPlot, $
@@ -110,8 +134,12 @@ PRO JOURNAL__20160530__PLOTS_OF_10_18_49_PROBOCCURRENCE_NPLOTS_DURING_STORMPHASE
      SUPPRESS_TITLES=fancyPresentationMode, $
      ADD_CENTER_TITLE__STORMPHASE_PLOTS=fancyPresentationMode, $
      LABELS_FOR_PRESENTATION=fancyPresentationMode, $
+     COLORBAR_FOR_ALL=colorBar_for_all, $
      /COMBINE_STORMPHASE_PLOTS, $
      /SAVE_COMBINED_WINDOW, $
      /COMBINED_TO_BUFFER
 
+
+
 END
+

@@ -12,17 +12,33 @@
 ;; include_i          : Indices of the epochs for which we have data. All others discarded from
 ;;                       variables alf_centerTime, alf_tStamps, nAlfEpochs, alf_epoch_t, 
 ;;                       and alf_epoch_i
-PRO GET_EPOCH_T_AND_INDS_FOR_ALFVENDB,maximus,cdbTime,NEPOCHS=nEpochs,TBEFOREEPOCH=tBeforeEpoch,TAFTEREPOCH=tAfterEpoch, $
+PRO GET_EPOCH_T_AND_INDS_FOR_ALFVENDB,maximus,cdbTime,NEPOCHS=nEpochs, $
+                                      TBEFOREEPOCH=tBeforeEpoch, $
+                                      TAFTEREPOCH=tAfterEpoch, $
                                       CENTERTIME=centerTime, $
-                                      DATSTARTSTOP=datStartStop,TSTAMPS=tStamps,GOOD_I=good_i, $
-                                      NALFEPOCHS=nAlfEpochs,ALF_EPOCH_T=alf_epoch_t,ALF_EPOCH_I=alf_epoch_i, $
+                                      DATSTARTSTOP=datStartStop, $
+                                      TSTAMPS=tStamps, $
+                                      GOOD_I=good_i, $
+                                      NALFEPOCHS=nAlfEpochs, $
+                                      ALF_EPOCH_T=alf_epoch_t, $
+                                      ALF_EPOCH_I=alf_epoch_i, $
                                       EMPTY_EPOCHS_I=empty_epochs_i, $
-                                      ALF_CENTERTIME=alf_centerTime,ALF_TSTAMPS=alf_tStamps, $
+                                      ALF_CENTERTIME=alf_centerTime, $
+                                      ALF_TSTAMPS=alf_tStamps, $
                                       RESTRICT_ALTRANGE=restrict_altRange, $
                                       RESTRICT_CHARERANGE=restrict_charERange, $
+                                      RESTRICT_ORBRANGE=restrict_orbRange, $
                                       RESTRICT_POYNTRANGE=restrict_poyntRange, $
-                                      MINMLT=minM,MAXMLT=maxM,BINM=binM,MINILAT=minI,MAXILAT=maxI,BINI=binI, $
-                                      DO_LSHELL=do_lshell,MINLSHELL=minL,MAXLSHELL=maxL,BINL=binL, $
+                                      MINMLT=minM, $
+                                      MAXMLT=maxM, $
+                                      BINM=binM, $
+                                      MINILAT=minI, $
+                                      MAXILAT=maxI, $
+                                      BINI=binI, $
+                                      DO_LSHELL=do_lshell, $
+                                      MINLSHELL=minL, $
+                                      MAXLSHELL=maxL, $
+                                      BINL=binL, $
                                       BOTH_HEMIS=both_hemis, $
                                       NORTH=north, $
                                       SOUTH=south, $
@@ -44,6 +60,7 @@ PRO GET_EPOCH_T_AND_INDS_FOR_ALFVENDB,maximus,cdbTime,NEPOCHS=nEpochs,TBEFOREEPO
                                 HEMI=hemi, $ ;/BOTH_HEMIS, $
                                 ALTITUDERANGE=N_ELEMENTS(restrict_altRange) EQ 1 ? [0000,5000] : (N_ELEMENTS(restrict_altRange) GT 1 ? restrict_altRange : !NULL), $
                                 CHARERANGE=N_ELEMENTS(restrict_charERange) EQ 1 ? [4,30000] : (N_ELEMENTS(restrict_charERange) GT 1 ? restrict_charERange : !NULL), $ 
+                                ORBRANGE=N_ELEMENTS(restrict_orbRange) EQ 1 ? [500,12670] : (N_ELEMENTS(restrict_orbRange) GT 1 ? restrict_orbRange : !NULL), $
                                 POYNTRANGE=N_ELEMENTS(restrict_poyntRange) EQ 1 ? [1,100] : (N_ELEMENTS(restrict_poyntRange) GT 1 ? restrict_poyntRange : !NULL), $ 
                                 ;; CHARERANGE=(restrict_charERange) ? [300,4000] : !NULL, $
                                 ;; CHARERANGE=(restrict_charERange) ? [4,300] : !NULL, $

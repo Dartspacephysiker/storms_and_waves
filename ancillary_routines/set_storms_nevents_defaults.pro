@@ -4,7 +4,9 @@ PRO SET_STORMS_NEVENTS_DEFAULTS,TBEFOREEPOCH=tBeforeEpoch,TAFTEREPOCH=tAfterEpoc
                                 ;; DST_AEDIR=DST_AEDir,DST_AEFILE=DST_AEFile, $
                                 ;; DBDIR=dbDir,DBFILE=dbFile,DB_TFILE=db_tFile, $
                                 DAYSIDE=dayside,NIGHTSIDE=nightside, $
-                                RESTRICT_CHARERANGE=restrict_charERange,RESTRICT_ALTRANGE=restrict_altRange, $
+                                RESTRICT_CHARERANGE=restrict_charERange, $
+                                RESTRICT_ALTRANGE=restrict_altRange, $
+                                RESTRICT_ORBRANGE=restrict_orbRange, $
                                 MAXIND=maxInd,AVG_TYPE_MAXIND=avg_type_maxInd,LOG_DBQUANTITY=log_DBQuantity, $
                                 USING_HEAVIES=using_heavies, $
                                 YLOGSCALE_MAXIND=yLogScale_maxInd, $
@@ -49,7 +51,8 @@ PRO SET_STORMS_NEVENTS_DEFAULTS,TBEFOREEPOCH=tBeforeEpoch,TAFTEREPOCH=tAfterEpoc
                                 
   defRestrict_altRange          = 0
   defRestrict_charERange        = 0
-                                
+  defRestrict_orbRange          = 0
+
   defMaxInd                     = !NULL
   defavg_type_maxInd            = 0
   defLog_DBQuantity             = 0
@@ -102,6 +105,7 @@ PRO SET_STORMS_NEVENTS_DEFAULTS,TBEFOREEPOCH=tBeforeEpoch,TAFTEREPOCH=tAfterEpoc
 
   IF N_ELEMENTS(restrict_charERange) EQ 0 THEN restrict_charERange = defRestrict_charERange
   IF N_ELEMENTS(restrict_altRange) EQ 0 THEN restrict_altRange = defRestrict_altRange
+  IF N_ELEMENTS(restrict_orbRange) EQ 0 THEN restrict_orbRange = defRestrict_orbRange
 
   IF N_ELEMENTS(maxInd) EQ 0 THEN maxInd = defMaxInd
 

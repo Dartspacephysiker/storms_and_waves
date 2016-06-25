@@ -1,6 +1,12 @@
 ;;2015/10/16 
 ;;Time to streamline my life
-PRO LOAD_NOAA_AND_BRETT_DBS_AND_QI,stormStruct,SSC1,SSC2,qi,DBDir=DBDir,DB_BRETT=DB_Brett,DB_NOAA=DB_NOAA,INDS_FILE=inds_file,LUN=lun
+PRO LOAD_NOAA_AND_BRETT_DBS_AND_QI,stormStruct,SSC1,SSC2,qi, $
+                                   DBDir=DBDir, $
+                                   DB_BRETT=DB_Brett, $
+                                   DB_NOAA=DB_NOAA, $
+                                   INDS_FILE=inds_file, $
+                                   DO_BEF_NOV1999_FILE=DO_bef_nov1999_file, $
+                                   LUN=lun
 
   IF N_ELEMENTS(lun) EQ 0 THEN lun = -1
 
@@ -9,6 +15,7 @@ PRO LOAD_NOAA_AND_BRETT_DBS_AND_QI,stormStruct,SSC1,SSC2,qi,DBDir=DBDir,DB_BRETT
   DB_NOAA = 'SSC_dbs--storm2_mods.txt__STORM2_MODS.SSC--idl.sav'
 
   inds_file = 'large_and_small_storms--Oct1996-Oct2000--indices_for_four_quadrants--Anderson.sav'
+  inds_file_bef_nov99 = 'large_and_small_storms--Oct1996-Nov1999--indices_for_four_quadrants--Anderson.sav'
 
   IF N_ELEMENTS(stormStruct) EQ 0 THEN BEGIN
      PRINT,"Restoring " + DB_Brett + "..."
@@ -33,16 +40,23 @@ PRO LOAD_NOAA_AND_BRETT_DBS_AND_QI,stormStruct,SSC1,SSC2,qi,DBDir=DBDir,DB_BRETT
   ENDELSE
 
   IF N_ELEMENTS(qi) EQ 0 THEN BEGIN
-     PRINT,"Restoring " + Inds_File + "..."
-     IF FILE_TEST(DBDir+Inds_File) THEN RESTORE,DBDir+Inds_File
+     IF KEYWORD_SET(do_bef_nov1999_file) THEN BEGIN
+        PRINT,'Only getting storms bef Nov 1999!'
+        indF = inds_file_bef_nov99
+     ENDIF ELSE BEGIN
+        indF = inds_file
+     ENDELSE
+
+     PRINT,"Restoring " + indF + "..."
+     IF FILE_TEST(DBDir+indF) THEN RESTORE,DBDir+indF
      IF qi EQ !NULL THEN BEGIN
         PRINT,"Couldn't load indices for four storm quadrants!"
         STOP
      ENDIF
   ENDIF ELSE BEGIN
-     PRINTF,lun,"qi (four-storm-quadrant indices) already loaded! Not loading " + Inds_File
+     PRINTF,lun,"qi (four-storm-quadrant indices) already loaded! Not loading " + indF
   ENDELSE
 
-  RESTORE,DBDIR+inds_file
+  RESTORE,DBDIR+indF
 
 END

@@ -1,5 +1,5 @@
 ;;This thing will do versions of Fig 1 for both hemispheres
-PRO JOURNAL__20160530__PLOTS_OF_10_18_49_PROBOCCURRENCE_NPLOTS_DURING_STORMPHASES__SAVE_INDICES
+PRO JOURNAL__20160625__PLOTS_OF_10_18_49_PROBOCCURRENCE_NPLOTS_DURING_STORMPHASES__BEFORE_NOV_1999
   dstCutoff = -20
 
   ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
@@ -14,6 +14,8 @@ PRO JOURNAL__20160530__PLOTS_OF_10_18_49_PROBOCCURRENCE_NPLOTS_DURING_STORMPHASE
   ;;bonus
   do_despun                      = 0
 
+  orbRange                       = [500,12670]
+
   divide_by_width_x              = 1
 
   save_alf_stormphase_indices    = 0
@@ -22,15 +24,15 @@ PRO JOURNAL__20160530__PLOTS_OF_10_18_49_PROBOCCURRENCE_NPLOTS_DURING_STORMPHASE
   ;; add_center_title               = 1
   ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
   ;;Hemi stuff
-  hemi                           = 'NORTH'
-  minILAT                        = 60
-  maxILAT                        = 85
-  binILAT                        = 2.5
-
-  ;; hemi                           = 'SOUTH'
-  ;; minILAT                        = -85
-  ;; maxILAT                        = -60
+  ;; hemi                           = 'NORTH'
+  ;; minILAT                        = 60
+  ;; maxILAT                        = 85
   ;; binILAT                        = 2.5
+
+  hemi                           = 'SOUTH'
+  minILAT                        = -85
+  maxILAT                        = -60
+  binILAT                        = 2.5
 
   binMLT                         = 1.5
 
@@ -70,6 +72,7 @@ PRO JOURNAL__20160530__PLOTS_OF_10_18_49_PROBOCCURRENCE_NPLOTS_DURING_STORMPHASE
   PLOT_ALFVEN_STATS_DURING_STORMPHASES, $
      DSTCUTOFF=dstCutoff, $
      HEMI=hemi, $
+     ORBRANGE=orbRange, $
      DO_DESPUNDB=do_despun, $
      MASKMIN=maskMin, $
      BINMLT=binMLT, $
