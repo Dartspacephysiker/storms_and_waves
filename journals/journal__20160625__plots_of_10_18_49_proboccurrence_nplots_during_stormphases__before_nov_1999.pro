@@ -24,19 +24,17 @@ PRO JOURNAL__20160625__PLOTS_OF_10_18_49_PROBOCCURRENCE_NPLOTS_DURING_STORMPHASE
   ;; add_center_title               = 1
   ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
   ;;Hemi stuff
-  ;; hemi                           = 'NORTH'
-  ;; minILAT                        = 60
-  ;; maxILAT                        = 85
-  ;; binILAT                        = 2.5
-
-  hemi                           = 'SOUTH'
-  minILAT                        = -85
-  maxILAT                        = -60
+  hemi                           = 'NORTH'
+  minILAT                        = 60
+  maxILAT                        = 85
   binILAT                        = 2.5
 
-  binMLT                         = 1.5
+  ;; hemi                           = 'SOUTH'
+  ;; minILAT                        = -85
+  ;; maxILAT                        = -60
+  ;; binILAT                        = 2.5
 
-  maskMin                        = 10
+  binMLT                         = 1.5
 
   ;;;;;;;;;;;;;;;;;;;;;;
   ;;10-EFLUX_LOSSCONE_INTEG

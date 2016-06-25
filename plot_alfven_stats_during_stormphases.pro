@@ -196,7 +196,8 @@ PRO PLOT_ALFVEN_STATS_DURING_STORMPHASES,$
   ENDIF
 
   earliest_UTC = str_to_time('1996-10-06/16:26:02.417')
-  latest_UTC = str_to_time('2000-10-06/00:08:45.188')
+  latest_UTC   = str_to_time('1999-11-03/03:20:59.853')
+  ;; latest_UTC = str_to_time('2000-10-06/00:08:45.188')
 
   GET_NONSTORM_MAINPHASE_AND_RECOVERYPHASE_PERIODS,dst, $
      DSTCUTOFF=DstCutoff, $

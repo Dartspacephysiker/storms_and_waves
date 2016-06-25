@@ -64,7 +64,8 @@ PRO GET_EPOCH_T_AND_INDS_FOR_ALFVENDB,maximus,cdbTime,NEPOCHS=nEpochs, $
                                 POYNTRANGE=N_ELEMENTS(restrict_poyntRange) EQ 1 ? [1,100] : (N_ELEMENTS(restrict_poyntRange) GT 1 ? restrict_poyntRange : !NULL), $ 
                                 ;; CHARERANGE=(restrict_charERange) ? [300,4000] : !NULL, $
                                 ;; CHARERANGE=(restrict_charERange) ? [4,300] : !NULL, $
-                                MINMLT=minM,MAXMLT=maxM,BINM=binM,MINILAT=minI,MAXILAT=maxI,BINI=binI, $
+                                MINMLT=minM,MAXMLT=maxM,BINM=binM, $
+                                MINILAT=minI,MAXILAT=maxI,BINI=binI, $
                                 DO_LSHELL=do_lshell,MINLSHELL=minL,MAXLSHELL=maxL,BINL=binL, $
                                 DAYSIDE=dayside, $
                                 NIGHTSIDE=nightside, $

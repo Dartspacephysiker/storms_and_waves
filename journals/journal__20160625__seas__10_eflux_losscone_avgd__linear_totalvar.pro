@@ -5,7 +5,10 @@ PRO JOURNAL__20160625__SEAS__10_EFLUX_LOSSCONE_AVGD__LINEAR_TOTALVAR
 
   @journal__20160625__plot_defaults.pro
 
-  maxInd                   = 10
+  minI                      = 60
+  maxI                      = 85
+
+  maxInd                    = 10
 
   orbRange                  = [500,12670]
 
@@ -25,7 +28,7 @@ PRO JOURNAL__20160625__SEAS__10_EFLUX_LOSSCONE_AVGD__LINEAR_TOTALVAR
   yTitle                   = "Losscone e!U-!N Flux (mW m!U-2!N), 100 km"
   yRange_maxInd            = [4e-2,2e2]
 
-  yRange_totalVar          = [[0,2.5e0],[0,2.5e0]] ;day, then night
+  yRange_totalVar          = [[0,2.1e0],[0,2.1e0]] ;day, then night
 
   yLogScale_maxInd         = 1
 
@@ -89,6 +92,8 @@ PRO JOURNAL__20160625__SEAS__10_EFLUX_LOSSCONE_AVGD__LINEAR_TOTALVAR
         ;; /MAKE_LEGEND__AVG_PLOT, $
         MINMLT=minM[i], $
         MAXMLT=maxM[i], $
+        MINILAT=minI, $
+        MAXILAT=maxI, $
         HEMI=hemi, $
         SAVEMPNAME=spn
   ENDFOR

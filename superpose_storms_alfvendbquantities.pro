@@ -174,8 +174,15 @@ PRO SUPERPOSE_STORMS_ALFVENDBQUANTITIES,stormTimeArray_utc, $
                                         EPOCHPLOT_COLORNAMES=epochPlot_colorNames, $
                                         SCATTEROUTPREFIX=scatterOutPrefix, $
                                         RANDOMTIMES=randomTimes, $
-                                        MINMLT=minM,MAXMLT=maxM,BINM=binM,MINILAT=minI,MAXILAT=maxI,BINI=binI, $
-                                        DO_LSHELL=do_lshell,MINLSHELL=minL,MAXLSHELL=maxL,BINL=binL, $
+                                        MINMLT=minM,MAXMLT=maxM, $
+                                        BINM=binM, $
+                                        MINILAT=minI, $
+                                        MAXILAT=maxI, $
+                                        BINI=binI, $
+                                        DO_LSHELL=do_lshell, $
+                                        MINLSHELL=minL, $
+                                        MAXLSHELL=maxL, $
+                                        BINL=binL, $
                                         BOTH_HEMIS=both_hemis, $
                                         NORTH=north, $
                                         SOUTH=south, $
@@ -313,8 +320,16 @@ PRO SUPERPOSE_STORMS_ALFVENDBQUANTITIES,stormTimeArray_utc, $
                                        RESTRICT_ALTRANGE=restrict_altRange, $
                                        RESTRICT_CHARERANGE=restrict_charERange, $
                                        RESTRICT_ORBRANGE=restrict_orbRange, $
-                                       MINMLT=minM,MAXMLT=maxM,BINM=binM,MINILAT=minI,MAXILAT=maxI,BINI=binI, $
-                                       DO_LSHELL=do_lshell,MINLSHELL=minL,MAXLSHELL=maxL,BINL=binL, $
+                                       MINMLT=minM, $
+                                       MAXMLT=maxM, $
+                                       BINM=binM, $
+                                       MINILAT=minI, $
+                                       MAXILAT=maxI, $
+                                       BINI=binI, $
+                                       DO_LSHELL=do_lshell, $
+                                       MINLSHELL=minL, $
+                                       MAXLSHELL=maxL, $
+                                       BINL=binL, $
                                        BOTH_HEMIS=both_hemis, $
                                        NORTH=north, $
                                        SOUTH=south, $

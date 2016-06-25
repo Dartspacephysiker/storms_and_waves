@@ -5,6 +5,9 @@ PRO JOURNAL__20160625__SEAS__PROBOCCURRENCE
   do_bef_nov1999_file       = 1
   use_dartDB__bef_nov1999   = 1
 
+  minI                      = 60
+  maxI                      = 85
+
   @journal__20160625__plot_defaults.pro
 
   orbRange                  = [500,12670]
@@ -20,11 +23,13 @@ PRO JOURNAL__20160625__SEAS__PROBOCCURRENCE
 
   ;; restrict_altRange = [0000,1000]
   ;; restrict_altRange = [1000,2000]
-  restrict_altRange = [2000,4180] & histoRange = [0,0.1]
+  ;; restrict_altRange = [2000,4180] & histoRange = [0,0.1]
   ;; restrict_altRange = [3000,4175]
   ;; restrict_altRange = [4000,4175]
   ;; restrict_altRange = [0340,2000] & histoRange = [0,0.065]
   ;; restrict_altRange = [340,4180] & histoRange = [0,0.1]
+
+  histoRange        = [0,0.1]
 
   ;;manual mod this
   IF do_despun THEN BEGIN
@@ -33,8 +38,9 @@ PRO JOURNAL__20160625__SEAS__PROBOCCURRENCE
      plotSuff       = '--' + STRLOWCASE(hemi) + '_hemi.png'
   ENDELSE
 
-  probOccPref       = pref + 'PROBOCCURRENCE--with_NOAA--justhisto' + $
-                          STRING(FORMAT='("--altRange_",I0,"-",I0)',restrict_altRange[0],restrict_altRange[1])
+  ;; probOccPref       = pref + 'PROBOCCURRENCE--with_NOAA--justhisto' + $
+  ;;                         STRING(FORMAT='("--altRange_",I0,"-",I0)',restrict_altRange[0],restrict_altRange[1])
+  probOccPref       = pref + 'PROBOCCURRENCE--with_NOAA--justhisto'
 
   ptPref            = ''
 
@@ -46,7 +52,8 @@ PRO JOURNAL__20160625__SEAS__PROBOCCURRENCE
                                 histoBinsize)
                                 ;; window_sum)
      spn               = savePlotPref+plotSuff
-     pT                = 'SEA of 40 storms' + STRING(FORMAT='("(Altitude Range: [",I0,", ",I0,"] km)")',restrict_altRange[0],restrict_altRange[1])
+     ;; pT                = 'SEA of 40 storms' + STRING(FORMAT='("(Altitude Range: [",I0,", ",I0,"] km)")',restrict_altRange[0],restrict_altRange[1])
+     pT                = 'SEA of 31 storms'
 
      SUPERPOSE_STORMS_ALFVENDBQUANTITIES, $
         RESTRICT_ORBRANGE=orbRange, $
@@ -60,6 +67,8 @@ PRO JOURNAL__20160625__SEAS__PROBOCCURRENCE
         HOURS_AFT_FOR_NO_DUPES=hours_aft, $
         MINMLT=minM[i], $
         MAXMLT=maxM[i], $
+        MINILAT=minI, $
+        MAXILAT=maxI, $
         HEMI=hemi, $
         /NOMAXPLOTS, $
         PLOTTITLE=pT, $

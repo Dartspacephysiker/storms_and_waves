@@ -5,6 +5,9 @@ PRO JOURNAL__20160625__SEAS__18_AVG_ION_FLUX_UP__LINEAR_TOTALVAR
 
   @journal__20160625__plot_defaults.pro
 
+  minI                      = 60
+  maxI                      = 85
+
   maxInd                    = 18
 
   orbRange                  = [500,12670]
@@ -90,9 +93,10 @@ PRO JOURNAL__20160625__SEAS__18_AVG_ION_FLUX_UP__LINEAR_TOTALVAR
         ;; /MAKE_LEGEND__AVG_PLOT, $
         MINMLT=minM[i], $
         MAXMLT=maxM[i], $
+        MINILAT=minI, $
+        MAXILAT=maxI, $
         HEMI=hemi, $
         SAVEMPNAME=spn
   ENDFOR
 
 END
-

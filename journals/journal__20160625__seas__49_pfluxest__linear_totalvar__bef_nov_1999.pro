@@ -5,6 +5,9 @@ PRO JOURNAL__20160618__SEAS__49_PFLUXEST__LINEAR_TOTALVAR__BEF_NOV_1999
 
   @journal__20160625__plot_defaults.pro
 
+  minI                      = 60
+  maxI                      = 85
+
   maxInd                    = 49
                        
   orbRange                  = [500,12670]
@@ -25,7 +28,7 @@ PRO JOURNAL__20160618__SEAS__49_PFLUXEST__LINEAR_TOTALVAR__BEF_NOV_1999
   yTitle                    = 'Poynting Flux (mW m!U-2!N), 100 km' 
   yRange_maxInd             = [6e-2,3e2]
 
-  yRange_totalVar           = [[0,2.5e0],[0,2.5e0]] ;day, then night
+  yRange_totalVar           = [[0,2.5e0],[0,0.4e0]] ;day, then night
 
   yLogScale_maxInd          = 1
 
@@ -66,10 +69,11 @@ PRO JOURNAL__20160618__SEAS__49_PFLUXEST__LINEAR_TOTALVAR__BEF_NOV_1999
         DO_TWO_PANELS=do_two_panels, $
         OVERPLOT_TOTAL_EPOCH_VARIATION=include_total_var, $
         SECOND_PANEL__PREP_FOR_SECONDARY_AXIS=(i EQ 0), $
+        /DIFFCOLOR_SECONDARY_AXIS, $
         YRANGE_TOTALVAR=yRange_totalVar[*,i], $
         YLOGSCALE_TOTALVAR=0, $
         ;; SECONDARY_AXIS__TOTALVAR_PLOT=(i GT 0), $
-        SECONDARY_AXIS__TOTALVAR_PLOT=0, $
+        SECONDARY_AXIS__TOTALVAR_PLOT=(i GT 0), $
         ;; SYMCOLOR__TOTAL_EPOCH_VAR=symColor__totalVar[i], $
         SYMCOLOR__TOTAL_EPOCH_VAR=symColor[i], $
         TOTAL_EPOCH__DO_HISTOPLOT=total_epoch_do_histoPlot, $
@@ -83,12 +87,12 @@ PRO JOURNAL__20160618__SEAS__49_PFLUXEST__LINEAR_TOTALVAR__BEF_NOV_1999
         /NOGEOMAGPLOTS, $
         MINMLT=minM[i], $
         MAXMLT=maxM[i], $
+        MINILAT=minI, $
+        MAXILAT=maxI, $
         HEMI=hemi, $
         SAVEMAXPLOT=(i EQ 1), $
         SAVEMPNAME=spn
      
   ENDFOR
-
-
 
 END
