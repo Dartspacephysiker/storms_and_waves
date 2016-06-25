@@ -60,7 +60,7 @@ PRO JOURNAL__20160625__PLOTS_OF_10_18_49_PROBOCCURRENCE_NPLOTS_DURING_STORMPHASE
   probOccurrenceRange            = [1e-3,1e-1]
   logProbOccurrence              = 1
 
-  maskMin                        = 10 ;since identification is better
+  maskMin                        = 5 ;since identification is better
 
   ;;;;;;;;;;;;;;;;;;;;;
   ;;N events
