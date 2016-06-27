@@ -36,6 +36,7 @@ PRO PLOT_ALFVEN_STATS_DURING_STORMPHASES,$
    HWMKPIND=HwMKpInd, $
    ;; MIN_NEVENTS=min_nEvents, $
    MASKMIN=maskMin, $
+   THIST_MASK_BINS_BELOW_THRESH=tHist_mask_bins_below_thresh, $
    DELAY=delay, $
    STABLEIMF=stableIMF, $
    SMOOTHWINDOW=smoothWindow, $
@@ -254,7 +255,10 @@ PRO PLOT_ALFVEN_STATS_DURING_STORMPHASES,$
                                   HWMAUROVAL=HwMAurOval,HWMKPIND=HwMKpInd, $
                                   ;; MIN_NEVENTS=min_nEvents, $
                                   MASKMIN=maskMin, $
-                                  DELAY=delay, STABLEIMF=stableIMF, SMOOTHWINDOW=smoothWindow, INCLUDENOCONSECDATA=includeNoConsecData, $
+                                  THIST_MASK_BINS_BELOW_THRESH=tHist_mask_bins_below_thresh, $
+                                  DELAY=delay, STABLEIMF=stableIMF, $
+                                  SMOOTHWINDOW=smoothWindow, $
+                                  INCLUDENOCONSECDATA=includeNoConsecData, $
                                   NPLOTS=nPlots, $
                                   EPLOTS=ePlots, $
                                   EPLOTRANGE=ePlotRange, $
