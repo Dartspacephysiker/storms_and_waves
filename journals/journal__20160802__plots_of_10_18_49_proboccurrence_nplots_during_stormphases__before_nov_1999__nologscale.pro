@@ -1,5 +1,6 @@
 ;;This thing will do versions of Fig 1 for both hemispheres
-PRO JOURNAL__20160625__PLOTS_OF_10_18_49_PROBOCCURRENCE_NPLOTS_DURING_STORMPHASES__BEFORE_NOV_1999
+PRO JOURNAL__20160802__PLOTS_OF_10_18_49_PROBOCCURRENCE_NPLOTS_DURING_STORMPHASES__BEFORE_NOV_1999__NOLOGSCALE
+
   dstCutoff = -20
 
   ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
@@ -40,13 +41,18 @@ PRO JOURNAL__20160625__PLOTS_OF_10_18_49_PROBOCCURRENCE_NPLOTS_DURING_STORMPHASE
   ;;10-EFLUX_LOSSCONE_INTEG
   maxInd                         = 10
   enumfpt                        = 'eflux_losscone_integ'
-  eNumFlPlotRange                = [10^(-1.0),10^(1.0)]
-
+  ;; eNumFlPlotRange                = [10^(-1.0),10^(1.0)]
+  ;; logENumFlPlot                  = 1
+  eNumFlPlotRange                = [0,10]
+  logENumFlPlot                  = 0
   ;;;;;;;;;;;;;;;;;;;;;;
   ;;18-INTEG_ION_FLUX_UP
   maxInd                         = 18
   ifpt                           = 'INTEG_UP'
-  iPlotRange                     = [10.^(6.0),10.^(9.0)]
+  ;; iPlotRange                     = [10.^(6.0),10.^(9.0)]
+  ;; logIFPlot                      = 1
+  iPlotRange                     = [0,1e9]
+  logIFPlot                      = 0
 
   ;;;;;;;;;;;;;;;;;;;;;;
   ;;49--PFLUXEST
@@ -59,8 +65,10 @@ PRO JOURNAL__20160625__PLOTS_OF_10_18_49_PROBOCCURRENCE_NPLOTS_DURING_STORMPHASE
 
   ;;;;;;;;;;;;;;;;;;;;;;
   ;PROBOCCURRENCE
-  probOccurrenceRange            = [1e-3,1e-1]
-  logProbOccurrence              = 1
+  ;; probOccurrenceRange            = [1e-3,1e-1]
+  ;; logProbOccurrence              = 1
+  probOccurrenceRange            = [0,0.1]
+  logProbOccurrence              = 0
 
   maskMin                        = 5 ;since identification is better
 
@@ -82,12 +90,12 @@ PRO JOURNAL__20160625__PLOTS_OF_10_18_49_PROBOCCURRENCE_NPLOTS_DURING_STORMPHASE
      IONPLOTS=ionPlots, $
      IFLUXPLOTTYPE=ifpt, $
      /NONEGIFLUX, $
-     /LOGIFPLOT, $
+     LOGIFPLOT=logIFPlot, $
      IPLOTRANGE=iPlotRange, $
      ENUMFLPLOTS=eNumFluxPlot, $
      ENUMFLPLOTTYPE=enumfpt, $
      /NONEGENUMFL, $            ;Because we're not interested in upflowing electrons
-     /LOGENUMFLPLOT, $
+     LOGENUMFLPLOT=logENumFlPlot, $
      ENUMFLPLOTRANGE=eNumFlPlotRange, $
      PPLOTS=pFluxPlot, $
      LOGPFPLOT=logPFPlot, $

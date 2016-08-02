@@ -4,7 +4,9 @@
 ;2016/04/04 Added DO_DESPUN keyword for fear
 PRO GET_NONSTORM_MAINPHASE_AND_RECOVERYPHASE_FASTDB_INDICES, $
    DO_DESPUNDB=do_despunDB, $
-   USE_AACGM=use_aacgm, $
+   COORDINATE_SYSTEM=coordinate_system, $
+   USE_AACGM_COORDS=use_AACGM, $
+   USE_MAG_COORDS=use_MAG, $
    GET_TIME_I_NOT_ALFDB_I=get_time_i_not_alfDB_I, $
    NONSTORM_I=ns_i, $
    MAINPHASE_I=mp_i, $
@@ -28,8 +30,10 @@ PRO GET_NONSTORM_MAINPHASE_AND_RECOVERYPHASE_FASTDB_INDICES, $
 
   IF KEYWORD_SET(get_time_i_not_alfDB_I) THEN BEGIN
      LOAD_FASTLOC_AND_FASTLOC_TIMES,fastLoc,fastLoc_times, $
-     USE_AACGM=use_aacgm, $
-     LUN=lun
+                                    COORDINATE_SYSTEM=coordinate_system, $
+                                    USE_AACGM_COORDS=use_AACGM, $
+                                    USE_MAG_COORDS=use_MAG, $
+                                    LUN=lun
 
      good_i = FASTLOC_CLEANER(fastLoc)
 
@@ -40,7 +44,9 @@ PRO GET_NONSTORM_MAINPHASE_AND_RECOVERYPHASE_FASTDB_INDICES, $
   ENDIF ELSE BEGIN
      LOAD_MAXIMUS_AND_CDBTIME,maximus,cdbTime, $
                               DO_DESPUNDB=do_despunDB, $
-                              USE_AACGM=use_aacgm, $
+                              COORDINATE_SYSTEM=coordinate_system, $
+                              USE_AACGM=use_AACGM, $
+                              USE_MAG_COORDS=use_MAG, $
                               LUN=lun
 
      good_i = ALFVEN_DB_CLEANER(maximus)

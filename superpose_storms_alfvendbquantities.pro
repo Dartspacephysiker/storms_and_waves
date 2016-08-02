@@ -63,6 +63,7 @@
 ;                         2016/01/13 Added USING_HEAVIES keyword. You know.
 ;                         2016/02/20 Added TIMEAVGD_{PFLUX,EFLUXMAX}_SEA keywords.
 ;                         2016/03/03 Added OVERPLOT_TOTAL_EPOCH_VARIATION, which sums all observations in a given bin and divides by the amount of time that FAST spent in that bin to get a relative variation.
+;                         2016/07/30 Added PRINT_MAXIND__STATTYPE
 ;-
 PRO SUPERPOSE_STORMS_ALFVENDBQUANTITIES,stormTimeArray_utc, $
                                         TBEFOREEPOCH=tBeforeEpoch,TAFTEREPOCH=tAfterEpoch, $
@@ -149,6 +150,7 @@ PRO SUPERPOSE_STORMS_ALFVENDBQUANTITIES,stormTimeArray_utc, $
                                         SYMTRANSP_MAXIND=symTransp_maxInd, $
                                         YMINOR_MAXIND=yMinor_maxInd, $
                                         PRINT_MAXIND_SEA_STATS=print_maxInd_sea_stats, $
+                                        PRINT_MAXIND_SEA__STAT_TYPE=print_maxInd__statType, $
                                         ;; LEGEND_MAXIND__SUPPRESS=legend_maxInd__suppress, $
                                         BKGRND_HIST=bkgrnd_hist, BKGRND_MAXIND=bkgrnd_maxInd, $
                                         TBINS=tBins, $
@@ -611,6 +613,7 @@ PRO SUPERPOSE_STORMS_ALFVENDBQUANTITIES,stormTimeArray_utc, $
            HISTOBINSIZE=histoBinSize,NEVTOT=nEvTot, $
            NONZERO_I=nz_i, $
            PRINT_MAXIND_SEA_STATS=print_maxInd_sea_stats, $
+           PRINT_MAXIND_SEA__STAT_TYPE=print_maxInd__statType, $
            LUN=lun
 
         IF KEYWORD_SET(probOccurrence_sea) OR KEYWORD_SET(timeAvgd_maxInd_sea) $
@@ -644,6 +647,7 @@ PRO SUPERPOSE_STORMS_ALFVENDBQUANTITIES,stormTimeArray_utc, $
               FASTLOC_I_LIST=fastLoc_i_list,FASTLOC_T_LIST=fastLoc_t_list,FASTLOC_DT_LIST=fastLoc_dt_list, $
               NONZERO_I=nz_i_fastLoc, $
               PRINT_MAXIND_SEA_STATS=print_maxInd_sea_stats, $
+              PRINT_MAXIND_SEA__STAT_TYPE=print_maxInd__statType, $
               /LET_OVERLAPS_FLY__FOR_SEA, $
               LUN=lun
            ;; FASTLOC_STRUCT=fastLoc,FASTLOC_TIMES=fastLoc_times,FASTLOC_DELTA_T=fastLoc_delta_t
@@ -686,6 +690,7 @@ PRO SUPERPOSE_STORMS_ALFVENDBQUANTITIES,stormTimeArray_utc, $
               FASTLOC_I_LIST=fastLoc_i_list,FASTLOC_T_LIST=fastLoc_t_list,FASTLOC_DT_LIST=fastLoc_dt_list, $
               NONZERO_I=nz_i_fastLoc, $
               PRINT_MAXIND_SEA_STATS=print_maxInd_sea_stats, $
+              PRINT_MAXIND_SEA__STAT_TYPE=print_maxInd__statType, $
               /LET_OVERLAPS_FLY__FOR_SEA, $
               LUN=lun
               ;; FASTLOC_STRUCT=fastLoc,FASTLOC_TIMES=fastLoc_times,FASTLOC_DELTA_T=fastLoc_delta_t
@@ -702,6 +707,7 @@ PRO SUPERPOSE_STORMS_ALFVENDBQUANTITIES,stormTimeArray_utc, $
               HISTOBINSIZE=histoBinSize,NEVTOT=nEvTot, $
               NONZERO_I=nz_i_totalEpoch, $
               PRINT_MAXIND_SEA_STATS=print_maxInd_sea_stats, $
+              PRINT_MAXIND_SEA__STAT_TYPE=print_maxInd__statType, $
               LUN=lun
 
            
