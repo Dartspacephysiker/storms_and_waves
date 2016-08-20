@@ -1,6 +1,6 @@
 ;2016/08/19
 FUNCTION TODAYS_NONSTORM_MAINPHASE_AND_RECOVERYPHASE_OMNIDB_INDICES, $
-   DSTCUTOFF=dstCutoff
+   DSTCUTOFF=DstCutoff
 
 
   indDir               = '/SPENCEdata/Research/database/temps/'
