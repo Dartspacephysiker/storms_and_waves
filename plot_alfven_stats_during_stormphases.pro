@@ -238,10 +238,18 @@ PRO PLOT_ALFVEN_STATS_DURING_STORMPHASES,$
      t1_arr = dst.time[inds[start_dst_ii]]
      t2_arr = dst.time[inds[stop_dst_ii]]
 
-     PLOT_ALFVEN_STATS_UTC_RANGES,maximus,T1_ARR=t1_arr,T2_ARR=t2_arr,$
-                                  CLOCKSTR=clockStr, ANGLELIM1=angleLim1, ANGLELIM2=angleLim2, $
-                                  ORBRANGE=orbRange, ALTITUDERANGE=altitudeRange, CHARERANGE=charERange, POYNTRANGE=poyntRange, NUMORBLIM=numOrbLim, $
-                                  MINMLT=minMLT,MAXMLT=maxMLT, $
+     PLOT_ALFVEN_STATS_UTC_RANGES,maximus,T1_ARR=t1_arr, $
+                                  T2_ARR=t2_arr,$
+                                  CLOCKSTR=clockStr, $
+                                  ANGLELIM1=angleLim1, $
+                                  ANGLELIM2=angleLim2, $
+                                  ORBRANGE=orbRange, $
+                                  ALTITUDERANGE=altitudeRange, $
+                                  CHARERANGE=charERange, $
+                                  POYNTRANGE=poyntRange, $
+                                  NUMORBLIM=numOrbLim, $
+                                  MINMLT=minMLT, $
+                                  MAXMLT=maxMLT, $
                                   BINMLT=binMLT, $
                                   SHIFTMLT=shiftM, $
                                   MINILAT=minILAT,MAXILAT=maxILAT,BINILAT=binILAT, $
@@ -370,7 +378,8 @@ PRO PLOT_ALFVEN_STATS_DURING_STORMPHASES,$
                                   SAVERAW=saveRaw, RAWDIR=rawDir, $
                                   JUSTDATA=justData, SHOWPLOTSNOSAVE=showPlotsNoSave, $
                                   PLOTDIR=plotDir, $
-                                  PLOTPREFIX=strings[i], $
+                                  PLOTPREFIX=(KEYWORD_SET(plotPrefix) ? plotPrefix + '--' : $
+                                              '' ) + strings[i], $
                                   PLOTSUFFIX=plotSuffix, $
                                   SAVE_ALF_INDICES=save_alf_stormphase_indices, $
                                   TXTOUTPUTDIR=txtOutputDir, $

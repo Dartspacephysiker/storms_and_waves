@@ -5,7 +5,10 @@ PRO JOURNAL__20160820__PLOTS_OF_10_18_49__GROSS_RATES__DURING_STORMPHASES__PRE_N
   dstCutoff = -20
   
   do_despun                      = 1
-  orbRange                       = [500,12670]
+  ;; orbRange                       = [500,12670]
+  ;; orbRange                       = [1000,10800]
+  orbRange                       = [1000,12670]
+  altRange                       = [[1000,4180]]
 
   ;;;;;;;;;;;;;;;;;
   ;;turn plots on and off
@@ -22,20 +25,20 @@ PRO JOURNAL__20160820__PLOTS_OF_10_18_49__GROSS_RATES__DURING_STORMPHASES__PRE_N
 
   ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
   ;;Hemi stuff
-  hemi                           = 'NORTH'
-  minILAT                        = 60
-  maxILAT                        = 90
-  binILAT                        = 2.0
-
-  ;; hemi                           = 'SOUTH'
-  ;; minILAT                        = -85
-  ;; maxILAT                        = -60
+  ;; hemi                           = 'NORTH'
+  ;; minILAT                        = 60
+  ;; maxILAT                        = 90
   ;; binILAT                        = 2.5
 
-  binMLT                         = 0.75
+  hemi                           = 'SOUTH'
+  minILAT                        = -90
+  maxILAT                        = -60
+  binILAT                        = 2.5
 
-  maskMin                        = 10
-  tHist_mask_bins_below_thresh   = 10
+  binMLT                         = 1.5
+
+  ;; maskMin                        = 10
+  ;; tHist_mask_bins_below_thresh   = 5
 
   ;;;;;;;;;;;;;;;;;;;;;;
   ;;08-ELEC_ENERGY_FLUX
@@ -73,12 +76,23 @@ PRO JOURNAL__20160820__PLOTS_OF_10_18_49__GROSS_RATES__DURING_STORMPHASES__PRE_N
   probOccurrenceRange            = [1e-3,1e-1]
   logProbOccurrence              = 1
 
+
+  altStr                         = STRING(FORMAT='("orbs_",I0,"-",I0,"--",I0,"-",I0,"km")', $
+                                          orbRange[0], $
+                                          orbRange[1], $
+                                          altRange[0], $
+                                          altRange[1])
+
+  plotPrefix                     = (KEYWORD_SET(plotPref) ? plotPref : '') + altStr
+
   grossRate_info_file            = GET_TODAY_STRING(/DO_YYYYMMDD_FMT) + $
-                                   '--grossRate_info--' + hemi + '--maxInds_08_10_18_49.txt'
+                                   '--grossRate_info--' + hemi + '--' + $
+                                   altStr + '--maxInds_08_10_18_49.txt'
 
   PLOT_ALFVEN_STATS_DURING_STORMPHASES, $
      DSTCUTOFF=dstCutoff, $
      ORBRANGE=orbRange, $
+     ALTITUDERANGE=altRange, $
      HEMI=hemi, $
      DO_DESPUNDB=do_despun, $
      MASKMIN=maskMin, $
@@ -110,6 +124,7 @@ PRO JOURNAL__20160820__PLOTS_OF_10_18_49__GROSS_RATES__DURING_STORMPHASES__PRE_N
      PROBOCCURRENCEPLOT=probOccurrencePlot, $
      LOGPROBOCCURRENCE=logProbOccurrence, $
      PROBOCCURRENCERANGE=probOccurrenceRange, $
+     PLOTPREFIX=plotPrefix, $
      PLOTSUFFIX=plotSuff, $
      DO_TIMEAVG_FLUXQUANTITIES=do_timeAvg_fluxQuantities, $
      DO_GROSSRATE_FLUXQUANTITIES=do_grossRate_fluxQuantities, $
