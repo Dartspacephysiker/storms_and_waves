@@ -410,7 +410,7 @@ PRO PLOT_ALFVEN_STATS_DURING_STORMPHASES,$
               
   ENDFOR
 
-  IF KEYWORD_SET(combine_stormphase_plots) THEN BEGIN
+  IF KEYWORD_SET(combine_stormphase_plots) AND ~KEYWORD_SET(justData) THEN BEGIN
 
      IF KEYWORD_SET(eps_output) THEN fileSuff = '.ps' ELSE fileSuff = '.png'
      ;; COMBINE_ALFVEN_STATS_PLOTS,niceStrings, $

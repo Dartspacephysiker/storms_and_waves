@@ -10,6 +10,8 @@ PRO JOURNAL__20160820__PLOTS_OF_10_18_49__GROSS_RATES__DURING_STORMPHASES__PRE_N
   orbRange                       = [1000,12670]
   altRange                       = [[1000,4180]]
 
+  justData                       = 1
+
   ;;;;;;;;;;;;;;;;;
   ;;turn plots on and off
   ionPlots                       = 1
@@ -23,22 +25,24 @@ PRO JOURNAL__20160820__PLOTS_OF_10_18_49__GROSS_RATES__DURING_STORMPHASES__PRE_N
   do_grossRate_fluxQuantities    = 1
   do_logAvg_the_timeAvg          = 0
 
+  fancyPresentationMode          = 1 ;Erases stormphase titles, suppresses gridlabels, and blows up plot titles. Keep it.
+
   ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
   ;;Hemi stuff
-  ;; hemi                           = 'NORTH'
-  ;; minILAT                        = 60
-  ;; maxILAT                        = 90
-  ;; binILAT                        = 2.5
+  hemi                           = 'NORTH'
+  minILAT                        = 60
+  maxILAT                        = 90
 
-  hemi                           = 'SOUTH'
-  minILAT                        = -90
-  maxILAT                        = -60
-  binILAT                        = 2.5
+  ;; hemi                           = 'SOUTH'
+  ;; minILAT                        = -90
+  ;; maxILAT                        = -60
+  ;; orbRange                       = [2000,12670]
 
+  binILAT                        = 2.0
   binMLT                         = 1.5
 
   ;; maskMin                        = 10
-  ;; tHist_mask_bins_below_thresh   = 5
+  ;; tHist_mask_bins_below_thresh   = 1
 
   ;;;;;;;;;;;;;;;;;;;;;;
   ;;08-ELEC_ENERGY_FLUX
@@ -87,12 +91,15 @@ PRO JOURNAL__20160820__PLOTS_OF_10_18_49__GROSS_RATES__DURING_STORMPHASES__PRE_N
 
   grossRate_info_file            = GET_TODAY_STRING(/DO_YYYYMMDD_FMT) + $
                                    '--grossRate_info--' + hemi + '--' + $
-                                   altStr + '--maxInds_08_10_18_49.txt'
+                                   altStr + $
+                                   (KEYWORD_SET(maskMin) ? '--maskMin_'+STRCOMPRESS(maskMin,/REMOVE_ALL) : '') + $
+                                   '--maxInds_08_10_18_49.txt'
 
   PLOT_ALFVEN_STATS_DURING_STORMPHASES, $
      DSTCUTOFF=dstCutoff, $
      ORBRANGE=orbRange, $
      ALTITUDERANGE=altRange, $
+     NUMORBLIM=numOrbLim, $
      HEMI=hemi, $
      DO_DESPUNDB=do_despun, $
      MASKMIN=maskMin, $
@@ -131,9 +138,15 @@ PRO JOURNAL__20160820__PLOTS_OF_10_18_49__GROSS_RATES__DURING_STORMPHASES__PRE_N
      WRITE_GROSSRATE_INFO_TO_THIS_FILE=grossRate_info_file, $
    ;; DO_LOGAVG_THE_TIMEAVG=do_logavg_the_timeAvg, $
      ;; /LOGAVGPLOT, $
+     JUSTDATA=justData, $
      /MIDNIGHT, $
      /CB_FORCE_OOBLOW, $
      /CB_FORCE_OOBHIGH, $
+     NO_STORMPHASE_TITLES=fancyPresentationMode, $
+     SUPPRESS_GRIDLABELS=fancyPresentationMode, $
+     SUPPRESS_TITLES=fancyPresentationMode, $
+     ADD_CENTER_TITLE__STORMPHASE_PLOTS=fancyPresentationMode, $
+     LABELS_FOR_PRESENTATION=fancyPresentationMode, $
      /COMBINE_STORMPHASE_PLOTS, $
      /SAVE_COMBINED_WINDOW, $
      /COMBINED_TO_BUFFER
