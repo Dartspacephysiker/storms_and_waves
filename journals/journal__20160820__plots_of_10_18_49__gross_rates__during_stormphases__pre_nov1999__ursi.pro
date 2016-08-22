@@ -25,7 +25,20 @@ PRO JOURNAL__20160820__PLOTS_OF_10_18_49__GROSS_RATES__DURING_STORMPHASES__PRE_N
   do_grossRate_fluxQuantities    = 1
   do_logAvg_the_timeAvg          = 0
 
-  fancyPresentationMode          = 1 ;Erases stormphase titles, suppresses gridlabels, and blows up plot titles. Keep it.
+  add_variance_plots             = 0
+  only_variance_plots            = 0
+  var__rel_to_mean_variance      = 0
+
+  ;;Variance plots?
+  ;; var__plotRange                 =  [[0.0,1.0], $
+  ;;                                    [0.0,1.0], $
+  ;;                                    [0.4,2.0]]
+  var__plotRange                 = !NULL ;populate as we go
+
+  var__do_stddev_instead         = 0
+
+  fancyPresentationMode          = 1 ;Erases stormphase titles, 
+                                     ;suppresses gridlabels, blows up plot titles. Keep it.
 
   ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
   ;;Hemi stuff
@@ -41,7 +54,7 @@ PRO JOURNAL__20160820__PLOTS_OF_10_18_49__GROSS_RATES__DURING_STORMPHASES__PRE_N
   binILAT                        = 2.0
   binMLT                         = 1.5
 
-  ;; maskMin                        = 10
+  maskMin                        = 10
   ;; tHist_mask_bins_below_thresh   = 1
 
   ;;;;;;;;;;;;;;;;;;;;;;
@@ -50,7 +63,9 @@ PRO JOURNAL__20160820__PLOTS_OF_10_18_49__GROSS_RATES__DURING_STORMPHASES__PRE_N
   ePlotRange                     = [1e5,1e8]
   logEfPlot                      = 1
   noNegEflux                     = 1
-
+  eFluxVarPlotRange              = [1e1,1e8]
+  var__plotRange                 = [[var__plotRange],[eFluxVarPlotRange]]
+  
   ;;;;;;;;;;;;;;;;;;;;;;
   ;;10-EFLUX_LOSSCONE_INTEG
   maxInd                         = 10
@@ -61,6 +76,9 @@ PRO JOURNAL__20160820__PLOTS_OF_10_18_49__GROSS_RATES__DURING_STORMPHASES__PRE_N
   ;;                             [1e7,1e9]]
   eNumFlPlotRange                = [[10^(5.0),10^(8.0)], $
                                     [1e21,1e24]]
+  eNumFlVarPlotRange             = [[1e1,1e8], $
+                                    [1e1,1e8]]
+  var__plotRange                 = [[var__plotRange],[eNumFlVarPlotRange]]
 
   ;;;;;;;;;;;;;;;;;;;;;;
   ;;18-INTEG_ION_FLUX_UP
@@ -69,11 +87,15 @@ PRO JOURNAL__20160820__PLOTS_OF_10_18_49__GROSS_RATES__DURING_STORMPHASES__PRE_N
   noNegIFlux                     = 1
   iPlotRange                     = [10.^(20.0),10.^(23.0)]
   logIFPlot                      = 1
+  iVarPlotRange                  = [1e1,1e8]
+
   ;;;;;;;;;;;;;;;;;;;;;;
   ;;49--PFLUXEST
   pPlotRange                     = [10.^(5.0),10.^(8.0)] ;for pFlux divided by width_x and multiplied by area
   logPFPlot                      = 1
   ;; multiply_pFlux_by_width_x      = 1
+  pVarPlotRange                  = [1e1,1e8]
+  var__plotRange                 = [[var__plotRange],[pVarPlotRange]]
 
   ;;;;;;;;;;;;;;;;;;;;;;
   ;PROBOCCURRENCE
@@ -136,8 +158,11 @@ PRO JOURNAL__20160820__PLOTS_OF_10_18_49__GROSS_RATES__DURING_STORMPHASES__PRE_N
      DO_TIMEAVG_FLUXQUANTITIES=do_timeAvg_fluxQuantities, $
      DO_GROSSRATE_FLUXQUANTITIES=do_grossRate_fluxQuantities, $
      WRITE_GROSSRATE_INFO_TO_THIS_FILE=grossRate_info_file, $
-   ;; DO_LOGAVG_THE_TIMEAVG=do_logavg_the_timeAvg, $
-     ;; /LOGAVGPLOT, $
+     ADD_VARIANCE_PLOTS=add_variance_plots, $
+     ONLY_VARIANCE_PLOTS=only_variance_plots, $
+     VAR__PLOTRANGE=var__plotRange, $
+     VAR__REL_TO_MEAN_VARIANCE=var__rel_to_mean_variance, $
+     VAR__DO_STDDEV_INSTEAD=var__do_stddev_instead, $
      JUSTDATA=justData, $
      /MIDNIGHT, $
      /CB_FORCE_OOBLOW, $
