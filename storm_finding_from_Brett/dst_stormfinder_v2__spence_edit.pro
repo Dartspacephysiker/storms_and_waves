@@ -29,14 +29,19 @@
 
 
 PRO DST_STORMFINDER_V2__SPENCE_EDIT,arg1_julday,arg2_dst,arg3_storms,arg4_sstimes,arg5_lgtimes, $
-                                    SETHH2L=setHH2L, SETDD2=setDD2, STADATE=stadate, ENDDATE=enddate
+                                    SETHH2L=setHH2L, SETDD2=setDD2, STADATE=stadate, ENDDATE=enddate, $
+                                    SAVEDATA=saveData
 
   COMPILE_OPT defint32, strictarr, logical_predicate, strictarrsubs
   CLOSE, /all                   ;just a precaution line
   LOADCT, 39                    ;load a color template for plotting
   DEVICE,DECOMPOSED=0		;Apply loadct call to plots
-  filepath = '~/IDLWorkspace83/'
-  filename = 'try2015_04'
+
+  outDataDir = '/SPENCEdata/Research/Satellites/FAST/storms_Alfvens/saves_output_etc/'
+  SET_PLOT_DIR,plotDir,/FOR_STORMS,/ADD_TODAY
+  SET_TXTOUTPUT_DIR,txtOutputDir,/FOR_STORMS,/ADD_TODAY
+
+  filename = 'stormFinderStuff'
   ps = 1
 
   IF KEYWORD_SET(ps) THEN BEGIN
@@ -44,7 +49,7 @@ PRO DST_STORMFINDER_V2__SPENCE_EDIT,arg1_julday,arg2_dst,arg3_storms,arg4_sstime
      DEVICE, DECOMPOSED=0, COLOR=1, ENCAPSULATED=0, LANDSCAPE=1, INCHES=1, $
              XSIZE=9, YSIZE=6.5, $
              XOFFSET=1, YOFFSET=10, $
-             FILE=filepath+'dst_storm_finder/'+filename+'.ps'
+             FILE=plotDir+filename+'.ps'
   ENDIF ELSE BEGIN
      DEVICE, DECOMPOSED=0       ;Apply loadct call to plots
      WINDOW, 0, TITLE='xwin0', XSIZE=704, YSIZE=396, XPOS=2256, YPOS=925
@@ -64,7 +69,18 @@ PRO DST_STORMFINDER_V2__SPENCE_EDIT,arg1_julday,arg2_dst,arg3_storms,arg4_sstime
 ;Restore DST data from IDL Save file
 ; dstvalue	array of dst values
 ; jul_day	array of jd values
-  RESTORE, '~/IDLWorkspace83/data/dst2015/data_dst_pro-rt_2012_to_2015-05-11.sav' ;CHANGE !!!
+
+  kyotoDir   = '/SPENCEdata/Research/database/storm_data/'
+  finalFile  = 'dst_1957-2011.sav'
+
+  ;; RESTORE, '~/IDLWorkspace83/data/dst2015/data_dst_pro-rt_2012_to_2015-05-11.sav' ;CHANGE !!!
+  ;; RESTORE, '~/IDLWorkspace83/data/dst2015/data_dst_pro-rt_2012_to_2015-05-11.sav' ;CHANGE !!!
+  PRINT,"Loading up hammertime's Dst DB"
+  RESTORE,kyotoDir+finalFile
+  dstValue   = dst.val
+  jul_day    = dst.julDay
+  dst        = !NULL
+
 ;RESTORE, '~/IDLWorkspace83/data/dst2015/data_dst_final_1985-2011.sav'			;this restores FINAL dst data 1985-2011
 
 
@@ -77,8 +93,8 @@ PRO DST_STORMFINDER_V2__SPENCE_EDIT,arg1_julday,arg2_dst,arg3_storms,arg4_sstime
 ;IF (Keyword_Set(enddate) EQ 0) THEN enddate = [2000,12,31,23,59,59]
 ;--------------------------------------------------------------------
 ;IF (Keyword_Set(stadate) EQ 0) THEN stadate = [2012,08,30,08,05,00]		;Launch date of RBSP spacecraft, UT   (change?) !!!
-  IF ~Keyword_Set(stadate)  THEN stadate = [2012,01,08,00,00,00] ;CHANGE !!!
-  IF ~Keyword_Set(enddate)  THEN enddate = [2015,05,04,00,00,00] ;CHANGE !!!
+  IF ~Keyword_Set(stadate)  THEN stadate = [1957,01,08,00,00,00] ;CHANGE !!!
+  IF ~Keyword_Set(enddate)  THEN enddate = [2011,12,20,00,00,00] ;CHANGE !!!
 ;--------------------------------------------------------------------
 ;IF (Keyword_Set(stadate) EQ 0) THEN stadate = [1985,01,08,0,0,0]			;alternate option for startdate
 ;IF (Keyword_Set(enddate) EQ 0) THEN enddate = [2011,12,24,23,0,0]			;alternate option for enddate
@@ -122,7 +138,7 @@ PRO DST_STORMFINDER_V2__SPENCE_EDIT,arg1_julday,arg2_dst,arg3_storms,arg4_sstime
 ;Each criteria for whether or not there is a storm at a given timepoint is given a Prime Factor (PF_1, PF_2, etc...).
 ;	For each element of the "storms" array (except those in the first and last "HH1" hours), the value will be
 ;	set to 1*(PF_1)*(PF_2)*etc... for as many criteria are satisfied at that timepoint.
-;	This is similar to useing bitwise logic.  Afterwards, each element of the "storms" array can checked if ALL the necessary
+;	This is similar to using bitwise logic.  Afterwards, each element of the "storms" array can checked if ALL the necessary
 ;	criteria for a small/large storm are met at that timepoint.
 ;Prime Factor Summary:
 ;2		Indicates DST value is between -50 and -20 (inclusive)
@@ -272,11 +288,11 @@ PRO DST_STORMFINDER_V2__SPENCE_EDIT,arg1_julday,arg2_dst,arg3_storms,arg4_sstime
      FOR jj=0,N_ELEMENTS(stti_sm)-1 DO BEGIN
         wh_st = jj
         subt = ''
-        OPENW, zz, filepath+'dst_storm_finder/string.txt', /get_lun
+        OPENW, zz, txtOutputDir+'dst_stormfinder_v2__string.txt', /GET_LUN
         PRINTF, zz, data_jd[stti_sm[wh_st]], FORMAT='(C())'
         CLOSE, zz
         FREE_LUN, zz
-        OPENR, zz, filepath+'dst_storm_finder/string.txt', /get_lun
+        OPENR, zz, txtOutputDir+'dst_stormfinder_v2__string.txt', /GET_LUN
         READF, zz, FORMAT='(A50)', subt
         CLOSE, zz
         FREE_LUN, zz
@@ -324,11 +340,11 @@ PRO DST_STORMFINDER_V2__SPENCE_EDIT,arg1_julday,arg2_dst,arg3_storms,arg4_sstime
      FOR jj=0,N_Elements(stti_lg)-1 DO BEGIN
         wh_st = jj
         subt=''
-        OPENW, zz, filepath+'dst_storm_finder/string.txt', /GET_LUN
+        OPENW, zz, txtOutputDir+'dst_stormfinder_v2__string.txt', /GET_LUN
         PRINTF, zz, data_jd[stti_lg[wh_st]], FORMAT='(C())'
         CLOSE, zz
         FREE_LUN, zz
-        OPENR, zz, filepath+'dst_storm_finder/string.txt', /GET_LUN
+        OPENR, zz, txtOutputDir+'dst_stormfinder_v2__string.txt', /GET_LUN
         READF, zz, FORMAT='(A50)', subt
         CLOSE, zz
         FREE_LUN, zz
@@ -436,14 +452,14 @@ PRO DST_STORMFINDER_V2__SPENCE_EDIT,arg1_julday,arg2_dst,arg3_storms,arg4_sstime
 
 ;===IF=LOOP=OPEN============IF=LOOP=OPEN============IF=LOOP=OPEN============IF=LOOP=OPEN===
 ;The following IF segment saves the above 5 arguments into an IDL Save File
-  IF ( 0 ) THEN BEGIN           ;CHANGE !!!
-;SAVE, data_jd, data_dst, storms, stti_sm, stti_lg, FILENAME=filepath+'dst_storm_finder/storm_times_final.sav'
+  IF KEYWORD_SET(saveData) THEN BEGIN           ;CHANGE !!!
+;SAVE, data_jd, data_dst, storms, stti_sm, stti_lg, FILENAME=outDataDir+'dst_storm_finder/storm_times_final.sav'
      SAVE, data_jd, data_dst, storms, stti_sm, stti_lg, $
-           FILENAME=filepath+'dst_storm_finder/storm_times_rbsp_era/storm_times_pr-rt_2012_to_2015-05-11xxx.sav' ;CHANGE !!!
+           FILENAME=outDataDir+'stormCrap_1957-2011.sav' ;CHANGE !!!
 
 ;storms_30ntdrop = storms
 ;stti_sm_30ntdrop = stti_sm
-;SAVE, storms_30ntdrop, stti_sm_30ntdrop, FILENAME=filepath+'dst_storm_finder/storm_times_final_only_small30ntdrop.sav'
+;SAVE, storms_30ntdrop, stti_sm_30ntdrop, FILENAME=outDataDir+'dst_storm_finder/storm_times_final_only_small30ntdrop.sav'
 
   ENDIF
 ;===IF=LOOP=CLOSE============IF=LOOP=CLOSE============IF=LOOP=CLOSE============IF=LOOP=CLOSE===
