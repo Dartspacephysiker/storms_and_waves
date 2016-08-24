@@ -1,8 +1,9 @@
 ;2015/10/13
-PRO LOAD_DST_AE_DBS,Dst,ae,LUN=lun, $
+PRO LOAD_DST_AE_DBS,Dst,ae, $
                     DST_AE_DIR=Dst_AE_dir, $
                     DST_AE_FILE=Dst_AE_file, $
-                    FULL_DST_DB=full_Dst_db
+                    FULL_DST_DB=full_Dst_DB, $
+                    LUN=lun
 
   COMPILE_OPT idl2
 
@@ -20,7 +21,7 @@ PRO LOAD_DST_AE_DBS,Dst,ae,LUN=lun, $
   defFullDstFile             = 'idl_dst_data--1957-2011--smoothed_w_deriv.dat'
 
   CASE 1 OF
-     KEYWORD_SET(full_Dst_db): BEGIN
+     KEYWORD_SET(full_Dst_DB): BEGIN
         PRINT,"You've requested the full Dst Monty. You don't get AE in this case."
         IF N_ELEMENTS(Dst_AE_dir)  EQ 0 THEN Dst_AE_dir  = defFullDstDir
         IF N_ELEMENTS(Dst_AE_file) EQ 0 THEN Dst_AE_file = defFullDstFile
@@ -36,7 +37,7 @@ PRO LOAD_DST_AE_DBS,Dst,ae,LUN=lun, $
      IF FILE_TEST(Dst_AE_dir+Dst_AE_file) THEN RESTORE,Dst_AE_dir+Dst_AE_file
      IF Dst EQ !NULL THEN BEGIN
         CASE 1 OF
-           KEYWORD_SET(full_Dst_db): BEGIN
+           KEYWORD_SET(full_Dst_DB): BEGIN
               PRINT,"Couldn't load full Dst DB!"
            END
            ELSE: BEGIN
