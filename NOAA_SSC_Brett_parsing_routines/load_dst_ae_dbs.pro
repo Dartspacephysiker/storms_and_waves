@@ -8,14 +8,16 @@ PRO LOAD_DST_AE_DBS,Dst,ae,LUN=lun, $
 
   IF N_ELEMENTS(lun) EQ 0 THEN lun = -1         ;stdout
 
-  DefDst_AE_dir              = '/SPENCEdata/Research/database/geomag_indices__1999-2009/processed/'
+  defDst_AE_dir              = '/SPENCEdata/Research/database/geomag_indices__1999-2009/processed/'
   ;;defDst_AE_file           = 'idl_ae_Dst_data.dat'
   ;; defDst_AE_smoothedFile  = 'idl_ae_Dst_data--smoothed.dat'
   ;; defDst_AE_file          = 'idl_ae_Dst_data--smoothed.dat'
   defDst_AE_file             = 'idl_ae_dst_data--smoothed_w_deriv.dat'
 
-  defFullDstDir              = '/SPENCEdata/Research/database/storm_data/'
-  defFullDstFile             = 'dst_1957-2011.sav'
+  ;; defFullDstDir              = '/SPENCEdata/Research/database/storm_data/'
+  ;; defFullDstFile             = 'dst_1957-2011.sav'
+  defFullDstDir              = '/SPENCEdata/Research/database/storm_data/processed/'
+  defFullDstFile             = 'idl_dst_data--1957-2011--smoothed_w_deriv.dat'
 
   CASE 1 OF
      KEYWORD_SET(full_Dst_db): BEGIN

@@ -111,11 +111,11 @@ PRO READ_KYOTO_WDC_LIKE_FORMAT_TXTFILE
         ;; tmpi          = [k*24:((k+1)*24-1) < (nGot-1)]
         tmpi             = [k*24:(k+1)*24-1]
 
-        tmpDst           = [dat.data1[j],dat.data2[j],dat.data3[j],dat.data4[j],dat.data5[j], $
-                            dat.data6[j],dat.data7[j],dat.data8[j],dat.data9[j],dat.data10[j], $
-                            dat.data11[j],dat.data12[j],dat.data13[j],dat.data14[j],dat.data15[j], $
-                            dat.data16[j],dat.data17[j],dat.data18[j],dat.data19[j],dat.data20[j], $
-                            dat.data21[j],dat.data22[j],dat.data23[j],dat.data24[j]]
+        tmpDst           = [dat.data1[k],dat.data2[k],dat.data3[k],dat.data4[k],dat.data5[k], $
+                            dat.data6[k],dat.data7[k],dat.data8[k],dat.data9[k],dat.data10[k], $
+                            dat.data11[k],dat.data12[k],dat.data13[k],dat.data14[k],dat.data15[k], $
+                            dat.data16[k],dat.data17[k],dat.data18[k],dat.data19[k],dat.data20[k], $
+                            dat.data21[k],dat.data22[k],dat.data23[k],dat.data24[k]]
         
         realDst[tmpi]    = tmpDst
 
@@ -192,6 +192,11 @@ PRO READ_KYOTO_WDC_LIKE_FORMAT_TXTFILE
      doy[tmpi]    = dst.julDay[tmpi] - JULDAY(12,31,year-1,0,0,0)
 
   ENDFOR
+
+  ;;A little test for you to see that things came out OK
+  ;; diff = ROUND(((SHIFT(dst.julday,-1)-dst.julday)[0:-2])*24.)
+  ;; PRINT,MAX(diff)
+  ;; PRINT,MIN(diff)
 
   dst             = {date:tStamp, $
                      julday:dst.julday, $
