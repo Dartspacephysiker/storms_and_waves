@@ -160,12 +160,45 @@ PRO READ_KYOTO_WDC_LIKE_FORMAT_TXTFILE
      realHour            = !NULL
   ENDFOR
 
-  bad_i                 = WHERE(dst.val EQ 9999,nBad)
+  bad_i                  = WHERE(dst.val EQ 9999,nBad)
   PRINT,'n Bad Dst vals: ' + STRCOMPRESS(nBad,/REMOVE_ALL)
   PRINT,''
   PRINT,'Got ' + STRCOMPRESS(N_ELEMENTS(dst.val)) + ' entries in total, from ' + $
         STRCOMPRESS(nYears,/REMOVE_ALL) + ' years'
+
+  ;;Now add date string
+  ;;In batches, since the required memory is a lot
+  sliceSize = 5000
+  nDst      = N_ELEMENTS(dst.val)
+  nIt       = nDst/sliceSize
+  tStamp    = MAKE_ARRAY(nDst,/STRING)
+  doy       = MAKE_ARRAY(nDst,/INTEGER)
+  PRINT,'Getting timestamps ...'
+  FOR k=0,nIt DO BEGIN
+     PRINT,'nIterations: ' + STRCOMPRESS(k,/REMOVE_ALL) + '/' + STRCOMPRESS(nIt,/REMOVE_ALL)
+     tmpi         = [(k*sliceSize):((k+1)*sliceSize-1) < (nDst - 1)]
+
+     CALDAT,dst.julDay[tmpi],month,day,year,hour,minute
+
+     ;; tStamp[tmpi] = TIMESTAMP(YEAR=year[tmpi], $
+     ;;                 MONTH=month[tmpi], $
+     ;;                 DAY=day[tmpi], $
+     ;;                 HOUR=hour[tmpi])
+     tStamp[tmpi] = TIMESTAMP(YEAR=year, $
+                     MONTH=month, $
+                     DAY=day, $
+                     HOUR=hour)
+
+     doy[tmpi]    = dst.julDay[tmpi] - JULDAY(12,31,year-1,0,0,0)
+
+  ENDFOR
+
+  dst             = {date:tStamp, $
+                     julday:dst.julday, $
+                     doy:doy, $
+                     dst:dst.val}
+
   PRINT,'Saving to ' + finalFile + ' ...'
   SAVE,dst,FILENAME=kyotoDir+finalFile
-
+  STOP
 END
