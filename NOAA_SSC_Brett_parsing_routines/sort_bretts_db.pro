@@ -1,21 +1,22 @@
 PRO SORT_BRETTS_DB,stormStruct,jd
 
-  ;; jd_st = JULDAY(stormstruct.month, stormstruct.day, stormstruct.year, stormstruct.hour, stormstruct.minute)
-  si=sort(stormstruct.julday)
-  jd=stormstruct.julday(si)
+  COMPILE_OPT idl2
 
-  stormStruct={IS_LARGESTORM:stormstruct.is_largestorm(si), $
-               STORM:stormstruct.storm(si), $
-               TIME:stormstruct.time(si), $
-               JULDAY:stormstruct.julday(si), $
-               TSTAMP:stormstruct.tstamp(si), $
-               YEAR:stormstruct.year(si), $
-               MONTH:stormstruct.month(si), $
-               DAY:stormstruct.day(si), $
-               HOUR:stormstruct.hour(si), $
-               MINUTE:stormstruct.minute(si), $
-               DST:stormstruct.dst(si), $
-               DROP_IN_DST:stormstruct.drop_in_dst(si)}
+  storm_i     = SORT(stormstruct.julday)
+  jd          = stormstruct.julday[storm_i]
+
+  stormStruct = {IS_LARGESTORM:stormstruct.is_largestorm[storm_i], $
+                 STORM:stormstruct.storm[storm_i], $
+                 TIME:stormstruct.time[storm_i], $
+                 JULDAY:stormstruct.julday[storm_i], $
+                 TSTAMP:stormstruct.tstamp[storm_i], $
+                 YEAR:stormstruct.year[storm_i], $
+                 MONTH:stormstruct.month[storm_i], $
+                 DAY:stormstruct.day[storm_i], $
+                 HOUR:stormstruct.hour[storm_i], $
+                 MINUTE:stormstruct.minute[storm_i], $
+                 DST:stormstruct.dst[storm_i], $
+                 DROP_IN_DST:stormstruct.drop_in_dst[storm_i]}
 
   PRINT,"Finished sorting Brett's DB!"
 

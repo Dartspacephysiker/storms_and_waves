@@ -28,47 +28,69 @@
 ;-
 
 
-PRO DST_STORMFINDER_V2__SPENCE_EDIT,arg1_julday,arg2_dst,arg3_storms,arg4_sstimes,arg5_lgtimes, $
-                                    SETHH2L=setHH2L, SETDD2=setDD2, STADATE=stadate, ENDDATE=enddate, $
+PRO DST_STORMFINDER_V2__SPENCE_EDIT,arg1_julday,arg2_dst, $
+                                    arg3_storms,arg4_sstimes, $
+                                    arg5_lgtimes, $
+                                    SETHH2L=setHH2L, $
+                                    SETDD2=setDD2, $
+                                    STADATE=stadate, $
+                                    ENDDATE=enddate, $
+                                    PRINT_SMALLSTORMS_TO_TEXTFILE=print_smallStorms_to_textFile, $
+                                    PRINT_LARGESTORMS_TO_TEXTFILE=print_largeStorms_to_textFile, $
+                                    PLOT_ALL_SMALLSTORMS=plot_smallStorms, $
+                                    PLOT_ALL_LARGESTORMS=plot_largeStorms, $
+                                    PLOT_STORM_TDIFFS=plot_storm_tDiffs, $
+                                    PLOT_STORM_DSTDROP_HISTS=plot_storm_DstDrop_hists, $
                                     SAVEDATA=saveData
 
   COMPILE_OPT defint32, strictarr, logical_predicate, strictarrsubs
-  CLOSE, /all                   ;just a precaution line
+  CLOSE, /ALL                   ;just a precaution line
   LOADCT, 39                    ;load a color template for plotting
   DEVICE,DECOMPOSED=0		;Apply loadct call to plots
 
-  outDataDir = '/SPENCEdata/Research/Satellites/FAST/storms_Alfvens/saves_output_etc/'
+  outDataDir          = '/SPENCEdata/Research/database/storm_data/'
+  processedStormFile  = 'large_and_small_storms--1957-2011--Anderson.sav'
+  largeStormTxtFile   = 'large_storms--1957-2011.txt'
+  smallStormTxtFile   = 'small_storms--1957-2011.txt'
+
   SET_PLOT_DIR,plotDir,/FOR_STORMS,/ADD_TODAY
   SET_TXTOUTPUT_DIR,txtOutputDir,/FOR_STORMS,/ADD_TODAY
 
   filename = 'stormFinderStuff'
-  ps = 1
+  ;; ps       = 1
 
-  IF KEYWORD_SET(ps) THEN BEGIN
-     SET_PLOT, 'ps'
-     DEVICE, DECOMPOSED=0, COLOR=1, ENCAPSULATED=0, LANDSCAPE=1, INCHES=1, $
-             XSIZE=9, YSIZE=6.5, $
-             XOFFSET=1, YOFFSET=10, $
-             FILE=plotDir+filename+'.ps'
-  ENDIF ELSE BEGIN
-     DEVICE, DECOMPOSED=0       ;Apply loadct call to plots
-     WINDOW, 0, TITLE='xwin0', XSIZE=704, YSIZE=396, XPOS=2256, YPOS=925
-  ENDELSE
+  IF KEYWORD_SET(plot_all_smallStorms) OR KEYWORD_SET(plot_all_largeStorms) OR $
+     KEYWORD_SET(plot_storm_tDiffs)    OR KEYWORD_SET(plot_storm_DstDrop_hists) $
+     THEN makePlots = 1
+
+  IF KEYWORD_SET(makePlots) THEN BEGIN
+
+     IF KEYWORD_SET(ps) THEN BEGIN
+        SET_PLOT, 'ps'
+        DEVICE, DECOMPOSED=0, COLOR=1, ENCAPSULATED=0, LANDSCAPE=1, INCHES=1, $
+                XSIZE=9, YSIZE=6.5, $
+                XOFFSET=1, YOFFSET=10, $
+                FILE=plotDir+filename+'.ps'
+     ENDIF ELSE BEGIN
+        DEVICE, DECOMPOSED=0    ;Apply loadct call to plots
+        WINDOW, 0, TITLE='xwin0', XSIZE=704, YSIZE=396, XPOS=2256, YPOS=925
+     ENDELSE
+  ENDIF
 
 
-;Define colors
-;If "loadct, 39" is used:
+  ;;Define colors
+  ;;If "loadct, 39" is used:
   color_blk = 0                 ;black
   color_blu = 60		;blue
   color_grn = 135		;green
   color_red = 254		;red
-;If "loadct, 0" is used:
+  ;;If "loadct, 0" is used:
   color_gry = 150		;grey
 
 
-;Restore DST data from IDL Save file
-; dstvalue	array of dst values
-; jul_day	array of jd values
+  ;;Restore DST data from IDL Save file
+  ;; dstvalue	array of dst values
+  ;; jul_day	array of jd values
 
   kyotoDir   = '/SPENCEdata/Research/database/storm_data/'
   finalFile  = 'dst_1957-2011.sav'
@@ -77,40 +99,40 @@ PRO DST_STORMFINDER_V2__SPENCE_EDIT,arg1_julday,arg2_dst,arg3_storms,arg4_sstime
   ;; RESTORE, '~/IDLWorkspace83/data/dst2015/data_dst_pro-rt_2012_to_2015-05-11.sav' ;CHANGE !!!
   PRINT,"Loading up hammertime's Dst DB"
   RESTORE,kyotoDir+finalFile
-  dstValue   = dst.val
+  DstValue   = dst.dst
   jul_day    = dst.julDay
   dst        = !NULL
 
-;RESTORE, '~/IDLWorkspace83/data/dst2015/data_dst_final_1985-2011.sav'			;this restores FINAL dst data 1985-2011
+  ;;RESTORE, '~/IDLWorkspace83/data/dst2015/data_dst_final_1985-2011.sav'	;this restores FINAL dst data 1985-2011
 
 
-;Define (or pass in from Keywords) Start and End Dates: [yyyy,mo,dd,hh,mi,ss]
-;	   NOTE: start date must be at least 7 days after first time of DST data
-;	   NOTE: end   date must be at least 7 days before last time of DST data
-;Choose one of the below sets of startdate/enddate
-;--------------------------------------------------------------------
-;IF (Keyword_Set(stadate) EQ 0) THEN stadate = [1989,01,01,00,00,00]
-;IF (Keyword_Set(enddate) EQ 0) THEN enddate = [2000,12,31,23,59,59]
-;--------------------------------------------------------------------
-;IF (Keyword_Set(stadate) EQ 0) THEN stadate = [2012,08,30,08,05,00]		;Launch date of RBSP spacecraft, UT   (change?) !!!
-  IF ~Keyword_Set(stadate)  THEN stadate = [1957,01,08,00,00,00] ;CHANGE !!!
-  IF ~Keyword_Set(enddate)  THEN enddate = [2011,12,20,00,00,00] ;CHANGE !!!
-;--------------------------------------------------------------------
-;IF (Keyword_Set(stadate) EQ 0) THEN stadate = [1985,01,08,0,0,0]			;alternate option for startdate
-;IF (Keyword_Set(enddate) EQ 0) THEN enddate = [2011,12,24,23,0,0]			;alternate option for enddate
-;--------------------------------------------------------------------
+  ;;Define (or pass in from Keywords) Start and End Dates: [yyyy,mo,dd,hh,mi,ss]
+  ;;	   NOTE: start date must be at least 7 days after first time of DST data
+  ;;	   NOTE: end   date must be at least 7 days before last time of DST data
+  ;;Choose one of the below sets of startdate/enddate
+  ;;--------------------------------------------------------------------
+  ;;IF (Keyword_Set(stadate) EQ 0) THEN stadate = [1989,01,01,00,00,00]
+  ;;IF (Keyword_Set(enddate) EQ 0) THEN enddate = [2000,12,31,23,59,59]
+  ;;--------------------------------------------------------------------
+  ;;IF (Keyword_Set(stadate) EQ 0) THEN stadate = [2012,08,30,08,05,00]		;Launch date of RBSP spacecraft, UT   (change?) !!!
+  IF ~Keyword_Set(stadate)  THEN stadate = [1957,01,08,00,00,00] 
+  IF ~Keyword_Set(enddate)  THEN enddate = [2011,12,20,00,00,00] 
+  ;;--------------------------------------------------------------------
+  ;;IF (Keyword_Set(stadate) EQ 0) THEN stadate = [1985,01,08,0,0,0]			;alternate option for startdate
+  ;;IF (Keyword_Set(enddate) EQ 0) THEN enddate = [2011,12,24,23,0,0]			;alternate option for enddate
+  ;;--------------------------------------------------------------------
   jd_stadate =	JULDAY(stadate[1],stadate[2],stadate[0],stadate[3],stadate[4],stadate[5])
   jd_enddate =	JULDAY(enddate[1],enddate[2],enddate[0],enddate[3],enddate[4],enddate[5])
-;NOTE: start date must be at least 7 days after first time of DST data
+  ;;NOTE: start date must be at least 7 days after first time of DST data
   IF ( (jd_stadate - jul_day[0]  - 7) LT 0) THEN STOP
-;NOTE: end   date must be at least 7 days before last time of DST data
+  ;;NOTE: end   date must be at least 7 days before last time of DST data
   IF ( (jul_day[-1] - jd_enddate - 7) LT 0) THEN STOP
 
 
   ;;Create index, then arrays for just the data between the start and end dates desired
   index01 =	WHERE((jul_day GE jd_stadate-7) AND (jul_day LE jd_enddate+7), /NULL)
   data_jd =	jul_day[index01]
-  data_dst =	dstvalue[index01]
+  data_dst =	DstValue[index01]
   CALDAT, data_jd, data_month, data_day, data_year, data_hour, data_min, data_sec
 
 
@@ -134,50 +156,50 @@ PRO DST_STORMFINDER_V2__SPENCE_EDIT,arg1_julday,arg2_dst,arg3_storms,arg4_sstime
   DD2 = setDD2                    ;Defines the DST drop required for LARGE storms
 
 
-;Prime Factors for the storms array:
-;Each criteria for whether or not there is a storm at a given timepoint is given a Prime Factor (PF_1, PF_2, etc...).
-;	For each element of the "storms" array (except those in the first and last "HH1" hours), the value will be
-;	set to 1*(PF_1)*(PF_2)*etc... for as many criteria are satisfied at that timepoint.
-;	This is similar to using bitwise logic.  Afterwards, each element of the "storms" array can checked if ALL the necessary
-;	criteria for a small/large storm are met at that timepoint.
-;Prime Factor Summary:
-;2		Indicates DST value is between -50 and -20 (inclusive)
-;3		Indicates DST value is less than -50
-;5		Indicates DST value is a minumum in a time period of plus/minus "HH1" hours
-;7		Indicates DST value dropped at least DD1 nT in the previous "HH2" hours
-;11		Indicates DST value is NOT a repeat of a DST value in the previous 12 hours
-;13		Indicates DST value dropped at least DD2 nT in the previous "HH2L" hours
-;17		Indicates DST value is NOT a repeat of a DST value in the previous 12 hours
-;19		Indicates the time is between the specified startdate/enddate
-;			(required since I load data from/through 7 days before/after the specified startdate/enddate)
-;23		Indicates...
-;29, 31, 37, 41, 43, 47, 53, 59, 61
+  ;;Prime Factors for the storms array:
+  ;;Each criteria for whether or not there is a storm at a given timepoint is given a Prime Factor (PF_1, PF_2, etc...).
+  ;;	For each element of the "storms" array (except those in the first and last "HH1" hours), the value will be
+  ;;	set to 1*(PF_1)*(PF_2)*etc... for as many criteria are satisfied at that timepoint.
+  ;;	This is similar to using bitwise logic.  Afterwards, each element of the "storms" array can checked if ALL the necessary
+  ;;	criteria for a small/large storm are met at that timepoint.
+  ;;Prime Factor Summary:
+  ;;2		Indicates DST value is between -50 and -20 (inclusive)
+  ;;3		Indicates DST value is less than -50
+  ;;5		Indicates DST value is a minumum in a time period of plus/minus "HH1" hours
+  ;;7		Indicates DST value dropped at least DD1 nT in the previous "HH2" hours
+  ;;11		Indicates DST value is NOT a repeat of a DST value in the previous 12 hours
+  ;;13		Indicates DST value dropped at least DD2 nT in the previous "HH2L" hours
+  ;;17		Indicates DST value is NOT a repeat of a DST value in the previous 12 hours
+  ;;19		Indicates the time is between the specified startdate/enddate
+  ;;			(required since I load data from/through 7 days before/after the specified startdate/enddate)
+  ;;23		Indicates...
+  ;;29, 31, 37, 41, 43, 47, 53, 59, 61
 
 
   temp = 1L                       ;index for following FOR loop
   ii = 0L				;index for following FOR loop
   FOR ii=HH1,hours-(HH1+1) DO BEGIN
      temp = 1L			;reset indice
-;-----------------------------------------------------------------------------------------------------------------------------
-;Prime Factor: 2		Indicates DST value is between -50 and -20 (inclusive)
+  ;;-----------------------------------------------------------------------------------------------------------------------------
+  ;;Prime Factor: 2		Indicates DST value is between -50 and -20 (inclusive)
      IF ( (data_dst[ii] LE -20) AND (data_dst[ii] GE -50) ) THEN temp=temp*2
-;-----------------------------------------------------------------------------------------------------------------------------
-;Prime Factor: 3		Indicates DST value is less than -50
+  ;;-----------------------------------------------------------------------------------------------------------------------------
+  ;;Prime Factor: 3		Indicates DST value is less than -50
      IF (data_dst[ii] LT -50) THEN temp=temp*3
-;-----------------------------------------------------------------------------------------------------------------------------
-;Prime Factor: 5		Indicates DST value is a minumum in a time period of plus/minus "HH1" hours
+  ;;-----------------------------------------------------------------------------------------------------------------------------
+  ;;Prime Factor: 5		Indicates DST value is a minumum in a time period of plus/minus "HH1" hours
      IF (data_dst[ii] EQ min(data_dst[ii-HH1:ii+HH1])) THEN temp=temp*5
-;-----------------------------------------------------------------------------------------------------------------------------
-;Prime Factor: 7		Indicates DST value dropped at least DD1 nT in the previous "HH2" hours
+  ;;-----------------------------------------------------------------------------------------------------------------------------
+  ;;Prime Factor: 7		Indicates DST value dropped at least DD1 nT in the previous "HH2" hours
      IF (MAX(data_dst[ii-HH2:ii])-data_dst[ii] GE DD1) THEN temp=temp*7 ;should be GE DD1
 
                                 ;Define the dst_drop arrays one element at a time
      dst_drop_HH2[ii]  = MAX(data_dst[ii-HH2:ii]) - data_dst[ii]
      dst_drop_HH2L[ii] = MAX(data_dst[ii-HH2L:ii]) - data_dst[ii]
-;-----------------------------------------------------------------------------------------------------------------------------
-;Prime Factor: 11		Indicates DST value is NOT a repeat of a DST value in the previous 12 hours
-;	temp=temp*11												;test: use this line to allow storms to be ge 1 hour apart
-;	IF ( (data_dst[ii] NE data_dst[ii-1]) ) THEN temp=temp*11	;test: use this line to allow storms to be ge 2 hours apart
+  ;;-----------------------------------------------------------------------------------------------------------------------------
+  ;;Prime Factor: 11		Indicates DST value is NOT a repeat of a DST value in the previous 12 hours
+  ;;	temp=temp*11												;test: use this line to allow storms to be ge 1 hour apart
+  ;;	IF ( (data_dst[ii] NE data_dst[ii-1]) ) THEN temp=temp*11	;test: use this line to allow storms to be ge 2 hours apart
      IF ( (data_dst[ii] NE data_dst[ii-1]) AND $
           (data_dst[ii] NE data_dst[ii-2]) AND $
           (data_dst[ii] NE data_dst[ii-3]) AND $
@@ -190,17 +212,17 @@ PRO DST_STORMFINDER_V2__SPENCE_EDIT,arg1_julday,arg2_dst,arg3_storms,arg4_sstime
           (data_dst[ii] NE data_dst[ii-10]) AND $
           (data_dst[ii] NE data_dst[ii-11]) AND $
           (data_dst[ii] NE data_dst[ii-12]) ) THEN temp=temp*11
-;-----------------------------------------------------------------------------------------------------------------------------
-;Prime Factor: 13		Indicates DST value dropped at least DD2 nT in the previous "HH2L" hours
-;	IF ( (MAX(data_dst[ii-HH2L:ii])-data_dst[ii] GE 75) AND $
-;		 (MAX(data_dst[ii-HH2L:ii])-data_dst[ii] LE 79) ) THEN temp=temp*13
-;	IF ( (MAX(data_dst[ii-16:ii])-data_dst[ii] GE 60) AND $
-;		 (MAX(data_dst[ii-12:ii])-data_dst[ii] GE 55) ) THEN temp=temp*13
+  ;;-----------------------------------------------------------------------------------------------------------------------------
+  ;;Prime Factor: 13		Indicates DST value dropped at least DD2 nT in the previous "HH2L" hours
+  ;;	IF ( (MAX(data_dst[ii-HH2L:ii])-data_dst[ii] GE 75) AND $
+  ;;		 (MAX(data_dst[ii-HH2L:ii])-data_dst[ii] LE 79) ) THEN temp=temp*13
+  ;;	IF ( (MAX(data_dst[ii-16:ii])-data_dst[ii] GE 60) AND $
+  ;;		 (MAX(data_dst[ii-12:ii])-data_dst[ii] GE 55) ) THEN temp=temp*13
      IF (MAX(data_dst[ii-HH2L:ii])-data_dst[ii] GE DD2) THEN temp=temp*13 ;should be GE DD2
-;-----------------------------------------------------------------------------------------------------------------------------
-;Prime Factor: 17		Indicates DST value is NOT a repeat of a DST value in the previous 12 hours
-;	temp=temp*17												;test: use this line to allow storms to be ge 1 hour apart
-;	IF ( (data_dst[ii] NE data_dst[ii-1]) ) THEN temp=temp*17	;test: use this line to allow storms to be ge 2 hours apart
+  ;;-----------------------------------------------------------------------------------------------------------------------------
+  ;;Prime Factor: 17		Indicates DST value is NOT a repeat of a DST value in the previous 12 hours
+  ;;	temp=temp*17												;test: use this line to allow storms to be ge 1 hour apart
+  ;;	IF ( (data_dst[ii] NE data_dst[ii-1]) ) THEN temp=temp*17	;test: use this line to allow storms to be ge 2 hours apart
      IF ( (data_dst[ii] NE data_dst[ii-1]) AND $
           (data_dst[ii] NE data_dst[ii-2]) AND $
           (data_dst[ii] NE data_dst[ii-3]) AND $
@@ -213,17 +235,17 @@ PRO DST_STORMFINDER_V2__SPENCE_EDIT,arg1_julday,arg2_dst,arg3_storms,arg4_sstime
           (data_dst[ii] NE data_dst[ii-10]) AND $
           (data_dst[ii] NE data_dst[ii-11]) AND $
           (data_dst[ii] NE data_dst[ii-12]) ) THEN temp=temp*17
-;-----------------------------------------------------------------------------------------------------------------------------
-;Prime Factor: 19		Indicates the time is between the specified startdate/enddate
-;							(required since I load data from/through 7 days before/after the specified startdate/enddate)
+  ;;-----------------------------------------------------------------------------------------------------------------------------
+  ;;Prime Factor: 19		Indicates the time is between the specified startdate/enddate
+  ;;							(required since I load data from/through 7 days before/after the specified startdate/enddate)
      IF ( (data_jd[ii] GE jd_stadate) AND $
           (data_jd[ii] LE jd_enddate) ) THEN temp=temp*19
-;-----------------------------------------------------------------------------------------------------------------------------
+  ;;-----------------------------------------------------------------------------------------------------------------------------
      storms[ii]=temp		;store the temp index in the actual "storms" array
   ENDFOR
 
 
-;Create index arrays containing info on when a storm is identified
+  ;;Create index arrays containing info on when a storm is identified
   stti_sm = WHERE(		((storms mod   2) EQ 0) AND $ ; "STorm TImes SMall" = STTI_SM
                                 ((storms mod   5) EQ 0) AND $
                                 ((storms mod   7) EQ 0) AND $
@@ -236,51 +258,90 @@ PRO DST_STORMFINDER_V2__SPENCE_EDIT,arg1_julday,arg2_dst,arg3_storms,arg4_sstime
                                 ((storms mod  19) EQ 0)  ,/L64)
 
 
-;===IF=LOOP=OPEN============IF=LOOP=OPEN============IF=LOOP=OPEN============IF=LOOP=OPEN===
-;The folliwing IF segment prints out all the relevant info on the small and large storms
-  IF ( 1 ) THEN BEGIN
-     PRINT, ' '
-     PRINT, 'Small Storm Times'
-     PRINT, '#, Year, Month, Day, Hour, Minute, DST, Drop in DST in previous '+STRTRIM(HH2,2)+' hours'
-     jj = 0L
-     FOR jj=0,N_ELEMENTS(stti_sm)-1 DO $
-        PRINT,	STRTRIM(jj,2), $
-                data_year	[ stti_sm[jj] ], $
-                data_month	[ stti_sm[jj] ], $
-                data_day	[ stti_sm[jj] ], $
-                data_hour	[ stti_sm[jj] ], $
-                data_min	[ stti_sm[jj] ], $
-                data_dst	[ stti_sm[jj] ], 'nT', $
-                '  ('+STRTRIM(dst_drop_HH2[stti_sm[jj]],2)+'nT)'
-     PRINT, ' '
-     PRINT, '............'
-     PRINT, '............'
-     PRINT, '............'
-     PRINT, '............'
-     PRINT, ' '
-     PRINT, 'Large Storm Times'
-     PRINT, '#, Year, Month, Day, Hour, Minute, DST, Drop in DST in previous '+STRTRIM(HH2L,2)+' hours'
-     jj=0L
-     FOR jj=0,N_ELEMENTS(stti_lg)-1 DO $
-        PRINT,	STRTRIM(jj,2), $
-                data_year	[ stti_lg[jj] ], $
-                data_month	[ stti_lg[jj] ], $
-                data_day	[ stti_lg[jj] ], $
-                data_hour	[ stti_lg[jj] ], $
-                data_min	[ stti_lg[jj] ], $
-                data_dst	[ stti_lg[jj] ], 'nT', $
-                '  ('+STRTRIM(dst_drop_HH2L[stti_lg[jj]],2)+'nT)'
-     PRINT, '............'
-     PRINT, '............'
-     PRINT, '............'
-     PRINT, '............'
+  ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+  ;;Small storms
+  IF KEYWORD_SET(print_smallStorms_to_textFile) THEN BEGIN
+     PRINT,'Opening smallStorm file ...'
+     OPENW,smallLun,outDataDir+smallStormTxtFile,/GET_LUN
+  ENDIF ELSE BEGIN
+     smallLun = -1
+  ENDELSE
+
+
+  ;; PRINTF,smallLun, ' '
+  ;; PRINTF,smallLun, 'Small Storm Times'
+  PRINTF,smallLun, '#,     Year, Month, Day, Hour,' + $
+         'Minute, DST, Drop in DST in previous '+STRTRIM(HH2,2)+' hours'
+  format = '(I0,T8,I04,T18,I02,T24,I02,T30,I02,T36,' + $
+           'I02,T42,I-06,T50,I-06)'
+  jj = 0L
+  FOR jj=0,N_ELEMENTS(stti_sm)-1 DO $
+     PRINTF,smallLun,FORMAT=format, $
+            jj, $
+            data_year	[ stti_sm[jj] ], $
+            data_month	[ stti_sm[jj] ], $
+            data_day	[ stti_sm[jj] ], $
+            data_hour	[ stti_sm[jj] ], $
+            data_min	[ stti_sm[jj] ], $
+            data_dst	[ stti_sm[jj] ], $
+            dst_drop_HH2[ stti_sm[jj] ]
+     ;; PRINTF,smallLun,FORMAT=format, $
+     ;;        STRTRIM(jj,2), $
+     ;;        data_year	[ stti_sm[jj] ], $
+     ;;        data_month	[ stti_sm[jj] ], $
+     ;;        data_day	[ stti_sm[jj] ], $
+     ;;        data_hour	[ stti_sm[jj] ], $
+     ;;        data_min	[ stti_sm[jj] ], $
+     ;;        data_dst	[ stti_sm[jj] ], 'nT', $
+     ;;        '  ('+STRTRIM(dst_drop_HH2[stti_sm[jj]],2)+'nT)'
+
+
+  IF KEYWORD_SET(print_smallStorms_to_textFile) THEN BEGIN
+     CLOSE,smallLun
+     FREE_LUN,smallLun
   ENDIF
-;===IF=LOOP=CLOSE============IF=LOOP=CLOSE============IF=LOOP=CLOSE============IF=LOOP=CLOSE===
+
+  ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+  ;;Large storms
+  IF KEYWORD_SET(print_largeStorms_to_textFile) THEN BEGIN
+     PRINT,'Opening largeStorm file ...'
+     OPENW,largeLun,outDataDir+largeStormTxtFile,/GET_LUN
+  ENDIF ELSE BEGIN
+     largeLun = -1
+  ENDELSE
+  
+  ;; PRINTF,largeLun, 'Large Storm Times'
+  PRINTF,largeLun, '#, Year, Month, Day, Hour, Minute, DST, Drop in DST in previous '+STRTRIM(HH2L,2)+' hours'
+  jj = 0L
+  FOR jj=0,N_ELEMENTS(stti_lg)-1 DO $
+     PRINTF,largeLun,FORMAT=format, $
+            jj, $
+            data_year	[ stti_lg[jj] ], $
+            data_month	[ stti_lg[jj] ], $
+            data_day	[ stti_lg[jj] ], $
+            data_hour	[ stti_lg[jj] ], $
+            data_min	[ stti_lg[jj] ], $
+            data_dst	[ stti_lg[jj] ], $
+            dst_drop_HH2[ stti_lg[jj] ]
+     ;; PRINTF,largeLun,	STRTRIM(jj,2), $
+     ;;        data_year	[ stti_lg[jj] ], $
+     ;;        data_month	[ stti_lg[jj] ], $
+     ;;        data_day	[ stti_lg[jj] ], $
+     ;;        data_hour	[ stti_lg[jj] ], $
+     ;;        data_min	[ stti_lg[jj] ], $
+     ;;        data_dst	[ stti_lg[jj] ], 'nT', $
+     ;;        '  ('+STRTRIM(dst_drop_HH2L[stti_lg[jj]],2)+'nT)'
 
 
-;===IF=LOOP=OPEN============IF=LOOP=OPEN============IF=LOOP=OPEN============IF=LOOP=OPEN===
-;The following IF segment plots each small storm individually
-  IF ( 1 ) THEN BEGIN
+  IF KEYWORD_SET(print_largeStorms_to_textFile) THEN BEGIN
+     CLOSE,largeLun
+     FREE_LUN,largeLun
+  ENDIF
+
+
+
+  ;;The following IF segment plots each small storm individually
+  IF KEYWORD_SET(plot_smallStorms) THEN BEGIN
      HH3   = 168                    ;hours before event to plot DST
      HH4   = 168                    ;hours after event to plot DST
      wh_st = 0L                     ;"which storm"
@@ -327,12 +388,9 @@ PRO DST_STORMFINDER_V2__SPENCE_EDIT,arg1_julday,arg2_dst,arg3_storms,arg4_sstime
      PLOT, [0,10],[0,10]
      PLOT, [0,10],[0,10]
   ENDIF
-;===IF=LOOP=CLOSE============IF=LOOP=CLOSE============IF=LOOP=CLOSE============IF=LOOP=CLOSE===
 
-
-;===IF=LOOP=OPEN============IF=LOOP=OPEN============IF=LOOP=OPEN============IF=LOOP=OPEN===
-;The following IF segment plots each large storm individually
-  IF ( 1 ) THEN BEGIN
+  ;;The following IF segment plots each large storm individually
+  IF KEYWORD_SET(plot_largeStorms) THEN BEGIN
      HH3=168                    ;hours before event to plot DST
      HH4=168                    ;hours after event to plot DST
      wh_st = 0L                 ;"which storm"
@@ -378,12 +436,10 @@ PRO DST_STORMFINDER_V2__SPENCE_EDIT,arg1_julday,arg2_dst,arg3_storms,arg4_sstime
      ENDFOR
      PLOT, [0,10],[0,10]
   ENDIF
-;===IF=LOOP=CLOSE============IF=LOOP=CLOSE============IF=LOOP=CLOSE============IF=LOOP=CLOSE===
 
 
-;===IF=LOOP=OPEN============IF=LOOP=OPEN============IF=LOOP=OPEN============IF=LOOP=OPEN===
-;The following IF segment analyzes and plots the amount of time between storms
-  IF ( 1 ) THEN BEGIN
+  ;;The following IF segment analyzes and plots the amount of time between storms
+  IF KEYWORD_SET(plot_storm_tDiffs) THEN BEGIN
      times_sm = data_jd[stti_sm]
      times_lg = data_jd[stti_lg]
      times_sm_n = N_Elements(times_sm)
@@ -421,12 +477,10 @@ PRO DST_STORMFINDER_V2__SPENCE_EDIT,arg1_julday,arg2_dst,arg3_storms,arg4_sstime
            TITLE='LARGE Storms', XTITLE='hours between event and the previous event', YTITLE='large storm occurrence'
      PLOT, [1,2], [1,2]
   ENDIF
-;===IF=LOOP=CLOSE============IF=LOOP=CLOSE============IF=LOOP=CLOSE============IF=LOOP=CLOSE===
 
 
-;===IF=LOOP=OPEN============IF=LOOP=OPEN============IF=LOOP=OPEN============IF=LOOP=OPEN===
-;The following IF segment analyzes and plots the values of the DST Drops before each storm
-  IF ( 1 ) THEN BEGIN
+  ;;The following IF segment analyzes and plots the values of the DST Drops before each storm
+  IF KEYWORD_SET(plot_storm_DstDrop_hists) THEN BEGIN
      drop_sm_hist = HISTOGRAM(dst_drop_HH2[stti_sm], BINSIZE=1, /L64, LOCATIONS=drop_sm_locs)
      drop_lg_hist = HISTOGRAM(dst_drop_HH2L[stti_lg], BINSIZE=1, /L64, LOCATIONS=drop_lg_locs)
      PLOT, drop_sm_locs, drop_sm_hist, YSTYLE=1, YRANGE=[0,MAX(drop_sm_hist)+1], XSTYLE=1, XRANGE=[0,MAX(drop_sm_locs)+1], PSYM=2, $
@@ -439,10 +493,8 @@ PRO DST_STORMFINDER_V2__SPENCE_EDIT,arg1_julday,arg2_dst,arg3_storms,arg4_sstime
            TITLE='LARGE STORMS DST Drop Histogram', XTITLE='DST Drop (nT)', YTITLE='occurrence of storms'
      PLOT, [1,2], [1,2]
   ENDIF
-;===IF=LOOP=CLOSE============IF=LOOP=CLOSE============IF=LOOP=CLOSE============IF=LOOP=CLOSE===
 
-
-;Putting the important arrays into the output arguments
+  ;;Putting the important arrays into the output arguments
   arg1_julday   = data_jd
   arg2_dst      = data_dst
   arg3_storms   = storms
@@ -450,34 +502,31 @@ PRO DST_STORMFINDER_V2__SPENCE_EDIT,arg1_julday,arg2_dst,arg3_storms,arg4_sstime
   arg5_lgtimes  = stti_lg
 
 
-;===IF=LOOP=OPEN============IF=LOOP=OPEN============IF=LOOP=OPEN============IF=LOOP=OPEN===
-;The following IF segment saves the above 5 arguments into an IDL Save File
-  IF KEYWORD_SET(saveData) THEN BEGIN           ;CHANGE !!!
-;SAVE, data_jd, data_dst, storms, stti_sm, stti_lg, FILENAME=outDataDir+'dst_storm_finder/storm_times_final.sav'
+  ;;The following IF segment saves the above 5 arguments into an IDL Save File
+  IF KEYWORD_SET(saveData) THEN BEGIN
+  ;;SAVE, data_jd, data_dst, storms, stti_sm, stti_lg, FILENAME=outDataDir+'dst_storm_finder/storm_times_final.sav'
+     PRINT,"Saving to " + processedStormFile
      SAVE, data_jd, data_dst, storms, stti_sm, stti_lg, $
-           FILENAME=outDataDir+'stormCrap_1957-2011.sav' ;CHANGE !!!
+           FILENAME=outDataDir+processedStormFile
 
-;storms_30ntdrop = storms
-;stti_sm_30ntdrop = stti_sm
-;SAVE, storms_30ntdrop, stti_sm_30ntdrop, FILENAME=outDataDir+'dst_storm_finder/storm_times_final_only_small30ntdrop.sav'
+  ;;storms_30ntdrop = storms
+  ;;stti_sm_30ntdrop = stti_sm
+  ;;SAVE, storms_30ntdrop, stti_sm_30ntdrop, FILENAME=outDataDir+'dst_storm_finder/storm_times_final_only_small30ntdrop.sav'
 
   ENDIF
-;===IF=LOOP=CLOSE============IF=LOOP=CLOSE============IF=LOOP=CLOSE============IF=LOOP=CLOSE===
 
-
-;stop
-  IF (keyword_set(ps) eq 1) THEN BEGIN
+  IF KEYWORD_SET(ps) THEN BEGIN
      DEVICE, /CLOSE
      SET_PLOT, 'x'
   ENDIF
 
-;;Example code to plot all DST for a time and OPLOT all storms:
-;window, 0, TITLE='xwin0', xsize=1260, ysize=737, xpos=10, ypos=-792
-;loadct, 39
-;RESTORE, '~/IDLWorkspace83/data/dst2015/data_dst_2012-08-01_to_2015-05-11prepared.sav'
-;RESTORE: '~/IDLWorkspace83/dst_storm_finder/storm_times_rbsp_era/storm_times_2015-05-11.sav'
-;PLOT, (jul_day-julday(1,0,2013,0,0,0))/30., dstvalue, XSTYLE=1, XRANGE=[-5,29], YSTYLE=1, yrange=[-250,75]
-;FOR ii=0,N_Elements(stti_lg)-1 DO OPLOT, [0,0]+(data_jd[stti_lg[ii]]-julday(1,0,2013,0,0,0))/30.,[-300,100], COLOR=120
-;FOR ii=0,N_Elements(stti_sm)-1 DO OPLOT, [0,0]+(data_jd[stti_sm[ii]]-julday(1,0,2013,0,0,0))/30.,[-300,100], COLOR=250
+  ;;;Example code to plot all DST for a time and OPLOT all storms:
+  ;;window, 0, TITLE='xwin0', xsize=1260, ysize=737, xpos=10, ypos=-792
+  ;;loadct, 39
+  ;;RESTORE, '~/IDLWorkspace83/data/dst2015/data_dst_2012-08-01_to_2015-05-11prepared.sav'
+  ;;RESTORE: '~/IDLWorkspace83/dst_storm_finder/storm_times_rbsp_era/storm_times_2015-05-11.sav'
+  ;;PLOT, (jul_day-julday(1,0,2013,0,0,0))/30., DstValue, XSTYLE=1, XRANGE=[-5,29], YSTYLE=1, yrange=[-250,75]
+  ;;FOR ii=0,N_Elements(stti_lg)-1 DO OPLOT, [0,0]+(data_jd[stti_lg[ii]]-julday(1,0,2013,0,0,0))/30.,[-300,100], COLOR=120
+  ;;FOR ii=0,N_Elements(stti_sm)-1 DO OPLOT, [0,0]+(data_jd[stti_sm[ii]]-julday(1,0,2013,0,0,0))/30.,[-300,100], COLOR=250
 
 END
