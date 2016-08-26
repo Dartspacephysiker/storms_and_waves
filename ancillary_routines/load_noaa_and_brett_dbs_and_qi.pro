@@ -5,28 +5,51 @@ PRO LOAD_NOAA_AND_BRETT_DBS_AND_QI,stormStruct,SSC1,SSC2,qi, $
                                    DB_BRETT=DB_Brett, $
                                    DB_NOAA=DB_NOAA, $
                                    INDS_FILE=inds_file, $
-                                   DO_BEF_NOV1999_FILE=DO_bef_nov1999_file, $
+                                   DO_BEF_NOV1999_FILE=bef_nov1999_file, $
+                                   FULLMONTY_BRETTDB=fullMonty_brettDB, $
                                    LUN=lun
 
   IF N_ELEMENTS(lun) EQ 0 THEN lun = -1
 
-  DBDIR = '/home/spencerh/Research/database/storm_data/'
-  DB_Brett = 'large_and_small_storms--1985-2011--Anderson.sav'
-  DB_NOAA = 'SSC_dbs--storm2_mods.txt__STORM2_MODS.SSC--idl.sav'
+  DBDir        = '/home/spencerh/Research/database/storm_data/'
+  DB_Brett     = 'large_and_small_storms--1985-2011--Anderson.sav'
+  DB_fullMonty = 'large_and_small_storms--1957-2011--Anderson.sav'
 
-  inds_file = 'large_and_small_storms--Oct1996-Oct2000--indices_for_four_quadrants--Anderson.sav'
+  DB_NOAA      = 'SSC_dbs--storm2_mods.txt__STORM2_MODS.SSC--idl.sav'
+
+  ;;Files with storm indices
+  inds_file           = 'large_and_small_storms--Oct1996-Oct2000--indices_for_four_quadrants--Anderson.sav'
   inds_file_bef_nov99 = 'large_and_small_storms--Oct1996-Nov1999--indices_for_four_quadrants--Anderson.sav'
 
+  CASE 1 OF
+     KEYWORD_SET(fullMonty_brettDB): BEGIN
+        dbFile = DB_fullMonty
+        name   = 'Full-Montied stormStruct'
+     END
+     ELSE: BEGIN
+        dbFile = DB_Brett
+        name   = 'stormStruct'
+     END
+  ENDCASE
+
   IF N_ELEMENTS(stormStruct) EQ 0 THEN BEGIN
-     PRINT,"Restoring " + DB_Brett + "..."
-     IF FILE_TEST(DBDir+DB_Brett) THEN RESTORE,DBDir+DB_Brett
+     PRINT,"Restoring " + DbFile + "..."
+     IF FILE_TEST(DBDir+DbFile) THEN BEGIN
+        RESTORE,DBDir+DbFile
+     ENDIF
+        
      IF stormStruct EQ !NULL THEN BEGIN
-        PRINT,"Couldn't load Brett's stormStruct!"
+        PRINT,"Couldn't load Brett's " + name + "!"
         STOP
      ENDIF
   ENDIF ELSE BEGIN
-     PRINTF,lun,"There is already a stormStruct loaded! Not loading " + DB_Brett
+     PRINTF,lun,"There is already a stormStruct loaded! Not loading " + dbFile
   ENDELSE
+
+  IF KEYWORD_SET(fullMonty_brettDB) THEN BEGIN
+     PRINT,"I don't have pre-1985 SSC data. No SSC or quadrant info for you."
+     RETURN
+  ENDIF
 
   IF N_ELEMENTS(SSC1) EQ 0 OR N_ELEMENTS(SSC2) EQ 0 THEN BEGIN
      PRINT,"Restoring " + DB_NOAA + "..."
@@ -40,7 +63,7 @@ PRO LOAD_NOAA_AND_BRETT_DBS_AND_QI,stormStruct,SSC1,SSC2,qi, $
   ENDELSE
 
   IF N_ELEMENTS(qi) EQ 0 THEN BEGIN
-     IF KEYWORD_SET(do_bef_nov1999_file) THEN BEGIN
+     IF KEYWORD_SET(bef_nov1999_file) THEN BEGIN
         PRINT,'Only getting storms bef Nov 1999!'
         indF = inds_file_bef_nov99
      ENDIF ELSE BEGIN
@@ -57,6 +80,6 @@ PRO LOAD_NOAA_AND_BRETT_DBS_AND_QI,stormStruct,SSC1,SSC2,qi, $
      PRINTF,lun,"qi (four-storm-quadrant indices) already loaded! Not loading " + indF
   ENDELSE
 
-  RESTORE,DBDIR+indF
+  RESTORE,DBDir+indF
 
 END
