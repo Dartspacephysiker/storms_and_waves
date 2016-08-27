@@ -6,6 +6,9 @@ FUNCTION PLOT_STORMPERIOD_RATIOS__TIME_SERIES,stormRatStruct, $
    TITLE=title, $
    NO_TIME_LABEL=no_time_label, $
    CURRENT=window, $
+   LAYOUT=layout, $
+   POSITION=position, $
+   BUFFER=buffer, $
    SAVEPLOT=savePlot, $
    SPNAME=sPName, $
    PLOTDIR=plotDir, $
@@ -95,6 +98,9 @@ FUNCTION PLOT_STORMPERIOD_RATIOS__TIME_SERIES,stormRatStruct, $
                                    ;; NBARS=nBars, $
                                    FILL_COLOR=colorArr[iPlot], $
                                    ;; BOTTOM_COLOR=bottom_color, $
+                                   LAYOUT=layout, $
+                                   POSITION=position, $
+                                   BUFFER=buffer, $
                                    OVERPLOT=iPlot GT 0, $
                                    CURRENT=window)
      

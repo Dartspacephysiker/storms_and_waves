@@ -69,6 +69,7 @@ FUNCTION GET_DST_STATISTICS__TIMESERIES__FROM_STORMSTRUCT,stormStruct, $
         stormType = 'BOTH'
      END
   ENDCASE
+  nStormStr      = STRCOMPRESS(nStorm,/REMOVE_ALL)
 
   IF KEYWORD_SET(t1_UTC) AND KEYWORD_SET(t2_UTC) THEN BEGIN
      earliest_julDay     = UTC_TO_JULDAY(t1_UTC)
@@ -125,14 +126,23 @@ FUNCTION GET_DST_STATISTICS__TIMESERIES__FROM_STORMSTRUCT,stormStruct, $
   ;;First get the totals
   tmpStats   = GET_DST_STATISTICS_FROM_STORMSTRUCT(stormStruct,storm_i, $
                                                    BPD__DSTMIN_OUTLIERS=BPDMinOutliers, $
-                                                   BPD__DSTDROP_OUTLIERS=BPDDropOutliers)
+                                                   BPD__DSTDROP_OUTLIERS=BPDDropOutliers, $
+                                                   BPD__DSTMIN_SUSPECTED_OUTLIERS=BPDMinSusOutliers, $
+                                                   BPD__DSTDROP_SUSPECTED_OUTLIERS=BPDDropSusOutliers)
+
+  ;;String for the totals
+  CALDAT,earliest_julDay,!NULL,!NULL,earlyYear
+  CALDAT,latest_julDay,!NULL,!NULL,lateYear
+  totString  = STRING(FORMAT='(I0,"–",I0)',earlyYear,lateYear)
 
   totalMin   =  {BPD     : tmpStats[0].BPD, $
                  moment  : TRANSPOSE(tmpStats[0].mom), $
-                 BPD_CI  : tmpStats[0].ci_BPD}
+                 BPD_CI  : tmpStats[0].ci_BPD, $
+                 name    : totString}
   totalDrop  =  {BPD     : tmpStats[1].BPD, $
                  moment  : TRANSPOSE(tmpStats[1].mom), $
-                 BPD_CI  : tmpStats[1].ci_BPD}
+                 BPD_CI  : tmpStats[1].ci_BPD, $
+                 name    : totString}
   
   ;; totalDstMin_BPD  = 
   ;; totalDstDrop_BPD = tmpStats[1].BPD
@@ -174,9 +184,11 @@ FUNCTION GET_DST_STATISTICS__TIMESERIES__FROM_STORMSTRUCT,stormStruct, $
 
      tmpStats = GET_DST_STATISTICS_FROM_STORMSTRUCT(stormStruct,tmp_i, $
                                                     ;; BPD__DSTMIN_MEAN=BPDMinMean, $
-                                                    BPD__DSTMIN_OUTLIERS=BPDMinOutliers, $
                                                     ;; BPD__DSTDROP_MEAN=BPDDropMean, $
-                                                    BPD__DSTDROP_OUTLIERS=BPDDropOutliers)
+                                                    BPD__DSTMIN_OUTLIERS=BPDMinOutliers, $
+                                                    BPD__DSTDROP_OUTLIERS=BPDDropOutliers, $
+                                                    BPD__DSTMIN_SUSPECTED_OUTLIERS=BPDMinSusOutliers, $
+                                                    BPD__DSTDROP_SUSPECTED_OUTLIERS=BPDDropSusOutliers)
 
      DstMinBPD  = [[DstMinBPD] ,[TRANSPOSE(tmpStats[0].BPD)]]
      DstDropBPD = [[DstDropBPD],[TRANSPOSE(tmpStats[1].BPD)]]
@@ -199,10 +211,14 @@ FUNCTION GET_DST_STATISTICS__TIMESERIES__FROM_STORMSTRUCT,stormStruct, $
              n         : nArr, $
              min       : {BPD     : DstMinBPD, $
                           moment  : DstMinMom, $
-                          CI_list : DstMinCIList}, $
-             drop      : {BPD    : DstDropBPD, $
+                          CI_list : DstMinCIList, $
+                          name    : KEYWORD_SET(stormMinName) ? $
+                                    stormMinName  : nStormStr + ' ' + stormType + ' Storms'}, $
+             drop      : {BPD     : DstDropBPD, $
                           moment  : DstDropMom, $
-                          CI_list : DstDropCIList}, $
+                          CI_list : DstDropCIList, $
+                          name    : KEYWORD_SET(stormDropName) ? $
+                                    stormDropName : nStormStr + ' ' + stormType + ' Storms'}, $
              totalMin  : totalMin, $
              totalDrop : totalDrop $
                }

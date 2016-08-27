@@ -1,10 +1,12 @@
 ;;08/26/16
 FUNCTION GET_DST_STATISTICS_FROM_STORMSTRUCT,stormStruct, $
    storm_i, $
-   ;; BPD__DSTMIN_MEAN=BPDMinMean, $
    BPD__DSTMIN_OUTLIERS=BPDMinOutliers, $
-   ;; BPD__DSTDROP_MEAN=BPDDropMean, $
-   BPD__DSTDROP_OUTLIERS=BPDDropOutliers
+   BPD__DSTDROP_OUTLIERS=BPDDropOutliers, $
+   BPD__DSTMIN_SUSPECTED_OUTLIERS=BPDMinSusOutliers, $
+   BPD__DSTDROP_SUSPECTED_OUTLIERS=BPDDropSusOutliers
+  ;; BPD__DSTMIN_MEAN=BPDMinMean, $
+  ;; BPD__DSTDROP_MEAN=BPDDropMean, $
   ;; RESTRICT_WITH_THESE_I=restrict_i
 
   COMPILE_OPT IDL2
@@ -21,7 +23,8 @@ FUNCTION GET_DST_STATISTICS_FROM_STORMSTRUCT,stormStruct, $
      DstMinBPD       = CREATEBOXPLOTDATA(stormStruct.Dst[storm_i], $
                                          CI_VALUES=ci_minVals, $
                                          MEAN_VALUES=BPDMinMean, $
-                                         OUTLIER_VALUES=BPDMinOutliers)
+                                         OUTLIER_VALUES=BPDMinOutliers, $
+                                         SUSPECTED_OUTLIER_VALUES=BPDMinSusOutliers)
   ENDIF ELSE BEGIN
      DstMinBPD       = MAKE_ARRAY(1,5,VALUE=0)
      ;; BPDMinMean      = 0
@@ -49,7 +52,8 @@ FUNCTION GET_DST_STATISTICS_FROM_STORMSTRUCT,stormStruct, $
      DstDropBPD      = CREATEBOXPLOTDATA(stormStruct.drop_in_Dst[storm_i], $
                                          CI_VALUES=ci_dropVals, $
                                          MEAN_VALUES=BPDDropMean, $
-                                         OUTLIER_VALUES=BPDDropOutliers)
+                                         OUTLIER_VALUES=BPDDropOutliers, $
+                                         SUSPECTED_OUTLIER_VALUES=BPDDropSusOutliers)
   ENDIF ELSE BEGIN
      DstDropBPD       = MAKE_ARRAY(1,5,VALUE=0)
      ;; BPDDropMean      = 0
@@ -64,7 +68,7 @@ FUNCTION GET_DST_STATISTICS_FROM_STORMSTRUCT,stormStruct, $
   ;;                     moments : DstMinMom, $
   ;;                     name    : "Dst drop (nT)"}
   DstDrop          = {BPD     : DstDropBPD, $
-                     ci_BPD  : ci_dropVals, $
+                      ci_BPD  : ci_dropVals, $
                       mom     : DstDropMom, $
                       badBPD  : ~include_BPD, $
                       name    : "Dst drop (nT)"}
