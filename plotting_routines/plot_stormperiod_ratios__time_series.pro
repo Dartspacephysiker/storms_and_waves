@@ -8,6 +8,8 @@ FUNCTION PLOT_STORMPERIOD_RATIOS__TIME_SERIES,stormRatStruct, $
    CURRENT=window, $
    LAYOUT=layout, $
    POSITION=position, $
+   MARGIN=margin, $
+   CLIP=clip, $
    BUFFER=buffer, $
    SAVEPLOT=savePlot, $
    SPNAME=sPName, $
@@ -28,8 +30,7 @@ FUNCTION PLOT_STORMPERIOD_RATIOS__TIME_SERIES,stormRatStruct, $
   ENDIF
   
   nPlots          = 3
-  plotArr         = MAKE_ARRAY(3,/OBJ)
-  plotMargin      = [0.15, 0.25, 0.15, 0.15]
+  plotArr         = MAKE_ARRAY(nPlots,/OBJ)
 
   ;; plotNames       = ['Broadband','Monoenergetic','Diffuse']
   plotNames       = ['Quiescent','Main','Recovery']
@@ -100,6 +101,8 @@ FUNCTION PLOT_STORMPERIOD_RATIOS__TIME_SERIES,stormRatStruct, $
                                    ;; BOTTOM_COLOR=bottom_color, $
                                    LAYOUT=layout, $
                                    POSITION=position, $
+                                   MARGIN=margin, $
+                                   CLIP=clip, $
                                    BUFFER=buffer, $
                                    OVERPLOT=iPlot GT 0, $
                                    CURRENT=window)
