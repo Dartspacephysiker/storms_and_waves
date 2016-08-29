@@ -47,19 +47,21 @@ FUNCTION BOXPLOT_DSTMIN_STATISTICS,BPD, $
   extras = N_ELEMENTS(include_extras) GT 0 ? include_extras : 1
 
   IF KEYWORD_SET(extras) THEN BEGIN
-     EXTRACT_BOXPLOT_EXTRAS__DST_STATISTICS,BPD, $
-                                            CI_VALUES=ci_values, $
-                                            MEAN_VALUES=mean_values, $
-                                            OUTLIER_VALUES=outlier_values, $
-                                            SUSPECTED_OUTLIER_VALUES=suspected_outlier_values, $
-                                            EXCLUDE_MEAN_VALUES=exclude_mean_values, $          
-                                            EXCLUDE_CI_VALUES=exclude_ci_values, $              
-                                            EXCLUDE_OUTLIER_VALUES=exclude_outlier_values, $         
-                                            EXCLUDE_SUSPECTED_OUTLIER_VALUES=exclude_suspected_outlier_values
+     EXTRACT_BOXPLOT_EXTRAS__DST_STATISTICS, $
+        BPD, $
+        CI_VALUES=ci_values, $
+        MEAN_VALUES=mean_values, $
+        OUTLIER_VALUES=outlier_values, $
+        SUSPECTED_OUTLIER_VALUES=suspected_outlier_values, $
+        EXCLUDE_MEAN_VALUES=exclude_mean_values, $          
+        EXCLUDE_CI_VALUES=exclude_ci_values, $              
+        EXCLUDE_OUTLIER_VALUES=exclude_outlier_values, $         
+        EXCLUDE_SUSPECTED_OUTLIER_VALUES=exclude_suspected_outlier_values
   ENDIF
   
 
-  boxPlot = BOXPLOT(xLocs,BPD.data, $
+  boxPlot = BOXPLOT(xLocs, $
+                    BPD.data, $
                     TITLE=plotTitle, $
                     XRANGE=xRange, $
                     YRANGE=yRange, $

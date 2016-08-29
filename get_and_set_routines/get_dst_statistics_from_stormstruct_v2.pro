@@ -14,6 +14,12 @@ FUNCTION GET_DST_STATISTICS_FROM_STORMSTRUCT_V2,stormStruct, $
      include_BPD = 0
   ENDELSE
 
+  IF N_ELEMENTS(storm_i) EQ 0 THEN BEGIN
+     include_Mom = 0
+  ENDIF ELSE BEGIN
+     include_mom = 1
+  ENDELSE
+
   ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
   ;;DstMin statistics
   IF include_BPD THEN BEGIN
@@ -24,13 +30,18 @@ FUNCTION GET_DST_STATISTICS_FROM_STORMSTRUCT_V2,stormStruct, $
                                          SUSPECTED_OUTLIER_VALUES=BPDMinSusOutliers)
   ENDIF ELSE BEGIN
      DstMinBPD       = MAKE_ARRAY(1,5,VALUE=0)
+     DstMinBPD[0,2]  = N_ELEMENTS(storm_i) GT 0 ? MEDIAN(stormStruct.Dst[storm_i]) : 0
      ;; BPDMinMean      = 0
      ci_minVals      = MAKE_ARRAY(2,VALUE=0)
      BPDMinMean      = 0
      BPDMinOutliers  = 0
   ENDELSE
 
-  DstMinMom       = MOMENT(stormStruct.Dst[storm_i])
+  IF include_mom THEN BEGIN
+     DstMinMom    = MOMENT(stormStruct.Dst[storm_i])
+  ENDIF ELSE BEGIN
+     DstMinMom    = MAKE_ARRAY(4,VALUE=0)
+  ENDELSE
 
   tmpExtra        =  {ci_values   : ci_minVals, $
                       mean_values : BPDMinMean}
@@ -74,11 +85,18 @@ FUNCTION GET_DST_STATISTICS_FROM_STORMSTRUCT_V2,stormStruct, $
                                          SUSPECTED_OUTLIER_VALUES=BPDDropSusOutliers)
   ENDIF ELSE BEGIN
      DstDropBPD       = MAKE_ARRAY(1,5,VALUE=0)
+     DstDropBPD[0,2]  = N_ELEMENTS(storm_i) GT 0 ? MEDIAN(stormStruct.drop_in_Dst[storm_i]) : 0
      ci_DropVals      = MAKE_ARRAY(2,VALUE=0)
      BPDDropMean      = 0
      BPDDropOutliers  = 0
   ENDELSE
-  DstDropMom      = MOMENT(stormStruct.drop_in_Dst[storm_i])
+
+  IF include_mom THEN BEGIN
+     DstDropMom   = MOMENT(stormStruct.drop_in_Dst[storm_i])
+  ENDIF ELSE BEGIN
+     DstDropMom   = MAKE_ARRAY(4,VALUE=0)
+  ENDELSE
+  
 
   tmpExtra        =  {ci_values   : ci_DropVals, $
                       mean_values : BPDDropMean}

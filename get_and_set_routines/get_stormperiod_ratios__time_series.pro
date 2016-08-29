@@ -1,5 +1,6 @@
 ;2016/08/24
-FUNCTION GET_STORMPERIOD_RATIOS__TIME_SERIES, $
+FUNCTION GET_STORMPERIOD_RATIOS__TIME_SERIES,Dst, $
+   INCLUDE_STATISTICS=include_statistics, $
    NMONTHS_PER_CALC=monthInterval, $
    NDAYS_PER_CALC=dayInterval, $
    NYEARS_PER_CALC=yearInterval, $
@@ -14,25 +15,29 @@ FUNCTION GET_STORMPERIOD_RATIOS__TIME_SERIES, $
 
   COMPILE_OPT idl2
 
-  deltaMin = 0.00069444444444444447D ;;The length of 1 min in units of days
+  deltaMin       = 0.00069444444444444447D ;;The length of 1 min in units of days
 
-  LOAD_DST_AE_DBS,Dst,ae,LUN=lun, $
-                  DST_AE_DIR=Dst_AE_dir, $
-                  DST_AE_FILE=Dst_AE_file, $
-                  FULL_DST_DB=full_Dst_DB
+  include_stats  = N_ELEMENTS(include_statistics) GT 0 ? include_statistics :  1
+
+  IF N_ELEMENTS(Dst) EQ 0 THEN BEGIN
+     LOAD_DST_AE_DBS,Dst,ae,LUN=lun, $
+                     DST_AE_DIR=Dst_AE_dir, $
+                     DST_AE_FILE=Dst_AE_file, $
+                     FULL_DST_DB=full_Dst_DB
+  ENDIF
 
   IF KEYWORD_SET(t1_UTC) AND KEYWORD_SET(t2_UTC) THEN BEGIN
      ;; earliest_UTC        = t1_UTC
      ;; latest_UTC          = t2_UTC
-     earliest_julDay     = UTC_TO_JULDAY(t1_UTC)
-     latest_julDay       = UTC_TO_JULDAY(t2_UTC)
+     earliest_julDay        = UTC_TO_JULDAY(t1_UTC)
+     latest_julDay          = UTC_TO_JULDAY(t2_UTC)
   ENDIF ELSE BEGIN
      IF KEYWORD_SET(t1_julDay) AND KEYWORD_SET(t2_julDay) THEN BEGIN
-        earliest_julDay  = t1_julDay
-        latest_julDay    = t2_julDay
+        earliest_julDay     = t1_julDay
+        latest_julDay       = t2_julDay
      ENDIF ELSE BEGIN
         PRINT,'No input time provided! Assuming I should just do them all ...'
-        calc_all_times   = 1
+        calc_all_times      = 1
      ENDELSE
   ENDELSE
 
@@ -43,21 +48,21 @@ FUNCTION GET_STORMPERIOD_RATIOS__TIME_SERIES, $
            latest_julDay    = Dst.julDay[-1]
         END
         ELSE: BEGIN
-           ;; earliest_UTC     = Dst.time[0]
-           ;; latest_UTC       = Dst.time[-1]
+           ;; earliest_UTC  = Dst.time[0]
+           ;; latest_UTC    = Dst.time[-1]
            earliest_julDay  = UTC_TO_JULDAY(Dst.time[0])
            latest_julDay    = UTC_TO_JULDAY(Dst.time[-1])
         END
      ENDCASE
   ENDIF
 
-  timeArr = TIMEGEN_EASIER(earliest_julDay,latest_julDay, $
-                           NMONTHS_PER_CALC=monthInterval, $
-                           NDAYS_PER_CALC=dayInterval, $
-                           NYEARS_PER_CALC=yearInterval, $
-                           NHOURS_PER_CALC=hourInterval, $
-                           OUT_MAXSEP=maxSep)
-
+  ;;Now handle times
+  timeArr    = TIMEGEN_EASIER(earliest_julDay,latest_julDay, $
+                              NMONTHS_PER_CALC=monthInterval, $
+                              NDAYS_PER_CALC=dayInterval, $
+                              NYEARS_PER_CALC=yearInterval, $
+                              NHOURS_PER_CALC=hourInterval, $
+                              OUT_MAXSEP=maxSep)
   
   ;;Make sure we're not missing out on the last possibility for a data point
   IF (latest_julDay-timeArr[-1]) GT maxSep THEN BEGIN
@@ -128,11 +133,13 @@ FUNCTION GET_STORMPERIOD_RATIOS__TIME_SERIES, $
      STOP
   ENDIF
 
-  nsRatArr[nz_i]   = FLOAT(nNSArr[nz_i])/nTotArr[nz_i]
-  spRatArr[nz_i]   = FLOAT(nSPArr[nz_i])/nTotArr[nz_i]
-  mpRatArr[nz_i]   = FLOAT(nMPArr[nz_i])/nTotArr[nz_i]
-  rpRatArr[nz_i]   = FLOAT(nRPArr[nz_i])/nTotArr[nz_i]
+  ;;Calculate ratios of each storm phase
+  nsRatArr[nz_i] = FLOAT(nNSArr[nz_i])/nTotArr[nz_i]
+  spRatArr[nz_i] = FLOAT(nSPArr[nz_i])/nTotArr[nz_i]
+  mpRatArr[nz_i] = FLOAT(nMPArr[nz_i])/nTotArr[nz_i]
+  rpRatArr[nz_i] = FLOAT(nRPArr[nz_i])/nTotArr[nz_i]
 
+  ;;Make the final struct
   stormRatStruct = {times      :finalJul, $
                     nIntervals : nIntervals, $    
                     nDays      : nDays, $
@@ -145,7 +152,19 @@ FUNCTION GET_STORMPERIOD_RATIOS__TIME_SERIES, $
                     spRatio    : spRatArr, $
                     mpRatio    : mpRatArr, $
                     rpRatio    : rpRatArr, $
-                    nMissedArr : nMissedArr}
+                    nMissedArr : nMissedArr $ ;, $
+                    ;; stats      : {BPD     : {data    : StormRatBPD, $
+                    ;;                          extras  : StormRatBPDList, $
+                    ;;                          bad     : StormRatBadBPD}, $
+                    ;;               moment  : StormRatMom, $
+                    ;;               name    : KEYWORD_SET(stormRatNames) ? $
+                    ;;               stormRatNames : ['Quiescent','Main','Recovery']} $
+                   }
+
+  IF KEYWORD_SET(include_stats) THEN BEGIN
+     stats       = GET_STORMRATIO_STATISTICS_FROM_STORMRATIOSTRUCT(stormRatStruct, $
+                                                                   /ADD_TO_STRUCT)
+  ENDIF
 
   RETURN,stormRatStruct
 

@@ -149,7 +149,8 @@ FUNCTION GET_DST_STATISTICS_TIMESERIES_FROM_STORMSTRUCT,stormStruct, $
      
      IF nTmp EQ 0 THEN BEGIN
         IF KEYWORD_SET(verbose) THEN PRINT,'No data for this period, most unfortunately...'
-        CONTINUE
+        ;; CONTINUE
+        tmp_i       = !NULL
      ENDIF ELSE BEGIN
         tmp_i       = storm_i[tmp_ii]
         nArr[iTime] = nTmp
@@ -178,6 +179,7 @@ FUNCTION GET_DST_STATISTICS_TIMESERIES_FROM_STORMSTRUCT,stormStruct, $
   DstStats = { $
              times     : julTimes, $
              n         : nArr, $
+
              min       : {BPD     : {data    : DstMinBPD, $
                                      extras  : DstMinBPDList, $
                                      bad     : DstMinBadBPD}, $
@@ -191,6 +193,7 @@ FUNCTION GET_DST_STATISTICS_TIMESERIES_FROM_STORMSTRUCT,stormStruct, $
                           moment  : DstDropMom, $
                           name    : KEYWORD_SET(stormDropName) ? $
                                     stormDropName : nStormStr + ' ' + stormType + ' Storms'}, $
+
              totalMin  : totalMin, $
              totalDrop : totalDrop $
                }

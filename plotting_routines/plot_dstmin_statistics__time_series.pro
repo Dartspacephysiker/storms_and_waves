@@ -1,5 +1,6 @@
 ;;08/27/16
 FUNCTION PLOT_DSTMIN_STATISTICS__TIME_SERIES,BPD,times, $
+   SUPPRESS_LINEPLOT=suppress_line, $
    SCATTERDATA=scatterData, $
    SCATTERSYMBOL=scatterSymbol, $
    SCATTERSYMCOLOR=scatterSymColor, $
@@ -10,12 +11,18 @@ FUNCTION PLOT_DSTMIN_STATISTICS__TIME_SERIES,BPD,times, $
    EXCLUDE_CI_VALUES=exclude_ci_values, $              
    EXCLUDE_OUTLIER_VALUES=exclude_outlier_values, $         
    EXCLUDE_SUSPECTED_OUTLIER_VALUES=exclude_suspected_outlier_values, $
+   COLOR=color, $
    ADD_LEGEND=add_legend, $
    NXTICKS=nXTicks, $
    FULL_DST_DB=full_Dst_DB, $
    YLOG=yLog, $
    YRANGE=yRange, $
+   XSHOWTEXT=xShowText, $
+   XTHICK=xThick, $
+   YTHICK=yThick, $
+   XMINOR=xMinor, $
    LINESTYLE=lineStyle, $
+   THICK=thick, $
    TITLE=title, $
    NAME=name, $
    NO_TIME_LABEL=no_time_label, $
@@ -33,13 +40,14 @@ FUNCTION PLOT_DSTMIN_STATISTICS__TIME_SERIES,BPD,times, $
 
   COMPILE_OPT IDL2
 
-  ;;Now plots
+  @plot_stormstats_defaults.pro
+
   ;;Window?
   IF ~ISA(window) THEN BEGIN
      window       = WINDOW(DIMENSIONS=[1000,800])
   ENDIF
   
-  nPlots          = 1 + KEYWORD_SET(scatterData)
+  nPlots          = ~KEYWORD_SET(suppress_line) + KEYWORD_SET(scatterData)
   plotArr         = MAKE_ARRAY(nPlots,/OBJ)
 
   ;;Get good boxplot indices
@@ -68,11 +76,10 @@ FUNCTION PLOT_DSTMIN_STATISTICS__TIME_SERIES,BPD,times, $
 
   ENDIF
 
-  ;; xRange          = [000,4500]
-  yRange          = KEYWORD_SET(yRange) ? yRange : [MIN(BPD.data[0,*]),-15]
-
-  ;; xTickValues     = [500,1000,1500,2000,2500,3000,3500,4000,4500]
-  ;; xTickName       = STRCOMPRESS(xTickValues,/REMOVE_ALL)
+  IF ~KEYWORD_SET(overplot) THEN BEGIN
+     yRange          = KEYWORD_SET(yRange) ? $
+                       yRange : [MIN(BPD.data[0,*]),-15]
+  ENDIF
 
   CASE 1 OF
      KEYWORD_SET(no_time_label) OR (N_ELEMENTS(times) EQ 0): BEGIN
@@ -83,7 +90,7 @@ FUNCTION PLOT_DSTMIN_STATISTICS__TIME_SERIES,BPD,times, $
         ;; dummy           = LABEL_DATE(DATE_FORMAT=['%D-%M','%Y'])
         dummy           = LABEL_DATE(DATE_FORMAT=['%Y'])
         x_values        = MEAN(times,/DOUBLE,DIMENSION=1)
-        ;; xRange          = [MIN(x_values),MAX(x_values)]
+        xRange          = [MIN(x_values),MAX(x_values)]
      END
   ENDCASE
 
@@ -92,31 +99,44 @@ FUNCTION PLOT_DSTMIN_STATISTICS__TIME_SERIES,BPD,times, $
                            STEP_SIZE=10)
   ENDIF
 
-  FOR iPlot=0,nPlots-1 DO BEGIN
+  FOR iPlot=(0-KEYWORD_SET(suppress_line)),nPlots-1 DO BEGIN
 
 
      ;; PRINT,'Doing' + plotNames[i] + '...'
 
-     plotArr[iPlot]      = PLOT(x_values[goodBP_i], $
-                                BPD.data[2,goodBP_i], $
-                                XRANGE=xRange, $
-                                YRANGE=yRange, $
-                                NAME=KEYWORD_SET(name) ? name[iPlot] : !NULL, $
-                                YTITLE='Dst minimum (nT)', $
-                                XMAJOR=nXTicks, $
-                                XTICKVALUES=xTickValues, $
-                                XTICKFORMAT=KEYWORD_SET(no_time_label) ? $
-                                !NULL : 'LABEL_DATE', $
-                                XTICKUNITS=KEYWORD_SET(no_time_label) ? $
-                                !NULL : 'Time', $
-                                FILL_COLOR=fill_color, $
-                                LAYOUT=layout, $
-                                POSITION=position, $
-                                MARGIN=margin, $
-                                CLIP=clip, $
-                                BUFFER=buffer, $
-                                OVERPLOT=overplot, $
-                                CURRENT=window)
+     IF ~KEYWORD_SET(suppress_line) THEN BEGIN
+        plotArr[iPlot]      = PLOT(x_values[goodBP_i], $
+                                   BPD.data[2,goodBP_i], $
+                                   XRANGE=xRange, $
+                                   YRANGE=yRange, $
+                                   NAME=KEYWORD_SET(name) ? name[iPlot] : !NULL, $
+                                   YTITLE='Dst minimum (nT)', $
+                                   XMAJOR=nXTicks, $
+                                   XMINOR=xMinor, $
+                                   XTICKVALUES=xTickValues, $
+                                   XTICKFORMAT=KEYWORD_SET(no_time_label) ? $
+                                   !NULL : 'LABEL_DATE', $
+                                   XTICKUNITS=KEYWORD_SET(no_time_label) ? $
+                                   !NULL : 'Time', $
+                                   XTICKFONT_SIZE=xTickFont_size, $
+                                   XTICKFONT_STYLE=xTickFont_style, $
+                                   YTICKFONT_SIZE=yTickFont_size, $
+                                   YTICKFONT_STYLE=yTickFont_style, $
+                                   XSHOWTEXT=xShowText, $
+                                   XTHICK=xThick, $
+                                   YTHICK=yThick, $
+                                   COLOR=color, $
+                                   LINESTYLE=lineStyle, $
+                                   THICK=thick, $
+                                   FILL_COLOR=fill_color, $
+                                   LAYOUT=layout, $
+                                   POSITION=position, $
+                                   MARGIN=margin, $
+                                   CLIP=clip, $
+                                   BUFFER=buffer, $
+                                   OVERPLOT=overplot, $
+                                   CURRENT=window)
+     ENDIF
      
      
      IF KEYWORD_SET(scatterData) THEN BEGIN
@@ -124,21 +144,32 @@ FUNCTION PLOT_DSTMIN_STATISTICS__TIME_SERIES,BPD,times, $
 
         plotArr[iPlot] = PLOT(scatterData[0,*], $
                               scatterData[1,*], $
+                              YRANGE=yRange, $
                               SYMBOL=scatterSymbol, $
                               SYM_COLOR=scatterSymColor, $
                               SYM_SIZE=scatterSymSize, $
                               SYM_TRANSPARENCY=scatterSymTransp, $
+                              SYM_THICK=1.6, $
                               XTICKVALUES=xTickValues, $
                               XTICKFORMAT=KEYWORD_SET(no_time_label) ? $
                               !NULL : 'LABEL_DATE', $
                               XTICKUNITS=KEYWORD_SET(no_time_label) ? $
                               !NULL : 'Time', $
+                              XTICKFONT_SIZE=xTickFont_size, $
+                              XTICKFONT_STYLE=xTickFont_style, $
+                              YTICKFONT_SIZE=yTickFont_size, $
+                              YTICKFONT_STYLE=yTickFont_style, $
+                              XSHOWTEXT=xShowText, $
+                              XTHICK=xThick, $
+                              YTHICK=yThick, $
+                              XMINOR=xMinor, $
                               LINESTYLE='', $
                               LAYOUT=layout, $
                               POSITION=position, $
                               MARGIN=margin, $
                               CLIP=clip, $
-                              /OVERPLOT, $
+                              OVERPLOT=KEYWORD_SET(overplot) ? $
+                              1 : ~KEYWORD_SET(suppress_line), $
                               CURRENT=window)
 
      ENDIF
@@ -154,7 +185,7 @@ FUNCTION PLOT_DSTMIN_STATISTICS__TIME_SERIES,BPD,times, $
   ENDIF
 
   ;; Add a title.
-  plotArr[0].title = "Storm Dst Minimum" + (KEYWORD_SET(title) ? "!C" + title : '')
+  ;; plotArr[0].title = "Storm Dst Minimum" + (KEYWORD_SET(title) ? "!C" + title : '')
   
   IF KEYWORD_SET(savePlot) THEN BEGIN
 

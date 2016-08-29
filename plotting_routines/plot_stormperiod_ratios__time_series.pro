@@ -3,6 +3,11 @@ FUNCTION PLOT_STORMPERIOD_RATIOS__TIME_SERIES,stormRatStruct, $
    FULL_DST_DB=full_Dst_DB, $
    YLOG=yLog, $
    YRANGE=yRange, $
+   XSHOWTEXT=xShowText, $
+   XTHICK=xThick, $
+   YTHICK=yThick, $
+   THICK=thick, $
+   XMINOR=xMinor, $
    TITLE=title, $
    NO_TIME_LABEL=no_time_label, $
    CURRENT=window, $
@@ -18,10 +23,15 @@ FUNCTION PLOT_STORMPERIOD_RATIOS__TIME_SERIES,stormRatStruct, $
 
   COMPILE_OPT idl2
 
+  @plot_stormstats_defaults.pro
 
-  histList        = LIST(stormRatStruct.nsRatio, $
-                         stormRatStruct.mpRatio, $
-                         stormRatStruct.rpRatio)
+  ;; histList        = LIST(stormRatStruct.nsRatio, $
+  ;;                        stormRatStruct.mpRatio, $
+  ;;                        stormRatStruct.rpRatio)
+
+  histList        = LIST(stormRatStruct.mpRatio*100., $
+                         stormRatStruct.rpRatio*100., $
+                         stormRatStruct.nsRatio*100.)
 
   ;;Now plots
   ;;Window?
@@ -33,12 +43,14 @@ FUNCTION PLOT_STORMPERIOD_RATIOS__TIME_SERIES,stormRatStruct, $
   plotArr         = MAKE_ARRAY(nPlots,/OBJ)
 
   ;; plotNames       = ['Broadband','Monoenergetic','Diffuse']
-  plotNames       = ['Quiescent','Main','Recovery']
-  colorArr        = ['light gray','Red','Blue']
+  ;; plotNames       = ['Quiescent','Main','Recovery']
+  ;; colorArr        = ['light gray','Red','Blue']
+  plotNames       = ['Main','Recovery','Quiescent']
+  colorArr        = ['Red','Blue','light gray']
   lsArr           = ['-','-','-']
 
-  ;; xRange          = [000,4500]
-  yRange          = KEYWORD_SET(yRange) ? yRange : [MIN(histList[0]),1.00]
+  ;; yRange          = KEYWORD_SET(yRange) ? yRange : [MIN(histList[0]),1.00]
+  yRange          = KEYWORD_SET(yRange) ? yRange : [MIN(histList[0]),100]
 
   ;; xTickValues     = [500,1000,1500,2000,2500,3000,3500,4000,4500]
   ;; xTickName       = STRCOMPRESS(xTickValues,/REMOVE_ALL)
@@ -52,6 +64,7 @@ FUNCTION PLOT_STORMPERIOD_RATIOS__TIME_SERIES,stormRatStruct, $
         ;; dummy           = LABEL_DATE(DATE_FORMAT=['%D-%M','%Y'])
         dummy           = LABEL_DATE(DATE_FORMAT=['%Y'])
         x_values        = MEAN(stormRatStruct.times,/DOUBLE,DIMENSION=1)
+        xRange          = [MIN(x_values),MAX(x_values)]
      END
   ENDCASE
 
@@ -82,9 +95,14 @@ FUNCTION PLOT_STORMPERIOD_RATIOS__TIME_SERIES,stormRatStruct, $
                                    y_values, $
                                    XRANGE=xRange, $
                                    YRANGE=yRange, $
+                                   YTITLE='% Period', $
                                    BOTTOM_VALUES=bottom_values, $
                                    NAME=plotNames[iPlot], $
                                    XMAJOR=nXTicks, $
+                                   XMINOR=xMinor, $
+                                   XSHOWTEXT=xShowText, $
+                                   XTHICK=xThick, $
+                                   YTHICK=yThick, $
                                    OUTLINE=0, $
                                    ;; XMINOR=0, $
                                    XTICKVALUES=xTickValues, $
@@ -94,6 +112,10 @@ FUNCTION PLOT_STORMPERIOD_RATIOS__TIME_SERIES,stormRatStruct, $
                                    XTICKUNITS=KEYWORD_SET(no_time_label) ? $
                                    ;; !NULL : ['Time','Time'], $
                                    !NULL : 'Time', $
+                                   XTICKFONT_SIZE=xTickFont_size, $
+                                   XTICKFONT_STYLE=xTickFont_style, $
+                                   YTICKFONT_SIZE=yTickFont_size, $
+                                   YTICKFONT_STYLE=yTickFont_style, $
                                    ;; XTICKS=nXTicks, $
                                    ;; INDEX=indexArr[0], $
                                    ;; NBARS=nBars, $
@@ -112,11 +134,12 @@ FUNCTION PLOT_STORMPERIOD_RATIOS__TIME_SERIES,stormRatStruct, $
 
   legend          = LEGEND(TARGET=plotArr[*], $
                            /NORMAL, $
-                           POSITION=[0.35,0.3])
+                           ;; POSITION=[0.35,0.3])
+                           POSITION=[0.35,0.8])
 
 
   ;; Add a title.
-  plotArr[0].title = "Storm ratios" + (KEYWORD_SET(title) ? "!C" + title : '')
+  ;; plotArr[0].title = "Storm ratios" + (KEYWORD_SET(title) ? "!C" + title : '')
   
   IF KEYWORD_SET(savePlot) THEN BEGIN
 
@@ -141,7 +164,5 @@ FUNCTION PLOT_STORMPERIOD_RATIOS__TIME_SERIES,stormRatStruct, $
 
 
   RETURN,plotArr
-  
-
 
 END
