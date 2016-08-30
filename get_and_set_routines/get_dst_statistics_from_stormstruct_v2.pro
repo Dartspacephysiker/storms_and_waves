@@ -130,6 +130,7 @@ FUNCTION GET_DST_STATISTICS_FROM_STORMSTRUCT_V2,stormStruct, $
                       mom     : DstDropMom, $
                       name    : "Dst drop (nT)"}
 
+
   RETURN,LIST(Dstmin,DstDrop)
 
 END

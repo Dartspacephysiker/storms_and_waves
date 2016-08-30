@@ -19,7 +19,8 @@ FUNCTION PLOT_STORMPERIOD_RATIOS__TIME_SERIES,stormRatStruct, $
    SAVEPLOT=savePlot, $
    SPNAME=sPName, $
    PLOTDIR=plotDir, $
-   CLOSE_WINDOW_AFTER_SAVE=close_window_after_save
+   CLOSE_WINDOW_AFTER_SAVE=close_window_after_save, $
+   OUT_MEDIAN_OFFSETS=median_offsets
 
   COMPILE_OPT idl2
 
@@ -29,8 +30,8 @@ FUNCTION PLOT_STORMPERIOD_RATIOS__TIME_SERIES,stormRatStruct, $
   ;;                        stormRatStruct.mpRatio, $
   ;;                        stormRatStruct.rpRatio)
 
-  histList        = LIST(stormRatStruct.mpRatio*100., $
-                         stormRatStruct.rpRatio*100., $
+  histList        = LIST(stormRatStruct.rpRatio*100., $
+                         stormRatStruct.mpRatio*100., $
                          stormRatStruct.nsRatio*100.)
 
   ;;Now plots
@@ -42,11 +43,17 @@ FUNCTION PLOT_STORMPERIOD_RATIOS__TIME_SERIES,stormRatStruct, $
   nPlots          = 3
   plotArr         = MAKE_ARRAY(nPlots,/OBJ)
 
+  IF ARG_PRESENT(median_offsets) THEN median_offsets = MAKE_ARRAY(nPlots,VALUE=0.0)
   ;; plotNames       = ['Broadband','Monoenergetic','Diffuse']
   ;; plotNames       = ['Quiescent','Main','Recovery']
   ;; colorArr        = ['light gray','Red','Blue']
-  plotNames       = ['Main','Recovery','Quiescent']
-  colorArr        = ['Red','Blue','light gray']
+  ;; plotNames       = ['Main','Recovery','Quiescent']
+  ;; colorArr        = ['Red','Blue','light gray']
+
+  plotOrder       = [0,1,2]
+  legOrder        = [2,1,0]
+  plotNames       = ['Recovery','Main','Quiescent']
+  colorArr        = ['Blue','Red','light gray']
   lsArr           = ['-','-','-']
 
   ;; yRange          = KEYWORD_SET(yRange) ? yRange : [MIN(histList[0]),1.00]
@@ -76,19 +83,22 @@ FUNCTION PLOT_STORMPERIOD_RATIOS__TIME_SERIES,stormRatStruct, $
   FOR iPlot=0,nPlots-1 DO BEGIN
      CASE iPlot OF
         0: BEGIN
-           y_values      = (histList[0])
+           y_values      = (histList[plotOrder[0]])
            bottom_values = !NULL
         END
         1: BEGIN
-           y_values      = (histList[1]+histList[0])
-           bottom_values = (histList[0])
+           y_values      = (histList[plotOrder[1]]+histList[plotOrder[0]])
+           bottom_values = (histList[plotOrder[0]])
         END
         2: BEGIN
-           y_values      = (histList[2]+histList[1]+histList[0])
-           bottom_values = (histList[0] + histList[1])
+           y_values      = (histList[plotOrder[2]]+ $
+                            histList[plotOrder[1]]+ $
+                            histList[plotOrder[0]])
+           bottom_values = (histList[plotOrder[0]] + histList[plotOrder[1]])
         END
      ENDCASE
 
+     IF KEYWORD_SET(median_offsets) THEN median_offsets[plotOrder[iPlot]] = MEDIAN(y_values)
      ;; PRINT,'Doing' + plotNames[i] + '...'
 
      plotArr[iPlot]      = BARPLOT(x_values, $
@@ -97,7 +107,7 @@ FUNCTION PLOT_STORMPERIOD_RATIOS__TIME_SERIES,stormRatStruct, $
                                    YRANGE=yRange, $
                                    YTITLE='% Period', $
                                    BOTTOM_VALUES=bottom_values, $
-                                   NAME=plotNames[iPlot], $
+                                   NAME=plotNames[plotOrder[iPlot]], $
                                    XMAJOR=nXTicks, $
                                    XMINOR=xMinor, $
                                    XSHOWTEXT=xShowText, $
@@ -119,7 +129,7 @@ FUNCTION PLOT_STORMPERIOD_RATIOS__TIME_SERIES,stormRatStruct, $
                                    ;; XTICKS=nXTicks, $
                                    ;; INDEX=indexArr[0], $
                                    ;; NBARS=nBars, $
-                                   FILL_COLOR=colorArr[iPlot], $
+                                   FILL_COLOR=colorArr[plotOrder[iPlot]], $
                                    ;; BOTTOM_COLOR=bottom_color, $
                                    LAYOUT=layout, $
                                    POSITION=position, $
@@ -132,7 +142,9 @@ FUNCTION PLOT_STORMPERIOD_RATIOS__TIME_SERIES,stormRatStruct, $
      
   ENDFOR
 
-  legend          = LEGEND(TARGET=plotArr[*], $
+  legend          = LEGEND(TARGET=[plotArr[legOrder[0]], $
+                                   plotArr[legOrder[1]], $
+                                   plotArr[legOrder[2]]], $
                            /NORMAL, $
                            ;; POSITION=[0.35,0.3])
                            POSITION=[0.35,0.8])

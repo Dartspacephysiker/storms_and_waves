@@ -1,8 +1,8 @@
 ;;08/29/16
 FUNCTION BOXPLOT_STORMPERIOD_RATIOS, $
    BPD, $
-   STACKEM=stackEm, $
    ADD_MEDIANS=add_medians, $
+   MED_OFFSETS=median_offsets, $
    INCLUDE_EXTRAS=include_extras, $
    EXCLUDE_MEAN_VALUES=exclude_mean_values, $          
    EXCLUDE_CI_VALUES=exclude_ci_values, $              
@@ -11,10 +11,14 @@ FUNCTION BOXPLOT_STORMPERIOD_RATIOS, $
    XRANGE=xRange, $
    YRANGE=yRange, $
    ADD_BOXPLOT_NAMES=add_boxplot_names, $
+   ADD_COLUMN_TEXT=add_column_text, $
    SYMBOL_MEANS=symbol_means, $
    SYMBOL_OUTLIERS=symbol_outliers, $
    SYMBOL_SUSPECTED_OUTLIERS=symbol_suspected_outliers, $
+   BP_LOCATIONS=bp_locations, $
    BPWIDTH=BPWidth, $
+   STACKEM=stackEm, $
+   LEGEND__STACKEM=legend__stackEm, $
    PLOTTITLE=plotTitle, $
    CLIP=clip, $
    COLOR=color, $
@@ -25,6 +29,10 @@ FUNCTION BOXPLOT_STORMPERIOD_RATIOS, $
    MEDIAN=median, $
    NOTCH=notch, $
    LINESTYLE=lineStyle, $
+   XTHICK=xThick, $
+   YTHICK=yThick, $
+   KILL_YTEXT=kill_yText, $
+   THICK=thick, $
    TRANSPARENCY=transparency, $
    WHISKERS=whiskers, $
    MARGIN=margin, $
@@ -40,6 +48,8 @@ FUNCTION BOXPLOT_STORMPERIOD_RATIOS, $
    PLOTDIR=plotDir
 
   COMPILE_OPT idl2
+
+  @plot_stormstats_defaults.pro
 
   ;;Want stuff like outliers and stuff?
   extras = N_ELEMENTS(include_extras) GT 0 ? include_extras : 1
@@ -66,9 +76,15 @@ FUNCTION BOXPLOT_STORMPERIOD_RATIOS, $
   nPlots          = KEYWORD_SET(stackEm) ? 3 : 1
   plotArr         = MAKE_ARRAY(nPlots,/OBJ)
 
-  plotNames       = ['Quiescent','Main','Recovery']
-  colorArr        = ['light gray','Red','Blue']
-  lsArr           = ['-','-','-']
+  ;; plotNames       = ['Quiescent','Main','Recovery']
+  ;; colorArr        = ['light gray','Red','Blue']
+  ;; plotNames       = ['Main','Recovery','Quiescent']
+  ;; colorArr        = ['Red','Blue','light gray']
+  plotNames       = ['Recovery','Main','Quiescent']
+  colorArr        = ['Blue','Red','light gray']
+  ;; lsArr           = ['-','--','-.']
+
+  x_vals          = KEYWORD_SET(bp_locations) ? bp_locations : [-1,0,1]
 
   yRange          = KEYWORD_SET(yRange) ? yRange : [MIN(BPD.data[*,0]),1.00]
 
@@ -76,22 +92,28 @@ FUNCTION BOXPLOT_STORMPERIOD_RATIOS, $
   CASE KEYWORD_SET(stackEm) OF
      1: BEGIN
 
-        plotDat = BPD.data
+        plotDat = BPD.data*100
         IF KEYWORD_SET(add_medians) THEN BEGIN
 
            ;;Adds median of each previous bp
            FOR iPlot=0,nPlots-1 DO BEGIN
 
-              j = iPlot+1
-              WHILE j LE nPlots-1 DO BEGIN
-                 plotDat[j,*] += plotDat[iPlot,2]
-                 j++
-              ENDWHILE
+              CASE KEYWORD_SET(median_offsets) OF
+                 1: BEGIN
+                    plotDat[iPlot,*] += (median_offsets[iPlot] - plotDat[iPlot,2])
+                 END
+                 ELSE: BEGIN
+                    j = iPlot+1
+                    WHILE j LT nPlots-1 DO BEGIN
+                       plotDat[j,*] += plotDat[iPlot,2]
+                       j++
+                    ENDWHILE
+                 END
+              ENDCASE
+
            ENDFOR
 
         ENDIF
-
-        
 
         FOR iPlot=0,nPlots-1 DO BEGIN
            ;; PRINT,'Doing' + plotNames[i] + '...'
@@ -125,7 +147,8 @@ FUNCTION BOXPLOT_STORMPERIOD_RATIOS, $
               ENDIF
            ENDIF
 
-           plotArr[iPlot]      = BOXPLOT(plotDat[iPlot,*], $
+           ;; plotArr[iPlot]      = BOXPLOT(plotDat[iPlot,*], $
+           plotArr[iPlot]      = BOXPLOT([x_vals[iPlot]],plotDat[iPlot,*], $
                                          XRANGE=xRange, $
                                          YRANGE=yRange, $
                                          NAME=plotNames[iPlot], $
@@ -142,10 +165,14 @@ FUNCTION BOXPLOT_STORMPERIOD_RATIOS, $
                                          SYMBOL_OUTLIERS=symbol_outliers, $
                                          SYMBOL_SUSPECTED_OUTLIERS=symbol_suspected_outliers, $
                                          COLOR=colorArr[iPlot], $
-                                         ;; FILL_COLOR=colorArr[iPlot], $
+                                         FILL_COLOR=colorArr[iPlot], $
                                          ;; BACKGROUND_COLOR=background_color, $
                                          LOWER_COLOR=lower_color, $
                                          LINESTYLE=lineStyle, $
+                                         XTHICK=xThick, $
+                                         YTHICK=yThick, $
+                                         THICK=thick, $
+                                         YSHOWTEXT=KEYWORD_SET(kill_yText) ? 0 : !NULL, $
                                          TRANSPARENCY=transparency, $
                                          MARGIN=margin, $
                                          LAYOUT=layout, $
@@ -159,6 +186,7 @@ FUNCTION BOXPLOT_STORMPERIOD_RATIOS, $
            IF iPlot EQ 0 THEN BEGIN
               plotArr[0].axes[0].Hide = 1
               plotArr[0].axes[2].Hide = 1
+              plotArr[0].axes[3].Hide = 1
            ENDIF
 
         ENDFOR
@@ -217,9 +245,11 @@ FUNCTION BOXPLOT_STORMPERIOD_RATIOS, $
 
      CASE KEYWORD_SET(stackEm) OF
         1: BEGIN
-           legend          = LEGEND(TARGET=plotArr[*], $
-                                    /NORMAL, $
-                                    POSITION=[0.35,0.3])
+           IF KEYWORD_SET(legend__stackEm) THEN BEGIN
+              legend          = LEGEND(TARGET=plotArr[*], $
+                                       /NORMAL, $
+                                       POSITION=[0.35,0.3])
+           ENDIF
         END
         ELSE: BEGIN
            yLocs  = REFORM(plotData[*,2])
@@ -236,99 +266,20 @@ FUNCTION BOXPLOT_STORMPERIOD_RATIOS, $
      ENDCASE
   ENDIF
 
+  IF KEYWORD_SET(add_column_text) THEN BEGIN
+     colText = TEXT(x_vals[0], $
+                    102, $
+                    add_column_text, $
+                    TARGET=plotArr[0], $
+                    /DATA, $
+                    FONT_SIZE=xTickFont_size, $
+                    CLIP=0, $
+                    ALIGNMENT=0.5)
 
-     ;; xLocations = ((FINDGEN(nBoxPlots)+1)/(nBoxPlots+1))
-
-
-  ;; CASE SIZE(add_to_plotArr,/TYPE) OF
-  ;;    1: BEGIN
-  ;;       IF N_ELEMENTS(out_boxPlot) GT 0 THEN BEGIN
-  ;;          out_boxPlot = [out_boxPlot,boxPlot]
-  ;;       ENDIF ELSE BEGIN
-  ;;          out_boxPlot = boxPlot
-  ;;       ENDELSE
-  ;;    END
-  ;;    ELSE: out_boxPlot = boxPlot
-  ;; ENDCASE
-  ;; ENDIF
-
-  ;; FOR iPlot=0,nPlots-1 DO BEGIN
-  ;;    ;; PRINT,'Doing' + plotNames[i] + '...'
-
-  ;;    ;;Get extras, if possible
-  ;;    IF KEYWORD_SET(extras) THEN BEGIN
-  ;;       IF N_ELEMENTS(ci_values) GT 0 THEN BEGIN
-  ;;          tmpCi = ci_values[iPlot]
-  ;;       ENDIF
-
-  ;;       IF N_ELEMENTS(mean_values) GT 0 THEN BEGIN
-  ;;          tmpMean = mean_values[iPlot]
-  ;;       ENDIF
-
-  ;;       IF N_ELEMENTS(outlier_values) GT 0 THEN BEGIN
-  ;;          tmpWhere = WHERE(outlier_values[0,*] EQ iPlot,nTmp)
-  ;;          IF nTmp GT 0 THEN BEGIN
-  ;;             tmpOutlier = outlier_values[*,tmpWhere] 
-  ;;          ENDIF ELSE BEGIN
-  ;;             tmpOutlier = !NULL
-  ;;          ENDELSE
-  ;;       ENDIF
-
-  ;;       IF N_ELEMENTS(suspected_outlier_values) GT 0 THEN BEGIN
-  ;;          tmpWhere = WHERE(suspected_outlier_values[0,*] EQ iPlot,nTmp)
-  ;;          IF nTmp GT 0 THEN BEGIN
-  ;;             tmpSuspected_outlier = suspected_outlier_values[*,tmpWhere] 
-  ;;          ENDIF ELSE BEGIN
-  ;;             tmpSuspected_outlier = !NULL
-  ;;          ENDELSE
-  ;;       ENDIF
-  ;;    ENDIF
-
-  ;;    plotArr[iPlot]      = BOXPLOT(xLocs[iPlot], $
-  ;;                                  ;; boxPlot         = BOXPLOT(xLocs, $
-  ;;                                  BPD.data[iPlot,*], $
-  ;;                                  XRANGE=xRange, $
-  ;;                                  YRANGE=yRange, $
-  ;;                                  NAME=plotNames[iPlot], $
-  ;;                                  ;; NAME=plotNames[iPlot], $
-  ;;                                  WIDTH=BPWidth, $
-  ;;                                  WHISKERS=whiskers, $
-  ;;                                  ENDCAPS=endCaps, $
-  ;;                                  MEDIAN=median, $
-  ;;                                  NOTCH=notch, $
-  ;;                                  CI_VALUES=tmpCi, $
-  ;;                                  MEAN_VALUES=tmpMean, $
-  ;;                                  OUTLIER_VALUES=tmpOutlier, $
-  ;;                                  SUSPECTED_OUTLIER_VALUES=tmpSuspected_outlier, $
-  ;;                                  SYMBOL_MEANS=symbol_means, $
-  ;;                                  SYMBOL_OUTLIERS=symbol_outliers, $
-  ;;                                  SYMBOL_SUSPECTED_OUTLIERS=symbol_suspected_outliers, $
-  ;;                                  ;; COLOR=colorArr, $
-  ;;                                  FILL_COLOR=colorArr[iPlot], $
-  ;;                                  ;; FILL_COLOR=colorArr, $
-  ;;                                  ;; BACKGROUND_COLOR=background_color, $
-  ;;                                  LOWER_COLOR=lower_color, $
-  ;;                                  LINESTYLE=lineStyle, $
-  ;;                                  TRANSPARENCY=transparency, $
-  ;;                                  MARGIN=margin, $
-  ;;                                  LAYOUT=layout, $
-  ;;                                  POSITION=position, $
-  ;;                                  CLIP=clip, $
-  ;;                                  LOCATION=location, $
-  ;;                                  OVERPLOT=KEYWORD_SET(overplot) OR iPlot GT 0, $
-  ;;                                  ;; OVERPLOT=KEYWORD_SET(overplot), $
-  ;;                                  BUFFER=buffer, $
-  ;;                                  CURRENT=window)
-     
-  ;;    IF iPlot EQ 0 THEN BEGIN
-  ;;       plotArr[0].axes[0].Hide = 1
-  ;;       plotArr[0].axes[2].Hide = 1
-  ;;    ENDIF
-
-  ;; ENDFOR
+  END
 
   ;; Add a title.
-  plotArr[0].title = "Storm ratios" + (KEYWORD_SET(plotTitle) ? "!C" + plotTitle : '')
+  ;; plotArr[0].title = "Storm ratios" + (KEYWORD_SET(plotTitle) ? "!C" + plotTitle : '')
   
   IF KEYWORD_SET(savePlot) THEN BEGIN
 

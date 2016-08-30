@@ -12,7 +12,7 @@ PRO EXTRACT_BOXPLOT_EXTRAS__DST_STATISTICS,BPD, $
 
   COMPILE_OPT IDL2
 
-  nBoxPlots = N_ELEMENTS(BPD.data[0,*])
+  nBoxPlots = N_ELEMENTS(BPD.data[*,0])
 
   badCount  = 0
 

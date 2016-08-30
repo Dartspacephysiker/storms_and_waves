@@ -1,5 +1,6 @@
 ;;08/26/16
 FUNCTION GET_DST_STATISTICS_TIMESERIES_FROM_STORMSTRUCT,stormStruct, $
+   RESTRICT_I=restrict_i, $
    LARGE_STORMS=large_storms, $
    SMALL_STORMS=small_storms, $
    NMONTHS_PER_CALC=monthInterval, $
@@ -12,6 +13,7 @@ FUNCTION GET_DST_STATISTICS_TIMESERIES_FROM_STORMSTRUCT,stormStruct, $
    T1_JULDAY=t1_julDay, $
    T2_JULDAY=t2_julDay, $
    CALC_FOR_ALL_AVAILABLE_TIMES=calc_all_times, $
+   ADD_FREQ_STATS=add_freq_stats, $
    VERBOSE=verbose
 
   COMPILE_OPT IDL2
@@ -106,6 +108,7 @@ FUNCTION GET_DST_STATISTICS_TIMESERIES_FROM_STORMSTRUCT,stormStruct, $
   ;;These guys contain the extras, like outliers, if they exist
   DstMinBPDList  = LIST()
   DstDropBPDList = LIST()
+  DstFreqBPDList = LIST()
 
   DstMinBadBPD   = !NULL
   DstDropBadBPD  = !NULL
@@ -185,18 +188,104 @@ FUNCTION GET_DST_STATISTICS_TIMESERIES_FROM_STORMSTRUCT,stormStruct, $
                                      bad     : DstMinBadBPD}, $
                           moment  : DstMinMom, $
                           name    : KEYWORD_SET(stormMinName) ? $
-                                    stormMinName  : nStormStr + ' ' + stormType + ' Storms'}, $
+                          stormMinName  : nStormStr + ' ' + stormType + ' Storms'}, $
 
              drop      : {BPD     : {data    : DstDropBPD, $
                                      extras  : DstDropBPDList, $
                                      bad     : DstDropBadBPD}, $
                           moment  : DstDropMom, $
                           name    : KEYWORD_SET(stormDropName) ? $
-                                    stormDropName : nStormStr + ' ' + stormType + ' Storms'}, $
+                          stormDropName : nStormStr + ' ' + stormType + ' Storms'}, $
 
              totalMin  : totalMin, $
              totalDrop : totalDrop $
-               }
+             }
+
+  IF KEYWORD_SET(add_freq_stats) THEN BEGIN
+     ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+     ;;DstFreq statistics
+
+     IF N_ELEMENTS(DstStats.N) GE 5 THEN BEGIN
+        include_BPD      = 1 
+     ENDIF ELSE BEGIN
+        include_BPD      = 0
+     ENDELSE
+
+     IF N_ELEMENTS(DstStats.N) EQ 0 THEN BEGIN
+        include_Mom      = 0
+     ENDIF ELSE BEGIN
+        include_mom      = 1
+     ENDELSE
+
+     DstFreqDat          = DstStats.N/(DstStats.times[1,*]-DstStats.times[0,*])*365.25
+
+     IF include_BPD THEN BEGIN
+        DstFreqBPD       = CREATEBOXPLOTDATA(DstFreqDat, $
+                                             CI_VALUES=ci_freqVals, $
+                                             MEAN_VALUES=BPDFreqMean, $
+                                             OUTLIER_VALUES=BPDFreqOutliers, $
+                                             SUSPECTED_OUTLIER_VALUES=BPDFreqSusOutliers)
+     ENDIF ELSE BEGIN
+        DstFreqBPD       = MAKE_ARRAY(1,5,VALUE=0)
+        DstFreqBPD[0,2]  = N_ELEMENTS(storm_i) GT 0 ? MEDIAN(DstFreqDat) : 0
+        ;; BPDFreqMean   = 0
+        ci_freqVals      = MAKE_ARRAY(2,VALUE=0)
+        BPDFreqMean      = 0
+        BPDFreqOutliers  = 0
+     ENDELSE
+
+     IF include_mom THEN BEGIN
+        DstFreqMom       = MOMENT(DstFreqDat)
+     ENDIF ELSE BEGIN
+        DstFreqMom       = MAKE_ARRAY(4,VALUE=0)
+     ENDELSE
+
+     tmpExtra            =  {ci_values   : ci_FreqVals, $
+                             mean_values : BPDFreqMean}
+
+     CASE 1 OF
+        (N_ELEMENTS(BPDFreqOutliers) GT 0) AND $
+           (N_ELEMENTS(BPDFreqSusOutliers) GT 0): BEGIN
+           tmpExtra      = CREATE_STRUCT(tmpExtra, $
+                                         "OUTLIER_VALUES",BPDFreqOutliers, $
+                                         "SUSPECTED_OUTLIER_VALUES",BPDFreqSusOutliers)
+           
+        END
+        (N_ELEMENTS(BPDFreqOutliers) GT 0): BEGIN
+           tmpExtra      = CREATE_STRUCT(tmpExtra, $
+                                         "OUTLIER_VALUES",BPDFreqOutliers)
+
+        END
+        (N_ELEMENTS(BPDFreqSusOutliers) GT 0): BEGIN
+           tmpExtra      = CREATE_STRUCT(tmpExtra, $
+                                         "SUSPECTED_OUTLIER_VALUES",BPDFreqSusOutliers)
+        END
+        ELSE: 
+     ENDCASE
+
+     DstFreqBPD          = {data    : DstFreqBPD, $
+                            extras  : tmpExtra, $
+                            bad     : 0}
+
+     DstStats            = { $
+                           times     : DstStats.times, $
+                           n         : DstStats.n, $
+
+                           min       : DstStats.min, $
+
+                           drop      : DstStats.drop, $
+
+                           freq      : {BPD     : DstFreqBPD, $
+                                        moment  : DstFreqMom, $
+                                        name    : KEYWORD_SET(stormFreqName) ? $
+                                        stormFreqName : stormType + ' Storm Frequency', $
+                                        units   : 'Years^-1'}, $
+
+                           totalMin  : DstStats.totalMin, $
+                           totalDrop : DstStats.totalDrop $
+                           }
+
+  ENDIF
 
   RETURN,DstStats
 END

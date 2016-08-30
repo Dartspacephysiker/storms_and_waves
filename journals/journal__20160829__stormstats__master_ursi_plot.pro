@@ -3,75 +3,170 @@ PRO JOURNAL__20160829__STORMSTATS__MASTER_URSI_PLOT
 
   COMPILE_OPT IDL2
 
-  stormRatPlots    = 1
-  dstMinPlots      = 1
-  stormFreqPlots   = 1
-
-  calc_all_times   = 1
-  full_Dst_DB      = 1
-
-  monthInterval    = 18
-  ;; yearInterval  = 3
-
-  smallColor       = 'blue'
-  smallName        = 'Small storms'
-  largeColor       = 'red'
-  largeName        = 'Large storms'
-
-  studyTransp      = 80
-  xThick           = 2.0
-  yThick           = 2.0
-  thick            = 2.0
-  xMinor           = 9.0
-
   ;;SavePlot names
-  saveAllPlots     = 1
+  saveAllPlots         = 1
 
-  sRatSPName   = GET_TODAY_STRING(/DO_YYYYMMDD_FMT) + '--stormRatios_1957-2011.png'
-  dstMinSPName = GET_TODAY_STRING(/DO_YYYYMMDD_FMT) + '--dstMinStats_1957-2011.png'
-  freqSPName   = GET_TODAY_STRING(/DO_YYYYMMDD_FMT) + '--stormFrequencyStats_1957-2011.png'
+  stormRatPlots        = 1
+  sRatTimeSeries       = 1
+  sRatBoxPlots         = 1
+
+  dMinPlots            = 1
+  dMinTimeSeries       = 1
+  dMinBoxPlots         = 1
+
+  sFrqPlots            = 1
+  sFrqTimeSeries       = 1
+  sFrqBoxPlots         = 1
+  
+  calc_all_times       = 1
+  full_Dst_DB          = 1
+
+  monthInterval        = 18
+  FASTmonthInterval    = 37
+  ;; yearInterval      = 3
+
+  sRatSPName           = GET_TODAY_STRING(/DO_YYYYMMDD_FMT) + '--stormRatios_1957-2011.png'
+  dMinSPName           = GET_TODAY_STRING(/DO_YYYYMMDD_FMT) + '--dstMinStats_1957-2011.png'
+  sFrqSPName           = GET_TODAY_STRING(/DO_YYYYMMDD_FMT) + '--stormFrequencyStats_1957-2011.png'
+
+  ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+  ;;Plot optionszz
+
+  smallColor           = 'blue'
+  smallName            = 'Small storms'
+  largeColor           = 'red'
+  largeName            = 'Large storms'
+  allColor             = 'dark gray'
 
   ;;stormRatio plot options
-  sRat_studyTransp = 65
-  sRat_shadeStudyArea = 1
-  ;; sRatYRange   = [0,1.0]
-  sRatYRange   = [0,100]
-  sRat_xShowText = 0
-  sRat_shadeTxt = 1
-  ;; sRatTxtOffset = 0.02
-  sRatTxtOffset = 2
+  sRat_studyTransp     = 45
+  sRat_shadeStudyArea  = 1
+  ;; sRatYRange        = [0,1.0]
+  sRatYRange           = [0,100]
+  sRat_xShowText       = 0
+  sRat_shadeTxt        = 1
+  ;; sRatTxtOffset     = 0.02
+  sRatTxtOffset        = 2
+  sRatLineStyle        = ['-','--']
+
+  ;; sRatBPLocs        = [-0.5,0.5,0.0] ;mp, rp, quiescence
+  sRatBPLocs           = REPLICATE(4.0,3) ;mp, rp, quiescence
+  sRatBPThick          = 2.0
+  sRatBPTransp         = 30
+  sRatBPWidth          = 1.0
+  sRatBPXRange         = [0,10]
+  sRatBPColumnText     = '1957–2011'
+
+  sRatBP_addPoints     = 1
+  sRatFASTXVals        = REPLICATE(8.2,3)
+  sRatFASTYVals        = [0.174,0.134,0.691]
+  sRatFASTYVals[1]     = sRatFASTYVals[0]+sRatFASTYVals[1]
+  sRatFastCol          = [smallColor,largeColor,allColor]
+  ;; sRatFastCol       = REPLICATE('green',3)
 
   ;;Dstmin plot options
-  DMinLargeTransp = 60
-  DMinSmallTransp = 80
-  dstMinYRange    = [-300,-15]
-  dstMinLegPos    = [JULDAY(6,1,1963),dstMinYRange[0]+50]
-  dstMin_xShowText = 0
-  DstMin_shadeStudyArea = 1
-  DstMin_shadeTxt = 0
-  dstMinTxtOffset = 10
-  dstMinLineStyle = ['-','--','-.']
+  DMinLargeTransp      = 60
+  DMinSmallTransp      = 80
+  dMinYRange           = [-300,-15]
+  dMinLegPos           = [JULDAY(6,1,1963),dMinYRange[0]+50]
+  dMin_xShowText       = 0
+  DMin_shadeStudyArea  = 1
+  DMin_shadeTxt        = 0
+  dMinTxtOffset        = 10
+  dMinLineStyle        = ['-','--']
+  dMinSymbols          = ['+','x']
+
+  dMinBPLocs           = REPLICATE(4.0,2) ;mp, rp, quiescence
+  dMinBPThick          = 2.0
+  dMinBPTransp         = 20
+  dMinBPWidth          = 1.0
+  dMinBPXRange         = [0,10]
+  dMinBPColor          = [smallColor,largeColor]
+  ;; dMinBPFillColor      = [smallColor,largeColor]
+
+  dMinBP_addPoints     = 1
+  dMinFASTXVals        = REPLICATE(8.2,2)
+  ;; dMinFASTYVals     = [0.174,0.134]
+  dMinFastCol          = [smallColor,largeColor]
 
   ;;Freq plot options
-  freqYRange      = [0,80]
-  ;; freqYRange   = !NULL
-  freqUnits       = 'Years'
-  freqLegendIncl  = [0,1,2]
-  ;; freqTotName  = 'All storms'
-  freq_xShowText  = 1
-  freqTotName     = 'Total'
-  freqLegPos      = [JULDAY(6,1,1963),freqYRange[1]-5]
-  freq_shadeStudyArea = 1
-  freq_shadeTxt   = 0
-  freqTxtOffset   = 2
-  freqLineStyle   = ['-','--','-.']
+  sFrqYRange           = [0,80]
+  ;; sFrqYRange        = !NULL
+  sFrqUnits            = 'Years'
+  sFrqLegendIncl       = [2,0,1]
+  ;; sFrqTotName       = 'All storms'
+  sFrq_xShowText       = 1
+  sFrqTotName          = 'Total'
+  sFrqLegPos           = [JULDAY(6,1,1963),sFrqYRange[1]-5]
+  sFrq_shadeStudyArea  = 1
+  sFrq_shadeTxt        = 0
+  sFrqTxtOffset        = 2
+  sFrqLineStyle        = ['-','--','-.']
+
+  ;; sFrqBPLocs           = [2.5,3.0,3.5] ;small and large and ALL
+  ;; sFrqBPLocs           = [3.0,3.0,3.0] ;small and large and ALL
+  sFrqBPLocs           = [4.0,2.5,5.5] ;small and large and ALL
+  sFrqBPThick          = 2.0
+  sFrqBPTransp         = 30
+  sFrqBPWidth          = [1.0,1.0,1.0]
+  sFrqBPXRange         = [0,10]
+
+  sFrqBP_addPoints     = 1
+  sFrqFASTXVals        = REPLICATE(8.2,3)
+  ;; sFrqFASTYVals     = [0.174,0.134]
+  sFrqColor            = [smallColor,largeColor,allColor]
+  ;; sFrqBPFillColor      = [smallColor,largeColor,allColor]
+  sFrqBPFillColor      = !NULL
+  sFrqFastCol          = [smallColor,largeColor,allColor]
+
+  ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+  ;;Plot minutiae
+
+  studyTransp          = 80
+  studyFillColor       = 'light green'
+  xThick               = 2.0
+  yThick               = 2.0
+  thick                = 2.0
+  xMinor               = 9.0
 
   ;;FAST study period
-  fStudy1_UTC    = STR_TO_TIME('1996-10-06/16:26:02.417')
-  fStudy2_UTC    = STR_TO_TIME('1999-11-03/03:20:59.853')
-  fStudy1_julDay = UTC_TO_JULDAY(fStudy1_UTC)
-  fStudy2_julDay = UTC_TO_JULDAY(fStudy2_UTC)
+  fStudy1_UTC          = STR_TO_TIME('1996-10-06/16:26:02.417')
+  fStudy2_UTC          = STR_TO_TIME('1999-11-03/03:20:59.853')
+  fStudy1_julDay       = UTC_TO_JULDAY(fStudy1_UTC)
+  fStudy2_julDay       = UTC_TO_JULDAY(fStudy2_UTC)
 
+  tsPos_combPlot       = [0.10,0.05,0.75,0.95]
+  bpPos_combPlot       = [0.75,0.05,0.95,0.95] ;Boxplot position for a combine time series/boxplot
+
+  ;;Plot positions
+  CASE 1 OF
+     KEYWORD_SET(sRatTimeSeries) AND KEYWORD_SET(sRatBoxPlots): BEGIN
+        sRatTSPos      = tsPos_combPlot
+
+        sRatBPPos      = bpPos_combPlot
+        dMinTSPos      = tsPos_combPlot
+        dMinBPPos      = bpPos_combPlot
+     END
+     ELSE: 
+  ENDCASE
+
+  CASE 1 OF
+     KEYWORD_SET(dMinTimeSeries) AND KEYWORD_SET(dMinBoxPlots): BEGIN
+        dMinTSPos      = tsPos_combPlot
+        dMinBPPos      = bpPos_combPlot
+     END
+     ELSE: 
+  ENDCASE
+
+  CASE 1 OF
+     KEYWORD_SET(sFrqTimeSeries) AND KEYWORD_SET(sFrqBoxPlots): BEGIN
+        sFrqTSPos      = tsPos_combPlot
+        sFrqBPPos      = bpPos_combPlot
+     END
+     ELSE: 
+  ENDCASE
+
+  ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
   ;;Load DBs
   LOAD_NOAA_AND_BRETT_DBS_AND_QI,storms, $
                                  FULLMONTY_BRETTDB=full_Dst_DB
@@ -81,6 +176,8 @@ PRO JOURNAL__20160829__STORMSTATS__MASTER_URSI_PLOT
                   DST_AE_FILE=Dst_AE_file, $
                   FULL_DST_DB=full_Dst_DB
 
+  ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+  ;;Gather statistics
 
   ;;Get stormRatio stats
   stormRat = GET_STORMPERIOD_RATIOS__TIME_SERIES(Dst, $
@@ -111,6 +208,7 @@ PRO JOURNAL__20160829__STORMSTATS__MASTER_URSI_PLOT
           T1_JULDAY=t1_julDay, $
           T2_JULDAY=t2_julDay, $
           CALC_FOR_ALL_AVAILABLE_TIMES=calc_all_times, $
+          /ADD_FREQ_STATS, $
           VERBOSE=verbose) 
   
   small = GET_DST_STATISTICS_TIMESERIES_FROM_STORMSTRUCT( $
@@ -126,8 +224,9 @@ PRO JOURNAL__20160829__STORMSTATS__MASTER_URSI_PLOT
           T1_JULDAY=t1_julDay, $
           T2_JULDAY=t2_julDay, $
           CALC_FOR_ALL_AVAILABLE_TIMES=calc_all_times, $
+          /ADD_FREQ_STATS, $
           VERBOSE=verbose) 
-  
+
   all   = GET_DST_STATISTICS_TIMESERIES_FROM_STORMSTRUCT( $
           storms, $
           NMONTHS_PER_CALC=monthInterval, $
@@ -140,89 +239,187 @@ PRO JOURNAL__20160829__STORMSTATS__MASTER_URSI_PLOT
           T1_JULDAY=t1_julDay, $
           T2_JULDAY=t2_julDay, $
           CALC_FOR_ALL_AVAILABLE_TIMES=calc_all_times, $
+          /ADD_FREQ_STATS, $
           VERBOSE=verbose) 
 
 
   ;;Combine large and small statistics before feeding into PLOT_DSTMIN_STATISTICS
-  COMBINE_DST_STATISTICS_BOXPLOT_DATA,final,large.totalmin.BPD,NAME=large.totalmin.name
-  COMBINE_DST_STATISTICS_BOXPLOT_DATA,final,small.totalmin.BPD,NAME=small.totalmin.name
+  COMBINE_DST_STATISTICS_BOXPLOT_DATA,finalDMin,small.totalmin.BPD,NAME=small.totalmin.name
+  COMBINE_DST_STATISTICS_BOXPLOT_DATA,finalDMin,large.totalmin.BPD,NAME=large.totalmin.name
+
+  COMBINE_DST_STATISTICS_BOXPLOT_DATA,finalFreq,small.freq.BPD,NAME=small.freq.name
+  COMBINE_DST_STATISTICS_BOXPLOT_DATA,finalFreq,large.freq.BPD,NAME=large.freq.name
+  COMBINE_DST_STATISTICS_BOXPLOT_DATA,finalFreq,all.freq.BPD,NAME=all.freq.name
+
+  ;;Now FAST stats
+  earliest_UTC = STR_TO_TIME('1996-10-06/16:26:02.417')
+  latest_UTC   = STR_TO_TIME('1999-11-03/03:20:59.853')
+
+  ;;Get Dst storm statistics
+  PRINT,'Getting FAST storm stats ...'
+  largeF = GET_DST_STATISTICS_TIMESERIES_FROM_STORMSTRUCT( $
+           storms, $
+           RESTRICT_I=restrict_i, $
+           /LARGE_STORMS, $
+           NMONTHS_PER_CALC=FASTmonthInterval, $
+           NDAYS_PER_CALC=dayInterval, $
+           NYEARS_PER_CALC=yearInterval, $
+           NHOURS_PER_CALC=hourInterval, $
+           FULL_DST_DB=full_Dst_DB, $
+           T1_UTC=earliest_UTC, $
+           T2_UTC=latest_UTC, $
+           T1_JULDAY=t1_julDay, $
+           T2_JULDAY=t2_julDay, $
+           ;; CALC_FOR_ALL_AVAILABLE_TIMES=calc_all_times, $
+           /ADD_FREQ_STATS, $
+           VERBOSE=verbose) 
+  
+  smallF = GET_DST_STATISTICS_TIMESERIES_FROM_STORMSTRUCT( $
+           storms, $
+           RESTRICT_I=restrict_i, $
+           /SMALL_STORMS, $
+           NMONTHS_PER_CALC=FASTmonthInterval, $
+           NDAYS_PER_CALC=dayInterval, $
+           NYEARS_PER_CALC=yearInterval, $
+           NHOURS_PER_CALC=hourInterval, $
+           FULL_DST_DB=full_Dst_DB, $
+           T1_UTC=earliest_UTC, $
+           T2_UTC=latest_UTC, $
+           T1_JULDAY=t1_julDay, $
+           T2_JULDAY=t2_julDay, $
+           ;; CALC_FOR_ALL_AVAILABLE_TIMES=calc_all_times, $
+           /ADD_FREQ_STATS, $
+           VERBOSE=verbose) 
+
+  allF = GET_DST_STATISTICS_TIMESERIES_FROM_STORMSTRUCT( $
+         storms, $
+         RESTRICT_I=restrict_i, $
+         NMONTHS_PER_CALC=FASTmonthInterval, $
+         NDAYS_PER_CALC=dayInterval, $
+         NYEARS_PER_CALC=yearInterval, $
+         NHOURS_PER_CALC=hourInterval, $
+         FULL_DST_DB=full_Dst_DB, $
+         T1_UTC=earliest_UTC, $
+         T2_UTC=latest_UTC, $
+         T1_JULDAY=t1_julDay, $
+         T2_JULDAY=t2_julDay, $
+         ;; CALC_FOR_ALL_AVAILABLE_TIMES=calc_all_times, $
+         /ADD_FREQ_STATS, $
+         VERBOSE=verbose) 
 
 
+
+  ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
   ;;Now plots
-  ;; plotHash = HASH()
-  ;; this = BOXPLOT_STORMPERIOD_RATIOS(stormRat.stats.BPD, $
-  ;;                                   /ADD_MEDIANS, $
-  ;;                                   /STACKEM, $
-  ;;                                   /ADD_BOXPLOT_NAMES)
-
-  ;; STOP
-
-  ;; plotHash = plotHash + HASH(this,this.name)
-
-  ;; this = BOXPLOT_DSTMIN_STATISTICS(final,/ADD_BOXPLOT_NAMES,XRANGE=[-400,0])
-
-  window = WINDOW(DIMENSIONS=[1000,800])
+  window = WINDOW(DIMENSIONS=[1200,800])
 
   ;; dstMinTimeSeriesPos    = [0.0,0.5,1.0,1.0]
-  ;; stormFreqTimeSeriesPos = [0.0,0.0,1.0,0.5]
+  ;; sFrqTSPos = [0.0,0.0,1.0,0.5]
 
   IF KEYWORD_SET(stormRatPlots) THEN BEGIN
 
-     sRatPlots = PLOT_STORMPERIOD_RATIOS__TIME_SERIES( $
-                 stormRat, $
-                 NXTICKS=nXTicks, $
-                 FULL_DST_DB=full_Dst_DB, $
-                 YLOG=yLog, $
-                 YRANGE=sRatYRange, $
-                 XSHOWTEXT=sRat_xShowText, $
-                 XTHICK=xThick, $
-                 YTHICK=yThick, $
-                 THICK=thick, $
-                 XMINOR=xMinor, $
-                 TITLE=title, $
-                 NO_TIME_LABEL=no_time_label, $
-                 CURRENT=window, $
-                 LAYOUT=layout, $
-                 POSITION=position, $
-                 MARGIN=margin, $
-                 CLIP=clip, $
-                 BUFFER=buffer, $
-                 SAVEPLOT=savePlot, $
-                 SPNAME=sPName, $
-                 PLOTDIR=plotDir, $
-                 CLOSE_WINDOW_AFTER_SAVE=close_window_after_save)
+     IF KEYWORD_SET(sRatTimeSeries) THEN BEGIN
 
-     IF KEYWORD_SET(sRat_shadeStudyArea) THEN BEGIN
+        sRatPlots = PLOT_STORMPERIOD_RATIOS__TIME_SERIES( $
+                    stormRat, $
+                    NXTICKS=nXTicks, $
+                    FULL_DST_DB=full_Dst_DB, $
+                    YLOG=yLog, $
+                    YRANGE=sRatYRange, $
+                    XSHOWTEXT=sRat_xShowText, $
+                    XTHICK=xThick, $
+                    YTHICK=yThick, $
+                    THICK=thick, $
+                    XMINOR=xMinor, $
+                    TITLE=title, $
+                    NO_TIME_LABEL=no_time_label, $
+                    CURRENT=window, $
+                    LAYOUT=layout, $
+                    ;; POSITION=position, $
+                    POSITION=sRatTSPos, $
+                    MARGIN=margin, $
+                    CLIP=clip, $
+                    BUFFER=buffer, $
+                    SAVEPLOT=savePlot, $
+                    SPNAME=sPName, $
+                    PLOTDIR=plotDir, $
+                    CLOSE_WINDOW_AFTER_SAVE=close_window_after_save, $
+                    OUT_MEDIAN_OFFSETS=sRatMedOffsets)
 
-        ;; Define the large study area.
-        boxCoords   = [[fStudy1_julDay,sRatYRange[0]], $
-                       [fStudy1_julDay,sRatYRange[1]], $
-                       [fStudy2_julDay,sRatYRange[1]], $
-                       [fStudy2_julDay,sRatYRange[0]]]
-        
-        ;; Draw the large study area using POLYGON.
-        sRatPoly  = POLYGON(boxCoords, $
-                              TARGET=sRatPlots[0], $
-                              /DATA, $
-                              FILL_BACKGROUND=1, $
-                              FILL_COLOR='gray', $
-                              TRANSPARENCY=sRat_studyTransp, $
-                              ;; COLOR='gray', $
-                              THICK=2)
-        
-        ;; Draw the text for the large study area.
-        IF KEYWORD_SET(sRat_shadeTxt) THEN BEGIN
-           sRatText  = TEXT(MEAN([fStudy1_julDay,fStudy2_julDay]), $
-                              sRatYRange[1]+sRatTxtOffset, $
-                              TARGET=sRatPlots[0], $
-                              CLIP=0, $
-                              ALIGNMENT=0.5, $
-                              /DATA, $
-                              'FAST Study', $
-                              COLOR='black', $
-                              FONT_SIZE=18)
+        IF KEYWORD_SET(sRat_shadeStudyArea) THEN BEGIN
+
+           ;; Define the large study area.
+           boxCoords   = [[fStudy1_julDay,sRatYRange[0]], $
+                          [fStudy1_julDay,sRatYRange[1]], $
+                          [fStudy2_julDay,sRatYRange[1]], $
+                          [fStudy2_julDay,sRatYRange[0]]]
+           
+           ;; Draw the large study area using POLYGON.
+           sRatPoly  = POLYGON(boxCoords, $
+                               TARGET=sRatPlots[0], $
+                               /DATA, $
+                               FILL_BACKGROUND=1, $
+                               FILL_COLOR=studyFillColor, $
+                               TRANSPARENCY=sRat_studyTransp, $
+                               ;; COLOR=studyFillColor, $
+                               THICK=2)
+           
+           ;; Draw the text for the large study area.
+           IF KEYWORD_SET(sRat_shadeTxt) THEN BEGIN
+              sRatText  = TEXT(MEAN([fStudy1_julDay,fStudy2_julDay]), $
+                               sRatYRange[1]+sRatTxtOffset, $
+                               TARGET=sRatPlots[0], $
+                               CLIP=0, $
+                               ALIGNMENT=0.5, $
+                               /DATA, $
+                               'FAST Study', $
+                               COLOR='black', $
+                               FONT_SIZE=18)
+           ENDIF
         ENDIF
+
      ENDIF     
+
+     IF KEYWORD_SET(sRatBoxPlots) THEN BEGIN
+        sRatBP = BOXPLOT_STORMPERIOD_RATIOS(stormRat.stats.BPD, $
+                                            BP_LOCATIONS=sRatBPLocs, $
+                                            BPWIDTH=sRatBPWidth, $
+                                            XRANGE=sRatBPXRange, $
+                                            YRANGE=sRatYRange, $
+                                            /ADD_MEDIANS, $
+                                            ;; MED_OFFSETS=sRatMedOffsets, $
+                                            /STACKEM, $
+                                            /ADD_BOXPLOT_NAMES, $
+                                            ADD_COLUMN_TEXT=sRatBPColumnText, $
+                                            XTHICK=xThick, $
+                                            YTHICK=yThick, $
+                                            ;; KILL_YTEXT=KEYWORD_SET(sRatTimeSeries), $
+                                            /KILL_YTEXT, $
+                                            THICK=sRatBPThick, $
+                                            TRANSPARENCY=sRatBPTransp, $
+                                            POSITION=sRatBPPos, $
+                                            CURRENT=window)
+
+        IF KEYWORD_SET(sRatBP_addPoints) THEN BEGIN
+           
+           sRatBPSyms  = SYMBOL( $
+                         sRatFASTXVals, $
+                         sRatFASTYVals*100, $
+                         'Star', $
+                         /DATA, $
+                         ;; /NORMAL, $
+                         ;; TARGET=this[0], $
+                         ;; TARGET=window, $
+                         ;; TARGET=sRatPlots[0], $
+                         TARGET=sRatBP[0], $
+                         CLIP=0, $
+                         SYM_COLOR=sRatFastCol, $
+                         SYM_SIZE=3.0, $
+                         /SYM_FILLED)
+        ENDIF
+
+     ENDIF
+
 
      IF KEYWORD_SET(saveAllPlots) THEN BEGIN
         IF ~KEYWORD_SET(plotDir) THEN SET_PLOT_DIR,plotDir,/FOR_STORMS,/ADD_TODAY
@@ -236,18 +433,19 @@ PRO JOURNAL__20160829__STORMSTATS__MASTER_URSI_PLOT
         STOP
      ENDELSE
 
+
   ENDIF 
 
-  IF KEYWORD_SET(dstMinPlots) THEN BEGIN
+  IF KEYWORD_SET(dMinPlots) THEN BEGIN
 
      IF N_ELEMENTS(window) EQ 0 THEN BEGIN
-        window = WINDOW(DIMENSIONS=[1000,800])
+        window = WINDOW(DIMENSIONS=[1200,800])
      ENDIF
 
      large_i     = WHERE(storms.is_largeStorm,COMPLEMENT=small_i)
 
-     ;; dstMinPlots = MAKE_ARRAY(3,/OBJ)
-     ;; dstMinPlots[0] = PLOT_DSTMIN_STATISTICS__TIME_SERIES( $
+     ;; dMinPlots = MAKE_ARRAY(3,/OBJ)
+     ;; dMinPlots[0] = PLOT_DSTMIN_STATISTICS__TIME_SERIES( $
      ;;                  all.min.BPD,all.times, $
      ;;                  /SUPPRESS_LINEPLOT, $
      ;;                  SCATTERDATA=TRANSPOSE([[storms.julday], $
@@ -256,92 +454,146 @@ PRO JOURNAL__20160829__STORMSTATS__MASTER_URSI_PLOT
      ;;                  YRANGE=[-300,0], $
      ;;                  ;; /OVERPLOT, $
      ;;                  /FULL_DST_DB, $
-     ;;                  POSITION=dstMinTimeSeriesPos, $
+     ;;                  POSITION=dMinTSPos, $
      ;;                  CURRENT=window)
 
-     dstMinPlots = MAKE_ARRAY(4,/OBJ)
+     IF KEYWORD_SET(dMinTimeSeries) THEN BEGIN
+        dMinPlots = MAKE_ARRAY(4,/OBJ)
 
-     dstMinPlots[0] = PLOT_DSTMIN_STATISTICS__TIME_SERIES( $
-                      small.min.BPD,small.times, $
-                      NAME=smallName, $
-                      XSHOWTEXT=dstMin_xShowText, $
-                      XTHICK=xThick, $
-                      YTHICK=yThick, $
-                      XMINOR=xMinor, $
-                      COLOR=smallColor, $
-                      YRANGE=dstMinYRange, $
-                      LINESTYLE=dstMinLineStyle[0], $
-                      THICK=thick, $
-                      SCATTERDATA=TRANSPOSE([[storms.julday[small_i]], $
-                                             [storms.dst[small_i]]]), $
-                      SCATTERSYMCOLOR=smallColor, $
-                      SCATTERSYMTRANSP=DMinSmallTransp, $
-                      POSITION=dstMinTimeSeriesPos, $
-                      /FULL_DST_DB, $
-                      CURRENT=window)
+        dMinPlots[0] = PLOT_DSTMIN_STATISTICS__TIME_SERIES( $
+                       small.min.BPD,small.times, $
+                       NAME=smallName, $
+                       XSHOWTEXT=dMin_xShowText, $
+                       XTHICK=xThick, $
+                       YTHICK=yThick, $
+                       XMINOR=xMinor, $
+                       COLOR=smallColor, $
+                       YRANGE=dMinYRange, $
+                       LINESTYLE=dMinLineStyle[0], $
+                       CLIP=0, $
+                       THICK=thick, $
+                       SCATTERDATA=TRANSPOSE([[storms.julday[small_i]], $
+                                              [storms.dst[small_i]]]), $
+                       SCATTERSYMBOL=dMinSymbols[0], $
+                       SCATTERSYMCOLOR=smallColor, $
+                       SCATTERSYMTRANSP=DMinSmallTransp, $
+                       POSITION=dMinTSPos, $
+                       /FULL_DST_DB, $
+                       CURRENT=window)
 
-     dstMinPlots[2] = PLOT_DSTMIN_STATISTICS__TIME_SERIES( $
-                      large.min.BPD,large.times, $
-                      NAME=largeName, $
-                      XSHOWTEXT=dstMin_xShowText, $
-                      XTHICK=xThick, $
-                      YTHICK=yThick, $
-                      XMINOR=xMinor, $
-                      COLOR=largeColor, $
-                      YRANGE=dstMinYRange, $
-                      LINESTYLE=dstMinLineStyle[1], $
-                      THICK=thick, $
-                      SCATTERDATA=TRANSPOSE([[storms.julday[large_i]], $
-                                             [storms.dst[large_i]]]), $
-                      SCATTERSYMCOLOR=largeColor, $
-                      SCATTERSYMTRANSP=DMinLargeTransp, $
-                      POSITION=dstMinTimeSeriesPos, $
-                      /OVERPLOT, $
-                      CURRENT=window, $
-                      /FULL_DST_DB)
+        dMinPlots[2] = PLOT_DSTMIN_STATISTICS__TIME_SERIES( $
+                       large.min.BPD,large.times, $
+                       NAME=largeName, $
+                       XSHOWTEXT=dMin_xShowText, $
+                       XTHICK=xThick, $
+                       YTHICK=yThick, $
+                       XMINOR=xMinor, $
+                       COLOR=largeColor, $
+                       YRANGE=dMinYRange, $
+                       LINESTYLE=dMinLineStyle[1], $
+                       CLIP=0, $
+                       THICK=thick, $
+                       SCATTERDATA=TRANSPOSE([[storms.julday[large_i]], $
+                                              [storms.dst[large_i]]]), $
+                       SCATTERSYMBOL=dMinSymbols[1], $
+                       SCATTERSYMCOLOR=largeColor, $
+                       SCATTERSYMTRANSP=DMinLargeTransp, $
+                       POSITION=dMinTSPos, $
+                       /OVERPLOT, $
+                       CURRENT=window, $
+                       /FULL_DST_DB)
 
-     legend          = LEGEND(TARGET=dstMinPlots[[0,2]], $
-                              HORIZONTAL_ALIGNMENT=0.0, $
-                              /DATA, $
-                              POSITION=dstMinLegPos)
+        legend          = LEGEND(TARGET=dMinPlots[[0,2]], $
+                                 HORIZONTAL_ALIGNMENT=0.0, $
+                                 /DATA, $
+                                 POSITION=dMinLegPos)
 
-     IF KEYWORD_SET(DstMin_shadeStudyArea) THEN BEGIN
+        IF KEYWORD_SET(DMin_shadeStudyArea) THEN BEGIN
 
-        ;; Define the large study area.
-        boxCoords   = [[fStudy1_julDay,dstMinYRange[0]], $
-                       [fStudy1_julDay,dstMinYRange[1]], $
-                       [fStudy2_julDay,dstMinYRange[1]], $
-                       [fStudy2_julDay,dstMinYRange[0]]]
-        
-        ;; Draw the large study area using POLYGON.
-        dstMinPoly  = POLYGON(boxCoords, $
-                              TARGET=dstMinPlots[0], $
-                              /DATA, $
-                              FILL_BACKGROUND=1, $
-                              FILL_COLOR='gray', $
-                              TRANSPARENCY=studyTransp, $
-                              ;; COLOR='gray', $
-                              THICK=2)
-        
-        ;; Draw the text for the large study area.
-        IF KEYWORD_SET(dstMin_shadeTxt) THEN BEGIN
-           dstMinText  = TEXT(MEAN([fStudy1_julDay,fStudy2_julDay]), $
-                              dstMinYRange[1]+dstMinTxtOffset, $
-                              TARGET=dstMinPlots[0], $
-                              CLIP=0, $
-                              ALIGNMENT=0.5, $
-                              /DATA, $
-                              'FAST Study', $
-                              COLOR='black', $
-                              FONT_SIZE=18)
+           ;; Define the large study area.
+           boxCoords   = [[fStudy1_julDay,dMinYRange[0]], $
+                          [fStudy1_julDay,dMinYRange[1]], $
+                          [fStudy2_julDay,dMinYRange[1]], $
+                          [fStudy2_julDay,dMinYRange[0]]]
+           
+           ;; Draw the large study area using POLYGON.
+           dMinPoly  = POLYGON(boxCoords, $
+                               TARGET=dMinPlots[0], $
+                               /DATA, $
+                               FILL_BACKGROUND=1, $
+                               FILL_COLOR=studyFillColor, $
+                               TRANSPARENCY=studyTransp, $
+                               ;; COLOR=studyFillColor, $
+                               THICK=2)
+           
+           ;; Draw the text for the large study area.
+           IF KEYWORD_SET(dMin_shadeTxt) THEN BEGIN
+              dMinText  = TEXT(MEAN([fStudy1_julDay,fStudy2_julDay]), $
+                               dMinYRange[1]+dMinTxtOffset, $
+                               TARGET=dMinPlots[0], $
+                               CLIP=0, $
+                               ALIGNMENT=0.5, $
+                               /DATA, $
+                               'FAST Study', $
+                               COLOR='black', $
+                               FONT_SIZE=18)
+           ENDIF
         ENDIF
      ENDIF
+
+     IF KEYWORD_SET(dMinBoxPlots) THEN BEGIN
+        dMinBPs = MAKE_ARRAY(2,/OBJ)
+
+        dMinBPs[0] = BOXPLOT_DSTMIN_STATISTICS( $
+                     finalDMin, $
+                     ;; /ADD_BOXPLOT_NAMES, $
+                     ;; INCLUDE_EXTRAS=0, $
+                     /EXCLUDE_OUTLIER_VALUES, $
+                     /EXCLUDE_SUSPECTED_OUTLIER_VALUES, $
+                     COLOR=dMinBPColor, $
+                     FILL_COLOR=dMinBPFillColor, $
+                     BPWIDTH=dMinBPWidth, $
+                     BP_LOCATIONS=dMinBPLocs, $
+                     XRANGE=dMinBPXRange, $
+                     YRANGE=dMinYRange, $
+                     LINESTYLE=dMinLineStyle, $
+                     THICK=dMinBPThick, $
+                     TRANSPARENCY=dMinBPTransp, $
+                     XMINOR=xMinor, $
+                     XTHICK=xThick, $
+                     YTHICK=yThick, $
+                     KILL_YTEXT=KEYWORD_SET(dMinTimeSeries), $
+                     ;; /KILL_YTEXT, $
+                     POSITION=dMinBPPos, $
+                     CURRENT=window)
+
+
+        IF KEYWORD_SET(dMinBP_addPoints) THEN BEGIN
+           
+           dMinBPSyms  = SYMBOL( $
+                         dMinFASTXVals, $
+                         [smallf.totalmin.bpd.data[2], $
+                          largef.totalmin.bpd.data[2]], $
+                         'Star', $
+                         /DATA, $
+                         ;; /NORMAL, $
+                         ;; TARGET=this[0], $
+                         ;; TARGET=window, $
+                         ;; TARGET=dMinPlots[0], $
+                         TARGET=dMinBPs[0], $
+                         CLIP=0, $
+                         SYM_COLOR=dMinFastCol, $
+                         SYM_SIZE=3.0, $
+                         /SYM_FILLED)
+        ENDIF
+     ENDIF
+
 
      IF KEYWORD_SET(saveAllPlots) THEN BEGIN
         IF ~KEYWORD_SET(plotDir) THEN SET_PLOT_DIR,plotDir,/FOR_STORMS,/ADD_TODAY
 
         PRINT,'Saving dstMin plot ...'
-        window.Save,plotDir+dstMinSPName
+        window.Save,plotDir+dMinSPName
 
         window.Close
         window = !NULL
@@ -351,108 +603,162 @@ PRO JOURNAL__20160829__STORMSTATS__MASTER_URSI_PLOT
 
   ENDIF
 
-  IF KEYWORD_SET(stormFreqPlots) THEN BEGIN
+  IF KEYWORD_SET(sFrqPlots) THEN BEGIN
 
      IF N_ELEMENTS(window) EQ 0 THEN BEGIN
-        window = WINDOW(DIMENSIONS=[1000,800])
+        window = WINDOW(DIMENSIONS=[1200,800])
      ENDIF
 
-     iPlot              = 0
-     freqPlots          = MAKE_ARRAY(3,/OBJ)
+     IF KEYWORD_SET(sFrqTimeSeries) THEN BEGIN
 
-     freqPlots[iPlot++] = PLOT_DST_STORMFREQ_STATISTICS__TIME_SERIES( $
-                          small, $
-                          /FULL_DST_DB, $
-                          YRANGE=freqYRange, $
-                          FREQUNITS=freqUnits, $
-                          NAME=smallName, $
-                          XSHOWTEXT=freq_xShowText, $
-                          XTHICK=xThick, $
-                          YTHICK=yThick, $
-                          XMINOR=xMinor, $
-                          LINESTYLE=freqLineStyle[iPlot-1], $
-                          THICK=thick, $
-                          COLOR=smallColor, $
-                          POSITION=stormFreqTimeSeriesPos, $
-                          ;; /OVERPLOT, $
-                          CURRENT=window)
+        iPlot              = 0
+        sFrqPlots          = MAKE_ARRAY(3,/OBJ)
 
-     freqPlots[iPlot++] = PLOT_DST_STORMFREQ_STATISTICS__TIME_SERIES( $
-                          large, $
-                          YRANGE=freqYRange, $
-                          /FULL_DST_DB, $
-                          FREQUNITS=freqUnits, $
-                          NAME=largeName, $
-                          XSHOWTEXT=freq_xShowText, $
-                          XTHICK=xThick, $
-                          YTHICK=yThick, $
-                          XMINOR=xMinor, $
-                          LINESTYLE=freqLineStyle[iPlot-1], $
-                          THICK=thick, $
-                          COLOR=largeColor, $
-                          POSITION=stormFreqTimeSeriesPos, $
-                          /OVERPLOT, $
-                          CURRENT=window)
+        sFrqPlots[iPlot++] = PLOT_DST_STORMFREQ_STATISTICS__TIME_SERIES( $
+                             small, $
+                             /FULL_DST_DB, $
+                             YRANGE=sFrqYRange, $
+                             FREQUNITS=sFrqUnits, $
+                             NAME=smallName, $
+                             XSHOWTEXT=sFrq_xShowText, $
+                             XTHICK=xThick, $
+                             YTHICK=yThick, $
+                             XMINOR=xMinor, $
+                             LINESTYLE=sFrqLineStyle[iPlot-1], $
+                             THICK=thick, $
+                             COLOR=smallColor, $
+                             POSITION=sFrqTSPos, $
+                             ;; /OVERPLOT, $
+                             CURRENT=window)
 
-     freqPlots[iPlot++] = PLOT_DST_STORMFREQ_STATISTICS__TIME_SERIES( $
-                          all, $
-                          YRANGE=freqYRange, $
-                          /FULL_DST_DB, $
-                          FREQUNITS=freqUnits, $
-                          NAME=freqTotName, $
-                          XSHOWTEXT=freq_xShowText, $
-                          XTHICK=xThick, $
-                          YTHICK=yThick, $
-                          XMINOR=xMinor, $
-                          LINESTYLE=freqLineStyle[iPlot-1], $
-                          THICK=thick, $
-                          POSITION=stormFreqTimeSeriesPos, $
-                          /OVERPLOT, $
-                          CURRENT=window)
+        sFrqPlots[iPlot++] = PLOT_DST_STORMFREQ_STATISTICS__TIME_SERIES( $
+                             large, $
+                             YRANGE=sFrqYRange, $
+                             /FULL_DST_DB, $
+                             FREQUNITS=sFrqUnits, $
+                             NAME=largeName, $
+                             XSHOWTEXT=sFrq_xShowText, $
+                             XTHICK=xThick, $
+                             YTHICK=yThick, $
+                             XMINOR=xMinor, $
+                             LINESTYLE=sFrqLineStyle[iPlot-1], $
+                             THICK=thick, $
+                             COLOR=largeColor, $
+                             POSITION=sFrqTSPos, $
+                             /OVERPLOT, $
+                             CURRENT=window)
 
-     stormFreqLegend = LEGEND(TARGET=freqPlots[freqLegendIncl], $
-                              /DATA, $
-                              HORIZONTAL_ALIGNMENT=0.0, $
-                              ;; /NORMAL, $
-                              POSITION=freqLegPos)
+        sFrqPlots[iPlot++] = PLOT_DST_STORMFREQ_STATISTICS__TIME_SERIES( $
+                             all, $
+                             YRANGE=sFrqYRange, $
+                             /FULL_DST_DB, $
+                             FREQUNITS=sFrqUnits, $
+                             NAME=sFrqTotName, $
+                             XSHOWTEXT=sFrq_xShowText, $
+                             XTHICK=xThick, $
+                             YTHICK=yThick, $
+                             XMINOR=xMinor, $
+                             LINESTYLE=sFrqLineStyle[iPlot-1], $
+                             COLOR=allColor, $
+                             THICK=thick, $
+                             POSITION=sFrqTSPos, $
+                             /OVERPLOT, $
+                             CURRENT=window)
 
-     IF KEYWORD_SET(freq_shadeStudyArea) THEN BEGIN
+        sFrqLegend = LEGEND(TARGET=sFrqPlots[sFrqLegendIncl], $
+                            /DATA, $
+                            HORIZONTAL_ALIGNMENT=0.0, $
+                            ;; /NORMAL, $
+                            POSITION=sFrqLegPos)
 
-        ;; Define the large study area.
-        boxCoords    = [[fStudy1_julDay,freqYRange[0]], $
-                        [fStudy1_julDay,freqYRange[1]], $
-                        [fStudy2_julDay,freqYRange[1]], $
-                        [fStudy2_julDay,freqYRange[0]]]
-        
-        ;; Draw the large study area using POLYGON.
-        freqPoly     = POLYGON(boxCoords, $
-                               TARGET=freqPlots[0], $
-                               /DATA, $
-                               FILL_BACKGROUND=1, $
-                               FILL_COLOR='gray', $
-                               TRANSPARENCY=studyTransp, $
-                               ;; COLOR='gray', $
-                               THICK=2)
-        
-        ;; Draw the text for the large study area.
-        IF KEYWORD_SET(freq_shadeTxt) THEN BEGIN
-           freqText     = TEXT(MEAN([fStudy1_julDay,fStudy2_julDay]), $
-                               freqYRange[1]+freqTxtOffset, $
-                               CLIP=0, $
-                               ALIGNMENT=0.5, $
-                               /DATA, $
-                               TARGET=freqPlots[0], $
-                               'FAST Study', $
-                               COLOR='black', $
-                               FONT_SIZE=18)
+        IF KEYWORD_SET(sFrq_shadeStudyArea) THEN BEGIN
+
+           ;; Define the large study area.
+           boxCoords    = [[fStudy1_julDay,sFrqYRange[0]], $
+                           [fStudy1_julDay,sFrqYRange[1]], $
+                           [fStudy2_julDay,sFrqYRange[1]], $
+                           [fStudy2_julDay,sFrqYRange[0]]]
+           
+           ;; Draw the large study area using POLYGON.
+           sFrqPoly     = POLYGON(boxCoords, $
+                                  TARGET=sFrqPlots[0], $
+                                  /DATA, $
+                                  FILL_BACKGROUND=1, $
+                                  FILL_COLOR=studyFillColor, $
+                                  TRANSPARENCY=studyTransp, $
+                                  ;; COLOR=studyFillColor, $
+                                  THICK=2)
+           
+           ;; Draw the text for the large study area.
+           IF KEYWORD_SET(sFrq_shadeTxt) THEN BEGIN
+              sFrqText     = TEXT(MEAN([fStudy1_julDay,fStudy2_julDay]), $
+                                  sFrqYRange[1]+sFrqTxtOffset, $
+                                  CLIP=0, $
+                                  ALIGNMENT=0.5, $
+                                  /DATA, $
+                                  TARGET=sFrqPlots[0], $
+                                  'FAST Study', $
+                                  COLOR='black', $
+                                  FONT_SIZE=18)
+           ENDIF
+
+        ENDIF
+
+     ENDIF
+
+     IF KEYWORD_SET(sFrqBoxPlots) THEN BEGIN
+        sFrqBPs = MAKE_ARRAY(3,/OBJ)
+
+        sFrqBPs[0] = BOXPLOT_DSTMIN_STATISTICS( $
+                     finalFreq, $
+                     ;; /ADD_BOXPLOT_NAMES, $
+                     ;; INCLUDE_EXTRAS=0, $
+                     /EXCLUDE_OUTLIER_VALUES, $
+                     /EXCLUDE_SUSPECTED_OUTLIER_VALUES, $
+                     COLOR=sFrqColor, $
+                     FILL_COLOR=sFrqBPFillColor, $
+                     BPWIDTH=sFrqBPWidth, $
+                     BP_LOCATIONS=sFrqBPLocs, $
+                     XRANGE=sFrqBPXRange, $
+                     YRANGE=sFrqYRange, $
+                     THICK=sFrqBPThick, $
+                     TRANSPARENCY=sFrqBPTransp, $
+                     LINESTYLE=sFrqLineStyle, $
+                     XMINOR=xMinor, $
+                     XTHICK=xThick, $
+                     YTHICK=yThick, $
+                     KILL_YTEXT=KEYWORD_SET(sFrqTimeSeries), $
+                     ;; /KILL_YTEXT, $
+                     POSITION=sFrqBPPos, $
+                     CURRENT=window)
+
+
+        IF KEYWORD_SET(sFrqBP_addPoints) THEN BEGIN
+           
+           sFrqBPSyms  = SYMBOL( $
+                         sFrqFASTXVals, $
+                         [smallf.freq.bpd.data[2], $
+                          largef.freq.bpd.data[2], $
+                          allf.freq.bpd.data[2]], $
+                         'Star', $
+                         /DATA, $
+                         ;; /NORMAL, $
+                         ;; TARGET=this[0], $
+                         ;; TARGET=window, $
+                         ;; TARGET=sFrqPlots[0], $
+                         TARGET=sFrqBPs[0], $
+                         CLIP=0, $
+                         SYM_COLOR=sFrqFastCol, $
+                         SYM_SIZE=3.0, $
+                         /SYM_FILLED)
         ENDIF
      ENDIF
 
      IF KEYWORD_SET(saveAllPlots) THEN BEGIN
         IF ~KEYWORD_SET(plotDir) THEN SET_PLOT_DIR,plotDir,/FOR_STORMS,/ADD_TODAY
 
-        PRINT,'Saving freq plot ...'
-        window.Save,plotDir+freqSPName
+        PRINT,'Saving storm frequency plot ...'
+        window.Save,plotDir+sFrqSPName
 
         window.Close
         window = !NULL
