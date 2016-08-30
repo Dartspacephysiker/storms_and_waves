@@ -1,4 +1,6 @@
 ;;2016/08/29
+;;You want statistics of big storms, don't you? Bare tenk på det: 
+;;CALDAT,storms.julday[where(storms.dst LE -300)],month,day,year
 PRO JOURNAL__20160829__STORMSTATS__MASTER_URSI_PLOT
 
   COMPILE_OPT IDL2
@@ -10,11 +12,11 @@ PRO JOURNAL__20160829__STORMSTATS__MASTER_URSI_PLOT
   sRatTimeSeries       = 1
   sRatBoxPlots         = 1
 
-  dMinPlots            = 1
+  dMinPlots            = 0
   dMinTimeSeries       = 1
   dMinBoxPlots         = 1
 
-  sFrqPlots            = 1
+  sFrqPlots            = 0
   sFrqTimeSeries       = 1
   sFrqBoxPlots         = 1
   
@@ -44,7 +46,7 @@ PRO JOURNAL__20160829__STORMSTATS__MASTER_URSI_PLOT
   ;; sRatYRange        = [0,1.0]
   sRatYRange           = [0,100]
   sRat_xShowText       = 0
-  sRat_shadeTxt        = 1
+  sRat_shadeTxt        = 0
   ;; sRatTxtOffset     = 0.02
   sRatTxtOffset        = 2
   sRatLineStyle        = ['-','--']
@@ -55,7 +57,7 @@ PRO JOURNAL__20160829__STORMSTATS__MASTER_URSI_PLOT
   sRatBPTransp         = 30
   sRatBPWidth          = 1.0
   sRatBPXRange         = [0,10]
-  sRatBPColumnText     = '1957–2011'
+  sRatBPColumnText     = '1957–!C2011'
 
   sRatBP_addPoints     = 1
   sRatFASTXVals        = REPLICATE(8.2,3)
@@ -63,6 +65,7 @@ PRO JOURNAL__20160829__STORMSTATS__MASTER_URSI_PLOT
   sRatFASTYVals[1]     = sRatFASTYVals[0]+sRatFASTYVals[1]
   sRatFastCol          = [smallColor,largeColor,allColor]
   ;; sRatFastCol       = REPLICATE('green',3)
+  sRatBP_addText       = 1
 
   ;;Dstmin plot options
   DMinLargeTransp      = 60
@@ -122,7 +125,7 @@ PRO JOURNAL__20160829__STORMSTATS__MASTER_URSI_PLOT
   ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
   ;;Plot minutiae
 
-  studyTransp          = 80
+  studyTransp          = sRat_studyTransp
   studyFillColor       = 'light green'
   xThick               = 2.0
   yThick               = 2.0
@@ -372,9 +375,10 @@ PRO JOURNAL__20160829__STORMSTATS__MASTER_URSI_PLOT
                                CLIP=0, $
                                ALIGNMENT=0.5, $
                                /DATA, $
-                               'FAST Study', $
+                               'FAST!CStudy', $
                                COLOR='black', $
-                               FONT_SIZE=18)
+                               VERTICAL_ALIGNMENT=0.5, $
+                               FONT_SIZE=16)
            ENDIF
         ENDIF
 
@@ -416,6 +420,24 @@ PRO JOURNAL__20160829__STORMSTATS__MASTER_URSI_PLOT
                          SYM_COLOR=sRatFastCol, $
                          SYM_SIZE=3.0, $
                          /SYM_FILLED)
+        ENDIF
+
+        IF KEYWORD_SET(sRatBP_addText) THEN BEGIN
+           
+           sRatBPText  = TEXT( $
+                         sRatFASTXVals[0], $
+                         102, $
+                         'FAST!CStudy', $
+                         /DATA, $
+                         ;; /NORMAL, $
+                         ;; TARGET=this[0], $
+                         ;; TARGET=window, $
+                         ;; TARGET=sRatPlots[0], $
+                         TARGET=sRatBP[0], $
+                         ALIGNMENT=0.5, $
+                         VERTICAL_ALIGNMENT=0.5, $
+                         CLIP=0, $
+                         FONT_SIZE=16)
         ENDIF
 
      ENDIF
