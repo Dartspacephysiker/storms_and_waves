@@ -8,7 +8,7 @@ PRO JOURNAL__20160829__STORMSTATS__MASTER_URSI_PLOT
   ;;SavePlot names
   saveAllPlots         = 1
 
-  stormRatPlots        = 1
+  stormRatPlots        = 0
   sRatTimeSeries       = 1
   sRatBoxPlots         = 1
 
@@ -16,7 +16,7 @@ PRO JOURNAL__20160829__STORMSTATS__MASTER_URSI_PLOT
   dMinTimeSeries       = 1
   dMinBoxPlots         = 1
 
-  sFrqPlots            = 0
+  sFrqPlots            = 1
   sFrqTimeSeries       = 1
   sFrqBoxPlots         = 1
   
@@ -109,6 +109,8 @@ PRO JOURNAL__20160829__STORMSTATS__MASTER_URSI_PLOT
   ;; sFrqBPLocs           = [2.5,3.0,3.5] ;small and large and ALL
   ;; sFrqBPLocs           = [3.0,3.0,3.0] ;small and large and ALL
   sFrqBPLocs           = [4.0,2.5,5.5] ;small and large and ALL
+  ;; sFrqBPLocs           = [2.5,4.0,4.0] ;small and large and ALL
+  ;; sFrqBPLocs           = REPLICATE(4.0,3) ;small and large and ALL
   sFrqBPThick          = 2.0
   sFrqBPTransp         = 30
   sFrqBPWidth          = [1.0,1.0,1.0]
@@ -126,6 +128,9 @@ PRO JOURNAL__20160829__STORMSTATS__MASTER_URSI_PLOT
   ;;Plot minutiae
 
   studyTransp          = sRat_studyTransp
+  ;; studyBPSym           = 'Star'
+  studyBPSym           = '+'
+  studyBPSym_thick     = 2.0
   studyFillColor       = 'light green'
   xThick               = 2.0
   yThick               = 2.0
@@ -395,11 +400,11 @@ PRO JOURNAL__20160829__STORMSTATS__MASTER_URSI_PLOT
                                             /STACKEM, $
                                             /ADD_BOXPLOT_NAMES, $
                                             ADD_COLUMN_TEXT=sRatBPColumnText, $
+                                            THICK=sRatBPThick, $
                                             XTHICK=xThick, $
                                             YTHICK=yThick, $
                                             ;; KILL_YTEXT=KEYWORD_SET(sRatTimeSeries), $
                                             /KILL_YTEXT, $
-                                            THICK=sRatBPThick, $
                                             TRANSPARENCY=sRatBPTransp, $
                                             POSITION=sRatBPPos, $
                                             CURRENT=window)
@@ -409,7 +414,8 @@ PRO JOURNAL__20160829__STORMSTATS__MASTER_URSI_PLOT
            sRatBPSyms  = SYMBOL( $
                          sRatFASTXVals, $
                          sRatFASTYVals*100, $
-                         'Star', $
+                         studyBPSym, $
+                         SYM_THICK=studyBPSym_thick, $
                          /DATA, $
                          ;; /NORMAL, $
                          ;; TARGET=this[0], $
@@ -596,7 +602,8 @@ PRO JOURNAL__20160829__STORMSTATS__MASTER_URSI_PLOT
                          dMinFASTXVals, $
                          [smallf.totalmin.bpd.data[2], $
                           largef.totalmin.bpd.data[2]], $
-                         'Star', $
+                         studyBPSym, $
+                         SYM_THICK=studyBPSym_thick, $
                          /DATA, $
                          ;; /NORMAL, $
                          ;; TARGET=this[0], $
@@ -762,7 +769,8 @@ PRO JOURNAL__20160829__STORMSTATS__MASTER_URSI_PLOT
                          [smallf.freq.bpd.data[2], $
                           largef.freq.bpd.data[2], $
                           allf.freq.bpd.data[2]], $
-                         'Star', $
+                         studyBPSym, $
+                         SYM_THICK=studyBPSym_thick, $
                          /DATA, $
                          ;; /NORMAL, $
                          ;; TARGET=this[0], $

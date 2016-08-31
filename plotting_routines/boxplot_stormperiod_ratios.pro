@@ -29,10 +29,10 @@ FUNCTION BOXPLOT_STORMPERIOD_RATIOS, $
    MEDIAN=median, $
    NOTCH=notch, $
    LINESTYLE=lineStyle, $
+   THICK=thick, $
    XTHICK=xThick, $
    YTHICK=yThick, $
    KILL_YTEXT=kill_yText, $
-   THICK=thick, $
    TRANSPARENCY=transparency, $
    WHISKERS=whiskers, $
    MARGIN=margin, $
@@ -73,15 +73,16 @@ FUNCTION BOXPLOT_STORMPERIOD_RATIOS, $
      window       = WINDOW(DIMENSIONS=[1000,800])
   ENDIF
   
-  nPlots          = KEYWORD_SET(stackEm) ? 3 : 1
-  plotArr         = MAKE_ARRAY(nPlots,/OBJ)
+  nBoxPlots          = KEYWORD_SET(stackEm) ? 3 : 1
+  plotArr         = MAKE_ARRAY(nBoxPlots,/OBJ)
 
   ;; plotNames       = ['Quiescent','Main','Recovery']
   ;; colorArr        = ['light gray','Red','Blue']
   ;; plotNames       = ['Main','Recovery','Quiescent']
   ;; colorArr        = ['Red','Blue','light gray']
   plotNames       = ['Recovery','Main','Quiescent']
-  colorArr        = ['Blue','Red','light gray']
+  color           = N_ELEMENTS(color)      GT 0 ? color      : ['Blue','Red','light gray']
+  ;; fill_color      = N_ELEMENTS(fill_color) GT 0 ? fill_color : ['Blue','Red','light gray']
   ;; lsArr           = ['-','--','-.']
 
   x_vals          = KEYWORD_SET(bp_locations) ? bp_locations : [-1,0,1]
@@ -96,7 +97,7 @@ FUNCTION BOXPLOT_STORMPERIOD_RATIOS, $
         IF KEYWORD_SET(add_medians) THEN BEGIN
 
            ;;Adds median of each previous bp
-           FOR iPlot=0,nPlots-1 DO BEGIN
+           FOR iPlot=0,nBoxPlots-1 DO BEGIN
 
               CASE KEYWORD_SET(median_offsets) OF
                  1: BEGIN
@@ -104,7 +105,7 @@ FUNCTION BOXPLOT_STORMPERIOD_RATIOS, $
                  END
                  ELSE: BEGIN
                     j = iPlot+1
-                    WHILE j LT nPlots-1 DO BEGIN
+                    WHILE j LT nBoxPlots-1 DO BEGIN
                        plotDat[j,*] += plotDat[iPlot,2]
                        j++
                     ENDWHILE
@@ -115,7 +116,7 @@ FUNCTION BOXPLOT_STORMPERIOD_RATIOS, $
 
         ENDIF
 
-        FOR iPlot=0,nPlots-1 DO BEGIN
+        FOR iPlot=0,nBoxPlots-1 DO BEGIN
            ;; PRINT,'Doing' + plotNames[i] + '...'
 
            ;;Get extras, if possible
@@ -164,8 +165,10 @@ FUNCTION BOXPLOT_STORMPERIOD_RATIOS, $
                                          SYMBOL_MEANS=symbol_means, $
                                          SYMBOL_OUTLIERS=symbol_outliers, $
                                          SYMBOL_SUSPECTED_OUTLIERS=symbol_suspected_outliers, $
-                                         COLOR=colorArr[iPlot], $
-                                         FILL_COLOR=colorArr[iPlot], $
+                                         COLOR=N_ELEMENTS(color) EQ nBoxPlots ? $
+                                         color[iPlot] : color, $
+                                         FILL_COLOR=N_ELEMENTS(fill_color) EQ nBoxPlots ? $
+                                         fill_color[iPlot] : fill_color, $
                                          ;; BACKGROUND_COLOR=background_color, $
                                          LOWER_COLOR=lower_color, $
                                          LINESTYLE=lineStyle, $
