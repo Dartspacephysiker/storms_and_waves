@@ -8,11 +8,11 @@ PRO JOURNAL__20160829__STORMSTATS__MASTER_URSI_PLOT
   ;;SavePlot names
   saveAllPlots         = 1
 
-  stormRatPlots        = 0
+  stormRatPlots        = 1
   sRatTimeSeries       = 1
   sRatBoxPlots         = 1
 
-  dMinPlots            = 0
+  dMinPlots            = 1
   dMinTimeSeries       = 1
   dMinBoxPlots         = 1
 
@@ -38,7 +38,7 @@ PRO JOURNAL__20160829__STORMSTATS__MASTER_URSI_PLOT
   smallName            = 'Small storms'
   largeColor           = 'red'
   largeName            = 'Large storms'
-  allColor             = 'dark gray'
+  allColor             = 'black'
 
   ;;stormRatio plot options
   sRat_studyTransp     = 45
@@ -54,7 +54,7 @@ PRO JOURNAL__20160829__STORMSTATS__MASTER_URSI_PLOT
   ;; sRatBPLocs        = [-0.5,0.5,0.0] ;mp, rp, quiescence
   sRatBPLocs           = REPLICATE(4.0,3) ;mp, rp, quiescence
   sRatBPThick          = 2.0
-  sRatBPTransp         = 30
+  sRatBPTransp         = 15
   sRatBPWidth          = 1.0
   sRatBPXRange         = [0,10]
   sRatBPColumnText     = '1957–!C2011'
@@ -78,6 +78,7 @@ PRO JOURNAL__20160829__STORMSTATS__MASTER_URSI_PLOT
   dMinTxtOffset        = 10
   dMinLineStyle        = ['-','--']
   dMinSymbols          = ['+','x']
+  ;; dMinLargeThick       = 4.0
 
   dMinBPLocs           = REPLICATE(4.0,2) ;mp, rp, quiescence
   dMinBPThick          = 2.0
@@ -112,7 +113,7 @@ PRO JOURNAL__20160829__STORMSTATS__MASTER_URSI_PLOT
   ;; sFrqBPLocs           = [2.5,4.0,4.0] ;small and large and ALL
   ;; sFrqBPLocs           = REPLICATE(4.0,3) ;small and large and ALL
   sFrqBPThick          = 2.0
-  sFrqBPTransp         = 30
+  sFrqBPTransp         = 15
   sFrqBPWidth          = [1.0,1.0,1.0]
   sFrqBPXRange         = [0,10]
 
@@ -219,6 +220,12 @@ PRO JOURNAL__20160829__STORMSTATS__MASTER_URSI_PLOT
           /ADD_FREQ_STATS, $
           VERBOSE=verbose) 
   
+  fast_i         = WHERE((storms.julDay GE fStudy1_julDay) AND $
+                         (storms.julDay LE fStudy2_julDay),count)
+  outlier_i      = WHERE(storms.dst LE $
+                         MAX(large.totalmin.bpd.extras.suspected_outlier_values[1,*]))
+  outlier_fast_i = CGSETINTERSECTION(fast_i,outlier_i,COUNT=nFastOutlier)
+
   small = GET_DST_STATISTICS_TIMESERIES_FROM_STORMSTRUCT( $
           storms, $
           /SMALL_STORMS, $
@@ -520,7 +527,7 @@ PRO JOURNAL__20160829__STORMSTATS__MASTER_URSI_PLOT
                        YRANGE=dMinYRange, $
                        LINESTYLE=dMinLineStyle[1], $
                        CLIP=0, $
-                       THICK=thick, $
+                       THICK=dMinLargeThick, $
                        SCATTERDATA=TRANSPOSE([[storms.julday[large_i]], $
                                               [storms.dst[large_i]]]), $
                        SCATTERSYMBOL=dMinSymbols[1], $

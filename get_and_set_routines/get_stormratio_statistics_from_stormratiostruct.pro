@@ -77,7 +77,7 @@ FUNCTION GET_STORMRATIO_STATISTICS_FROM_STORMRATIOSTRUCT,stormRatStruct, $
   stormRatStats       = {BPD     : tmpBPD, $
                          mom     : stormRatMoms, $
                          ;; name    : "Storm Ratios"}
-                         name    : ['Quiescent','Main','Recovery']}
+                         name    : ['Main','Recovery','Quiescent']}
 
 
 

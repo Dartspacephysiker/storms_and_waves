@@ -81,7 +81,7 @@ FUNCTION BOXPLOT_STORMPERIOD_RATIOS, $
   ;; plotNames       = ['Main','Recovery','Quiescent']
   ;; colorArr        = ['Red','Blue','light gray']
   plotNames       = ['Recovery','Main','Quiescent']
-  color           = N_ELEMENTS(color)      GT 0 ? color      : ['Blue','Red','light gray']
+  color           = N_ELEMENTS(color)      GT 0 ? color      : ['Blue','Red','black']
   ;; fill_color      = N_ELEMENTS(fill_color) GT 0 ? fill_color : ['Blue','Red','light gray']
   ;; lsArr           = ['-','--','-.']
 

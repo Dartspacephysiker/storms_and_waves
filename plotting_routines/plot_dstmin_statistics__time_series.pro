@@ -110,7 +110,7 @@ FUNCTION PLOT_DSTMIN_STATISTICS__TIME_SERIES,BPD,times, $
                                    XRANGE=xRange, $
                                    YRANGE=yRange, $
                                    NAME=KEYWORD_SET(name) ? name[iPlot] : !NULL, $
-                                   YTITLE='Dst minimum (nT)', $
+                                   YTITLE='!6Dst!X$_{min}$ (nT)', $
                                    XMAJOR=nXTicks, $
                                    XMINOR=xMinor, $
                                    XTICKVALUES=xTickValues, $

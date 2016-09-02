@@ -5,4 +5,4 @@
   yTickFont_style        =  1      
   symSize                =  2.0            
   symThick               =  2.0           
-  thick                  =  2.5              
+  thick                  =  N_ELEMENTS(thick) GT 0 ? thick : 3.0
