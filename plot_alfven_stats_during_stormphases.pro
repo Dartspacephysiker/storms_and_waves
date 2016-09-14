@@ -138,6 +138,7 @@ PRO PLOT_ALFVEN_STATS_DURING_STORMPHASES,$
    DO_DESPUNDB=do_despunDB, $
    USE_AACGM=use_aacgm, $
    NEVENTSPLOTRANGE=nEventsPlotRange, $
+   NEVENTSPLOT__NOMASK=nEventsPlot__noMask, $
    LOGNEVENTSPLOT=logNEventsPlot, $
    NEVENTSPLOTAUTOSCALE=nEventsPlotAutoscale, $
    NEVENTSPLOTNORMALIZE=nEventsPlotNormalize, $
@@ -369,6 +370,7 @@ PRO PLOT_ALFVEN_STATS_DURING_STORMPHASES,$
                                   DO_DESPUNDB=do_despunDB, $
                                   USE_AACGM=use_aacgm, $
                                   NEVENTSPLOTRANGE=nEventsPlotRange, $
+                                  NEVENTSPLOT__NOMASK=nEventsPlot__noMask, $
                                   LOGNEVENTSPLOT=logNEventsPlot, $
                                   NEVENTSPLOTAUTOSCALE=nEventsPlotAutoscale, $
                                   NEVENTSPLOTNORMALIZE=nEventsPlotNormalize, $

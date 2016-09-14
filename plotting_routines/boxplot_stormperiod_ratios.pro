@@ -167,8 +167,9 @@ FUNCTION BOXPLOT_STORMPERIOD_RATIOS, $
                                          SYMBOL_SUSPECTED_OUTLIERS=symbol_suspected_outliers, $
                                          COLOR=N_ELEMENTS(color) EQ nBoxPlots ? $
                                          color[iPlot] : color, $
-                                         FILL_COLOR=N_ELEMENTS(fill_color) EQ nBoxPlots ? $
-                                         fill_color[iPlot] : fill_color, $
+                                         ;; FILL_COLOR=N_ELEMENTS(fill_color) EQ nBoxPlots ? $
+                                         ;; fill_color[iPlot] : fill_color, $
+                                         ;; FILL_COLOR=(iPlot EQ 2 ? 'light gray' : !NULL), $
                                          ;; BACKGROUND_COLOR=background_color, $
                                          LOWER_COLOR=lower_color, $
                                          LINESTYLE=lineStyle, $
@@ -176,7 +177,8 @@ FUNCTION BOXPLOT_STORMPERIOD_RATIOS, $
                                          YTHICK=yThick, $
                                          THICK=thick, $
                                          YSHOWTEXT=KEYWORD_SET(kill_yText) ? 0 : !NULL, $
-                                         TRANSPARENCY=transparency, $
+                                         TRANSPARENCY=(iPlot EQ 2 ? !NULL : transparency), $
+                                         ;; TRANSPARENCY=transparency, $
                                          MARGIN=margin, $
                                          LAYOUT=layout, $
                                          POSITION=position, $
@@ -220,11 +222,13 @@ FUNCTION BOXPLOT_STORMPERIOD_RATIOS, $
                                       SYMBOL_SUSPECTED_OUTLIERS=symbol_suspected_outliers, $
                                       ;; COLOR=colorArr, $
                                       ;; FILL_COLOR=colorArr[iPlot], $
+                                      ;; FILL_COLOR=(iPlot EQ 2 ? 'light gray' : !NULL), $
                                       ;; FILL_COLOR=colorArr, $
                                       ;; BACKGROUND_COLOR=background_color, $
                                       LOWER_COLOR=lower_color, $
                                       LINESTYLE=lineStyle, $
-                                      TRANSPARENCY=transparency, $
+                                      TRANSPARENCY=(iPlot EQ 2 ? !NULL : transparency), $
+                                      ;; TRANSPARENCY=transparency, $
                                       MARGIN=margin, $
                                       LAYOUT=layout, $
                                       POSITION=position, $
@@ -276,7 +280,7 @@ FUNCTION BOXPLOT_STORMPERIOD_RATIOS, $
                     TARGET=plotArr[0], $
                     /DATA, $
                     ;; FONT_SIZE=xTickFont_size, $
-                    FONT_SIZE=16, $
+                    FONT_SIZE=18, $
                     VERTICAL_ALIGNMENT=0.5, $
                     CLIP=0, $
                     ALIGNMENT=0.5)

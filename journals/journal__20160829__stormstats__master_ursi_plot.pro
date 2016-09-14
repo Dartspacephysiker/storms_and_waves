@@ -101,7 +101,7 @@ PRO JOURNAL__20160829__STORMSTATS__MASTER_URSI_PLOT
   ;; sFrqTotName       = 'All storms'
   sFrq_xShowText       = 1
   sFrqTotName          = 'Total'
-  sFrqLegPos           = [JULDAY(6,1,1963),sFrqYRange[1]-5]
+  sFrqLegPos           = [JULDAY(4,1,1962),sFrqYRange[1]-4.0]
   sFrq_shadeStudyArea  = 1
   sFrq_shadeTxt        = 0
   sFrqTxtOffset        = 2
@@ -390,7 +390,7 @@ PRO JOURNAL__20160829__STORMSTATS__MASTER_URSI_PLOT
                                'FAST!CStudy', $
                                COLOR='black', $
                                VERTICAL_ALIGNMENT=0.5, $
-                               FONT_SIZE=16)
+                               FONT_SIZE=18)
            ENDIF
         ENDIF
 
@@ -450,7 +450,7 @@ PRO JOURNAL__20160829__STORMSTATS__MASTER_URSI_PLOT
                          ALIGNMENT=0.5, $
                          VERTICAL_ALIGNMENT=0.5, $
                          CLIP=0, $
-                         FONT_SIZE=16)
+                         FONT_SIZE=18)
         ENDIF
 
      ENDIF
@@ -505,7 +505,7 @@ PRO JOURNAL__20160829__STORMSTATS__MASTER_URSI_PLOT
                        COLOR=smallColor, $
                        YRANGE=dMinYRange, $
                        LINESTYLE=dMinLineStyle[0], $
-                       CLIP=0, $
+                       CLIP=clip, $
                        THICK=thick, $
                        SCATTERDATA=TRANSPOSE([[storms.julday[small_i]], $
                                               [storms.dst[small_i]]]), $
@@ -526,7 +526,7 @@ PRO JOURNAL__20160829__STORMSTATS__MASTER_URSI_PLOT
                        COLOR=largeColor, $
                        YRANGE=dMinYRange, $
                        LINESTYLE=dMinLineStyle[1], $
-                       CLIP=0, $
+                       CLIP=clip, $
                        THICK=dMinLargeThick, $
                        SCATTERDATA=TRANSPOSE([[storms.julday[large_i]], $
                                               [storms.dst[large_i]]]), $
@@ -539,6 +539,7 @@ PRO JOURNAL__20160829__STORMSTATS__MASTER_URSI_PLOT
                        /FULL_DST_DB)
 
         legend          = LEGEND(TARGET=dMinPlots[[0,2]], $
+                                 FONT_SIZE=18, $
                                  HORIZONTAL_ALIGNMENT=0.0, $
                                  /DATA, $
                                  POSITION=dMinLegPos)
@@ -703,6 +704,7 @@ PRO JOURNAL__20160829__STORMSTATS__MASTER_URSI_PLOT
 
         sFrqLegend = LEGEND(TARGET=sFrqPlots[sFrqLegendIncl], $
                             /DATA, $
+                            FONT_SIZE=18, $
                             HORIZONTAL_ALIGNMENT=0.0, $
                             ;; /NORMAL, $
                             POSITION=sFrqLegPos)

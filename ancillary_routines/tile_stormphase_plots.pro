@@ -24,8 +24,10 @@ PRO TILE_STORMPHASE_PLOTS,filenames,titles, $
   imVDim         = 800
   ;; xRange         = [300,800]
   ;; yRange         = [20,620]
-  xRange         = [10,790]
-  yRange         = [10,790]
+  ;; xRange         = [15,795]
+  ;; yRange         = [15,795]
+  xRange         = [15,800]
+  yRange         = [15,800]
 
   IF KEYWORD_SET(combined_to_buffer) THEN BEGIN
      hDim        = 800

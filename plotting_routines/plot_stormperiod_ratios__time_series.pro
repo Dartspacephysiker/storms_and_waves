@@ -145,9 +145,10 @@ FUNCTION PLOT_STORMPERIOD_RATIOS__TIME_SERIES,stormRatStruct, $
   legend          = LEGEND(TARGET=[plotArr[legOrder[0]], $
                                    plotArr[legOrder[1]], $
                                    plotArr[legOrder[2]]], $
+                           FONT_SIZE=18, $
                            /NORMAL, $
                            ;; POSITION=[0.35,0.3])
-                           POSITION=[0.35,0.8])
+                           POSITION=[0.28,0.88])
 
 
   ;; Add a title.
