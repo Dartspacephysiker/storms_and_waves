@@ -252,20 +252,20 @@ PRO PLOT_ALFVEN_STATS_DURING_STORMPHASES,$
            QUIET=quiet, $
            LUN=lun
 
-        phases   = ['High_','Low_'] + navn
+        phases   = ['Low_','High_'] + navn
         nPhases  = N_ELEMENTS(phases)
 
         deleteString  = phases[1]
         replaceString = 'combined_'+ navn + '_phases'
 
         suff     = STRING(FORMAT='("--",A0,"cutoff_",I0)',navn,AeCutoff)
-        ind_list = LIST(high_ae_i,low_ae_i)
+        ind_list = LIST(low_ae_i,high_ae_i)
         times    = ae.time
 
         IF KEYWORD_SET(no_stormphase_titles) THEN BEGIN
            niceStrings = !NULL
         ENDIF ELSE BEGIN
-           niceStrings = ["High ","Low "] + navn
+           niceStrings = ["Low ","High "] + navn
         ENDELSE
 
         IF KEYWORD_SET(combine_stormphase_plots) THEN BEGIN

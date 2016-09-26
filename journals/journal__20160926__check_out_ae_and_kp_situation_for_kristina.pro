@@ -7,11 +7,11 @@ PRO JOURNAL__20160926__CHECK_OUT_AE_AND_KP_SITUATION_FOR_KRISTINA
 
   ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
   ;;turn plots on and off
-  ionPlots                       = 0
-  probOccurrencePlot             = 0
-  eNumFluxPlot                   = 0
+  ionPlots                       = 1
+  probOccurrencePlot             = 1
+  eNumFluxPlot                   = 1
   pFluxPlot                      = 1
-  nPlots                         = 0
+  nPlots                         = 1
 
   ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
   ;;bonus
@@ -23,7 +23,7 @@ PRO JOURNAL__20160926__CHECK_OUT_AE_AND_KP_SITUATION_FOR_KRISTINA
 
   save_alf_stormphase_indices    = 0
 
-  fancyPresentationMode          = 1 ;Erases stormphase titles, suppresses gridlabels, and blows up plot titles. Keep it.
+  fancyPresentationMode          = 0 ;Erases stormphase titles, suppresses gridlabels, and blows up plot titles. Keep it.
   ;; add_center_title               = 1
   ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
   ;;Hemi stuff
@@ -33,9 +33,9 @@ PRO JOURNAL__20160926__CHECK_OUT_AE_AND_KP_SITUATION_FOR_KRISTINA
   binILAT                        = 2.0
 
   ;; hemi                           = 'SOUTH'
-  ;; minILAT                        = -85
+  ;; minILAT                        = -90
   ;; maxILAT                        = -60
-  ;; binILAT                        = 2.5
+  ;; binILAT                        = 2.0
 
   binMLT                         = 1.0
 

@@ -22,15 +22,15 @@ PRO JOURNAL__20160926__CHECK_OUT_AE_AND_KP_SITUATION_FOR_KRISTINA__GROSSRATES
 
   ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
   ;;Hemi stuff
-  hemi                           = 'NORTH'
-  minILAT                        = 60
-  maxILAT                        = 90
-  binILAT                        = 2.0
+  ;; hemi                           = 'NORTH'
+  ;; minILAT                        = 60
+  ;; maxILAT                        = 90
+  ;; binILAT                        = 2.0
 
-  ;; hemi                           = 'SOUTH'
-  ;; minILAT                        = -85
-  ;; maxILAT                        = -60
-  ;; binILAT                        = 2.5
+  hemi                           = 'SOUTH'
+  minILAT                        = -90
+  maxILAT                        = -60
+  binILAT                        = 2.0
 
   binMLT                         = 1.0
 
