@@ -6,6 +6,10 @@
 ;;
 PRO PLOT_ALFVEN_STATS_DURING_STORMPHASES,$
    DSTCUTOFF=dstCutoff, $
+   USE_AE=use_ae, $
+   USE_AU=use_au, $
+   USE_AL=use_al, $
+   USE_AO=use_ao, $
    CLOCKSTR=clockStr, $
    ANGLELIM1=angleLim1, $
    ANGLELIM2=angleLim2, $
@@ -202,45 +206,168 @@ PRO PLOT_ALFVEN_STATS_DURING_STORMPHASES,$
   latest_UTC   = STR_TO_TIME('1999-11-03/03:20:59.853')
   ;; latest_UTC = str_to_time('2000-10-06/00:08:45.188')
 
-  GET_NONSTORM_MAINPHASE_AND_RECOVERYPHASE_PERIODS,dst, $
-     DSTCUTOFF=DstCutoff, $
-     STORM_DST_I=s_dst_i,NONSTORM_DST_I=ns_dst_i,MAINPHASE_DST_I=mp_dst_i,RECOVERYPHASE_DST_I=rp_dst_i, $
-     N_STORM=n_s,N_NONSTORM=n_ns,N_MAINPHASE=n_mp,N_RECOVERYPHASE=n_rp, $
-     EARLIEST_UTC=earliest_UTC,LATEST_UTC=latest_UTC, $
-     LUN=lun
+  ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+  ;;Create the time array!!
+  ;;First dimension gives either beginning or end of streak, second dimension gives the phase (e.g., main, recovery, etc.), and third
+  ;;dimension indexes the streak number
+  timesList    = LIST()
 
-  ;; justData = 1
-  dst_i_list=LIST(ns_dst_i,mp_dst_i,rp_dst_i)
-  suff = STRING(FORMAT='("--Dstcutoff_",I0)',dstCutoff)
-  phases = ["nonstorm","mainphase","recoveryphase"]
-  strings=[phases[0]+suff,phases[1]+suff,phases[2]+suff]
+  use_ae_stuff = KEYWORD_SET(use_AE) + $
+                 KEYWORD_SET(use_AO) + $
+                 KEYWORD_SET(use_AU) + $
+                 KEYWORD_SET(use_AL)
 
-  IF KEYWORD_SET(no_stormphase_titles) THEN BEGIN
-     niceStrings = !NULL
-  ENDIF ELSE BEGIN
-     niceStrings=["Non-storm","Main phase","Recovery phase"]
-  ENDELSE
+  IF use_ae_stuff GT 1 THEN BEGIN
+     PRINT,"only select one of (AE,AU,AL,AO)!"
+     STOP
+  ENDIF
 
-  IF KEYWORD_SET(combine_stormphase_plots) THEN BEGIN
-     outTempFiles = !NULL
-     IF ~KEYWORD_SET(colorbar_for_all) THEN BEGIN
-        no_colorbar  = [1,0,1]
-     ENDIF ELSE BEGIN
-        no_colorbar = [0,0,0]
-     ENDELSE
-  ENDIF ELSE BEGIN
-     no_colorbar  = [0,0,0]
-  ENDELSE
+  CASE 1 OF
+     KEYWORD_SET(use_ae_stuff): BEGIN
 
-  FOR i=0,2 DO BEGIN
-     inds=dst_i_list[i]
+        GET_LOW_AND_HIGH_AE_PERIODS, $
+           ae, $
+           AECUTOFF=AeCutoff, $
+           EARLIEST_UTC=earliest_UTC, $
+           LATEST_UTC=latest_UTC, $
+           USE_JULDAY_NOT_UTC=use_julDay_not_UTC, $
+           EARLIEST_JULDAY=earliest_julDay, $
+           LATEST_JULDAY=latest_julDay, $
+           USE_AU=use_au, $
+           USE_AL=use_al, $
+           USE_AO=use_ao, $
+           ;; STORM_AE_I=s_ae_i, $
+           ;; NONSTORM_AE_I=ns_ae_i, $
+           ;; MAINPHASE_AE_I=mp_ae_i, $
+           ;; RECOVERYPHASE_AE_I=rp_ae_i, $
+           ;; N_STORM=n_s, $
+           ;; N_NONSTORM=n_ns, $
+           ;; N_MAINPHASE=n_mp, $
+           ;; N_RECOVERYPHASE=n_rp, $
+           HIGH_AE_I=high_ae_i, $
+           LOW_AE_I=low_ae_i, $
+           N_HIGH=n_high, $
+           N_LOW=n_low, $
+           OUT_NAME=navn, $
+           QUIET=quiet, $
+           LUN=lun
 
-     GET_STREAKS,inds,START_I=start_dst_ii,STOP_I=stop_dst_ii,SINGLE_I=single_dst_ii
-     t1_arr = dst.time[inds[start_dst_ii]]
-     t2_arr = dst.time[inds[stop_dst_ii]]
+        phases   = ['High_','Low_'] + navn
+        nPhases  = N_ELEMENTS(phases)
 
-     PLOT_ALFVEN_STATS_UTC_RANGES,maximus,T1_ARR=t1_arr, $
-                                  T2_ARR=t2_arr,$
+        deleteString  = phases[1]
+        replaceString = 'combined_'+ navn + '_phases'
+
+        suff     = STRING(FORMAT='("--",A0,"cutoff_",I0)',navn,AeCutoff)
+        ind_list = LIST(high_ae_i,low_ae_i)
+        times    = ae.time
+
+        IF KEYWORD_SET(no_stormphase_titles) THEN BEGIN
+           niceStrings = !NULL
+        ENDIF ELSE BEGIN
+           niceStrings = ["High ","Low "] + navn
+        ENDELSE
+
+        IF KEYWORD_SET(combine_stormphase_plots) THEN BEGIN
+           outTempFiles    = !NULL
+           IF ~KEYWORD_SET(colorbar_for_all) THEN BEGIN
+              no_colorbar  = [0,1]
+           ENDIF ELSE BEGIN
+              no_colorbar  = [0,0]
+           ENDELSE
+        ENDIF ELSE BEGIN
+           no_colorbar     = [0,0]
+        ENDELSE
+
+     END
+     ELSE: BEGIN
+
+        phases   = ["nonstorm","mainphase","recoveryphase"]
+        nPhases  = N_ELEMENTS(phases)
+
+        deleteString  = 'recoveryphase'
+        replaceString = 'combined_phases'
+
+        suff     = STRING(FORMAT='("--Dstcutoff_",I0)',dstCutoff)
+
+        GET_NONSTORM_MAINPHASE_AND_RECOVERYPHASE_PERIODS,dst, $
+           DSTCUTOFF=DstCutoff, $
+           STORM_DST_I=s_dst_i,NONSTORM_DST_I=ns_dst_i,MAINPHASE_DST_I=mp_dst_i, $
+           RECOVERYPHASE_DST_I=rp_dst_i, $
+           N_STORM=n_s,N_NONSTORM=n_ns,N_MAINPHASE=n_mp,N_RECOVERYPHASE=n_rp, $
+           EARLIEST_UTC=earliest_UTC,LATEST_UTC=latest_UTC, $
+           LUN=lun
+
+        ind_list = LIST(ns_dst_i,mp_dst_i,rp_dst_i)
+        times    = dst.time
+
+        ;; maxNStreaksPerPhase = 10000
+        ;; MAKE_ARRAY(2,nPhases,maxNStreaksPerPhase,/DOUBLE)
+        ;; t1_arr    = MAKE_ARRAY(nPhases,maxNStreaksPerPhase,/DOUBLE)
+        ;; t2_arr    = MAKE_ARRAY(nPhases,maxNStreaksPerPhase,/DOUBLE)
+
+        IF KEYWORD_SET(no_stormphase_titles) THEN BEGIN
+           niceStrings = !NULL
+        ENDIF ELSE BEGIN
+           niceStrings=["Non-storm","Main phase","Recovery phase"]
+        ENDELSE
+
+        IF KEYWORD_SET(combine_stormphase_plots) THEN BEGIN
+           outTempFiles = !NULL
+           IF ~KEYWORD_SET(colorbar_for_all) THEN BEGIN
+              no_colorbar  = [1,0,1]
+           ENDIF ELSE BEGIN
+              no_colorbar = [0,0,0]
+           ENDELSE
+        ENDIF ELSE BEGIN
+           no_colorbar  = [0,0,0]
+        ENDELSE
+
+     END
+  ENDCASE
+
+
+  strings  = phases + suff
+  nStreaksArr  = MAKE_ARRAY(nPhases,/LONG)
+  FOR i=0,nPhases-1 DO BEGIN
+     inds         = ind_list[i]
+
+     GET_STREAKS,inds,START_I=start_ii,STOP_I=stop_ii,SINGLE_I=single_ii
+
+     nStreaksArr[i] = N_ELEMENTS(start_ii)
+     
+     ;; IF nStreaksArr[i] GT maxNStreaksPerPhase THEN STOP
+
+     ;; t1_arr = times[inds[start_ii]]
+     ;; t2_arr = times[inds[stop_ii]]
+     ;; timesArr[*,i, = times[inds[start_ii]]
+     timesList.Add,[TRANSPOSE(times[inds[start_ii]]),TRANSPOSE(times[inds[stop_ii]])]
+
+  ENDFOR
+
+  diag = 0
+  FOR i=0,nPhases-1 DO BEGIN
+     ;; inds=dst_i_list[i]
+
+     ;; GET_STREAKS,inds,START_I=start_ii,STOP_I=stop_ii,SINGLE_I=single_ii
+     ;; t1_arr = times[inds[start_ii]]
+     ;; t2_arr = times[inds[stop_ii]]
+
+     IF KEYWORD_SET(diag) THEN BEGIN
+            FOR k=0,N_ELEMENTS((timesList[i])[0,*])-1 DO BEGIN
+               PRINT,TIME_TO_STR(REFORM((timesList[i])[0,k])),'   ', $
+                     TIME_TO_STR(REFORM((timesList[i])[0,k])),'   ', $
+                     (REFORM((timesList[i])[1,k])-REFORM((timesList[i])[0,k]))/3600.
+            ENDFOR
+
+            CONTINUE
+     ENDIF
+
+     ;; PLOT_ALFVEN_STATS_UTC_RANGES,maximus,T1_ARR=t1_arr, $
+     ;;                              T2_ARR=t2_arr,$
+     PLOT_ALFVEN_STATS_UTC_RANGES,maximus, $
+                                  T1_ARR=REFORM((timesList[i])[0,*]), $
+                                  T2_ARR=REFORM((timesList[i])[1,*]),$
                                   CLOCKSTR=clockStr, $
                                   ANGLELIM1=angleLim1, $
                                   ANGLELIM2=angleLim2, $
@@ -429,7 +556,7 @@ PRO PLOT_ALFVEN_STATS_DURING_STORMPHASES,$
      PRINT,"Combining stormphase plots..."
 
      plotFileArr = !NULL
-     FOR i=0,2 DO BEGIN
+     FOR i=0,nPhases-1 DO BEGIN
         RESTORE,outTempFiles[i]
         plotFileArr = [[plotFileArr],[plotDir + paramStr+'--'+dataNameArr[0:-2+KEYWORD_SET(nPlots)] + fileSuff]]
      ENDFOR
@@ -450,7 +577,7 @@ PRO PLOT_ALFVEN_STATS_DURING_STORMPHASES,$
            ENDELSE
         ENDELSE
 
-        save_combined_name = paramStr.REPLACE('recoveryphase','combined_phases',/FOLD_CASE) + '--' + $
+        save_combined_name = paramStr.REPLACE(deleteString,replaceString,/FOLD_CASE) + '--' + $
                              dataNameArr[0:-2+KEYWORD_SET(nPlots)] + fileSuff
         ;; save_combined_name = GET_TODAY_STRING() + '--' + dataNameArr[0:-3+KEYWORD_SET(nPlots)] + $
         ;;                      (KEYWORD_SET(plotSuffix) ? plotSuffix : '') + $
@@ -461,6 +588,7 @@ PRO PLOT_ALFVEN_STATS_DURING_STORMPHASES,$
 
         PRINT,"Saving to " + save_combined_name[i] + "..."
         TILE_STORMPHASE_PLOTS,plotFileArr[i,*],niceStrings, $
+                              NTOTILE=nPhases, $
                               ADD_CENTER_TITLE=KEYWORD_SET(add_center_title) ? ctrTitleArr[i] : !NULL, $
                               OUT_IMGARR=out_imgArr, $
                               OUT_TITLEOBJS=out_titleObjs, $

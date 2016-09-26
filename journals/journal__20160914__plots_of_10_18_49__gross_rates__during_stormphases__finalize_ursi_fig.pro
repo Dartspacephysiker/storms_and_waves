@@ -16,11 +16,11 @@ PRO JOURNAL__20160914__PLOTS_OF_10_18_49__GROSS_RATES__DURING_STORMPHASES__FINAL
 
   ;;;;;;;;;;;;;;;;;
   ;;turn plots on and off
-  ionPlots                       = 1
-  probOccurrencePlot             = 1
-  eNumFluxPlots                  = 1
-  ePlots                         = 1
-  pFluxPlot                      = 1
+  ionPlots                       = 0
+  probOccurrencePlot             = 0
+  eNumFluxPlots                  = 0
+  ePlots                         = 0
+  pFluxPlot                      = 0
   tHistDenominatorPlot           = 1
   nPlots                         = 1
 
@@ -46,13 +46,13 @@ PRO JOURNAL__20160914__PLOTS_OF_10_18_49__GROSS_RATES__DURING_STORMPHASES__FINAL
 
   ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
   ;;Hemi stuff
-  hemi                           = 'NORTH'
-  minILAT                        = 60
-  maxILAT                        = 90
+  ;; hemi                           = 'NORTH'
+  ;; minILAT                        = 60
+  ;; maxILAT                        = 90
 
-  ;; hemi                           = 'SOUTH'
-  ;; minILAT                        = -90
-  ;; maxILAT                        = -60
+  hemi                           = 'SOUTH'
+  minILAT                        = -90
+  maxILAT                        = -60
   ;; orbRange                       = [2000,12670]
 
   binILAT                        = 2.5
@@ -103,14 +103,14 @@ PRO JOURNAL__20160914__PLOTS_OF_10_18_49__GROSS_RATES__DURING_STORMPHASES__FINAL
 
   ;;;;;;;;;;;;;;;;;;;;;;
   ;;Time histogram               
-  tHistDenomPlotRange            = [0,10]
+  tHistDenomPlotRange            = [0,50]
   ;; tHistDenomPlotAutoscale        = 1
   ;; tHistDenomPlotNormalize        = 0
   tHistDenomPlot_noMask          = 1
 
   ;;;;;;;;;;;;;;;;;;;;;;;;;
   ;;N Events
-  nEventsPlotRange               = [0,15]
+  nEventsPlotRange               = [0,50]
   nEventsPlot__noMask            = 1
 
   ;;;;;;;;;;;;;;;;;;;;;;

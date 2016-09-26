@@ -1,6 +1,7 @@
 ;2015/12/07
 ;It's way better to see all plots together, of course
 PRO TILE_STORMPHASE_PLOTS,filenames,titles, $
+                          NTOTILE=nToTile, $
                           ADD_CENTER_TITLE=add_center_title, $
                           OUT_IMGARR=out_imgArr, $
                           OUT_TITLEOBJS=out_titleObjs, $
@@ -13,6 +14,7 @@ PRO TILE_STORMPHASE_PLOTS,filenames,titles, $
 
   IF N_ELEMENTS(lun) EQ 0 THEN lun = -1 ;stdout
                           
+  IF N_ELEMENTS(nToTile) EQ 0 THEN nToTile = 2
 
   ;;Old regime, pre-2016/04/09
   ;; imHDim         = 800
@@ -48,13 +50,13 @@ PRO TILE_STORMPHASE_PLOTS,filenames,titles, $
   ;; xRange      = [150*scaleFactor,650*scaleFactor]
   ;; yRange      = [0,600*scaleFactor]
 
-  imArr       = MAKE_ARRAY(3,/OBJ)
-  win         = WINDOW(DIMENSIONS=[adjHDim*3,adjVDim], $
+  imArr       = MAKE_ARRAY(nToTile,/OBJ)
+  win         = WINDOW(DIMENSIONS=[adjHDim*nToTile,adjVDim], $
                        BUFFER=combined_to_buffer)
-  titleObjs   = MAKE_ARRAY(3,/OBJ)
+  titleObjs   = MAKE_ARRAY(nToTile,/OBJ)
   
   
-  FOR i = 0,2 DO BEGIN
+  FOR i = 0,nToTile-1 DO BEGIN
      IF ~FILE_TEST(filenames[i]) THEN BEGIN
         PRINTF,lun,"Couldn't find " + filenames[i] + "! Not tiling these guys..."
         RETURN
@@ -62,7 +64,7 @@ PRO TILE_STORMPHASE_PLOTS,filenames,titles, $
   ENDFOR
 
   ;; FOR i = 0, N_ELEMENTS(fileNames) - 1 DO BEGIN
-  FOR i = 0,2 DO BEGIN
+  FOR i = 0,nToTile-1 DO BEGIN
      ;; IF KEYWORD_SET(combined_to_buffer) THEN BEGIN
      ;;    imArr[0]    = IMAGE(filenames[i], $
      ;;                        LAYOUT=[3,1,i+1],$
@@ -71,7 +73,7 @@ PRO TILE_STORMPHASE_PLOTS,filenames,titles, $
      ;;                        IMAGE_DIMENSIONS=[hDim,vDim])
      ;; ENDIF ELSE BEGIN
         imArr[i]    = IMAGE(filenames[i], $
-                            LAYOUT=[3,1,i+1],$
+                            LAYOUT=[nToTile,1,i+1],$
                             MARGIN=0, $
                             /CURRENT, $
                             ;; DIMENSIONS=[hDim,vDim], $
@@ -120,7 +122,7 @@ PRO TILE_STORMPHASE_PLOTS,filenames,titles, $
 
   IF KEYWORD_SET(delete_plots) THEN BEGIN
      PRINTF,lun,"Deleting plots after tiling..."
-     FOR i = 0,2 DO BEGIN
+     FOR i = 0,nToTile-1 DO BEGIN
         PRINTF,lun,'Removing ' + filenames[i] + '...'
         SPAWN,'rm ' + filenames[i]
      ENDFOR
