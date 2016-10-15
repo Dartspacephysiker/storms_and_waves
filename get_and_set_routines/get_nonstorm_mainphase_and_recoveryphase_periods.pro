@@ -34,6 +34,7 @@
 ;-
 PRO GET_NONSTORM_MAINPHASE_AND_RECOVERYPHASE_PERIODS,dst, $
    DSTCUTOFF=DstCutoff, $
+   SMOOTH_DST=smooth_Dst, $
    EARLIEST_UTC=earliest_UTC, $
    LATEST_UTC=latest_UTC, $
    USE_JULDAY_NOT_UTC=use_julDay_not_UTC, $
@@ -59,7 +60,15 @@ PRO GET_NONSTORM_MAINPHASE_AND_RECOVERYPHASE_PERIODS,dst, $
      IF ~KEYWORD_SET(quiet) THEN PRINTF,lun,FORMAT='("Using default Dst cutoff value: ",I0)',dstCutoff
   ENDIF
 
-  s_dst_i = WHERE(dst.dst LE dstCutoff,n_s,COMPLEMENT=ns_dst_i,NCOMPLEMENT=n_ns)
+  CASE 1 OF
+     KEYWORD_SET(smooth_Dst): BEGIN
+        IF ~KEYWORD_SET(quiet) THEN PRINTF,lun,FORMAT='(A0)',"Using smoothed Dst"
+        s_dst_i = WHERE(dst.dst_smoothed_6hr LE dstCutoff,n_s,COMPLEMENT=ns_dst_i,NCOMPLEMENT=n_ns)
+     END
+     ELSE: BEGIN
+        s_dst_i = WHERE(dst.dst LE dstCutoff,n_s,COMPLEMENT=ns_dst_i,NCOMPLEMENT=n_ns)
+     END
+  ENDCASE
 
   CASE 1 OF
      KEYWORD_SET(use_julDay_not_UTC): BEGIN
