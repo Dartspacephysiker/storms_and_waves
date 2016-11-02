@@ -35,6 +35,7 @@
 PRO GET_LOW_AND_HIGH_AE_PERIODS, $
    ae, $
    AECUTOFF=AeCutoff, $
+   SMOOTH_AE=smooth_AE, $
    EARLIEST_UTC=earliest_UTC, $
    LATEST_UTC=latest_UTC, $
    USE_JULDAY_NOT_UTC=use_julDay_not_UTC, $
@@ -100,7 +101,10 @@ PRO GET_LOW_AND_HIGH_AE_PERIODS, $
      IF ~KEYWORD_SET(quiet) THEN PRINTF,lun,FORMAT='("Using default ",A0," cutoff value: ",I0)',navn,aeCutoff
   ENDIF
 
-  low_ae_i     = WHERE(dex LE aeCutoff,n_low,COMPLEMENT=high_ae_i,NCOMPLEMENT=n_high)
+  low_ae_i     = WHERE(( KEYWORD_SET(smooth_AE) ? smDex : dex ) LE aeCutoff, $
+                       n_low, $
+                       COMPLEMENT=high_ae_i, $
+                       NCOMPLEMENT=n_high)
 
   CASE 1 OF
      KEYWORD_SET(use_julDay_not_UTC): BEGIN
@@ -169,15 +173,13 @@ PRO GET_LOW_AND_HIGH_AE_PERIODS, $
   rp_ae_i=low_ae_i[rp_ae_ii]
   
   IF ~KEYWORD_SET(quiet) THEN BEGIN
-     PRINTF,lun,FORMAT='("**GET_NONSTORM_MAINPHASE_AND_RECOVERYPHASE_PERIODS**")'
+     PRINTF,lun,FORMAT='("**GET_LOW_AND_HIGH_",A0,"_PERIODS**")',navn
      IF KEYWORD_SET(earliest_UTC) THEN PRINTF,lun,FORMAT='("Earliest allowed UTC",T30,":",T35,A0)',time_to_str(earliest_UTC)
      IF KEYWORD_SET(latest_UTC)   THEN PRINTF,lun,FORMAT='("Latest allowed UTC",T30,":",T35,A0)',time_to_str(latest_UTC)
      PRINTF,lun,""
      PRINTF,lun,FORMAT='("N high ",A0," indices             :",T35,I0)',navn,n_high
      PRINTF,lun,""
      PRINTF,lun,FORMAT='("N low ",A0," indices              :",T35,I0)',navn,n_low
-     ;; PRINTF,lun,FORMAT='("-->N main phase indices       :",T35,I0)',n_mp
-     ;; PRINTF,lun,FORMAT='("-->N recovery phase indices   :",T35,I0)',n_rp
      PRINTF,lun,""
   ENDIF
 
