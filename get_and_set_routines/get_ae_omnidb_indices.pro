@@ -1,11 +1,12 @@
 ;2016/08/19 Now we need OMNI to do it too
 PRO GET_AE_OMNIDB_INDICES, $
    OMNI_COORDS=OMNI_coords, $
-   RESTRICT_TO_ALFVENDB_TIMES=restrict_to_alfvendb_times, $
-   COORDINATE_SYSTEM=coordinate_system, $
-   USE_AACGM_COORDS=use_AACGM, $
-   USE_MAG_COORDS=use_MAG, $
+   ;; RESTRICT_TO_ALFVENDB_TIMES=restrict_to_alfvendb_times, $
+   ;; COORDINATE_SYSTEM=coordinate_system, $
+   ;; USE_AACGM_COORDS=use_AACGM, $
+   ;; USE_MAG_COORDS=use_MAG, $
    AECUTOFF=AeCutoff, $
+   SMOOTH_AE=smooth_AE, $
    EARLIEST_UTC=earliest_UTC, $
    LATEST_UTC=latest_UTC, $
    USE_JULDAY_NOT_UTC=use_julDay_not_UTC, $
@@ -14,6 +15,8 @@ PRO GET_AE_OMNIDB_INDICES, $
    USE_AU=use_au, $
    USE_AL=use_al, $
    USE_AO=use_ao, $
+   HIGH_AE_I=high_ae_i, $
+   LOW_AE_I=low_ae_i, $
    HIGH_I=high_i, $
    LOW_I=low_i, $
    N_HIGH=n_high, $
@@ -63,7 +66,12 @@ PRO GET_AE_OMNIDB_INDICES, $
   C_OMNI__clean_i = GET_CLEAN_OMNI_I(C_OMNI__Bx,C_OMNI__By,C_OMNI__Bz, $
                                      LUN=lun)
   C_OMNI__time_i  = GET_OMNI_TIME_I(mag_UTC, $
-                                    RESTRICT_TO_ALFVENDB_TIMES=restrict_to_alfvendb_times, $
+                                    ;; RESTRICT_TO_ALFVENDB_TIMES=restrict_to_alfvendb_times, $
+                                    EARLIEST_UTC=earliest_UTC, $
+                                    LATEST_UTC=latest_UTC, $
+                                    USE_JULDAY_NOT_UTC=use_julDay_not_UTC, $
+                                    EARLIEST_JULDAY=earliest_julDay, $
+                                    LATEST_JULDAY=latest_julDay, $
                                     LUN=lun)
 
   good_i   = CGSETINTERSECTION(C_OMNI__clean_i,C_OMNI__time_i,COUNT=nGood)
@@ -83,6 +91,7 @@ PRO GET_AE_OMNIDB_INDICES, $
   GET_LOW_AND_HIGH_AE_PERIODS, $
      ae, $
      AECUTOFF=AeCutoff, $
+     SMOOTH_AE=smooth_AE, $
      EARLIEST_UTC=earliest_UTC, $
      LATEST_UTC=latest_UTC, $
      USE_JULDAY_NOT_UTC=use_julDay_not_UTC, $
@@ -107,7 +116,7 @@ PRO GET_AE_OMNIDB_INDICES, $
      RESTORE,todaysFile
   ENDIF ELSE BEGIN
      
-     FOR i=0,2 DO BEGIN
+     FOR i=0,1 DO BEGIN
         inds=AE_i_list[i]
         help,inds
         GET_STREAKS,inds,START_I=start_AE_ii,STOP_I=stop_AE_ii,SINGLE_I=single_AE_ii
@@ -125,20 +134,24 @@ PRO GET_AE_OMNIDB_INDICES, $
            /LIST_TO_ARR
         
         IF i EQ 0 THEN BEGIN
-           high_i                  = inds
+           high_i                  = inds_list
            high_ae_t1              = ae.time[inds[start_ae_ii]]
            high_ae_t2              = ae.time[inds[stop_ae_ii]]
+           PRINT,"N " + dbString + " inds for high " + AE_str + " retrieved  : " + $
+                 STRCOMPRESS(N_ELEMENTS(inds_list),/REMOVE_ALL)
         ENDIF ELSE BEGIN
            IF i EQ 1 THEN BEGIN
-              low_i                = inds
+              low_i                = inds_list
               low_ae_t1            = ae.time[inds[start_ae_ii]]
               low_ae_t2            = ae.time[inds[stop_ae_ii]]
+              PRINT,"N " + dbString + " inds for low " + AE_str + " retrieved  : " + $
+                    STRCOMPRESS(N_ELEMENTS(inds_list),/REMOVE_ALL)
            ENDIF
         ENDELSE
         
      ENDFOR
 
-     PRINTF,lun,"Saving OMNI " + dbString + " AE/AO/AU/AL indices for today..."
+     PRINTF,lun,"Saving " + dbString + " AE/AO/AU/AL indices for today..."
      SAVE,high_i,low_i,high_ae_i,low_ae_i, $
           n_high,n_low, $
           high_ae_t1,high_ae_t2,low_ae_t1,low_ae_t2, $

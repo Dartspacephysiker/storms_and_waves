@@ -1,14 +1,19 @@
 ;2016/08/19 Now we need OMNI to do it too
 PRO GET_NONSTORM_MAINPHASE_AND_RECOVERYPHASE_OMNIDB_INDICES, $
    OMNI_COORDS=OMNI_coords, $
-   RESTRICT_TO_ALFVENDB_TIMES=restrict_to_alfvendb_times, $
-   COORDINATE_SYSTEM=coordinate_system, $
-   USE_AACGM_COORDS=use_AACGM, $
-   USE_MAG_COORDS=use_MAG, $
+   ;; RESTRICT_TO_ALFVENDB_TIMES=restrict_to_alfvendb_times, $
+   ;; COORDINATE_SYSTEM=coordinate_system, $
+   ;; USE_AACGM_COORDS=use_AACGM, $
+   ;; USE_MAG_COORDS=use_MAG, $
    NONSTORM_I=ns_i, $
    MAINPHASE_I=mp_i, $
    RECOVERYPHASE_I=rp_i, $
    DSTCUTOFF=dstCutoff, $
+   EARLIEST_UTC=earliest_UTC, $
+   LATEST_UTC=latest_UTC, $
+   USE_JULDAY_NOT_UTC=use_julDay_not_UTC, $
+   EARLIEST_JULDAY=earliest_julDay, $
+   LATEST_JULDAY=latest_julDay, $
    SMOOTH_DST=smooth_dst, $
    STORM_DST_I=s_dst_i, $
    NONSTORM_DST_I=ns_dst_i, $
@@ -45,7 +50,12 @@ PRO GET_NONSTORM_MAINPHASE_AND_RECOVERYPHASE_OMNIDB_INDICES, $
   C_OMNI__clean_i = GET_CLEAN_OMNI_I(C_OMNI__Bx,C_OMNI__By,C_OMNI__Bz, $
                                      LUN=lun)
   C_OMNI__time_i  = GET_OMNI_TIME_I(mag_UTC, $
-                                    RESTRICT_TO_ALFVENDB_TIMES=restrict_to_alfvendb_times, $
+                                    EARLIEST_UTC=earliest_UTC, $
+                                    LATEST_UTC=latest_UTC, $
+                                    USE_JULDAY_NOT_UTC=use_julDay_not_UTC, $
+                                    EARLIEST_JULDAY=earliest_julDay, $
+                                    LATEST_JULDAY=latest_julDay, $
+                                    ;; RESTRICT_TO_ALFVENDB_TIMES=restrict_to_alfvendb_times, $
                                     LUN=lun)
 
   good_i   = CGSETINTERSECTION(C_OMNI__clean_i,C_OMNI__time_i,COUNT=nGood)
@@ -63,6 +73,11 @@ PRO GET_NONSTORM_MAINPHASE_AND_RECOVERYPHASE_OMNIDB_INDICES, $
   GET_NONSTORM_MAINPHASE_AND_RECOVERYPHASE_PERIODS,dst, $
      DSTCUTOFF=dstCutoff, $
      SMOOTH_DST=smooth_dst, $
+     EARLIEST_UTC=earliest_UTC, $
+     LATEST_UTC=latest_UTC, $
+     USE_JULDAY_NOT_UTC=use_julDay_not_UTC, $
+     EARLIEST_JULDAY=earliest_julDay, $
+     LATEST_JULDAY=latest_julDay, $
      STORM_DST_I=s_dst_i, $
      NONSTORM_DST_I=ns_dst_i, $
      MAINPHASE_DST_I=mp_dst_i, $

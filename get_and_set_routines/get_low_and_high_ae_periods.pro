@@ -34,7 +34,7 @@
 ;-
 PRO GET_LOW_AND_HIGH_AE_PERIODS, $
    ae, $
-   AECUTOFF=AeCutoff, $
+   AECUTOFF=AEcutoff, $
    SMOOTH_AE=smooth_AE, $
    EARLIEST_UTC=earliest_UTC, $
    LATEST_UTC=latest_UTC, $
@@ -60,7 +60,7 @@ PRO GET_LOW_AND_HIGH_AE_PERIODS, $
    QUIET=quiet, $
    LUN=lun
   
-  defAeCutoff = 115
+  defAEcutoff = 115
   defAECutoff = MEDIAN(ae.ae)
   defAUCutoff = MEDIAN(ae.au)
   defALCutoff = MEDIAN(ae.al)
@@ -70,25 +70,29 @@ PRO GET_LOW_AND_HIGH_AE_PERIODS, $
   CASE 1 OF
      KEYWORD_SET(use_au): BEGIN
         dex   = ae.au
-        smDex = ae.dt_au_sm6hr
+        smDex = ae.au_smoothed_6hr
+        dtDex = ae.dt_au_sm6hr
         navn  = 'AU'
         defCutoff = defAUCutoff
      END
      KEYWORD_SET(use_al): BEGIN
         dex   = ae.al
-        smDex = ae.dt_al_sm6hr
+        smDex = ae.al_smoothed_6hr
+        dtDex = ae.dt_al_sm6hr
         navn  = 'AL'
         defCutoff = defALCutoff
      END
      KEYWORD_SET(use_ao): BEGIN
         dex   = ae.ao
-        smDex = ae.dt_ao_sm6hr
+        smDex = ae.ao_smoothed_6hr
+        dtDex = ae.dt_ao_sm6hr
         navn  = 'AO'
         defCutoff = defAOCutoff
      END
      ELSE: BEGIN
         dex   = ae.ae
-        smDex = ae.dt_ae_sm6hr
+        smDex = ae.ae_smoothed_6hr
+        dtDex = ae.dt_ae_sm6hr
         navn  = 'AE'
         defCutoff = defAECutoff
      END
@@ -164,13 +168,13 @@ PRO GET_LOW_AND_HIGH_AE_PERIODS, $
   ENDCASE
 
 
-  mp_ae_ii = WHERE(smDex[low_ae_i] LE 0,n_mp,COMPLEMENT=rp_ae_ii,NCOMPLEMENT=n_rp)
+  mp_ae_ii = WHERE(dtDex[low_ae_i] LE 0,n_mp,COMPLEMENT=rp_ae_ii,NCOMPLEMENT=n_rp)
 
   ;;Make sure these all actually found stuff
   WHERECHECK,low_ae_i,high_ae_i,mp_ae_ii,rp_ae_ii
 
-  mp_ae_i=low_ae_i[mp_ae_ii]
-  rp_ae_i=low_ae_i[rp_ae_ii]
+  mp_ae_i = low_ae_i[mp_ae_ii]
+  rp_ae_i = low_ae_i[rp_ae_ii]
   
   IF ~KEYWORD_SET(quiet) THEN BEGIN
      PRINTF,lun,FORMAT='("**GET_LOW_AND_HIGH_",A0,"_PERIODS**")',navn

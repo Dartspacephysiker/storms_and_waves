@@ -13,6 +13,11 @@ PRO GET_NONSTORM_MAINPHASE_AND_RECOVERYPHASE_FASTDB_INDICES, $
    RECOVERYPHASE_I=rp_i, $
    DSTCUTOFF=dstCutoff, $
    SMOOTH_DST=smooth_dst, $
+   EARLIEST_UTC=earliest_UTC, $
+   LATEST_UTC=latest_UTC, $
+   USE_JULDAY_NOT_UTC=use_julDay_not_UTC, $
+   EARLIEST_JULDAY=earliest_julDay, $
+   LATEST_JULDAY=latest_julDay, $
    STORM_DST_I=s_dst_i, $
    NONSTORM_DST_I=ns_dst_i, $
    MAINPHASE_DST_I=mp_dst_i, $
@@ -62,6 +67,11 @@ PRO GET_NONSTORM_MAINPHASE_AND_RECOVERYPHASE_FASTDB_INDICES, $
   GET_NONSTORM_MAINPHASE_AND_RECOVERYPHASE_PERIODS,dst, $
      DSTCUTOFF=dstCutoff, $
      SMOOTH_DST=smooth_Dst, $
+     EARLIEST_UTC=earliest_UTC, $
+     LATEST_UTC=latest_UTC, $
+     USE_JULDAY_NOT_UTC=use_julDay_not_UTC, $
+     EARLIEST_JULDAY=earliest_julDay, $
+     LATEST_JULDAY=latest_julDay, $
      STORM_DST_I=s_dst_i, $
      NONSTORM_DST_I=ns_dst_i, $
      MAINPHASE_DST_I=mp_dst_i, $

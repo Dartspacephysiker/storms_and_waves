@@ -8,7 +8,8 @@ PRO GET_AE_FASTDB_INDICES, $
    USE_AACGM_COORDS=use_AACGM, $
    USE_MAG_COORDS=use_MAG, $
    GET_TIME_I_NOT_ALFDB_I=get_time_i_not_alfDB_I, $
-   AECUTOFF=AeCutoff, $
+   AECUTOFF=AEcutoff, $
+   SMOOTH_AE=smooth_AE, $
    EARLIEST_UTC=earliest_UTC, $
    LATEST_UTC=latest_UTC, $
    USE_JULDAY_NOT_UTC=use_julDay_not_UTC, $
@@ -64,7 +65,7 @@ PRO GET_AE_FASTDB_INDICES, $
      dbTimes  = TEMPORARY(fastLoc_times)
      dbString = 'fastLoc'
      todaysFile = TODAYS_AE_FASTLOC_INDICES(AE_STR=ae_str, $
-                                            AECUTOFF=AeCutoff)
+                                            AECUTOFF=AEcutoff)
   ENDIF ELSE BEGIN
      LOAD_MAXIMUS_AND_CDBTIME,maximus,cdbTime, $
                               DO_DESPUNDB=do_despunDB, $
@@ -87,7 +88,7 @@ PRO GET_AE_FASTDB_INDICES, $
 
   GET_LOW_AND_HIGH_AE_PERIODS, $
      ae, $
-     AECUTOFF=AeCutoff, $
+     AECUTOFF=AEcutoff, $
      SMOOTH_AE=smooth_AE, $
      EARLIEST_UTC=earliest_UTC, $
      LATEST_UTC=latest_UTC, $
@@ -113,25 +114,38 @@ PRO GET_AE_FASTDB_INDICES, $
      RESTORE,todaysFile
   ENDIF ELSE BEGIN
      
-     FOR i=0,2 DO BEGIN
+     FOR i=0,1 DO BEGIN
         inds=ae_i_list[i]
         help,inds
         GET_STREAKS,inds,START_I=start_ae_ii,STOP_I=stop_ae_ii,SINGLE_I=single_ae_ii
         
-        GET_DATA_AVAILABILITY_FOR_ARRAY_OF_UTC_RANGES,T1_ARR=ae.time[inds[start_ae_ii]],T2_ARR=ae.time[inds[stop_ae_ii]], $
-           DBSTRUCT=dbStruct,DBTIMES=dbTimes, RESTRICT_W_THESEINDS=good_i, $
+        GET_DATA_AVAILABILITY_FOR_ARRAY_OF_UTC_RANGES, $
+           T1_ARR=ae.time[inds[start_ae_ii]], $
+           T2_ARR=ae.time[inds[stop_ae_ii]], $
+           DBSTRUCT=dbStruct, $
+           DBTIMES=dbTimes, $
+           RESTRICT_W_THESEINDS=good_i, $
            OUT_INDS_LIST=inds_list, $
-           UNIQ_ORBS_LIST=uniq_orbs_list,UNIQ_ORB_INDS_LIST=uniq_orb_inds_list, $
-           INDS_ORBS_LIST=inds_orbs_list,TRANGES_ORBS_LIST=tranges_orbs_list,TSPANS_ORBS_LIST=tspans_orbs_list, $
-           PRINT_DATA_AVAILABILITY=0,VERBOSE=0,/LIST_TO_ARR
+           UNIQ_ORBS_LIST=uniq_orbs_list, $
+           UNIQ_ORB_INDS_LIST=uniq_orb_inds_list, $
+           INDS_ORBS_LIST=inds_orbs_list, $
+           TRANGES_ORBS_LIST=tranges_orbs_list, $
+           TSPANS_ORBS_LIST=tspans_orbs_list, $
+           PRINT_DATA_AVAILABILITY=0, $
+           VERBOSE=0, $
+           /LIST_TO_ARR
         
         IF i EQ 0 THEN BEGIN
-           high_i                  = inds
+           PRINT,"N " + dbString + " inds for high " + AE_str + " retrieved  : " + $
+                 STRCOMPRESS(N_ELEMENTS(inds_list),/REMOVE_ALL)
+           high_i                  = inds_list
            high_ae_t1              = ae.time[inds[start_ae_ii]]
            high_ae_t2              = ae.time[inds[stop_ae_ii]]
         ENDIF ELSE BEGIN
            IF i EQ 1 THEN BEGIN
-              low_i                = inds
+           PRINT,"N " + dbString + " inds for low " + AE_str + " retrieved  : " + $
+                 STRCOMPRESS(N_ELEMENTS(inds_list),/REMOVE_ALL)
+              low_i                = inds_list
               low_ae_t1            = ae.time[inds[start_ae_ii]]
               low_ae_t2            = ae.time[inds[stop_ae_ii]]
            ENDIF
