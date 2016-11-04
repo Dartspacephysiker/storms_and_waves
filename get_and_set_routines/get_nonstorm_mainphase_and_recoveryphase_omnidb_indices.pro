@@ -65,10 +65,13 @@ PRO GET_NONSTORM_MAINPHASE_AND_RECOVERYPHASE_OMNIDB_INDICES, $
   ENDIF
 
   ;;Cast in the parlance of other routines
-  dbTimes  = TEMPORARY(mag_utc)
-  dbString = 'OMNI DB'
+  dbTimes    = TEMPORARY(mag_utc)
+  dbString   = 'OMNI DB'
 
-  todaysFile = TODAYS_NONSTORM_MAINPHASE_AND_RECOVERYPHASE_OMNIDB_INDICES(DSTCUTOFF=dstCutoff,SMOOTH_DST=smooth_dst)
+  todaysFile = TODAYS_NONSTORM_MAINPHASE_AND_RECOVERYPHASE_INDICES( $
+               /FOR_OMNIDB, $
+               DSTCUTOFF=dstCutoff, $
+               SMOOTH_DST=smooth_dst)
   
   GET_NONSTORM_MAINPHASE_AND_RECOVERYPHASE_PERIODS,dst, $
      DSTCUTOFF=dstCutoff, $
@@ -87,11 +90,12 @@ PRO GET_NONSTORM_MAINPHASE_AND_RECOVERYPHASE_OMNIDB_INDICES, $
      N_MAINPHASE=n_mp, $
      N_RECOVERYPHASE=n_rp,LUN=lun
 
-  dst_i_list=LIST(ns_dst_i,mp_dst_i,rp_dst_i)
-  strings=["nonstorm","mainphase","recoveryphase"]
+  dst_i_list = LIST(ns_dst_i,mp_dst_i,rp_dst_i)
+  strings    = ["nonstorm","mainphase","recoveryphase"]
 
   IF FILE_TEST(todaysFile) THEN BEGIN
-     PRINTF,lun,"Already have nonstorm and storm " + dbString + " inds! Restoring today's file..."
+     PRINTF,lun,"Already have nonstorm and storm " + $
+            dbString + " inds! Restoring today's file..."
      RESTORE,todaysFile
   ENDIF ELSE BEGIN
      

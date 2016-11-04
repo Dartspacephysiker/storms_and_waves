@@ -7,7 +7,8 @@ PRO GET_NONSTORM_MAINPHASE_AND_RECOVERYPHASE_FASTDB_INDICES, $
    COORDINATE_SYSTEM=coordinate_system, $
    USE_AACGM_COORDS=use_AACGM, $
    USE_MAG_COORDS=use_MAG, $
-   GET_TIME_I_NOT_ALFDB_I=get_time_i_not_alfDB_I, $
+   GET_TIME_I_NOT_ALFDB_I=get_time_i_not_alfDB_i, $
+   GET_ESPECDB_I_NOT_ALFDB_I=get_eSpecdb_i_not_alfDB_i, $
    NONSTORM_I=ns_i, $
    MAINPHASE_I=mp_i, $
    RECOVERYPHASE_I=rp_i, $
@@ -34,35 +35,67 @@ PRO GET_NONSTORM_MAINPHASE_AND_RECOVERYPHASE_FASTDB_INDICES, $
 
   LOAD_DST_AE_DBS,dst,ae,LUN=lun
 
-  IF KEYWORD_SET(get_time_i_not_alfDB_I) THEN BEGIN
-     LOAD_FASTLOC_AND_FASTLOC_TIMES,fastLoc,fastLoc_times, $
-                                    COORDINATE_SYSTEM=coordinate_system, $
-                                    USE_AACGM_COORDS=use_AACGM, $
-                                    USE_MAG_COORDS=use_MAG, $
-                                    LUN=lun
+  CASE 1 OF
+     KEYWORD_SET(get_eSpecdb_i_not_alfDB_i): BEGIN
+        LOAD_NEWELL_ESPEC_DB, $
+                             FAILCODES=failCode, $
+                             USE_UNSORTED_FILE=use_unsorted_file, $
+                             NEWELLDBDIR=NewellDBDir, $
+                             NEWELLDBFILE=NewellDBFile, $
+                             FORCE_LOAD_DB=force_load_db, $
+                             /DONT_LOAD_IN_MEMORY, $
+                             /JUST_TIMES, $
+                             OUT_TIMES=dbTimes, $
+                             ;; OUT_GOOD_I=good_i, $
+                             LUN=lun, $
+                             QUIET=quiet
 
-     good_i = FASTLOC_CLEANER(fastLoc)
+        ;; good_i      = FASTLOC_CLEANER(fastLoc)
 
-     dbStruct = TEMPORARY(fastLoc)
-     dbTimes  = TEMPORARY(fastLoc_times)
-     dbString = 'fastLoc'
-     todaysFile = TODAYS_NONSTORM_MAINPHASE_AND_RECOVERYPHASE_FASTLOC_INDICES(DSTCUTOFF=dstCutoff,SMOOTH_DST=smooth_dst)
-  ENDIF ELSE BEGIN
-     LOAD_MAXIMUS_AND_CDBTIME,maximus,cdbTime, $
-                              DO_DESPUNDB=do_despunDB, $
-                              COORDINATE_SYSTEM=coordinate_system, $
-                              USE_AACGM=use_AACGM, $
-                              USE_MAG_COORDS=use_MAG, $
-                              LUN=lun
+        dbString    = 'eSpec DB'
+        todaysFile  = TODAYS_NONSTORM_MAINPHASE_AND_RECOVERYPHASE_INDICES( $
+                      /FOR_ESPECDB, $
+                      DSTCUTOFF=dstCutoff, $
+                      SMOOTH_DST=smooth_dst)
+     END
+     KEYWORD_SET(get_time_i_not_alfDB_I): BEGIN
+        LOAD_FASTLOC_AND_FASTLOC_TIMES,fastLoc,fastLoc_times, $
+                                       COORDINATE_SYSTEM=coordinate_system, $
+                                       USE_AACGM_COORDS=use_AACGM, $
+                                       USE_MAG_COORDS=use_MAG, $
+                                       LUN=lun
 
-     good_i = ALFVEN_DB_CLEANER(maximus)
-     dbStruct = TEMPORARY(maximus)
-     dbTimes  = TEMPORARY(cdbTime)
-     dbString = 'Alfven DB'
+        good_i      = FASTLOC_CLEANER(fastLoc)
 
-     todaysFile = TODAYS_NONSTORM_MAINPHASE_AND_RECOVERYPHASE_FASTDB_INDICES(DO_DESPUN=do_despunDB,DSTCUTOFF=dstCutoff,SMOOTH_DST=smooth_dst)
-  
-  ENDELSE
+        dbStruct    = TEMPORARY(fastLoc)
+        dbTimes     = TEMPORARY(fastLoc_times)
+        dbString    = 'fastLoc'
+        todaysFile  = TODAYS_NONSTORM_MAINPHASE_AND_RECOVERYPHASE_INDICES( $
+                      /FOR_FASTLOC, $
+                      DSTCUTOFF=dstCutoff, $
+                      SMOOTH_DST=smooth_dst)
+     END
+     ELSE: BEGIN
+        LOAD_MAXIMUS_AND_CDBTIME,maximus,cdbTime, $
+                                 DO_DESPUNDB=do_despunDB, $
+                                 COORDINATE_SYSTEM=coordinate_system, $
+                                 USE_AACGM=use_AACGM, $
+                                 USE_MAG_COORDS=use_MAG, $
+                                 LUN=lun
+
+        good_i      = ALFVEN_DB_CLEANER(maximus)
+        dbStruct    = TEMPORARY(maximus)
+        dbTimes     = TEMPORARY(cdbTime)
+        dbString    = 'Alfven DB'
+
+        todaysFile  = TODAYS_NONSTORM_MAINPHASE_AND_RECOVERYPHASE_INDICES( $
+                      /FOR_ALFVENDB, $
+                      DESPUN_ALFDB=do_despunDB, $
+                      DSTCUTOFF=dstCutoff, $
+                      SMOOTH_DST=smooth_dst)
+
+     END
+  ENDCASE
 
   GET_NONSTORM_MAINPHASE_AND_RECOVERYPHASE_PERIODS,dst, $
      DSTCUTOFF=dstCutoff, $
