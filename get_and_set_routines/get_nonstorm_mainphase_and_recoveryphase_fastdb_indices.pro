@@ -38,17 +38,18 @@ PRO GET_NONSTORM_MAINPHASE_AND_RECOVERYPHASE_FASTDB_INDICES, $
   CASE 1 OF
      KEYWORD_SET(get_eSpecdb_i_not_alfDB_i): BEGIN
         LOAD_NEWELL_ESPEC_DB, $
-                             FAILCODES=failCode, $
-                             USE_UNSORTED_FILE=use_unsorted_file, $
-                             NEWELLDBDIR=NewellDBDir, $
-                             NEWELLDBFILE=NewellDBFile, $
-                             FORCE_LOAD_DB=force_load_db, $
-                             /DONT_LOAD_IN_MEMORY, $
-                             /JUST_TIMES, $
-                             OUT_TIMES=dbTimes, $
-                             ;; OUT_GOOD_I=good_i, $
-                             LUN=lun, $
-                             QUIET=quiet
+           FAILCODES=failCode, $
+           USE_UNSORTED_FILE=use_unsorted_file, $
+           NEWELLDBDIR=NewellDBDir, $
+           NEWELLDBFILE=NewellDBFile, $
+           FORCE_LOAD_DB=force_load_db, $
+           ;; /DONT_PERFORM_CORRECTION, $
+           /DONT_LOAD_IN_MEMORY, $
+           /JUST_TIMES, $
+           OUT_TIMES=dbTimes, $
+           ;; OUT_GOOD_I=good_i, $
+           LUN=lun, $
+           QUIET=quiet
 
         ;; good_i      = FASTLOC_CLEANER(fastLoc)
 
@@ -134,6 +135,7 @@ PRO GET_NONSTORM_MAINPHASE_AND_RECOVERYPHASE_FASTDB_INDICES, $
         ;; CLOSE,this
         
         GET_DATA_AVAILABILITY_FOR_ARRAY_OF_UTC_RANGES,T1_ARR=dst.time[inds[start_dst_ii]],T2_ARR=dst.time[inds[stop_dst_ii]], $
+           FOR_ESPEC_DB=(dbString EQ 'eSpec DB'), $
            DBSTRUCT=dbStruct,DBTIMES=dbTimes, RESTRICT_W_THESEINDS=good_i, $
            OUT_INDS_LIST=inds_list, $
            UNIQ_ORBS_LIST=uniq_orbs_list,UNIQ_ORB_INDS_LIST=uniq_orb_inds_list, $
