@@ -98,23 +98,23 @@ PRO GET_DATA_FOR_ALFVENDB_EPOCH_PLOTS,MAXIMUS=maximus,CDBTIME=cdbTime, $
   ENDELSE
 
   ;; Get ranges for plots
-  minMaxDat=MAKE_ARRAY(nEpochs,2,/DOUBLE)
+  minMaxDat    = MAKE_ARRAY(nEpochs,2,/DOUBLE)
   
   alf_ind_list = LIST(WHERE(maxData GT 0))
   alf_ind_list.add,WHERE(maxData LT 0)
   IF KEYWORD_SET(log_dbquantity) THEN BEGIN
      PRINTF,lun,'Logging all Alfven DB values for maxInd = ' + STRCOMPRESS(maxInd,/REMOVE_ALL) + '...'
      
-     log_i = WHERE(maxData NE 0.0 AND FINITE(maxData))
-     good_i = CGSETINTERSECTION(good_i,log_i)
+     log_i   = WHERE(maxData NE 0.0 AND FINITE(maxData))
+     good_i  = CGSETINTERSECTION(good_i,log_i)
   ENDIF
   
   IF KEYWORD_SET(only_pos) THEN BEGIN
-     good_i = CGSETINTERSECTION(good_i,WHERE(maxData GT 0.0 AND FINITE(maxData)))
+     good_i  = CGSETINTERSECTION(good_i,WHERE(maxData GT 0.0 AND FINITE(maxData)))
   ENDIF
   
   IF KEYWORD_SET(only_neg) THEN BEGIN
-     good_i = CGSETINTERSECTION(good_i,WHERE(maxData LT 0.0 AND FINITE(maxData)))
+     good_i  = CGSETINTERSECTION(good_i,WHERE(maxData LT 0.0 AND FINITE(maxData)))
   ENDIF
 
   IF neg_and_pos_separ OR ( log_DBQuantity AND (alf_ind_list[1,0] NE -1)) THEN BEGIN
@@ -194,24 +194,24 @@ PRO GET_DATA_FOR_ALFVENDB_EPOCH_PLOTS,MAXIMUS=maximus,CDBTIME=cdbTime, $
            ;; get corresponding data
            IF KEYWORD_SET(only_neg) THEN BEGIN
               PRINT,"converting neg data to pos!"
-              alf_y=ABS(maxData[plot_i])
+              alf_y            = ABS(maxData[plot_i])
            ENDIF ELSE BEGIN
-              alf_y=maxData[plot_i]
+              alf_y            = maxData[plot_i]
            ENDELSE
            IF KEYWORD_SET(log_dbquantity) THEN BEGIN
-                 alf_y = ALOG10(alf_y)
+                 alf_y         = ALOG10(alf_y)
            ENDIF
 
            IF i EQ 0 THEN BEGIN
-              nEvTot=N_ELEMENTS(plot_i)
+              nEvTot           = N_ELEMENTS(plot_i)
               
-              tot_plot_i_list=LIST(plot_i)
-              tot_alf_t_list=LIST(alf_t)
+              tot_plot_i_list  = LIST(plot_i)
+              tot_alf_t_list   = LIST(alf_t)
               
-              tot_alf_y_list=LIST(alf_y)
-              nEvTotList=LIST(nEvTot)
+              tot_alf_y_list   = LIST(alf_y)
+              nEvTotList       = LIST(nEvTot)
            ENDIF ELSE BEGIN
-              nEvTot+=N_ELEMENTS(plot_i)
+              nEvTot         += N_ELEMENTS(plot_i)
               
               tot_plot_i_list.add,plot_i
               tot_alf_t_list.add,alf_t
