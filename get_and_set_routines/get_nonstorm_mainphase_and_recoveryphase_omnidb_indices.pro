@@ -15,6 +15,7 @@ PRO GET_NONSTORM_MAINPHASE_AND_RECOVERYPHASE_OMNIDB_INDICES, $
    EARLIEST_JULDAY=earliest_julDay, $
    LATEST_JULDAY=latest_julDay, $
    SMOOTH_DST=smooth_dst, $
+   USE_MOSTRECENT_DST_FILES=use_mostRecent_Dst_files, $
    STORM_DST_I=s_dst_i, $
    NONSTORM_DST_I=ns_dst_i, $
    MAINPHASE_DST_I=mp_dst_i, $
@@ -71,7 +72,8 @@ PRO GET_NONSTORM_MAINPHASE_AND_RECOVERYPHASE_OMNIDB_INDICES, $
   todaysFile = TODAYS_NONSTORM_MAINPHASE_AND_RECOVERYPHASE_INDICES( $
                /FOR_OMNIDB, $
                DSTCUTOFF=dstCutoff, $
-               SMOOTH_DST=smooth_dst)
+               SMOOTH_DST=smooth_dst, $
+               USE_MOSTRECENT_DST_FILES=use_mostRecent_Dst_files)
   
   GET_NONSTORM_MAINPHASE_AND_RECOVERYPHASE_PERIODS,dst, $
      DSTCUTOFF=dstCutoff, $

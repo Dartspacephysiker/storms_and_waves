@@ -14,6 +14,7 @@ PRO GET_NONSTORM_MAINPHASE_AND_RECOVERYPHASE_FASTDB_INDICES, $
    RECOVERYPHASE_I=rp_i, $
    DSTCUTOFF=dstCutoff, $
    SMOOTH_DST=smooth_dst, $
+   USE_MOSTRECENT_DST_FILES=use_mostRecent_Dst_files, $
    EARLIEST_UTC=earliest_UTC, $
    LATEST_UTC=latest_UTC, $
    USE_JULDAY_NOT_UTC=use_julDay_not_UTC, $
@@ -93,7 +94,8 @@ PRO GET_NONSTORM_MAINPHASE_AND_RECOVERYPHASE_FASTDB_INDICES, $
                       /FOR_ALFVENDB, $
                       DESPUN_ALFDB=do_despunDB, $
                       DSTCUTOFF=dstCutoff, $
-                      SMOOTH_DST=smooth_dst)
+                      SMOOTH_DST=smooth_dst, $
+                      USE_MOSTRECENT_DST_FILES=use_mostRecent_Dst_files)
 
      END
   ENDCASE

@@ -8,6 +8,7 @@ FUNCTION TODAYS_NONSTORM_MAINPHASE_AND_RECOVERYPHASE_INDICES, $
    FOR_OMNIDB=for_OMNIDB, $
    DSTCUTOFF=dstCutoff, $
    SMOOTH_DST=smooth_dst, $
+   USE_MOSTRECENT_DST_FILES=most_recent, $
    SUFFIX=suffix
 
 
@@ -43,16 +44,24 @@ FUNCTION TODAYS_NONSTORM_MAINPHASE_AND_RECOVERYPHASE_INDICES, $
 
   mostRecent_bash  = indDir + 'mostRecent_'+dbNavn + '_ns_mp_rp_inds.txt'
   IF KEYWORD_SET(most_recent) THEN BEGIN
-     SPAWN,'cat ' + mostRecent_bash,todaysFile
-  ENDIF ELSE BEGIN
+     IF FILE_TEST(mostRecent_bash) THEN BEGIN
+        SPAWN,'cat ' + mostRecent_bash,todaysFile
+        makeNew    = 0
+     ENDIF ELSE BEGIN
+        PRINT,"Couldn't get most recent " + dbNavn + " ns_mp_rp file! Making new ..."
+        makeNew    = 1
+     ENDELSE
+  ENDIF ELSE makeNew = 1
+
+  IF makeNew THEN BEGIN
      filePref      = 'todays_nonstorm_mainphase_and_recoveryphase_' $
                      + dbNavn + '_inds--dstCutoff_' + $
                      STRCOMPRESS(dstCutoff,/REMOVE_ALL) + "nT"
 
      hoyDia        = GET_TODAY_STRING(/DO_YYYYMMDD_FMT)
      todaysFile    = indDir+filePref+smoothStr+suffix + '--'+hoyDia+'.sav'
-     SPAWN,'echo "' + todaysFile + '" >>' + mostRecent_bash
-  ENDELSE
+     SPAWN,'echo "' + todaysFile + '" >' + mostRecent_bash
+  ENDIF
 
   RETURN,todaysFile
 
