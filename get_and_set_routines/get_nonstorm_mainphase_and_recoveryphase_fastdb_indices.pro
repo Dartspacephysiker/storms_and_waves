@@ -30,6 +30,8 @@ PRO GET_NONSTORM_MAINPHASE_AND_RECOVERYPHASE_FASTDB_INDICES, $
    N_RECOVERYPHASE=n_rp, $
    NONSTORM_T1=ns_t1,MAINPHASE_T1=mp_t1,RECOVERYPHASE_T1=rp_t1, $
    NONSTORM_T2=ns_t2,MAINPHASE_T2=mp_t2,RECOVERYPHASE_T2=rp_t2, $
+   GET_TIME_FOR_ESPEC_DBS=for_eSpec_DBs, $
+   INCLUDE_32HZ=include_32Hz, $
    LUN=lun
 
   IF N_ELEMENTS(lun) EQ 0 THEN lun = -1 ;stdout
@@ -65,15 +67,21 @@ PRO GET_NONSTORM_MAINPHASE_AND_RECOVERYPHASE_FASTDB_INDICES, $
                                        COORDINATE_SYSTEM=coordinate_system, $
                                        USE_AACGM_COORDS=use_AACGM, $
                                        USE_MAG_COORDS=use_MAG, $
+                                       FOR_ESPEC_DBS=for_eSpec_DBs, $
+                                       INCLUDE_32HZ=include_32Hz, $
                                        LUN=lun
 
-        good_i      = FASTLOC_CLEANER(fastLoc)
+        good_i      = FASTLOC_CLEANER(fastLoc, $
+                                     FOR_ESPEC_DBS=for_eSpec_DBs, $
+                                     INCLUDE_32HZ=include_32Hz)
 
         dbStruct    = TEMPORARY(fastLoc)
         dbTimes     = TEMPORARY(fastLoc_times)
         dbString    = 'fastLoc'
         todaysFile  = TODAYS_NONSTORM_MAINPHASE_AND_RECOVERYPHASE_INDICES( $
                       /FOR_FASTLOC, $
+                      FASTLOC_FOR_ESPEC=for_eSpec_DBs, $
+                      INCLUDE_32HZ=include_32Hz, $
                       DSTCUTOFF=dstCutoff, $
                       SMOOTH_DST=smooth_dst)
      END

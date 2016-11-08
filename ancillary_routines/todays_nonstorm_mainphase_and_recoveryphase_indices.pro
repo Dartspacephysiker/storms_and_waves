@@ -6,6 +6,8 @@ FUNCTION TODAYS_NONSTORM_MAINPHASE_AND_RECOVERYPHASE_INDICES, $
    FOR_ESPECDB=for_eSpecDB, $
    FOR_IONDB=for_ionDB, $
    FOR_OMNIDB=for_OMNIDB, $
+   FASTLOC_FOR_ESPEC=for_eSpec_DBs, $
+   INCLUDE_32HZ=include_32Hz, $
    DSTCUTOFF=dstCutoff, $
    SMOOTH_DST=smooth_dst, $
    USE_MOSTRECENT_DST_FILES=most_recent, $
@@ -28,6 +30,9 @@ FUNCTION TODAYS_NONSTORM_MAINPHASE_AND_RECOVERYPHASE_INDICES, $
      END
      KEYWORD_SET(for_fastLoc): BEGIN
         dbNavn         = 'fastLoc'
+        IF KEYWORD_SET(for_eSpec_DBs) THEN BEGIN
+           dbNavn += '--for_eSpec'
+        ENDIF
      END
      KEYWORD_SET(for_OMNIDB): BEGIN
         dbNavn         = 'OMNI'
@@ -39,6 +44,12 @@ FUNCTION TODAYS_NONSTORM_MAINPHASE_AND_RECOVERYPHASE_INDICES, $
         dbNavn         = 'ionDB'
      END
   ENDCASE
+
+  IF KEYWORD_SET(include_32Hz) AND $
+     (KEYWORD_SET(for_AlfvenDB) OR KEYWORD_SET(for_fastLoc)) $
+  THEN BEGIN
+     dbNavn += '--inc_32Hz'
+  ENDIF
 
   indDir           = '/SPENCEdata/Research/database/temps/'
 
