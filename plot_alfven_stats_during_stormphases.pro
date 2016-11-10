@@ -25,6 +25,7 @@ PRO PLOT_ALFVEN_STATS_DURING_STORMPHASES,$
    MINILAT=minILAT, $
    MAXILAT=maxILAT, $
    BINILAT=binILAT, $
+   EQUAL_AREA_BINNING=EA_binning, $
    DO_LSHELL=do_lShell, $
    REVERSE_LSHELL=reverse_lShell, $
    MINLSHELL=minLshell, $
@@ -182,6 +183,9 @@ PRO PLOT_ALFVEN_STATS_DURING_STORMPHASES,$
    CB_FORCE_OOBHIGH=cb_force_oobHigh, $
    CB_FORCE_OOBLOW=cb_force_oobLow, $
    FANCY_PLOTNAMES=fancy_plotNames, $
+   SHOW_INTEGRALS=show_integrals, $
+   MAKE_INTEGRAL_TXTFILE=make_integral_txtfile, $
+   MAKE_INTEGRAL_SAVFILE=make_integral_savfiles, $
    VERBOSE=verbose, $
    _EXTRA=e
 
@@ -381,6 +385,7 @@ PRO PLOT_ALFVEN_STATS_DURING_STORMPHASES,$
                                   BINMLT=binMLT, $
                                   SHIFTMLT=shiftM, $
                                   MINILAT=minILAT,MAXILAT=maxILAT,BINILAT=binILAT, $
+                                  EQUAL_AREA_BINNING=EA_binning, $
                                   DO_LSHELL=do_lShell,REVERSE_LSHELL=reverse_lShell, $
                                   MINLSHELL=minLshell,MAXLSHELL=maxLshell,BINLSHELL=binLshell, $
                                   MIN_MAGCURRENT=minMC, $
@@ -532,6 +537,9 @@ PRO PLOT_ALFVEN_STATS_DURING_STORMPHASES,$
                                   CB_FORCE_OOBHIGH=cb_force_oobHigh, $
                                   CB_FORCE_OOBLOW=cb_force_oobLow, $
                                   FANCY_PLOTNAMES=fancy_plotNames, $
+                                  SHOW_INTEGRALS=show_integrals, $
+                                  MAKE_INTEGRAL_TXTFILE=make_integral_txtfile, $
+                                  MAKE_INTEGRAL_SAVFILE=make_integral_savfiles, $
                                   /PRINT_DATA_AVAILABILITY, $
                                   _EXTRA = e  
 
