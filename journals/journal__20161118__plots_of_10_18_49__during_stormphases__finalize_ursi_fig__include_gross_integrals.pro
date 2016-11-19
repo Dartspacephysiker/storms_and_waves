@@ -10,12 +10,14 @@ PRO JOURNAL__20161118__PLOTS_OF_10_18_49__DURING_STORMPHASES__FINALIZE_URSI_FIG_
   do_despun                    = 0
   ;; orbRange                  = [500,12670]
   ;; orbRange                  = [1000,10800]
-  orbRange                     = [1000,12670]
+  orbRange                     = [1000,10000]
   altRange                     = [[1000,4180]]
 
   justData                     = 0
 
   EA_binning                   = 1
+
+  use_AACGM                    = 0
 
   minMC                        = 1
   maxNegMC                     = -1
@@ -73,7 +75,7 @@ PRO JOURNAL__20161118__PLOTS_OF_10_18_49__DURING_STORMPHASES__FINALIZE_URSI_FIG_
   ;;08-ELEC_ENERGY_FLUX
   eFluxPlotType                  = 'Max'
   ;; ePlotRange                     = [1e5,1e8]
-  ePlotRange                     = [1e-2,1e1]
+  ePlotRange                     = [1e-3,1e0]
   logEfPlot                      = 1
   noNegEflux                     = 1
   eFluxVarPlotRange              = [1e1,1e8]
@@ -89,8 +91,8 @@ PRO JOURNAL__20161118__PLOTS_OF_10_18_49__DURING_STORMPHASES__FINALIZE_URSI_FIG_
   ;;                             [1e7,1e9]]
   ;; eNumFlPlotRange                = [[10^(5.0),10^(8.0)], $
   ;;                                   [1e21,1e24]]
-  eNumFlPlotRange                = [[1e-2,1e1], $
-                                    [1e9,1e12]]
+  eNumFlPlotRange                = [[1e-3,1e0], $
+                                    [1e7,1e9]]
   eNumFlVarPlotRange             = [[1e1,1e8], $
                                     [1e1,1e8]]
   var__plotRange                 = [[var__plotRange],[eNumFlVarPlotRange]]
@@ -100,13 +102,13 @@ PRO JOURNAL__20161118__PLOTS_OF_10_18_49__DURING_STORMPHASES__FINALIZE_URSI_FIG_
   maxInd                         = 18
   ifpt                           = 'INTEG_UP'
   noNegIFlux                     = 1
-  iPlotRange                     = [1e7,1e9]
+  iPlotRange                     = [1e6,1e8]
   logIFPlot                      = 1
   iVarPlotRange                  = [1e1,1e8]
 
   ;;;;;;;;;;;;;;;;;;;;;;
   ;;49--PFLUXEST
-  pPlotRange                     = [1e-2,1e1] ;for pFlux divided by width_x and multiplied by area
+  pPlotRange                     = [1e-3,1e0] ;for pFlux divided by width_x and multiplied by area
   logPFPlot                      = 1
   ;; multiply_pFlux_by_width_x      = 1
   pVarPlotRange                  = [1e1,1e8]
@@ -114,14 +116,14 @@ PRO JOURNAL__20161118__PLOTS_OF_10_18_49__DURING_STORMPHASES__FINALIZE_URSI_FIG_
 
   ;;;;;;;;;;;;;;;;;;;;;;
   ;;Time histogram               
-  tHistDenomPlotRange            = [0,50]
+  tHistDenomPlotRange            = [0,300]
   ;; tHistDenomPlotAutoscale        = 1
   ;; tHistDenomPlotNormalize        = 0
   tHistDenomPlot_noMask          = 1
 
   ;;;;;;;;;;;;;;;;;;;;;;;;;
   ;;N Events
-  nEventsPlotRange               = [0,50]
+  nEventsPlotRange               = [0,500]
   nEventsPlot__noMask            = 1
 
   ;;;;;;;;;;;;;;;;;;;;;;
