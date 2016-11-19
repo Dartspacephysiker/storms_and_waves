@@ -83,7 +83,8 @@ PRO GET_NONSTORM_MAINPHASE_AND_RECOVERYPHASE_FASTDB_INDICES, $
                       FASTLOC_FOR_ESPEC=for_eSpec_DBs, $
                       INCLUDE_32HZ=include_32Hz, $
                       DSTCUTOFF=dstCutoff, $
-                      SMOOTH_DST=smooth_dst)
+                      SMOOTH_DST=smooth_dst, $
+                      USE_MOSTRECENT_DST_FILES=use_mostRecent_Dst_files)
      END
      ELSE: BEGIN
         LOAD_MAXIMUS_AND_CDBTIME,maximus,cdbTime, $
