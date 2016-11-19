@@ -17,16 +17,18 @@ PRO JOURNAL__20161118__PLOTS_OF_10_18_49__DURING_STORMPHASES__FINALIZE_URSI_FIG_
 
   EA_binning                   = 1
 
-  minMC                        = 3
-  maxNegMC                     = -3
+  minMC                        = 1
+  maxNegMC                     = -1
+
+  show_integrals               = 1
 
   ;;;;;;;;;;;;;;;;;
   ;;turn plots on and off
-  ionPlots                       = 0
-  probOccurrencePlot             = 0
-  eNumFluxPlots                  = 0
-  ePlots                         = 0
-  pFluxPlot                      = 0
+  ionPlots                       = 1
+  probOccurrencePlot             = 1
+  eNumFluxPlots                  = 1
+  ePlots                         = 1
+  pFluxPlot                      = 1
   tHistDenominatorPlot           = 1
   nPlots                         = 1
 
@@ -52,13 +54,13 @@ PRO JOURNAL__20161118__PLOTS_OF_10_18_49__DURING_STORMPHASES__FINALIZE_URSI_FIG_
 
   ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
   ;;Hemi stuff
-  ;; hemi                           = 'NORTH'
-  ;; minILAT                        = 60
-  ;; maxILAT                        = 90
+  hemi                           = 'NORTH'
+  minILAT                        = 60
+  maxILAT                        = 90
 
-  hemi                           = 'SOUTH'
-  minILAT                        = -90
-  maxILAT                        = -60
+  ;; hemi                           = 'SOUTH'
+  ;; minILAT                        = -90
+  ;; maxILAT                        = -60
   ;; orbRange                       = [2000,12670]
 
   ;; binILAT                        = 2.5
