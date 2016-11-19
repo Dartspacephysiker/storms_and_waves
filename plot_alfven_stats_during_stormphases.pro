@@ -6,6 +6,7 @@
 ;;
 PRO PLOT_ALFVEN_STATS_DURING_STORMPHASES,$
    DSTCUTOFF=dstCutoff, $
+   USE_MOSTRECENT_DST_FILES=use_mostRecent_Dst_files, $
    USE_AE=use_ae, $
    USE_AU=use_au, $
    USE_AL=use_al, $
