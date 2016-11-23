@@ -7,7 +7,9 @@ FUNCTION TODAYS_NONSTORM_MAINPHASE_AND_RECOVERYPHASE_INDICES, $
    FOR_IONDB=for_ionDB, $
    FOR_OMNIDB=for_OMNIDB, $
    FASTLOC_FOR_ESPEC=for_eSpec_DBs, $
+   SAMPLE_T_RESTRICTION=sample_t_restriction, $
    INCLUDE_32HZ=include_32Hz, $
+   DISREGARD_SAMPLE_T=disregard_sample_t, $
    DSTCUTOFF=dstCutoff, $
    SMOOTH_DST=smooth_dst, $
    USE_MOSTRECENT_DST_FILES=most_recent, $
@@ -45,11 +47,19 @@ FUNCTION TODAYS_NONSTORM_MAINPHASE_AND_RECOVERYPHASE_INDICES, $
      END
   ENDCASE
 
-  IF KEYWORD_SET(include_32Hz) AND $
-     (KEYWORD_SET(for_AlfvenDB) OR KEYWORD_SET(for_fastLoc)) $
-  THEN BEGIN
-     dbNavn += '--inc_32Hz'
-  ENDIF
+  CASE 1 OF
+     KEYWORD_SET(disregard_sample_t): BEGIN
+        dbNavn += '--disregard_sample_t'
+     END
+     (KEYWORD_SET(include_32Hz) AND $
+     (KEYWORD_SET(for_AlfvenDB) OR KEYWORD_SET(for_fastLoc))): BEGIN
+        dbNavn += '--inc_32Hz'
+     END
+     KEYWORD_SET(sample_t_restriction): BEGIN
+        dbNavn += 'sampT_restr_' + STRCOMPRESS(sample_t_restriction,/REMOVE_ALL)
+     END
+     ELSE:
+  ENDCASE
 
   indDir           = '/SPENCEdata/Research/database/temps/'
 

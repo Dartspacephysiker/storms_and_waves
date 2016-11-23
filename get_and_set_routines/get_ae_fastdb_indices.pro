@@ -83,7 +83,11 @@ PRO GET_AE_FASTDB_INDICES, $
                                        USE_MAG_COORDS=use_MAG, $
                                        LUN=lun
 
-        good_i = FASTLOC_CLEANER(fastLoc)
+        good_i = FASTLOC_CLEANER(fastLoc, $
+                                 FOR_ESPEC_DBS=for_eSpec_DBs, $
+                                 SAMPLE_T_RESTRICTION=sample_t_restriction, $
+                                 INCLUDE_32Hz=include_32Hz, $
+                                 DISREGARD_SAMPLE_T=disregard_sample_t)
 
         dbStruct = TEMPORARY(fastLoc)
         dbTimes  = TEMPORARY(fastLoc_times)
@@ -103,7 +107,10 @@ PRO GET_AE_FASTDB_INDICES, $
                                  USE_MAG_COORDS=use_MAG, $
                                  LUN=lun
 
-        good_i = ALFVEN_DB_CLEANER(maximus)
+        good_i = ALFVEN_DB_CLEANER(maximus, $
+                                   SAMPLE_T_RESTRICTION=sample_t_restriction, $
+                                   INCLUDE_32Hz=include_32Hz, $
+                                   DISREGARD_SAMPLE_T=disregard_sample_t)
         dbStruct = TEMPORARY(maximus)
         dbTimes  = TEMPORARY(cdbTime)
         dbString = 'Alfven DB'
