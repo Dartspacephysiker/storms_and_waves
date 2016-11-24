@@ -12,6 +12,8 @@ PRO GET_NONSTORM_MAINPHASE_AND_RECOVERYPHASE_FASTDB_INDICES, $
    DISREGARD_SAMPLE_T=disregard_sample_t, $
    GET_TIME_I_NOT_ALFDB_I=get_time_i_not_alfDB_i, $
    GET_ESPECDB_I_NOT_ALFDB_I=get_eSpecdb_i_not_alfDB_i, $
+   ;; ESPEC__USE_2000KM_FILE=use_2000km_file, $
+   ;; ESPEC__REDUCED_DB=reduce_dbSize, $
    NONSTORM_I=ns_i, $
    MAINPHASE_I=mp_i, $
    RECOVERYPHASE_I=rp_i, $
@@ -49,9 +51,13 @@ PRO GET_NONSTORM_MAINPHASE_AND_RECOVERYPHASE_FASTDB_INDICES, $
            NEWELLDBFILE=NewellDBFile, $
            FORCE_LOAD_DB=force_load_db, $
            ;; /DONT_PERFORM_CORRECTION, $
-           /DONT_LOAD_IN_MEMORY, $
+           ;; /DONT_LOAD_IN_MEMORY, $
            /JUST_TIMES, $
            OUT_TIMES=dbTimes, $
+           USE_2000KM_FILE=use_2000km_file, $
+           ;; NO_MEMORY_LOAD=noMem, $
+           ;; REDUCED_DB=reduce_dbSize, $
+           /REDUCED_DB, $
            ;; OUT_GOOD_I=good_i, $
            LUN=lun, $
            QUIET=quiet
@@ -65,7 +71,8 @@ PRO GET_NONSTORM_MAINPHASE_AND_RECOVERYPHASE_FASTDB_INDICES, $
                       INCLUDE_32HZ=include_32Hz, $
                       DISREGARD_SAMPLE_T=disregard_sample_t, $
                       DSTCUTOFF=dstCutoff, $
-                      SMOOTH_DST=smooth_dst)
+                      SMOOTH_DST=smooth_dst, $
+                      USE_MOSTRECENT_DST_FILES=use_mostRecent_Dst_files)
      END
      KEYWORD_SET(get_time_i_not_alfDB_I): BEGIN
         LOAD_FASTLOC_AND_FASTLOC_TIMES,fastLoc,fastLoc_times, $
