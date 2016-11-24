@@ -12,8 +12,9 @@ PRO GET_NONSTORM_MAINPHASE_AND_RECOVERYPHASE_FASTDB_INDICES, $
    DISREGARD_SAMPLE_T=disregard_sample_t, $
    GET_TIME_I_NOT_ALFDB_I=get_time_i_not_alfDB_i, $
    GET_ESPECDB_I_NOT_ALFDB_I=get_eSpecdb_i_not_alfDB_i, $
-   ;; ESPEC__USE_2000KM_FILE=use_2000km_file, $
-   ;; ESPEC__REDUCED_DB=reduce_dbSize, $
+   ESPEC__NEWELL_2009_INTERP=newell_2009_interp, $
+   ESPEC__USE_2000KM_FILE=eSpec__use_2000km_file, $
+   ;; ESPEC__REDUCED_DB=eSpec__reduce_dbSize, $
    NONSTORM_I=ns_i, $
    MAINPHASE_I=mp_i, $
    RECOVERYPHASE_I=rp_i, $
@@ -52,9 +53,10 @@ PRO GET_NONSTORM_MAINPHASE_AND_RECOVERYPHASE_FASTDB_INDICES, $
            FORCE_LOAD_DB=force_load_db, $
            ;; /DONT_PERFORM_CORRECTION, $
            ;; /DONT_LOAD_IN_MEMORY, $
+           DONT_CONVERT_TO_STRICT_NEWELL=~KEYWORD_SET(newell_2009_interp), $
            /JUST_TIMES, $
            OUT_TIMES=dbTimes, $
-           USE_2000KM_FILE=use_2000km_file, $
+           USE_2000KM_FILE=eSpec__use_2000km_file, $
            ;; NO_MEMORY_LOAD=noMem, $
            ;; REDUCED_DB=reduce_dbSize, $
            /REDUCED_DB, $
