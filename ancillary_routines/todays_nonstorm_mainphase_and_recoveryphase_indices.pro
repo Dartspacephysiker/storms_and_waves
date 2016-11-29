@@ -22,7 +22,11 @@ FUNCTION TODAYS_NONSTORM_MAINPHASE_AND_RECOVERYPHASE_INDICES, $
 
   smoothStr            = ''
   IF KEYWORD_SET(smooth_dst) THEN BEGIN
-     smoothStr         = '--smDst'
+     IF smooth_dst EQ 1 THEN BEGIN
+        smoothStr      = '--smDst'
+     ENDIF ELSE BEGIN
+        smoothStr      = '--smDst_'+STRCOMPRESS(smooth_dst,/REMOVE_ALL)+'hr'
+     ENDELSE   
   ENDIF
 
   CASE 1 OF

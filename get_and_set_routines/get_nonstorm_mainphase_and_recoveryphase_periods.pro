@@ -63,10 +63,40 @@ PRO GET_NONSTORM_MAINPHASE_AND_RECOVERYPHASE_PERIODS,dst, $
   CASE 1 OF
      KEYWORD_SET(smooth_Dst): BEGIN
         IF ~KEYWORD_SET(quiet) THEN PRINTF,lun,FORMAT='(A0)',"Using smoothed Dst"
-        s_dst_i = WHERE(dst.dst_smoothed_6hr LE dstCutoff,n_s,COMPLEMENT=ns_dst_i,NCOMPLEMENT=n_ns)
+        CASE smooth_Dst OF
+           1: BEGIN
+              s_dst_i = WHERE(dst.dst_smoothed_6hr LE dstCutoff,n_s, $
+                              COMPLEMENT=ns_dst_i,NCOMPLEMENT=n_ns)
+              mp_dst_ii = WHERE(dst.dt_dst_sm6hr[s_dst_i] LE 0, $
+                                n_mp, $
+                                COMPLEMENT=rp_dst_ii, $
+                                NCOMPLEMENT=n_rp)
+           END
+           ELSE: BEGIN
+                ;;Let's smooth Dst first, and get the derivative
+              dst_smoothed = SMOOTH(dst.dst,smooth_Dst,/EDGE_TRUNCATE)
+              dt_dst_sm = DERIV(dst_smoothed)
+
+              ;;NOW let's get storm indices and phase indices
+              s_dst_i = WHERE(dst_smoothed LE dstCutoff,n_s, $
+                              COMPLEMENT=ns_dst_i,NCOMPLEMENT=n_ns)
+              mp_dst_ii = WHERE(dt_dst_sm[s_dst_i] LE 0, $
+                                n_mp, $
+                                COMPLEMENT=rp_dst_ii, $
+                                NCOMPLEMENT=n_rp)
+
+           END
+        ENDCASE
      END
      ELSE: BEGIN
-        s_dst_i = WHERE(dst.dst LE dstCutoff,n_s,COMPLEMENT=ns_dst_i,NCOMPLEMENT=n_ns)
+        s_dst_i = WHERE(dst.dst LE dstCutoff, $
+                        n_s, $
+                        COMPLEMENT=ns_dst_i, $
+                        NCOMPLEMENT=n_ns)
+        mp_dst_ii = WHERE(dst.dt_dst_sm6hr[s_dst_i] LE 0, $
+                          n_mp, $
+                          COMPLEMENT=rp_dst_ii, $
+                          NCOMPLEMENT=n_rp)
      END
   ENDCASE
 
@@ -127,8 +157,6 @@ PRO GET_NONSTORM_MAINPHASE_AND_RECOVERYPHASE_PERIODS,dst, $
      END
   ENDCASE
 
-
-  mp_dst_ii = WHERE(dst.dt_dst_sm6hr[s_dst_i] LE 0,n_mp,COMPLEMENT=rp_dst_ii,NCOMPLEMENT=n_rp)
 
   ;;Make sure these all actually found stuff
   WHERECHECK,s_dst_i,ns_dst_i,mp_dst_ii,rp_dst_ii
