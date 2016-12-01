@@ -10,14 +10,14 @@ PRO JOURNAL__20161118__PLOTS_OF_10_18_49__DURING_STORMPHASES__FINALIZE_URSI_FIG_
   do_despun                    = 0
   ;; orbRange                  = [500,12670]
   ;; orbRange                  = [1000,10800]
-  orbRange                     = [1000,10000]
+  orbRange                     = [1000,10600]
   altRange                     = [[1000,4180]]
 
   justData                     = 0
 
   EA_binning                   = 1
 
-  use_AACGM                    = 0
+  use_AACGM                    = 1
 
   minMC                        = 1
   maxNegMC                     = -1
@@ -63,13 +63,13 @@ PRO JOURNAL__20161118__PLOTS_OF_10_18_49__DURING_STORMPHASES__FINALIZE_URSI_FIG_
   ;; hemi                           = 'SOUTH'
   ;; minILAT                        = -90
   ;; maxILAT                        = -60
-  ;; orbRange                       = [2000,12670]
+  ;; orbRange                       = [2000,10600]
 
   ;; binILAT                        = 2.5
   ;; binMLT                         = 1.5
 
   ;; maskMin                        = 5
-  tHist_mask_bins_below_thresh   = 1
+  ;; tHist_mask_bins_below_thresh   = 1
 
   ;;;;;;;;;;;;;;;;;;;;;;
   ;;08-ELEC_ENERGY_FLUX
@@ -140,14 +140,14 @@ PRO JOURNAL__20161118__PLOTS_OF_10_18_49__DURING_STORMPHASES__FINALIZE_URSI_FIG_
 
   plotPrefix           = (KEYWORD_SET(plotPref) ? plotPref : '') + altStr
 
-  grossRate_info_file  = GET_TODAY_STRING(/DO_YYYYMMDD_FMT) + $
-                         '--grossRate_info--' + hemi + '--' + $
-                         altStr + $
-                         (KEYWORD_SET(tHist_mask_bins_below_thresh) ? '--tThresh_'+ $
-                          STRCOMPRESS(tHist_mask_bins_below_thresh,/REMOVE_ALL) : '') + $
-                         (KEYWORD_SET(maskMin) ? '--maskMin_'+ $
-                          STRCOMPRESS(maskMin,/REMOVE_ALL) : '') + $
-                         '--maxInds_08_10_18_49.txt'
+  ;; grossRate_info_file  = GET_TODAY_STRING(/DO_YYYYMMDD_FMT) + $
+  ;;                        '--grossRate_info--' + hemi + '--' + $
+  ;;                        altStr + $
+  ;;                        (KEYWORD_SET(tHist_mask_bins_below_thresh) ? '--tThresh_'+ $
+  ;;                         STRCOMPRESS(tHist_mask_bins_below_thresh,/REMOVE_ALL) : '') + $
+  ;;                        (KEYWORD_SET(maskMin) ? '--maskMin_'+ $
+  ;;                         STRCOMPRESS(maskMin,/REMOVE_ALL) : '') + $
+  ;;                        '--maxInds_08_10_18_49.txt'
 
   PLOT_ALFVEN_STATS_DURING_STORMPHASES, $
      DSTCUTOFF=dstCutoff, $

@@ -90,16 +90,15 @@ PRO GET_NONSTORM_MAINPHASE_AND_RECOVERYPHASE_FASTDB_INDICES, $
            INCLUDE_32HZ=include_32Hz, $
            LUN=lun
 
-        good_i      = FASTLOC_CLEANER(KEYWORD_SET(for_eSpec_DBs) ? FL_eSpec__fastLoc : FL__fastLoc, $
-                                      FOR_ESPEC_DBS=for_eSpec_DBs, $
-                                      SAMPLE_T_RESTRICTION=sample_t_restriction, $
-                                      INCLUDE_32Hz=include_32Hz, $
-                                      DISREGARD_SAMPLE_T=disregard_sample_t)
-
-        ;; dbStruct    = TEMPORARY(KEYWORD_SET(for_eSpec_DBs) ? FL_eSpec__fastLoc : FL__fastLoc)
-        ;; dbTimes     = TEMPORARY(KEYWORD_SET(for_eSpec_DBs) ? FASTLOC_E__times : FASTLOC__times)
         dbStruct    = KEYWORD_SET(for_eSpec_DBs) ? FL_eSpec__fastLoc : FL__fastLoc
         dbTimes     = KEYWORD_SET(for_eSpec_DBs) ? FASTLOC_E__times : FASTLOC__times
+
+        good_i      = FASTLOC_CLEANER(dbStruct, $
+                      FOR_ESPEC_DBS=for_eSpec_DBs, $
+                      SAMPLE_T_RESTRICTION=sample_t_restriction, $
+                      INCLUDE_32Hz=include_32Hz, $
+                      DISREGARD_SAMPLE_T=disregard_sample_t)
+
         dbString    = 'fastLoc'
         todaysFile  = TODAYS_NONSTORM_MAINPHASE_AND_RECOVERYPHASE_INDICES( $
                       /FOR_FASTLOC, $
