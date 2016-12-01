@@ -14,7 +14,6 @@ PRO GET_NONSTORM_MAINPHASE_AND_RECOVERYPHASE_FASTDB_INDICES, $
    GET_ESPECDB_I_NOT_ALFDB_I=get_eSpecdb_i_not_alfDB_i, $
    ESPEC__NEWELL_2009_INTERP=newell_2009_interp, $
    ESPEC__USE_2000KM_FILE=eSpec__use_2000km_file, $
-   ;; ESPEC__REDUCED_DB=eSpec__reduce_dbSize, $
    NONSTORM_I=ns_i, $
    MAINPHASE_I=mp_i, $
    RECOVERYPHASE_I=rp_i, $
@@ -64,8 +63,6 @@ PRO GET_NONSTORM_MAINPHASE_AND_RECOVERYPHASE_FASTDB_INDICES, $
            LUN=lun, $
            QUIET=quiet
 
-        ;; good_i      = FASTLOC_CLEANER(fastLoc)
-
         dbString    = 'eSpec DB'
         todaysFile  = TODAYS_NONSTORM_MAINPHASE_AND_RECOVERYPHASE_INDICES( $
                       /FOR_ESPECDB, $
@@ -77,22 +74,32 @@ PRO GET_NONSTORM_MAINPHASE_AND_RECOVERYPHASE_FASTDB_INDICES, $
                       USE_MOSTRECENT_DST_FILES=use_mostRecent_Dst_files)
      END
      KEYWORD_SET(get_time_i_not_alfDB_I): BEGIN
-        LOAD_FASTLOC_AND_FASTLOC_TIMES,fastLoc,fastLoc_times, $
-                                       COORDINATE_SYSTEM=coordinate_system, $
-                                       USE_AACGM_COORDS=use_AACGM, $
-                                       USE_MAG_COORDS=use_MAG, $
-                                       FOR_ESPEC_DBS=for_eSpec_DBs, $
-                                       INCLUDE_32HZ=include_32Hz, $
-                                       LUN=lun
+        IF KEYWORD_SET(for_eSpec_DBs) THEN BEGIN
+           @common__fastloc_espec_vars.pro
 
-        good_i      = FASTLOC_CLEANER(fastLoc, $
-                                     FOR_ESPEC_DBS=for_eSpec_DBs, $
+        ENDIF ELSE BEGIN
+           @common__fastloc_vars.pro
+
+        ENDELSE        
+
+        LOAD_FASTLOC_AND_FASTLOC_TIMES, $
+           COORDINATE_SYSTEM=coordinate_system, $
+           USE_AACGM_COORDS=use_AACGM, $
+           USE_MAG_COORDS=use_MAG, $
+           FOR_ESPEC_DBS=for_eSpec_DBs, $
+           INCLUDE_32HZ=include_32Hz, $
+           LUN=lun
+
+        good_i      = FASTLOC_CLEANER(KEYWORD_SET(for_eSpec_DBs) ? FL_eSpec__fastLoc : FL__fastLoc, $
+                                      FOR_ESPEC_DBS=for_eSpec_DBs, $
                                       SAMPLE_T_RESTRICTION=sample_t_restriction, $
                                       INCLUDE_32Hz=include_32Hz, $
                                       DISREGARD_SAMPLE_T=disregard_sample_t)
 
-        dbStruct    = TEMPORARY(fastLoc)
-        dbTimes     = TEMPORARY(fastLoc_times)
+        ;; dbStruct    = TEMPORARY(KEYWORD_SET(for_eSpec_DBs) ? FL_eSpec__fastLoc : FL__fastLoc)
+        ;; dbTimes     = TEMPORARY(KEYWORD_SET(for_eSpec_DBs) ? FASTLOC_E__times : FASTLOC__times)
+        dbStruct    = KEYWORD_SET(for_eSpec_DBs) ? FL_eSpec__fastLoc : FL__fastLoc
+        dbTimes     = KEYWORD_SET(for_eSpec_DBs) ? FASTLOC_E__times : FASTLOC__times
         dbString    = 'fastLoc'
         todaysFile  = TODAYS_NONSTORM_MAINPHASE_AND_RECOVERYPHASE_INDICES( $
                       /FOR_FASTLOC, $
@@ -194,7 +201,7 @@ PRO GET_NONSTORM_MAINPHASE_AND_RECOVERYPHASE_FASTDB_INDICES, $
         
      ENDFOR
 
-     PRINTF,lun,"Saving FAST " + dbString + " nonstorm/storm indices for today..."
+     PRINTF,lun,"Saving FAST " + dbString + " nonstorm/storm indices for today: " + todaysFile
      SAVE,ns_i,mp_i,rp_i,s_dst_i,ns_dst_i,mp_dst_i,rp_dst_i, $
           n_s,n_ns,n_mp,n_rp, $
           ns_t1,ns_t2,mp_t1,mp_t2,rp_t1,rp_t2, $
