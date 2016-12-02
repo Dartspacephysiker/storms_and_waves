@@ -51,11 +51,12 @@ PRO GET_NONSTORM_MAINPHASE_AND_RECOVERYPHASE_OMNIDB_INDICES, $
   C_OMNI__clean_i = GET_CLEAN_OMNI_I(C_OMNI__Bx,C_OMNI__By,C_OMNI__Bz, $
                                      LUN=lun)
   C_OMNI__time_i  = GET_OMNI_TIME_I(mag_UTC, $
-                                    EARLIEST_UTC=earliest_UTC, $
-                                    LATEST_UTC=latest_UTC, $
-                                    USE_JULDAY_NOT_UTC=use_julDay_not_UTC, $
-                                    EARLIEST_JULDAY=earliest_julDay, $
-                                    LATEST_JULDAY=latest_julDay, $
+                                    IMF_STRUCT=IMF_struct, $
+                                    ;; EARLIEST_UTC=earliest_UTC, $
+                                    ;; LATEST_UTC=latest_UTC, $
+                                    ;; USE_JULDAY_NOT_UTC=use_julDay_not_UTC, $
+                                    ;; EARLIEST_JULDAY=earliest_julDay, $
+                                    ;; LATEST_JULDAY=latest_julDay, $
                                     ;; RESTRICT_TO_ALFVENDB_TIMES=restrict_to_alfvendb_times, $
                                     LUN=lun)
 
