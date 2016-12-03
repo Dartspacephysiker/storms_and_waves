@@ -3,7 +3,7 @@
 ;2016/01/01 Also output t1 and t2 for each phase, if desired
 ;2016/04/04 Added DO_DESPUN keyword for fear
 PRO GET_AE_FASTDB_INDICES, $
-   DO_DESPUNDB=do_despunDB, $
+   DESPUNDB=despunDB, $
    COORDINATE_SYSTEM=coordinate_system, $
    USE_AACGM_COORDS=use_AACGM, $
    USE_MAG_COORDS=use_MAG, $
@@ -101,7 +101,7 @@ PRO GET_AE_FASTDB_INDICES, $
      END
      ELSE: BEGIN
         LOAD_MAXIMUS_AND_CDBTIME,maximus,cdbTime, $
-                                 DO_DESPUNDB=do_despunDB, $
+                                 DESPUNDB=despunDB, $
                                  COORDINATE_SYSTEM=coordinate_system, $
                                  USE_AACGM=use_AACGM, $
                                  USE_MAG_COORDS=use_MAG, $
@@ -115,7 +115,7 @@ PRO GET_AE_FASTDB_INDICES, $
         dbTimes  = TEMPORARY(cdbTime)
         dbString = 'Alfven DB'
 
-        todaysFile = TODAYS_AE_INDICES(DESPUN_ALFDB=do_despunDB, $
+        todaysFile = TODAYS_AE_INDICES(DESPUN_ALFDB=despunDB, $
                                        /FOR_ALFVENDB, $
                                        AE_STR=ae_str, $
                                        AECUTOFF=AEcutoff, $

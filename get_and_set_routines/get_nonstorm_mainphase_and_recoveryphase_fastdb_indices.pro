@@ -3,7 +3,7 @@
 ;2016/01/01 Also output t1 and t2 for each phase, if desired
 ;2016/04/04 Added DO_DESPUN keyword for fear
 PRO GET_NONSTORM_MAINPHASE_AND_RECOVERYPHASE_FASTDB_INDICES, $
-   DO_DESPUNDB=do_despunDB, $
+   DESPUNDB=despunDB, $
    COORDINATE_SYSTEM=coordinate_system, $
    USE_AACGM_COORDS=use_AACGM, $
    USE_MAG_COORDS=use_MAG, $
@@ -112,7 +112,7 @@ PRO GET_NONSTORM_MAINPHASE_AND_RECOVERYPHASE_FASTDB_INDICES, $
      END
      ELSE: BEGIN
         LOAD_MAXIMUS_AND_CDBTIME,maximus,cdbTime, $
-                                 DO_DESPUNDB=do_despunDB, $
+                                 DESPUNDB=despunDB, $
                                  COORDINATE_SYSTEM=coordinate_system, $
                                  USE_AACGM=use_AACGM, $
                                  USE_MAG_COORDS=use_MAG, $
@@ -125,7 +125,7 @@ PRO GET_NONSTORM_MAINPHASE_AND_RECOVERYPHASE_FASTDB_INDICES, $
 
         todaysFile  = TODAYS_NONSTORM_MAINPHASE_AND_RECOVERYPHASE_INDICES( $
                       /FOR_ALFVENDB, $
-                      DESPUN_ALFDB=do_despunDB, $
+                      DESPUN_ALFDB=despunDB, $
                       SAMPLE_T_RESTRICTION=sample_t_restriction, $
                       INCLUDE_32HZ=include_32Hz, $
                       DISREGARD_SAMPLE_T=disregard_sample_t, $
