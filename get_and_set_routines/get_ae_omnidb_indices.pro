@@ -1,10 +1,8 @@
 ;2016/08/19 Now we need OMNI to do it too
 PRO GET_AE_OMNIDB_INDICES, $
-   OMNI_COORDS=OMNI_coords, $
-   ;; RESTRICT_TO_ALFVENDB_TIMES=restrict_to_alfvendb_times, $
-   ;; COORDINATE_SYSTEM=coordinate_system, $
-   ;; USE_AACGM_COORDS=use_AACGM, $
-   ;; USE_MAG_COORDS=use_MAG, $
+   ALFDB_PLOT_STRUCT=alfDB_plot_struct, $
+   IMF_STRUCT=IMF_struct, $
+   MIMC_STRUCT=MIMC_struct, $
    AECUTOFF=AeCutoff, $
    SMOOTH_AE=smooth_AE, $
    EARLIEST_UTC=earliest_UTC, $
@@ -60,18 +58,13 @@ PRO GET_AE_OMNIDB_INDICES, $
                       thetaCone_GSE,phiClock_GSE,cone_overClock_GSE,Bxy_over_Bz_GSE, $
                       By_GSM,Bz_GSM,Bt_GSM, $
                       thetaCone_GSM,phiClock_GSM,cone_overClock_GSM,Bxy_over_Bz_GSM, $
-                      OMNI_COORDS=OMNI_coords, $
+                      OMNI_COORDS=alfDB_plot_struct.OMNI_coords, $
                       LUN=lun
 
   C_OMNI__clean_i = GET_CLEAN_OMNI_I(C_OMNI__Bx,C_OMNI__By,C_OMNI__Bz, $
                                      LUN=lun)
   C_OMNI__time_i  = GET_OMNI_TIME_I(mag_UTC, $
-                                    ;; RESTRICT_TO_ALFVENDB_TIMES=restrict_to_alfvendb_times, $
-                                    EARLIEST_UTC=earliest_UTC, $
-                                    LATEST_UTC=latest_UTC, $
-                                    USE_JULDAY_NOT_UTC=use_julDay_not_UTC, $
-                                    EARLIEST_JULDAY=earliest_julDay, $
-                                    LATEST_JULDAY=latest_julDay, $
+                                    IMF_STRUCT=IMF_struct, $
                                     LUN=lun)
 
   good_i   = CGSETINTERSECTION(C_OMNI__clean_i,C_OMNI__time_i,COUNT=nGood)
@@ -93,10 +86,10 @@ PRO GET_AE_OMNIDB_INDICES, $
      AECUTOFF=AeCutoff, $
      SMOOTH_AE=smooth_AE, $
      EARLIEST_UTC=earliest_UTC, $
-     LATEST_UTC=latest_UTC, $
-     USE_JULDAY_NOT_UTC=use_julDay_not_UTC, $
-     EARLIEST_JULDAY=earliest_julDay, $
-     LATEST_JULDAY=latest_julDay, $
+     LATEST_UTC=IMF_struct.latest_UTC, $
+     USE_JULDAY_NOT_UTC=IMF_struct.use_julDay_not_UTC, $
+     EARLIEST_JULDAY=IMF_struct.earliest_julDay, $
+     LATEST_JULDAY=IMF_struct.latest_julDay, $
      USE_AU=use_au, $
      USE_AL=use_al, $
      USE_AO=use_ao, $
@@ -119,7 +112,10 @@ PRO GET_AE_OMNIDB_INDICES, $
      FOR i=0,1 DO BEGIN
         inds=AE_i_list[i]
         help,inds
-        GET_STREAKS,inds,START_I=start_AE_ii,STOP_I=stop_AE_ii,SINGLE_I=single_AE_ii
+        GET_STREAKS,inds, $
+                    START_I=start_AE_ii, $
+                    STOP_I=stop_AE_ii, $
+                    SINGLE_I=single_AE_ii
         
         GET_DATA_AVAILABILITY_FOR_ARRAY_OF_UTC_RANGES, $
            T1_ARR=AE.time[inds[start_AE_ii]], $
