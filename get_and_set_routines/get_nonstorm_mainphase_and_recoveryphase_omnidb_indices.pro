@@ -1,10 +1,9 @@
 ;2016/08/19 Now we need OMNI to do it too
 PRO GET_NONSTORM_MAINPHASE_AND_RECOVERYPHASE_OMNIDB_INDICES, $
-   OMNI_COORDS=OMNI_coords, $
+   ALFDB_PLOT_STRUCT=alfDB_plot_struct, $
+   IMF_STRUCT=IMF_struct, $
+   MIMC_STRUCT=MIMC_struct, $
    ;; RESTRICT_TO_ALFVENDB_TIMES=restrict_to_alfvendb_times, $
-   ;; COORDINATE_SYSTEM=coordinate_system, $
-   ;; USE_AACGM_COORDS=use_AACGM, $
-   ;; USE_MAG_COORDS=use_MAG, $
    NONSTORM_I=ns_i, $
    MAINPHASE_I=mp_i, $
    RECOVERYPHASE_I=rp_i, $
@@ -37,7 +36,7 @@ PRO GET_NONSTORM_MAINPHASE_AND_RECOVERYPHASE_OMNIDB_INDICES, $
   LOAD_DST_AE_DBS,dst,ae,LUN=lun
 
   PRINTF,lun,'Restoring culled OMNI data to get mag_utc ...'
-  dataDir                        = "/SPENCEdata/Research/database/"
+  dataDir         = "/SPENCEdata/Research/database/"
   RESTORE,dataDir + "/OMNI/culled_OMNI_magdata.dat"
 
   OMNI__SELECT_COORDS,Bx, $
@@ -45,19 +44,13 @@ PRO GET_NONSTORM_MAINPHASE_AND_RECOVERYPHASE_OMNIDB_INDICES, $
                       thetaCone_GSE,phiClock_GSE,cone_overClock_GSE,Bxy_over_Bz_GSE, $
                       By_GSM,Bz_GSM,Bt_GSM, $
                       thetaCone_GSM,phiClock_GSM,cone_overClock_GSM,Bxy_over_Bz_GSM, $
-                      OMNI_COORDS=OMNI_coords, $
+                      OMNI_COORDS=IMF_struct.OMNI_coords, $
                       LUN=lun
 
   C_OMNI__clean_i = GET_CLEAN_OMNI_I(C_OMNI__Bx,C_OMNI__By,C_OMNI__Bz, $
                                      LUN=lun)
   C_OMNI__time_i  = GET_OMNI_TIME_I(mag_UTC, $
                                     IMF_STRUCT=IMF_struct, $
-                                    ;; EARLIEST_UTC=earliest_UTC, $
-                                    ;; LATEST_UTC=latest_UTC, $
-                                    ;; USE_JULDAY_NOT_UTC=use_julDay_not_UTC, $
-                                    ;; EARLIEST_JULDAY=earliest_julDay, $
-                                    ;; LATEST_JULDAY=latest_julDay, $
-                                    ;; RESTRICT_TO_ALFVENDB_TIMES=restrict_to_alfvendb_times, $
                                     LUN=lun)
 
   good_i   = CGSETINTERSECTION(C_OMNI__clean_i,C_OMNI__time_i,COUNT=nGood)
@@ -79,11 +72,11 @@ PRO GET_NONSTORM_MAINPHASE_AND_RECOVERYPHASE_OMNIDB_INDICES, $
   GET_NONSTORM_MAINPHASE_AND_RECOVERYPHASE_PERIODS,dst, $
      DSTCUTOFF=dstCutoff, $
      SMOOTH_DST=smooth_dst, $
-     EARLIEST_UTC=earliest_UTC, $
-     LATEST_UTC=latest_UTC, $
-     USE_JULDAY_NOT_UTC=use_julDay_not_UTC, $
-     EARLIEST_JULDAY=earliest_julDay, $
-     LATEST_JULDAY=latest_julDay, $
+     EARLIEST_UTC=IMF_struct.earliest_UTC, $
+     LATEST_UTC=IMF_struct.latest_UTC, $
+     USE_JULDAY_NOT_UTC=IMF_struct.use_julDay_not_UTC, $
+     EARLIEST_JULDAY=IMF_struct.earliest_julDay, $
+     LATEST_JULDAY=IMF_struct.latest_julDay, $
      STORM_DST_I=s_dst_i, $
      NONSTORM_DST_I=ns_dst_i, $
      MAINPHASE_DST_I=mp_dst_i, $

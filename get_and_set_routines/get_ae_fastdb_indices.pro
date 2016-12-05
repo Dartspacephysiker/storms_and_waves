@@ -3,19 +3,13 @@
 ;2016/01/01 Also output t1 and t2 for each phase, if desired
 ;2016/04/04 Added DO_DESPUN keyword for fear
 PRO GET_AE_FASTDB_INDICES, $
-   DESPUNDB=despunDB, $
-   COORDINATE_SYSTEM=coordinate_system, $
-   USE_AACGM_COORDS=use_AACGM, $
-   USE_MAG_COORDS=use_MAG, $
+   ALFDB_PLOT_STRUCT=alfDB_plot_struct, $
+   IMF_STRUCT=IMF_struct, $
+   MIMC_STRUCT=MIMC_struct, $
    GET_TIME_I_NOT_ALFDB_I=get_time_i_not_alfDB_I, $
    GET_ESPECDB_I_NOT_ALFDB_I=get_eSpecdb_i_not_alfDB_i, $
    AECUTOFF=AEcutoff, $
    SMOOTH_AE=smooth_AE, $
-   EARLIEST_UTC=earliest_UTC, $
-   LATEST_UTC=latest_UTC, $
-   USE_JULDAY_NOT_UTC=use_julDay_not_UTC, $
-   EARLIEST_JULDAY=earliest_julDay, $
-   LATEST_JULDAY=latest_julDay, $
    USE_AU=use_au, $
    USE_AL=use_al, $
    USE_AO=use_ao, $
@@ -61,10 +55,7 @@ PRO GET_AE_FASTDB_INDICES, $
            NEWELLDBDIR=NewellDBDir, $
            NEWELLDBFILE=NewellDBFile, $
            FORCE_LOAD_DB=force_load_db, $
-           /DONT_LOAD_IN_MEMORY, $
-           /JUST_TIMES, $
            OUT_TIMES=dbTimes, $
-           ;; OUT_GOOD_I=good_i, $
            LUN=lun, $
            QUIET=quiet
 
@@ -77,17 +68,19 @@ PRO GET_AE_FASTDB_INDICES, $
                      LOAD_MOST_RECENT=most_recent)
      END
      KEYWORD_SET(get_time_i_not_alfDB_I): BEGIN
-        LOAD_FASTLOC_AND_FASTLOC_TIMES,fastLoc,fastLoc_times, $
-                                       COORDINATE_SYSTEM=coordinate_system, $
-                                       USE_AACGM_COORDS=use_AACGM, $
-                                       USE_MAG_COORDS=use_MAG, $
-                                       LUN=lun
+        LOAD_FASTLOC_AND_FASTLOC_TIMES, $
+           fastLoc, $
+           fastLoc_times, $
+           COORDINATE_SYSTEM=MIMC_struct.coordinate_system, $
+           USE_AACGM_COORDS=MIMC_struct.use_AACGM, $
+           USE_MAG_COORDS=MIMC_struct.use_MAG, $
+           LUN=lun
 
         good_i = FASTLOC_CLEANER(fastLoc, $
                                  FOR_ESPEC_DBS=for_eSpec_DBs, $
-                                 SAMPLE_T_RESTRICTION=sample_t_restriction, $
-                                 INCLUDE_32Hz=include_32Hz, $
-                                 DISREGARD_SAMPLE_T=disregard_sample_t)
+                                 SAMPLE_T_RESTRICTION=alfDB_plot_struct.sample_t_restriction, $
+                                 INCLUDE_32Hz=alfDB_plot_struct.include_32Hz, $
+                                 DISREGARD_SAMPLE_T=alfDB_plot_struct.disregard_sample_t)
 
         dbStruct = TEMPORARY(fastLoc)
         dbTimes  = TEMPORARY(fastLoc_times)
@@ -101,26 +94,28 @@ PRO GET_AE_FASTDB_INDICES, $
      END
      ELSE: BEGIN
         LOAD_MAXIMUS_AND_CDBTIME,maximus,cdbTime, $
-                                 DESPUNDB=despunDB, $
-                                 COORDINATE_SYSTEM=coordinate_system, $
-                                 USE_AACGM=use_AACGM, $
-                                 USE_MAG_COORDS=use_MAG, $
+                                 DESPUNDB=alfDB_plot_struct.despunDB, $
+                                 COORDINATE_SYSTEM=MIMC_struct.coordinate_system, $
+                                 USE_AACGM=MIMC_struct.use_AACGM, $
+                                 USE_MAG_COORDS=MIMC_struct.use_MAG, $
                                  LUN=lun
 
-        good_i = ALFVEN_DB_CLEANER(maximus, $
-                                   SAMPLE_T_RESTRICTION=sample_t_restriction, $
-                                   INCLUDE_32Hz=include_32Hz, $
-                                   DISREGARD_SAMPLE_T=disregard_sample_t)
+        good_i = ALFVEN_DB_CLEANER( $
+                 maximus, $
+                 SAMPLE_T_RESTRICTION=alfDB_plot_struct.sample_t_restriction, $
+                 INCLUDE_32Hz=alfDB_plot_struct.include_32Hz, $
+                 DISREGARD_SAMPLE_T=alfDB_plot_struct.disregard_sample_t)
         dbStruct = TEMPORARY(maximus)
         dbTimes  = TEMPORARY(cdbTime)
         dbString = 'Alfven DB'
 
-        todaysFile = TODAYS_AE_INDICES(DESPUN_ALFDB=despunDB, $
-                                       /FOR_ALFVENDB, $
-                                       AE_STR=ae_str, $
-                                       AECUTOFF=AEcutoff, $
-                                       SMOOTH_AE=smooth_AE, $
-                                       LOAD_MOST_RECENT=most_recent)
+        todaysFile = TODAYS_AE_INDICES( $
+                     DESPUN_ALFDB=alfDB_plot_struct.despunDB, $
+                     /FOR_ALFVENDB, $
+                     AE_STR=ae_str, $
+                     AECUTOFF=AEcutoff, $
+                     SMOOTH_AE=smooth_AE, $
+                     LOAD_MOST_RECENT=most_recent)
         
      END
   ENDCASE
@@ -129,11 +124,11 @@ PRO GET_AE_FASTDB_INDICES, $
      ae, $
      AECUTOFF=AEcutoff, $
      SMOOTH_AE=smooth_AE, $
-     EARLIEST_UTC=earliest_UTC, $
-     LATEST_UTC=latest_UTC, $
-     USE_JULDAY_NOT_UTC=use_julDay_not_UTC, $
-     EARLIEST_JULDAY=earliest_julDay, $
-     LATEST_JULDAY=latest_julDay, $
+     EARLIEST_UTC=IMF_struct.earliest_UTC, $
+     LATEST_UTC=IMF_struct.latest_UTC, $
+     USE_JULDAY_NOT_UTC=IMF_struct.use_julDay_not_UTC, $
+     EARLIEST_JULDAY=IMF_struct.earliest_julDay, $
+     LATEST_JULDAY=IMF_struct.latest_julDay, $
      USE_AU=use_au, $
      USE_AL=use_al, $
      USE_AO=use_ao, $
