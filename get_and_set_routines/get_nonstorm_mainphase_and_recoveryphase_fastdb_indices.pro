@@ -75,13 +75,13 @@ PRO GET_NONSTORM_MAINPHASE_AND_RECOVERYPHASE_FASTDB_INDICES, $
            LUN=lun
 
         dbStruct    = KEYWORD_SET(for_eSpec_DBs) ? FL_eSpec__fastLoc : FL__fastLoc
-        dbTimes     = KEYWORD_SET(for_eSpec_DBs) ? FASTLOC_E__times : FASTLOC__times
+        dbTimes     = KEYWORD_SET(for_eSpec_DBs) ? FASTLOC_E__times  : FASTLOC__times
 
         good_i      = FASTLOC_CLEANER(dbStruct, $
-                      FOR_ESPEC_DBS=for_eSpec_DBs, $
-                      SAMPLE_T_RESTRICTION=alfDB_plot_struct.sample_t_restriction, $
-                      INCLUDE_32Hz=alfDB_plot_struct.include_32Hz, $
-                      DISREGARD_SAMPLE_T=alfDB_plot_struct.disregard_sample_t)
+                                      FOR_ESPEC_DBS=for_eSpec_DBs, $
+                                      SAMPLE_T_RESTRICTION=alfDB_plot_struct.sample_t_restriction, $
+                                      INCLUDE_32Hz=alfDB_plot_struct.include_32Hz, $
+                                      DISREGARD_SAMPLE_T=alfDB_plot_struct.disregard_sample_t)
 
         dbString    = 'fastLoc'
         todaysFile  = TODAYS_NONSTORM_MAINPHASE_AND_RECOVERYPHASE_INDICES( $
