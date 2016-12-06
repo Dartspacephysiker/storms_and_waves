@@ -44,6 +44,7 @@ PRO GET_NONSTORM_MAINPHASE_AND_RECOVERYPHASE_FASTDB_INDICES, $
            DONT_CONVERT_TO_STRICT_NEWELL=~KEYWORD_SET(alfDB_plot_struct.espec__newell_2009_interp), $
            USE_2000KM_FILE=alfDB_plot_struct.eSpec__use_2000km_file, $
            /REDUCED_DB, $
+           LOAD_DELTA_T=KEYWORD_SET(alfDB_plot_struct.do_timeAvg_fluxQuantities), $
            LUN=lun, $
            QUIET=quiet
 
