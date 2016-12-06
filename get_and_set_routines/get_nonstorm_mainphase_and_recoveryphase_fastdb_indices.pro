@@ -33,6 +33,8 @@ PRO GET_NONSTORM_MAINPHASE_AND_RECOVERYPHASE_FASTDB_INDICES, $
 
   CASE 1 OF
      KEYWORD_SET(get_eSpecdb_i_not_alfDB_i): BEGIN
+        @common__newell_espec.pro
+
         LOAD_NEWELL_ESPEC_DB, $
            FAILCODES=failCode, $
            USE_UNSORTED_FILE=use_unsorted_file, $
@@ -40,14 +42,14 @@ PRO GET_NONSTORM_MAINPHASE_AND_RECOVERYPHASE_FASTDB_INDICES, $
            NEWELLDBFILE=NewellDBFile, $
            FORCE_LOAD_DB=force_load_db, $
            DONT_CONVERT_TO_STRICT_NEWELL=~KEYWORD_SET(alfDB_plot_struct.espec__newell_2009_interp), $
-           ;; /JUST_TIMES, $
-           ;; OUT_TIMES=dbTimes, $
            USE_2000KM_FILE=alfDB_plot_struct.eSpec__use_2000km_file, $
            /REDUCED_DB, $
            LUN=lun, $
            QUIET=quiet
 
         dbString    = 'eSpec DB'
+        pdbStruct   = PTR_NEW(NEWELL__eSpec)
+
         todaysFile  = TODAYS_NONSTORM_MAINPHASE_AND_RECOVERYPHASE_INDICES( $
                       /FOR_ESPECDB, $
                       SAMPLE_T_RESTRICTION=alfDB_plot_struct.sample_t_restriction, $
@@ -60,10 +62,8 @@ PRO GET_NONSTORM_MAINPHASE_AND_RECOVERYPHASE_FASTDB_INDICES, $
      KEYWORD_SET(get_time_i_not_alfDB_I): BEGIN
         IF KEYWORD_SET(for_eSpec_DBs) THEN BEGIN
            @common__fastloc_espec_vars.pro
-
         ENDIF ELSE BEGIN
            @common__fastloc_vars.pro
-
         ENDELSE        
 
         LOAD_FASTLOC_AND_FASTLOC_TIMES, $
@@ -74,10 +74,10 @@ PRO GET_NONSTORM_MAINPHASE_AND_RECOVERYPHASE_FASTDB_INDICES, $
            INCLUDE_32HZ=alfDB_plot_struct.include_32Hz, $
            LUN=lun
 
-        dbStruct    = KEYWORD_SET(for_eSpec_DBs) ? FL_eSpec__fastLoc : FL__fastLoc
-        dbTimes     = KEYWORD_SET(for_eSpec_DBs) ? FASTLOC_E__times  : FASTLOC__times
+        pdbStruct   = PTR_NEW(KEYWORD_SET(for_eSpec_DBs) ? FL_eSpec__fastLoc : FL__fastLoc)
+        pdbTimes    = PTR_NEW(KEYWORD_SET(for_eSpec_DBs) ? FASTLOC_E__times  : FASTLOC__times)
 
-        good_i      = FASTLOC_CLEANER(dbStruct, $
+        good_i      = FASTLOC_CLEANER(*pdbStruct, $
                                       FOR_ESPEC_DBS=for_eSpec_DBs, $
                                       SAMPLE_T_RESTRICTION=alfDB_plot_struct.sample_t_restriction, $
                                       INCLUDE_32Hz=alfDB_plot_struct.include_32Hz, $
@@ -95,18 +95,24 @@ PRO GET_NONSTORM_MAINPHASE_AND_RECOVERYPHASE_FASTDB_INDICES, $
                       USE_MOSTRECENT_DST_FILES=use_mostRecent_Dst_files)
      END
      ELSE: BEGIN
-        LOAD_MAXIMUS_AND_CDBTIME,maximus,cdbTime, $
-                                 CHASTDB=alfDB_plot_struct.chastDB, $
-                                 DESPUNDB=alfDB_plot_struct.despunDB, $
-                                 COORDINATE_SYSTEM=MIMC_struct.coordinate_system, $
-                                 USE_AACGM=MIMC_struct.use_AACGM, $
-                                 USE_MAG_COORDS=MIMC_struct.use_MAG, $
-                                 LUN=lun
+        @common__maximus_vars.pro
+        LOAD_MAXIMUS_AND_CDBTIME, $
+           CHASTDB=alfDB_plot_struct.chastDB, $
+           DESPUNDB=alfDB_plot_struct.despunDB, $
+           COORDINATE_SYSTEM=MIMC_struct.coordinate_system, $
+           USE_AACGM=MIMC_struct.use_AACGM, $
+           USE_MAG_COORDS=MIMC_struct.use_MAG, $
+           LUN=lun
 
-        good_i      = ALFVEN_DB_CLEANER(maximus)
-        dbStruct    = TEMPORARY(maximus)
-        dbTimes     = TEMPORARY(cdbTime)
+        pdbStruct   = PTR_NEW(MAXIMUS__maximus)
+        pdbTimes    = PTR_NEW(MAXIMUS__times)
         dbString    = 'Alfven DB'
+
+        good_i      = ALFVEN_DB_CLEANER( $
+                      *pdbstruct, $
+                      SAMPLE_T_RESTRICTION=alfDB_plot_struct.sample_t_restriction, $
+                      INCLUDE_32Hz=alfDB_plot_struct.include_32Hz, $
+                      DISREGARD_SAMPLE_T=alfDB_plot_struct.disregard_sample_t)
 
         todaysFile  = TODAYS_NONSTORM_MAINPHASE_AND_RECOVERYPHASE_INDICES( $
                       /FOR_ALFVENDB, $
@@ -159,7 +165,9 @@ PRO GET_NONSTORM_MAINPHASE_AND_RECOVERYPHASE_FASTDB_INDICES, $
            T1_ARR=dst.time[inds[start_dst_ii]], $
            T2_ARR=dst.time[inds[stop_dst_ii]], $
            FOR_ESPEC_DB=(dbString EQ 'eSpec DB'), $
-           DBSTRUCT=dbStruct,DBTIMES=dbTimes, $
+           DBSTRUCT=*pdbStruct, $
+           DBTIMES=N_ELEMENTS(pdbTimes) GT 0 ? *pdbTimes : !NULL, $
+           ;; DBTIMES=*pdbTimes, $
            RESTRICT_W_THESEINDS=good_i, $
            OUT_INDS_LIST=inds_list, $
            UNIQ_ORBS_LIST=uniq_orbs_list,UNIQ_ORB_INDS_LIST=uniq_orb_inds_list, $

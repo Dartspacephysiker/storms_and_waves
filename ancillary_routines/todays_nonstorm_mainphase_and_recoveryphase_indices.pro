@@ -69,6 +69,7 @@ FUNCTION TODAYS_NONSTORM_MAINPHASE_AND_RECOVERYPHASE_INDICES, $
 
   mostRecent_bash  = indDir + 'mostRecent_'+dbNavn + '--' + 'dstCutoff_' + $
                      STRCOMPRESS(dstCutoff,/REMOVE_ALL) + "nT" + smoothStr + suffix + '_ns_mp_rp_inds.txt'
+
   IF KEYWORD_SET(most_recent) THEN BEGIN
      IF FILE_TEST(mostRecent_bash) THEN BEGIN
         SPAWN,'cat ' + mostRecent_bash,todaysFile

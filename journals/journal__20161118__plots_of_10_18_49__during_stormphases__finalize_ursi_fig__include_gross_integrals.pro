@@ -11,7 +11,7 @@ PRO JOURNAL__20161118__PLOTS_OF_10_18_49__DURING_STORMPHASES__FINALIZE_URSI_FIG_
   ;; orbRange                  = [500,12670]
   ;; orbRange                  = [1000,10800]
   orbRange                     = [1000,10600]
-  altRange                     = [[1000,4180]]
+  altRange                     = [[300,4180]]
 
   justData                     = 0
 

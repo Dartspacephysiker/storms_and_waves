@@ -24,6 +24,7 @@ PRO GET_AE_FASTDB_INDICES, $
    LOW_AE_T1=low_ae_t1, $
    HIGH_AE_T2=high_ae_t2, $
    LOW_AE_T2=low_ae_t2, $
+   GET_TIME_FOR_ESPEC_DBS=for_eSpec_DBs, $
    LUN=lun
 
   COMPILE_OPT idl2
@@ -49,6 +50,8 @@ PRO GET_AE_FASTDB_INDICES, $
 
   CASE 1 OF 
      KEYWORD_SET(get_eSpecdb_i_not_alfDB_i): BEGIN
+        @common__newell_espec.pro
+
         LOAD_NEWELL_ESPEC_DB, $
            FAILCODES=failCode, $
            USE_UNSORTED_FILE=use_unsorted_file, $
@@ -60,6 +63,8 @@ PRO GET_AE_FASTDB_INDICES, $
            QUIET=quiet
 
         dbString    = 'eSpec DB'
+        pdbStruct   = PTR_NEW(NEWELL__eSpec)
+
         todaysFile = TODAYS_AE_INDICES( $
                      /FOR_ESPECDB, $
                      AE_STR=ae_str, $
@@ -68,46 +73,60 @@ PRO GET_AE_FASTDB_INDICES, $
                      LOAD_MOST_RECENT=most_recent)
      END
      KEYWORD_SET(get_time_i_not_alfDB_I): BEGIN
+        IF KEYWORD_SET(for_eSpec_DBs) THEN BEGIN
+           @common__fastloc_espec_vars.pro
+        ENDIF ELSE BEGIN
+           @common__fastloc_vars.pro
+        ENDELSE        
+
         LOAD_FASTLOC_AND_FASTLOC_TIMES, $
-           fastLoc, $
-           fastLoc_times, $
            COORDINATE_SYSTEM=MIMC_struct.coordinate_system, $
            USE_AACGM_COORDS=MIMC_struct.use_AACGM, $
            USE_MAG_COORDS=MIMC_struct.use_MAG, $
+           FOR_ESPEC_DBS=for_eSpec_DBs, $
+           INCLUDE_32HZ=alfDB_plot_struct.include_32Hz, $
            LUN=lun
 
-        good_i = FASTLOC_CLEANER(fastLoc, $
+        pdbStruct   = PTR_NEW(KEYWORD_SET(for_eSpec_DBs) ? FL_eSpec__fastLoc : FL__fastLoc   )
+        pdbTimes    = PTR_NEW(KEYWORD_SET(for_eSpec_DBs) ? FASTLOC_E__times  : FASTLOC__times)
+
+        good_i = FASTLOC_CLEANER(*pdbStruct, $
                                  FOR_ESPEC_DBS=for_eSpec_DBs, $
                                  SAMPLE_T_RESTRICTION=alfDB_plot_struct.sample_t_restriction, $
                                  INCLUDE_32Hz=alfDB_plot_struct.include_32Hz, $
                                  DISREGARD_SAMPLE_T=alfDB_plot_struct.disregard_sample_t)
 
-        dbStruct = TEMPORARY(fastLoc)
-        dbTimes  = TEMPORARY(fastLoc_times)
         dbString = 'fastLoc'
         todaysFile = TODAYS_AE_INDICES( $
                      /FOR_FASTLOC, $
+                     FASTLOC_FOR_ESPEC=for_eSpec_DBs, $
+                     SAMPLE_T_RESTRICTION=alfDB_plot_struct.sample_t_restriction, $
+                     INCLUDE_32HZ=alfDB_plot_struct.include_32Hz, $
+                     DISREGARD_SAMPLE_T=alfDB_plot_struct.disregard_sample_t, $
                      AE_STR=ae_str, $
                      AECUTOFF=AEcutoff, $
                      SMOOTH_AE=smooth_AE, $
                      LOAD_MOST_RECENT=most_recent)
      END
      ELSE: BEGIN
-        LOAD_MAXIMUS_AND_CDBTIME,maximus,cdbTime, $
-                                 DESPUNDB=alfDB_plot_struct.despunDB, $
-                                 COORDINATE_SYSTEM=MIMC_struct.coordinate_system, $
-                                 USE_AACGM=MIMC_struct.use_AACGM, $
-                                 USE_MAG_COORDS=MIMC_struct.use_MAG, $
-                                 LUN=lun
+
+        LOAD_MAXIMUS_AND_CDBTIME, $
+           CHASTDB=alfDB_plot_struct.chastDB, $
+           DESPUNDB=alfDB_plot_struct.despunDB, $
+           COORDINATE_SYSTEM=MIMC_struct.coordinate_system, $
+           USE_AACGM=MIMC_struct.use_AACGM, $
+           USE_MAG_COORDS=MIMC_struct.use_MAG, $
+           LUN=lun
+
+        pdbStruct   = PTR_NEW(MAXIMUS__maximus)
+        pdbTimes    = PTR_NEW(MAXIMUS__times)
+        dbString = 'Alfven DB'
 
         good_i = ALFVEN_DB_CLEANER( $
-                 maximus, $
+                 *pdbStruct, $
                  SAMPLE_T_RESTRICTION=alfDB_plot_struct.sample_t_restriction, $
                  INCLUDE_32Hz=alfDB_plot_struct.include_32Hz, $
                  DISREGARD_SAMPLE_T=alfDB_plot_struct.disregard_sample_t)
-        dbStruct = TEMPORARY(maximus)
-        dbTimes  = TEMPORARY(cdbTime)
-        dbString = 'Alfven DB'
 
         todaysFile = TODAYS_AE_INDICES( $
                      DESPUN_ALFDB=alfDB_plot_struct.despunDB, $
@@ -156,8 +175,8 @@ PRO GET_AE_FASTDB_INDICES, $
         GET_DATA_AVAILABILITY_FOR_ARRAY_OF_UTC_RANGES, $
            T1_ARR=ae.time[inds[start_ae_ii]], $
            T2_ARR=ae.time[inds[stop_ae_ii]], $
-           DBSTRUCT=dbStruct, $
-           DBTIMES=dbTimes, $
+           DBSTRUCT=*pdbStruct, $
+           DBTIMES=N_ELEMENTS(pdbTimes) GT 0 ? *pdbTimes : !NULL, $
            RESTRICT_W_THESEINDS=good_i, $
            OUT_INDS_LIST=inds_list, $
            UNIQ_ORBS_LIST=uniq_orbs_list, $
