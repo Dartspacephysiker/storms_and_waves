@@ -40,8 +40,8 @@ PRO GET_NONSTORM_MAINPHASE_AND_RECOVERYPHASE_FASTDB_INDICES, $
            NEWELLDBFILE=NewellDBFile, $
            FORCE_LOAD_DB=force_load_db, $
            DONT_CONVERT_TO_STRICT_NEWELL=~KEYWORD_SET(alfDB_plot_struct.espec__newell_2009_interp), $
-           /JUST_TIMES, $
-           OUT_TIMES=dbTimes, $
+           ;; /JUST_TIMES, $
+           ;; OUT_TIMES=dbTimes, $
            USE_2000KM_FILE=alfDB_plot_struct.eSpec__use_2000km_file, $
            /REDUCED_DB, $
            LUN=lun, $
