@@ -97,13 +97,15 @@ PRO GET_NONSTORM_MAINPHASE_AND_RECOVERYPHASE_FASTDB_INDICES, $
      END
      ELSE: BEGIN
         @common__maximus_vars.pro
-        LOAD_MAXIMUS_AND_CDBTIME, $
-           CHASTDB=alfDB_plot_struct.chastDB, $
-           DESPUNDB=alfDB_plot_struct.despunDB, $
-           COORDINATE_SYSTEM=MIMC_struct.coordinate_system, $
-           USE_AACGM=MIMC_struct.use_AACGM, $
-           USE_MAG_COORDS=MIMC_struct.use_MAG, $
-           LUN=lun
+        IF N_ELEMENTS(MAXIMUS__maximus) EQ 0 THEN BEGIN
+           LOAD_MAXIMUS_AND_CDBTIME, $
+              CHASTDB=alfDB_plot_struct.chastDB, $
+              DESPUNDB=alfDB_plot_struct.despunDB, $
+              COORDINATE_SYSTEM=MIMC_struct.coordinate_system, $
+              USE_AACGM=MIMC_struct.use_AACGM, $
+              USE_MAG_COORDS=MIMC_struct.use_MAG, $
+              LUN=lun
+        ENDIF
 
         pdbStruct   = PTR_NEW(MAXIMUS__maximus)
         pdbTimes    = PTR_NEW(MAXIMUS__times)
