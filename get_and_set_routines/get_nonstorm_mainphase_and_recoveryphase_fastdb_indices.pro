@@ -75,13 +75,18 @@ PRO GET_NONSTORM_MAINPHASE_AND_RECOVERYPHASE_FASTDB_INDICES, $
            @common__fastloc_vars.pro
         ENDELSE        
 
-        LOAD_FASTLOC_AND_FASTLOC_TIMES, $
-           COORDINATE_SYSTEM=MIMC_struct.coordinate_system, $
-           USE_AACGM_COORDS=MIMC_struct.use_AACGM, $
-           USE_MAG_COORDS=MIMC_struct.use_MAG, $
-           FOR_ESPEC_DBS=for_eSpec_DBs, $
-           INCLUDE_32HZ=alfDB_plot_struct.include_32Hz, $
-           LUN=lun
+        IF ( KEYWORD_SET(for_eSpec_DBs) AND (N_ELEMENTS(FL_eSpec__fastLoc) EQ 0)) OR $
+           (~KEYWORD_SET(for_eSpec_DBs) AND (N_ELEMENTS(FL__fastLoc      ) EQ 0))    $
+           THEN BEGIN
+
+           LOAD_FASTLOC_AND_FASTLOC_TIMES, $
+              COORDINATE_SYSTEM=MIMC_struct.coordinate_system, $
+              USE_AACGM_COORDS=MIMC_struct.use_AACGM, $
+              USE_MAG_COORDS=MIMC_struct.use_MAG, $
+              FOR_ESPEC_DBS=for_eSpec_DBs, $
+              INCLUDE_32HZ=alfDB_plot_struct.include_32Hz, $
+              LUN=lun
+        ENDIF
 
         pdbStruct   = PTR_NEW(KEYWORD_SET(for_eSpec_DBs) ? FL_eSpec__fastLoc : FL__fastLoc)
         pdbTimes    = PTR_NEW(KEYWORD_SET(for_eSpec_DBs) ? FASTLOC_E__times  : FASTLOC__times)
