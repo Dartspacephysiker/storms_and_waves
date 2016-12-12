@@ -6,16 +6,24 @@ PRO JOURNAL__20161209__PLOTS_OF_10_18_49__DURING_STORMPHASES__USE_PLOT_ALFVEN_ST
 
   use_prev_plot_i              = 1
   do_despun                    = 0
-  ;; orbRange                  = [500,12670]
-  ;; orbRange                  = [1000,10800]
+
   orbRange                     = [1000,10600]
-  altRange                     = [[2000,4300]]
+  ;; altRange                     = [ $
+  ;;                                [ 500,4300], $
+  ;;                                [1000,4300], $
+  ;;                                [2000,4300], $
+  ;;                                [3000,4300], $
+  ;;                                [ 500,3000]  $
+  ;;                                ]
+  altRange                     = [ $
+                                 [ 500,4300] $
+                                 ]
 
   justData                     = 0
 
   EA_binning                   = 1
 
-  use_AACGM                    = 1
+  use_AACGM                    = 0
 
   minMC                        = 1
   maxNegMC                     = -1
@@ -75,7 +83,7 @@ PRO JOURNAL__20161209__PLOTS_OF_10_18_49__DURING_STORMPHASES__USE_PLOT_ALFVEN_ST
   ;; binMLT                         = 1.5
 
   ;; maskMin                        = 5
-  tHist_mask_bins_below_thresh   = 1
+  ;; tHist_mask_bins_below_thresh   = 2
 
   ;;;;;;;;;;;;;;;;;;;;;;
   ;;08-ELEC_ENERGY_FLUX
