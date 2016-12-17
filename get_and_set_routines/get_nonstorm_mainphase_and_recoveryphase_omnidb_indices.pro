@@ -65,13 +65,13 @@ PRO GET_NONSTORM_MAINPHASE_AND_RECOVERYPHASE_OMNIDB_INDICES, $
 
   todaysFile = TODAYS_NONSTORM_MAINPHASE_AND_RECOVERYPHASE_INDICES( $
                /FOR_OMNIDB, $
-               DSTCUTOFF=dstCutoff, $
-               SMOOTH_DST=smooth_dst, $
-               USE_MOSTRECENT_DST_FILES=use_mostRecent_Dst_files)
+               DSTCUTOFF=alfDB_plot_struct.storm_opt.DstCutoff, $
+               SMOOTH_DST=alfDB_plot_struct.storm_opt.smooth_Dst, $
+               USE_MOSTRECENT_DST_FILES=alfDB_plot_struct.storm_opt.use_mostRecent_Dst_files)
   
   GET_NONSTORM_MAINPHASE_AND_RECOVERYPHASE_PERIODS,dst, $
-     DSTCUTOFF=dstCutoff, $
-     SMOOTH_DST=smooth_dst, $
+     DSTCUTOFF=alfDB_plot_struct.storm_opt.DstCutoff, $
+     SMOOTH_DST=alfDB_plot_struct.storm_opt.smooth_Dst, $
      EARLIEST_UTC=IMF_struct.earliest_UTC, $
      LATEST_UTC=IMF_struct.latest_UTC, $
      USE_JULDAY_NOT_UTC=IMF_struct.use_julDay_not_UTC, $

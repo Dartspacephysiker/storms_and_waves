@@ -64,9 +64,9 @@ PRO GET_NONSTORM_MAINPHASE_AND_RECOVERYPHASE_FASTDB_INDICES, $
                       SAMPLE_T_RESTRICTION=alfDB_plot_struct.sample_t_restriction, $
                       INCLUDE_32HZ=alfDB_plot_struct.include_32Hz, $
                       DISREGARD_SAMPLE_T=alfDB_plot_struct.disregard_sample_t, $
-                      DSTCUTOFF=dstCutoff, $
-                      SMOOTH_DST=smooth_dst, $
-                      USE_MOSTRECENT_DST_FILES=use_mostRecent_Dst_files)
+                      DSTCUTOFF=alfDB_plot_struct.storm_opt.dstCutoff, $
+                      SMOOTH_DST=alfDB_plot_struct.storm_opt.smooth_Dst, $
+                      USE_MOSTRECENT_DST_FILES=alfDB_plot_struct.storm_opt.use_mostRecent_Dst_files)
      END
      KEYWORD_SET(get_time_i_not_alfDB_I): BEGIN
         IF KEYWORD_SET(for_eSpec_DBs) THEN BEGIN
@@ -104,9 +104,9 @@ PRO GET_NONSTORM_MAINPHASE_AND_RECOVERYPHASE_FASTDB_INDICES, $
                       SAMPLE_T_RESTRICTION=alfDB_plot_struct.sample_t_restriction, $
                       INCLUDE_32HZ=alfDB_plot_struct.include_32Hz, $
                       DISREGARD_SAMPLE_T=alfDB_plot_struct.disregard_sample_t, $
-                      DSTCUTOFF=dstCutoff, $
-                      SMOOTH_DST=smooth_dst, $
-                      USE_MOSTRECENT_DST_FILES=use_mostRecent_Dst_files)
+                      DSTCUTOFF=alfDB_plot_struct.storm_opt.dstCutoff, $
+                      SMOOTH_DST=alfDB_plot_struct.storm_opt.smooth_Dst, $
+                      USE_MOSTRECENT_DST_FILES=alfDB_plot_struct.storm_opt.use_mostRecent_Dst_files)
      END
      ELSE: BEGIN
         @common__maximus_vars.pro
@@ -136,16 +136,16 @@ PRO GET_NONSTORM_MAINPHASE_AND_RECOVERYPHASE_FASTDB_INDICES, $
                       SAMPLE_T_RESTRICTION=alfDB_plot_struct.sample_t_restriction, $
                       INCLUDE_32HZ=alfDB_plot_struct.include_32Hz, $
                       DISREGARD_SAMPLE_T=alfDB_plot_struct.disregard_sample_t, $
-                      DSTCUTOFF=dstCutoff, $
-                      SMOOTH_DST=smooth_dst, $
-                      USE_MOSTRECENT_DST_FILES=use_mostRecent_Dst_files)
+                      DSTCUTOFF=alfDB_plot_struct.storm_opt.dstCutoff, $
+                      SMOOTH_DST=alfDB_plot_struct.storm_opt.smooth_Dst, $
+                      USE_MOSTRECENT_DST_FILES=alfDB_plot_struct.storm_opt.use_mostRecent_Dst_files)
 
      END
   ENDCASE
 
   GET_NONSTORM_MAINPHASE_AND_RECOVERYPHASE_PERIODS,dst, $
-     DSTCUTOFF=dstCutoff, $
-     SMOOTH_DST=smooth_Dst, $
+     DSTCUTOFF=alfDB_plot_struct.storm_opt.dstCutoff, $
+     SMOOTH_DST=alfDB_plot_struct.storm_opt.smooth_Dst, $
      EARLIEST_UTC=IMF_struct.earliest_UTC, $
      LATEST_UTC=IMF_struct.latest_UTC, $
      USE_JULDAY_NOT_UTC=IMF_struct.use_julDay_not_UTC, $
