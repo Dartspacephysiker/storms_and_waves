@@ -4,7 +4,7 @@ PRO JOURNAL__20161217__PLOTS_OF_10_18_49__DURING_STORMPHASES__LINEAR_RANGES
   dstCutoff                    = -20
   use_mostRecent_Dst_files  = 1
 
-  use_prev_plot_i              = 1
+  use_prev_plot_i              = 0
   do_despun                    = 0
 
   orbRange                     = [1000,10600]
@@ -16,14 +16,14 @@ PRO JOURNAL__20161217__PLOTS_OF_10_18_49__DURING_STORMPHASES__LINEAR_RANGES
   ;;                                [ 500,3000]  $
   ;;                                ]
   altRange                     = [ $
-                                 [ 800,4300] $
+                                 [ 300,4300] $
                                  ]
 
   justData                     = 0
 
   EA_binning                   = 1
 
-  use_AACGM                    = 0
+  use_AACGM                    = 1
 
   minMC                        = 1
   maxNegMC                     = -1
@@ -70,23 +70,23 @@ PRO JOURNAL__20161217__PLOTS_OF_10_18_49__DURING_STORMPHASES__LINEAR_RANGES
 
   ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
   ;;Hemi stuff
-  hemi                           = 'NORTH'
-  minILAT                        = 60
-  maxILAT                        = 90
+  ;; hemi                           = 'NORTH'
+  ;; minILAT                        = 60
+  ;; maxILAT                        = 90
 
-  ;; hemi                           = 'SOUTH'
-  ;; minILAT                        = -90
-  ;; maxILAT                        = -60
-  ;; orbRange                       = [2000,10600]
+  hemi                           = 'SOUTH'
+  minILAT                        = -90
+  maxILAT                        = -60
+  orbRange                       = [2000,10600]
 
-  ;; binILAT                        = 2.5
-  ;; binMLT                         = 1.5
+  binILAT                        = 2.5
+  binMLT                         = 1.0
 
   ;; maskMin                        = 5
   ;; tHist_mask_bins_below_thresh   = 2
 
-  colorbar_for_all               = 1
-  autoscale_fluxPlots            = 1
+  colorbar_for_all               = 0
+  autoscale_fluxPlots            = 0
 
   ;;;;;;;;;;;;;;;;;;;;;;
   ;;08-ELEC_ENERGY_FLUX
@@ -103,13 +103,12 @@ PRO JOURNAL__20161217__PLOTS_OF_10_18_49__DURING_STORMPHASES__LINEAR_RANGES
   maxInd                         = 10
   eNumFlPlotType                 = ['Eflux_Losscone_Integ', 'ESA_Number_flux']
   noNegENumFl                    = [1,1]
-  logENumFlPlot                  = [1,1]
-  ;; ENumFlPlotRange             = [[1e-1,1e1], $
-  ;;                             [1e7,1e9]]
-  ;; eNumFlPlotRange                = [[10^(5.0),10^(8.0)], $
-  ;;                                   [1e21,1e24]]
-  eNumFlPlotRange                = [[1e-3,1e0], $
-                                    [1e7,1e9]]
+  ;; logENumFlPlot                  = [1,1]
+  ;; eNumFlPlotRange                = [[1e-3,1e0], $
+  ;;                                   [1e7,1e9]]
+  logENumFlPlot                  = [0,0]
+  eNumFlPlotRange                = [[0,0.6], $
+                                    [0,1e9]]
   eNumFlVarPlotRange             = [[1e1,1e8], $
                                     [1e1,1e8]]
   var__plotRange                 = [[var__plotRange],[eNumFlVarPlotRange]]
@@ -119,21 +118,24 @@ PRO JOURNAL__20161217__PLOTS_OF_10_18_49__DURING_STORMPHASES__LINEAR_RANGES
   maxInd                         = 18
   ifluxPlotType                  = ['INTEG_UP','integ']
   noNegIFlux                     = [1,0]
-  iPlotRange                     = [[1e6,1e8],[-1e7,1e7]]
-  logIFPlot                      = [1,0]
+  ;; iPlotRange                     = [[1e6,1e8],[-1e7,1e7]]
+  ;; logIFPlot                      = [1,0]
+  iPlotRange                     = [[0,1e8],[-1e7,1e7]]
+  logIFPlot                      = [0,0]
   iVarPlotRange                  = [1e1,1e8]
 
   charEType                      = ["losscone"]
-  logCharEPlot                   = 1
-  ;; absCharE      
-  noNegCharE                     = 1
-  ;; noPosCharE    
-  CharEPlotRange                 = [1e1,1e4]
+  ;; logCharEPlot                   = 1
+  ;; CharEPlotRange                 = [1e1,1e4]
+  logCharEPlot                   = 0
+  CharEPlotRange                 = [0,1500]
 
   ;;;;;;;;;;;;;;;;;;;;;;
   ;;49--PFLUXEST
-  pPlotRange                     = [1e-3,1e0] ;for pFlux divided by width_x and multiplied by area
-  logPFPlot                      = 1
+  ;; logPFPlot                      = 1
+  ;; pPlotRange                     = [1e-3,1e0]
+  logPFPlot                      = 0
+  pPlotRange                     = [0,0.4]
   ;; multiply_pFlux_by_width_x      = 1
   pVarPlotRange                  = [1e1,1e8]
   var__plotRange                 = [[var__plotRange],[pVarPlotRange]]
@@ -152,9 +154,11 @@ PRO JOURNAL__20161217__PLOTS_OF_10_18_49__DURING_STORMPHASES__LINEAR_RANGES
 
   ;;;;;;;;;;;;;;;;;;;;;;
   ;PROBOCCURRENCE
-  probOccurrenceRange  = [1e-3,1e-1]
-  logProbOccurrence    = 1
+  ;; probOccurrenceRange  = [1e-3,1e-1]
+  ;; logProbOccurrence    = 1
 
+  probOccurrenceRange  = [0,0.1]
+  logProbOccurrence    = 0
 
   FOR k=0,N_ELEMENTS(altRange[0,*])-1 DO BEGIN
 
@@ -187,6 +191,7 @@ PRO JOURNAL__20161217__PLOTS_OF_10_18_49__DURING_STORMPHASES__LINEAR_RANGES
         USE_STORM_STUFF=use_storm_stuff, $
         AE_STUFF=ae_stuff, $    
         ALFDB_PLOT_STRUCT=alfDB_plot_struct, $
+        ALFDB_PLOTLIM_STRUCT=alfDB_plotLim_struct, $
         IMF_STRUCT=IMF_struct, $
         MIMC_STRUCT=MIMC_struct, $
         ORBRANGE=orbRange, $
@@ -357,6 +362,7 @@ PRO JOURNAL__20161217__PLOTS_OF_10_18_49__DURING_STORMPHASES__LINEAR_RANGES
         USE_STORM_STUFF=use_storm_stuff, $
         AE_STUFF=ae_stuff, $    
         ALFDB_PLOT_STRUCT=alfDB_plot_struct, $
+        ALFDB_PLOTLIM_STRUCT=alfDB_plotLim_struct, $
         IMF_STRUCT=IMF_struct, $
         MIMC_STRUCT=MIMC_struct, $
         RESTRICT_WITH_THESE_I=restrict_with_these_i, $
@@ -519,10 +525,10 @@ PRO JOURNAL__20161217__PLOTS_OF_10_18_49__DURING_STORMPHASES__LINEAR_RANGES
         NEVENTSPLOTNORMALIZE=nEventsPlotNormalize, $
         PLOTPREFIX=plotPrefix, $
         SUFFIX_TXTDIR=suffix_txtDir, $
-        SUPPRESS_THICKGRID=suppress_thickGrid, $
+        SUPPRESS_THICKGRID=fancyPresentationMode, $
         SUPPRESS_GRIDLABELS=fancyPresentationMode, $
-        SUPPRESS_MLT_LABELS=suppress_MLT_labels, $
-        SUPPRESS_ILAT_LABELS=suppress_ILAT_labels, $
+        SUPPRESS_MLT_LABELS=fancyPresentationMode, $
+        SUPPRESS_ILAT_LABELS=fancyPresentationMode, $
         SUPPRESS_MLT_NAME=suppress_MLT_name, $
         SUPPRESS_ILAT_NAME=suppress_ILAT_name, $
         SUPPRESS_TITLES=fancyPresentationMode, $
