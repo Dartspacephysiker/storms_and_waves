@@ -1,13 +1,15 @@
 ;;2016/12/17 asdlfkjsafd;lkjalweoiruojdabcxbvxmbvclzjdahiw8392423
-PRO JOURNAL__20161217__PLOTS_OF_10_18_49__DURING_STORMPHASES__LINEAR_RANGES
+PRO JOURNAL__20161219__ESPEC_PLOTS__DURING_STORMPHASES__LINEAR_RANGES
 
-  dstCutoff                    = -20
-  use_mostRecent_Dst_files  = 1
+  dstCutoff                       = -20
+  use_mostRecent_Dst_files        = 1
 
-  use_prev_plot_i              = 0
-  despunDB                     = 0
+  use_prev_plot_i                 = 1
+  despunDB                        = 0
 
-  orbRange                     = [1000,10600]
+  disregard_sample_t              = 1
+
+  orbRange                        = [1000,10600]
   ;; altRange                     = [ $
   ;;                                [ 500,4300], $
   ;;                                [1000,4300], $
@@ -15,58 +17,117 @@ PRO JOURNAL__20161217__PLOTS_OF_10_18_49__DURING_STORMPHASES__LINEAR_RANGES
   ;;                                [3000,4300], $
   ;;                                [ 500,3000]  $
   ;;                                ]
-  altRange                     = [ $
-                                 [ 300,4300] $
-                                 ]
+  altRange                        = [ $
+                                    [ 300,4300] $
+                                    ]
 
-  justData                     = 0
+  justData                        = 0
 
-  EA_binning                   = 0
+  EA_binning                      = 0
 
-  use_AACGM                    = 1
+  minMC                           = 1
+  maxNegMC                        = -1
 
-  minMC                        = 1
-  maxNegMC                     = -1
+  show_integrals                  = 1
 
-  show_integrals               = 1
+  EA_binning                      = 0
+  plotH2D_contour                 = 1
+  plotH2D__kde                    = KEYWORD_SET(plotH2D_contour)
+  ;; contour__levels              = [20,30,50,60,80,90]
+  contour__levels                 = KEYWORD_SET(plotH2D_contour) ? [20,30,50,60,80,90,100] : !NULL
+  ;; contour__levels              = KEYWORD_SET(plotH2D_contour) ? [0,20,40,60,80,100] : !NULL
+  contour__percent                = KEYWORD_SET(plotH2D_contour) ? 1 : !NULL
 
-  dont_blackball_maximus       = 1
-  dont_blackball_fastLoc       = 1
-  ;;;;;;;;;;;;;;;;;
-  ;;turn plots on and off
-  ionPlots                       = 1
-  probOccurrencePlot             = 1
+  do_timeAvg_fluxQuantities       = 1
+  logAvgPlot                      = 0
+  medianPlot                      = 0
+  divide_by_width_x               = 1
+
+  ;; write_obsArr_textFile        = 1
+  ;; write_obsArr__inc_IMF        = 1
+  ;; write_obsArr__orb_avg_obs    = 1
+  ;; justData                     = 1
+
+  ;;DB stuff
+  do_despun                       = 0
+  use_AACGM                       = 0
+  use_MAG                         = 0
+
+  autoscale_fluxPlots             = 0
+  fluxPlots__remove_outliers      = 0
+  fluxPlots__remove_log_outliers  = 0
+  
+  group_like_plots_for_tiling     = 1
+  scale_like_plots_for_tiling     = 0
+  ;; adj_upper_plotlim_thresh       = 3 ;;Check third maxima
+  ;; adj_lower_plotlim_thresh       = 2 ;;Check minima
+
+  ;; overplot_file                  = '/SPENCEdata/Research/Satellites/FAST/OMNI_FAST/saves_output_etc/20161213/pFlux.dat'
+
+  ;; overplot_arr                   = [['*enumflux_espec*broad*','*timeavgd_pflux*'], $
+  ;;                                   ['*enumflux_espec*mono*' ,'*timeavgd_pflux*'], $
+  ;;                                   ['*enumflux_espec*accel*','*timeavgd_pflux*']]
+  ;; ;; op_contour__levels             = [20,50,80]
+  ;; op_contour__levels             = [10,40,70]
+  ;; plotPref                      += STRING(FORMAT='("-op_",20(I0,:,"_"))',op_contour__levels)
+  ;; op_contour__percent            = 1
+  ;; op_plotRange                   = [0.00,0.10]
+
+  cb_force_oobHigh               = 1
+
+
+  ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+  ;;The plots
+  no_maximus                     = 1
+  eSpec_flux_plots               = 1
+  Newell_analyze_eFlux           = 1
+  eSpec__all_fluxes              = 1
+  Newell__comb_accelerated       = 0
+
+  eSpec__Newell_2009_interp      = 1
+  eSpec__use_2000km_file         = 0
+  eSpec__remove_outliers         = 0
+  ;; eSpec__noMap                   = 1
+
+  ePlots                         = 0
   eNumFlPlots                    = 1
-  ePlots                         = 1
-  pPlots                         = 1
   charEPlots                     = 1
-  tHistDenominatorPlot           = 1
-  nPlots                         = 1
 
-  divide_by_width_x              = 1
-  do_timeAvg_fluxQuantities      = 1
-  do_grossRate_fluxQuantities    = 0
-  do_logAvg_the_timeAvg          = 0
+  tHistDenominatorPlot           = 0
+   tHistDenomPlotRange           = [0.,150.]
+  tHistDenomPlot_noMask          = 1
 
-  add_variance_plots             = 0
-  only_variance_plots            = 0
-  var__rel_to_mean_variance      = 0
+  espec__newellPlot_probOccurrence = 0
+  espec__newell_plotRange    = [[0.00,0.15],[0.60,1.00],[0.00,0.25],[0.00,0.30]]
 
-  ;;Variance plots?
-  ;; var__plotRange                 =  [[0.0,1.0], $
-  ;;                                    [0.0,1.0], $
-  ;;                                    [0.4,2.0]]
-  var__plotRange                 = !NULL ;populate as we go
+  eSpec__t_ProbOccurrence    = 0
+  eSpec__t_probOcc_plotRange = [[0.00,0.15],[0.60,1.00],[0.00,0.25],[0.00,0.30]]
 
-  var__do_stddev_instead         = 0
 
-  fancyPresentationMode          = 0 ;Erases stormphase titles,
-                                     ;suppresses gridlabels, blows up plot titles. Keep it.
-  and_tiling_options             = 1
-  group_like_plots_for_tiling    = 1
+  eFluxPlotType                  = 'Max'
+  CASE 1 OF
+     KEYWORD_SET(eSpec_noMap): BEGIN
+        ePlotRange               = [[0,0.08],[0,0.50],[0,0.15],[0,0.20]]
+     END
+     ELSE: BEGIN
+        ePlotRange               = [[0,0.2],[0,1.0],[0,0.30],[0,0.5]]
+     END
+  ENDCASE
+  logEfPlot                      = 0
+  noNegEflux                     = 1
+  noNegEflux                     = 1
 
-  cb_force_oobHigh = 0
-  cb_force_oobLow  = 0
+  eNumFlPlotType                 = ['ESA_Number_flux']
+  noNegENumFl                    = 1
+
+  CASE 1 OF
+     KEYWORD_SET(eSpec_noMap): BEGIN
+        ENumFlPlotRange          = [[0,2.0e8],[0,6.0e8],[0,1.5e8],[0,3.0e8]]
+     END
+     ELSE: BEGIN
+        ENumFlPlotRange          = [[0,5.0e8],[0,1.2e9],[0,6.0e8],[0,8.0e8]]
+     END
+  ENDCASE
 
   ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
   ;;Hemi stuff
@@ -88,57 +149,12 @@ PRO JOURNAL__20161217__PLOTS_OF_10_18_49__DURING_STORMPHASES__LINEAR_RANGES
   colorbar_for_all               = 0
   autoscale_fluxPlots            = 0
 
-  ;;;;;;;;;;;;;;;;;;;;;;
-  ;;08-ELEC_ENERGY_FLUX
-  eFluxPlotType                  = 'Max'
-  ;; ePlotRange                     = [1e5,1e8]
-  ePlotRange                     = [0,0.5]
-  logEfPlot                      = 0
-  noNegEflux                     = 1
-  eFluxVarPlotRange              = [1e1,1e8]
-  var__plotRange                 = [[var__plotRange],[eFluxVarPlotRange]]
-
-  ;;;;;;;;;;;;;;;;;;;;;;
-  ;;10-EFLUX_LOSSCONE_INTEG
-  maxInd                         = 10
-  eNumFlPlotType                 = ['Eflux_Losscone_Integ', 'ESA_Number_flux']
-  noNegENumFl                    = [1,1]
-  ;; logENumFlPlot                  = [1,1]
-  ;; eNumFlPlotRange                = [[1e-3,1e0], $
-  ;;                                   [1e7,1e9]]
-  logENumFlPlot                  = [0,0]
-  eNumFlPlotRange                = [[0,0.6], $
-                                    [0,1e9]]
-  eNumFlVarPlotRange             = [[1e1,1e8], $
-                                    [1e1,1e8]]
-  var__plotRange                 = [[var__plotRange],[eNumFlVarPlotRange]]
-
-  ;;;;;;;;;;;;;;;;;;;;;;
-  ;;18-INTEG_ION_FLUX_UP
-  maxInd                         = 18
-  ifluxPlotType                  = ['INTEG_UP','integ']
-  noNegIFlux                     = [1,0]
-  ;; iPlotRange                     = [[1e6,1e8],[-1e7,1e7]]
-  ;; logIFPlot                      = [1,0]
-  iPlotRange                     = [[0,1e8],[-1e7,1e7]]
-  logIFPlot                      = [0,0]
-  iVarPlotRange                  = [1e1,1e8]
 
   charEType                      = ["losscone"]
   ;; logCharEPlot                   = 1
   ;; CharEPlotRange                 = [1e1,1e4]
   logCharEPlot                   = 0
   CharEPlotRange                 = [0,1500]
-
-  ;;;;;;;;;;;;;;;;;;;;;;
-  ;;49--PFLUXEST
-  ;; logPFPlot                      = 1
-  ;; pPlotRange                     = [1e-3,1e0]
-  logPFPlot                      = 0
-  pPlotRange                     = [0,0.4]
-  ;; multiply_pFlux_by_width_x      = 1
-  pVarPlotRange                  = [1e1,1e8]
-  var__plotRange                 = [[var__plotRange],[pVarPlotRange]]
 
   ;;;;;;;;;;;;;;;;;;;;;;
   ;;Time histogram
@@ -557,4 +573,5 @@ PRO JOURNAL__20161217__PLOTS_OF_10_18_49__DURING_STORMPHASES__LINEAR_RANGES
   ENDFOR
 
 END
+
 
