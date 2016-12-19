@@ -8,8 +8,8 @@ PRO GET_AE_FASTDB_INDICES, $
    MIMC_STRUCT=MIMC_struct, $
    GET_TIME_I_NOT_ALFDB_I=get_time_i_not_alfDB_I, $
    GET_ESPECDB_I_NOT_ALFDB_I=get_eSpecdb_i_not_alfDB_i, $
-   AECUTOFF=AEcutoff, $
-   SMOOTH_AE=smooth_AE, $
+   ;; AECUTOFF=AEcutoff, $
+   ;; SMOOTH_AE=smooth_AE, $
    USE_AU=use_au, $
    USE_AL=use_al, $
    USE_AO=use_ao, $
@@ -34,13 +34,13 @@ PRO GET_AE_FASTDB_INDICES, $
   LOAD_DST_AE_DBS,dst,ae,LUN=lun
 
   CASE 1 OF
-     KEYWORD_SET(use_AU): BEGIN
+     KEYWORD_SET(alfDB_plot_struct.ae_opt.use_AU): BEGIN
         AE_str = 'AU'
      END
-     KEYWORD_SET(use_AO): BEGIN
+     KEYWORD_SET(alfDB_plot_struct.ae_opt.use_AO): BEGIN
         AE_str = 'AO'
      END
-     KEYWORD_SET(use_AL): BEGIN
+     KEYWORD_SET(alfDB_plot_struct.ae_opt.use_AL): BEGIN
         AE_str = 'AL'
      END
      ELSE: BEGIN
@@ -68,8 +68,8 @@ PRO GET_AE_FASTDB_INDICES, $
         todaysFile = TODAYS_AE_INDICES( $
                      /FOR_ESPECDB, $
                      AE_STR=ae_str, $
-                     AECUTOFF=AEcutoff, $
-                     SMOOTH_AE=smooth_AE, $
+                     AECUTOFF=alfDB_plot_struct.ae_opt.AEcutoff, $
+                     SMOOTH_AE=alfDB_plot_struct.ae_opt.smooth_AE, $
                      LOAD_MOST_RECENT=most_recent)
      END
      KEYWORD_SET(get_time_i_not_alfDB_I): BEGIN
@@ -99,13 +99,13 @@ PRO GET_AE_FASTDB_INDICES, $
         dbString = 'fastLoc'
         todaysFile = TODAYS_AE_INDICES( $
                      /FOR_FASTLOC, $
-                     FASTLOC_FOR_ESPEC=for_eSpec_DBs, $
+                     FASTLOC_FOR_ESPEC=alfDB_plot_struct.for_eSpec_DBs, $
                      SAMPLE_T_RESTRICTION=alfDB_plot_struct.sample_t_restriction, $
                      INCLUDE_32HZ=alfDB_plot_struct.include_32Hz, $
                      DISREGARD_SAMPLE_T=alfDB_plot_struct.disregard_sample_t, $
                      AE_STR=ae_str, $
-                     AECUTOFF=AEcutoff, $
-                     SMOOTH_AE=smooth_AE, $
+                     AECUTOFF=alfDB_plot_struct.ae_opt.AEcutoff, $
+                     SMOOTH_AE=alfDB_plot_struct.ae_opt.smooth_AE, $
                      LOAD_MOST_RECENT=most_recent)
      END
      ELSE: BEGIN
@@ -132,8 +132,8 @@ PRO GET_AE_FASTDB_INDICES, $
                      DESPUN_ALFDB=alfDB_plot_struct.despunDB, $
                      /FOR_ALFVENDB, $
                      AE_STR=ae_str, $
-                     AECUTOFF=AEcutoff, $
-                     SMOOTH_AE=smooth_AE, $
+                     AECUTOFF=alfDB_plot_struct.ae_opt.AEcutoff, $
+                     SMOOTH_AE=alfDB_plot_struct.ae_opt.smooth_AE, $
                      LOAD_MOST_RECENT=most_recent)
         
      END
@@ -141,16 +141,16 @@ PRO GET_AE_FASTDB_INDICES, $
 
   GET_LOW_AND_HIGH_AE_PERIODS, $
      ae, $
-     AECUTOFF=AEcutoff, $
-     SMOOTH_AE=smooth_AE, $
+     AECUTOFF=alfDB_plot_struct.ae_opt.AEcutoff, $
+     SMOOTH_AE=alfDB_plot_struct.ae_opt.smooth_AE, $
      EARLIEST_UTC=IMF_struct.earliest_UTC, $
      LATEST_UTC=IMF_struct.latest_UTC, $
      USE_JULDAY_NOT_UTC=IMF_struct.use_julDay_not_UTC, $
      EARLIEST_JULDAY=IMF_struct.earliest_julDay, $
      LATEST_JULDAY=IMF_struct.latest_julDay, $
-     USE_AU=use_au, $
-     USE_AL=use_al, $
-     USE_AO=use_ao, $
+     USE_AU=alfDB_plot_struct.ae_opt.use_au, $
+     USE_AL=alfDB_plot_struct.ae_opt.use_al, $
+     USE_AO=alfDB_plot_struct.ae_opt.use_ao, $
      HIGH_AE_I=high_ae_i, $
      LOW_AE_I=low_ae_i, $
      N_HIGH=n_high, $

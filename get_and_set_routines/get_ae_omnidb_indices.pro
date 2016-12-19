@@ -3,16 +3,16 @@ PRO GET_AE_OMNIDB_INDICES, $
    ALFDB_PLOT_STRUCT=alfDB_plot_struct, $
    IMF_STRUCT=IMF_struct, $
    MIMC_STRUCT=MIMC_struct, $
-   AECUTOFF=AeCutoff, $
-   SMOOTH_AE=smooth_AE, $
-   EARLIEST_UTC=earliest_UTC, $
-   LATEST_UTC=latest_UTC, $
-   USE_JULDAY_NOT_UTC=use_julDay_not_UTC, $
-   EARLIEST_JULDAY=earliest_julDay, $
-   LATEST_JULDAY=latest_julDay, $
-   USE_AU=use_au, $
-   USE_AL=use_al, $
-   USE_AO=use_ao, $
+   ;; AECUTOFF=AeCutoff, $
+   ;; SMOOTH_AE=smooth_AE, $
+   ;; EARLIEST_UTC=earliest_UTC, $
+   ;; LATEST_UTC=latest_UTC, $
+   ;; USE_JULDAY_NOT_UTC=use_julDay_not_UTC, $
+   ;; EARLIEST_JULDAY=earliest_julDay, $
+   ;; LATEST_JULDAY=latest_julDay, $
+   ;; USE_AU=use_au, $
+   ;; USE_AL=use_al, $
+   ;; USE_AO=use_ao, $
    HIGH_AE_I=high_ae_i, $
    LOW_AE_I=low_ae_i, $
    HIGH_I=high_i, $
@@ -35,13 +35,13 @@ PRO GET_AE_OMNIDB_INDICES, $
   LOAD_DST_AE_DBS,dst,ae,LUN=lun
 
   CASE 1 OF
-     KEYWORD_SET(use_AU): BEGIN
+     KEYWORD_SET(alfDB_plot_struct.ae_opt.use_AU): BEGIN
         AE_str = 'AU'
      END
-     KEYWORD_SET(use_AO): BEGIN
+     KEYWORD_SET(alfDB_plot_struct.ae_opt.use_AO): BEGIN
         AE_str = 'AO'
      END
-     KEYWORD_SET(use_AL): BEGIN
+     KEYWORD_SET(alfDB_plot_struct.ae_opt.use_AL): BEGIN
         AE_str = 'AL'
      END
      ELSE: BEGIN
@@ -77,22 +77,22 @@ PRO GET_AE_OMNIDB_INDICES, $
   dbTimes  = TEMPORARY(mag_utc)
   dbString = 'OMNI DB'
 
-  todaysFile = TODAYS_AE_OMNIDB_INDICES(AECUTOFF=AEcutoff, $
+  todaysFile = TODAYS_AE_OMNIDB_INDICES(AECUTOFF=alfDB_plot_struct.ae_opt.AEcutoff, $
                                         AE_STR=ae_str, $
-                                        SMOOTH_AE=smooth_AE)
+                                        SMOOTH_AE=alfDB_plot_struct.ae_opt.smooth_AE)
   
   GET_LOW_AND_HIGH_AE_PERIODS, $
      ae, $
-     AECUTOFF=AeCutoff, $
-     SMOOTH_AE=smooth_AE, $
-     EARLIEST_UTC=earliest_UTC, $
+     AECUTOFF=alfDB_plot_struct.ae_opt.AeCutoff, $
+     SMOOTH_AE=alfDB_plot_struct.ae_opt.smooth_AE, $
+     EARLIEST_UTC=IMF_struct.earliest_UTC, $
      LATEST_UTC=IMF_struct.latest_UTC, $
      USE_JULDAY_NOT_UTC=IMF_struct.use_julDay_not_UTC, $
      EARLIEST_JULDAY=IMF_struct.earliest_julDay, $
      LATEST_JULDAY=IMF_struct.latest_julDay, $
-     USE_AU=use_au, $
-     USE_AL=use_al, $
-     USE_AO=use_ao, $
+     USE_AU=alfDB_plot_struct.ae_opt.use_au, $
+     USE_AL=alfDB_plot_struct.ae_opt.use_al, $
+     USE_AO=alfDB_plot_struct.ae_opt.use_ao, $
      HIGH_AE_I=high_ae_i, $
      LOW_AE_I=low_ae_i, $
      N_HIGH=n_high, $

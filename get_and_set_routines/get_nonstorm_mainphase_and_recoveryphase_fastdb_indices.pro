@@ -11,8 +11,8 @@ PRO GET_NONSTORM_MAINPHASE_AND_RECOVERYPHASE_FASTDB_INDICES, $
    NONSTORM_I=ns_i, $
    MAINPHASE_I=mp_i, $
    RECOVERYPHASE_I=rp_i, $
-   DSTCUTOFF=dstCutoff, $
-   SMOOTH_DST=smooth_dst, $
+   ;; DSTCUTOFF=dstCutoff, $
+   ;; SMOOTH_DST=smooth_dst, $
    USE_MOSTRECENT_DST_FILES=use_mostRecent_Dst_files, $
    STORM_DST_I=s_dst_i, $
    NONSTORM_DST_I=ns_dst_i, $

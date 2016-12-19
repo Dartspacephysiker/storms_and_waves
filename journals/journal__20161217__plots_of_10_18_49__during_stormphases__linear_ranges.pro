@@ -2,12 +2,13 @@
 PRO JOURNAL__20161217__PLOTS_OF_10_18_49__DURING_STORMPHASES__LINEAR_RANGES
 
   dstCutoff                    = -20
-  use_mostRecent_Dst_files  = 1
+  use_mostRecent_Dst_files     = 1
 
-  use_prev_plot_i              = 0
+  use_prev_plot_i              = 1
   despunDB                     = 0
 
-  orbRange                     = [1000,10600]
+  ;; orbRange                     = [1000,10600]
+  orbRange                     = [1000,12670]
   ;; altRange                     = [ $
   ;;                                [ 500,4300], $
   ;;                                [1000,4300], $
@@ -16,7 +17,7 @@ PRO JOURNAL__20161217__PLOTS_OF_10_18_49__DURING_STORMPHASES__LINEAR_RANGES
   ;;                                [ 500,3000]  $
   ;;                                ]
   altRange                     = [ $
-                                 [ 300,4300] $
+                                 [ 1000,4300] $
                                  ]
 
   justData                     = 0
@@ -68,6 +69,11 @@ PRO JOURNAL__20161217__PLOTS_OF_10_18_49__DURING_STORMPHASES__LINEAR_RANGES
   cb_force_oobHigh = 0
   cb_force_oobLow  = 0
 
+  write_obsArr_textFile          = 0
+  write_obsArr__inc_IMF          = 0
+  write_obsArr__orb_avg_obs      = 1
+  writeProcessedH2D              = 0
+
   ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
   ;;Hemi stuff
   hemi                           = 'NORTH'
@@ -83,7 +89,7 @@ PRO JOURNAL__20161217__PLOTS_OF_10_18_49__DURING_STORMPHASES__LINEAR_RANGES
   binM                           = 1.5
 
   ;; maskMin                        = 5
-  ;; tHist_mask_bins_below_thresh   = 2
+  tHist_mask_bins_below_thresh   = 3
 
   colorbar_for_all               = 0
   autoscale_fluxPlots            = 0
@@ -263,7 +269,7 @@ PRO JOURNAL__20161217__PLOTS_OF_10_18_49__DURING_STORMPHASES__LINEAR_RANGES
         NO_BURSTDATA=no_burstData, $
         WRITEASCII=writeASCII, $
         WRITEHDF5=writeHDF5, $
-        WRITEPROCESSEDH2D=writeProcessedH2d, $
+        WRITEPROCESSEDH2D=writeProcessedH2D, $
         SAVERAW=saveRaw, $
         SAVEDIR=saveDir, $
         JUSTDATA=justData, $
@@ -390,14 +396,6 @@ PRO JOURNAL__20161217__PLOTS_OF_10_18_49__DURING_STORMPHASES__LINEAR_RANGES
         NEWELL_ANALYZE_MULTIPLY_BY_TYPE_PROBABILITY=newell_analyze_multiply_by_type_probability, $
         NEWELL_ANALYSIS__OUTPUT_SUMMARY=newell_analysis__output_summary, $
         NEWELL__COMBINE_ACCELERATED=Newell__comb_accelerated, $
-        ESPEC__NO_MAXIMUS=no_maximus, $
-        ESPEC_FLUX_PLOTS=eSpec_flux_plots, $
-        ESPEC__JUNK_ALFVEN_CANDIDATES=eSpec__junk_alfven_candidates, $
-        ESPEC__ALL_FLUXES=eSpec__all_fluxes, $
-        ESPEC__NEWELL_2009_INTERP=eSpec__Newell_2009_interp, $
-        ESPEC__USE_2000KM_FILE=eSpec__use_2000km_file, $
-        ESPEC__NOMAPTO100KM=eSpec__noMap, $
-        ESPEC__REMOVE_OUTLIERS=eSpec__remove_outliers, $
         PPLOTS=pPlots, $
         LOGPFPLOT=logPfPlot, $
         ABSPFLUX=absPflux, $
@@ -511,14 +509,9 @@ PRO JOURNAL__20161217__PLOTS_OF_10_18_49__DURING_STORMPHASES__LINEAR_RANGES
         RESET_GOOD_INDS=reset_good_inds, $
         NO_BURSTDATA=no_burstData, $
         DATADIR=dataDir, $
-        CHASTDB=chastDB, $
-        DESPUNDB=despunDB, $
         COORDINATE_SYSTEM=coordinate_system, $
         USE_AACGM_COORDS=use_AACGM, $
         USE_MAG_COORDS=use_MAG, $
-        LOAD_DELTA_ILAT_FOR_WIDTH_TIME=load_dILAT, $
-        LOAD_DELTA_ANGLE_FOR_WIDTH_TIME=load_dAngle, $
-        LOAD_DELTA_X_FOR_WIDTH_TIME=load_dx, $
         NEVENTSPLOTRANGE=nEventsPlotRange, $
         LOGNEVENTSPLOT=logNEventsPlot, $
         NEVENTSPLOTAUTOSCALE=nEventsPlotAutoscale, $
