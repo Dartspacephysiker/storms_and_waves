@@ -8,7 +8,7 @@ PRO JOURNAL__20161217__PLOTS_OF_10_18_49__DURING_STORMPHASES__LINEAR_RANGES
   despunDB                     = 0
 
   ;; orbRange                     = [1000,10600]
-  orbRange                     = [1000,12670]
+  orbRange                     = [1000,10800]
   ;; altRange                     = [ $
   ;;                                [ 500,4300], $
   ;;                                [1000,4300], $
@@ -20,11 +20,11 @@ PRO JOURNAL__20161217__PLOTS_OF_10_18_49__DURING_STORMPHASES__LINEAR_RANGES
                                  [ 1000,4300] $
                                  ]
 
-  justData                     = 0
+  justData                     = 1
 
   EA_binning                   = 0
 
-  use_AACGM                    = 1
+  use_AACGM                    = 0
 
   minMC                        = 1
   maxNegMC                     = -1
@@ -69,27 +69,27 @@ PRO JOURNAL__20161217__PLOTS_OF_10_18_49__DURING_STORMPHASES__LINEAR_RANGES
   cb_force_oobHigh = 0
   cb_force_oobLow  = 0
 
-  write_obsArr_textFile          = 0
-  write_obsArr__inc_IMF          = 0
+  write_obsArr_textFile          = 1
+  write_obsArr__inc_IMF          = 1
   write_obsArr__orb_avg_obs      = 1
-  writeProcessedH2D              = 0
+  writeProcessedH2D              = 1
 
   ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
   ;;Hemi stuff
-  hemi                           = 'NORTH'
-  minI                           = 60
-  maxI                           = 90
+  ;; hemi                           = 'NORTH'
+  ;; minI                           = 60
+  ;; maxI                           = 90
 
-  ;; hemi                           = 'SOUTH'
-  ;; minI                           = -90
-  ;; maxI                           = -60
+  hemi                           = 'SOUTH'
+  minI                           = -90
+  maxI                           = -60
   ;; orbRange                       = [2000,10600]
 
   binI                           = 2.5
   binM                           = 1.5
 
   ;; maskMin                        = 5
-  tHist_mask_bins_below_thresh   = 3
+  tHist_mask_bins_below_thresh   = 1
 
   colorbar_for_all               = 0
   autoscale_fluxPlots            = 0
@@ -112,9 +112,9 @@ PRO JOURNAL__20161217__PLOTS_OF_10_18_49__DURING_STORMPHASES__LINEAR_RANGES
   ;; logENumFlPlot                  = [1,1]
   ;; eNumFlPlotRange                = [[1e-3,1e0], $
   ;;                                   [1e7,1e9]]
-  logENumFlPlot                  = [0,0]
-  eNumFlPlotRange                = [[0,0.6], $
-                                    [0,1e9]]
+  logENumFlPlot                  = [1,1]
+  eNumFlPlotRange                = [[1e-2,1e0], $
+                                    [1e7,1e9]]
   eNumFlVarPlotRange             = [[1e1,1e8], $
                                     [1e1,1e8]]
   var__plotRange                 = [[var__plotRange],[eNumFlVarPlotRange]]
@@ -126,8 +126,8 @@ PRO JOURNAL__20161217__PLOTS_OF_10_18_49__DURING_STORMPHASES__LINEAR_RANGES
   noNegIFlux                     = [1,0]
   ;; iPlotRange                     = [[1e6,1e8],[-1e7,1e7]]
   ;; logIFPlot                      = [1,0]
-  iPlotRange                     = [[0,1e8],[-1e7,1e7]]
-  logIFPlot                      = [0,0]
+  iPlotRange                     = [[1e6,1e8],[-1e7,1e7]]
+  logIFPlot                      = [1,0]
   iVarPlotRange                  = [1e1,1e8]
 
   charEType                      = ["losscone"]
@@ -140,8 +140,8 @@ PRO JOURNAL__20161217__PLOTS_OF_10_18_49__DURING_STORMPHASES__LINEAR_RANGES
   ;;49--PFLUXEST
   ;; logPFPlot                      = 1
   ;; pPlotRange                     = [1e-3,1e0]
-  logPFPlot                      = 0
-  pPlotRange                     = [0,0.4]
+  logPFPlot                      = 1
+  pPlotRange                     = [1e-2,1e0]
   ;; multiply_pFlux_by_width_x      = 1
   pVarPlotRange                  = [1e1,1e8]
   var__plotRange                 = [[var__plotRange],[pVarPlotRange]]
