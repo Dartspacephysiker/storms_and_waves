@@ -9,7 +9,7 @@ PRO JOURNAL__20161219__ESPEC_PLOTS__DURING_STORMPHASES__LINEAR_RANGES
 
   disregard_sample_t              = 1
 
-  orbRange                        = [1000,10600]
+  orbRange                        = [1000,11950]
   ;; altRange                     = [ $
   ;;                                [ 500,4300], $
   ;;                                [1000,4300], $
@@ -18,7 +18,7 @@ PRO JOURNAL__20161219__ESPEC_PLOTS__DURING_STORMPHASES__LINEAR_RANGES
   ;;                                [ 500,3000]  $
   ;;                                ]
   altRange                        = [ $
-                                    [ 300,4300] $
+                                    [ 750,4300] $
                                     ]
 
   justData                        = 0
@@ -329,6 +329,8 @@ PRO JOURNAL__20161219__ESPEC_PLOTS__DURING_STORMPHASES__LINEAR_RANGES
         CLOCKSTR=clockStr, $
         ANGLELIM1=angleLim1, $
         ANGLELIM2=angleLim2, $
+        THETACONEMIN=tConeMin, $
+        THETACONEMAX=tConeMax, $
         BYMIN=byMin, $
         BYMAX=byMax, $
         BZMIN=bzMin, $
@@ -408,12 +410,6 @@ PRO JOURNAL__20161219__ESPEC_PLOTS__DURING_STORMPHASES__LINEAR_RANGES
         NEWELL__COMBINE_ACCELERATED=Newell__comb_accelerated, $
         ESPEC__NO_MAXIMUS=no_maximus, $
         ESPEC_FLUX_PLOTS=eSpec_flux_plots, $
-        ESPEC__JUNK_ALFVEN_CANDIDATES=eSpec__junk_alfven_candidates, $
-        ESPEC__ALL_FLUXES=eSpec__all_fluxes, $
-        ESPEC__NEWELL_2009_INTERP=eSpec__Newell_2009_interp, $
-        ESPEC__USE_2000KM_FILE=eSpec__use_2000km_file, $
-        ESPEC__NOMAPTO100KM=eSpec__noMap, $
-        ESPEC__REMOVE_OUTLIERS=eSpec__remove_outliers, $
         PPLOTS=pPlots, $
         LOGPFPLOT=logPfPlot, $
         ABSPFLUX=absPflux, $
@@ -527,14 +523,9 @@ PRO JOURNAL__20161219__ESPEC_PLOTS__DURING_STORMPHASES__LINEAR_RANGES
         RESET_GOOD_INDS=reset_good_inds, $
         NO_BURSTDATA=no_burstData, $
         DATADIR=dataDir, $
-        CHASTDB=chastDB, $
-        DESPUNDB=despunDB, $
         COORDINATE_SYSTEM=coordinate_system, $
         USE_AACGM_COORDS=use_AACGM, $
         USE_MAG_COORDS=use_MAG, $
-        LOAD_DELTA_ILAT_FOR_WIDTH_TIME=load_dILAT, $
-        LOAD_DELTA_ANGLE_FOR_WIDTH_TIME=load_dAngle, $
-        LOAD_DELTA_X_FOR_WIDTH_TIME=load_dx, $
         NEVENTSPLOTRANGE=nEventsPlotRange, $
         LOGNEVENTSPLOT=logNEventsPlot, $
         NEVENTSPLOTAUTOSCALE=nEventsPlotAutoscale, $
