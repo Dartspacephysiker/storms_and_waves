@@ -5,12 +5,13 @@ PRO JOURNAL__20161217__PLOTS_OF_10_18_49__DURING_STORMPHASES__LINEAR_RANGES
   use_mostRecent_Dst_files     = 1
 
   use_prev_plot_i              = 1
+  remake_prev_plot_file        = 1
   despunDB                     = 0
 
   include_32Hz                 = 1
 
   ;; orbRange                     = [1000,10600]
-  orbRange                     = [1000,11950]
+  orbRange                     = [1000,12670]
   ;; altRange                     = [ $
   ;;                                [ 500,4300], $
   ;;                                [1000,4300], $
@@ -26,12 +27,12 @@ PRO JOURNAL__20161217__PLOTS_OF_10_18_49__DURING_STORMPHASES__LINEAR_RANGES
   ;; justInds                     = 0
   ;; justInds_saveToFile          = 'check_out_flux_things--NORTH.sav'
 
-  EA_binning                   = 0
+  EA_binning                   = 1
 
   use_AACGM                    = 1
 
-  minMC                        = 1
-  maxNegMC                     = -1
+  minMC                        = 3
+  maxNegMC                     = -3
 
   show_integrals               = 1
 
@@ -47,7 +48,9 @@ PRO JOURNAL__20161217__PLOTS_OF_10_18_49__DURING_STORMPHASES__LINEAR_RANGES
   pPlots                         = 1
   charEPlots                     = 1
   tHistDenominatorPlot           = 1
-  nPlots                         = 1
+  nPlots                         = 0
+  sum_electron_and_poyntingflux  = 0
+
 
   divide_by_width_x              = 1
   do_timeAvg_fluxQuantities      = 1
@@ -81,14 +84,14 @@ PRO JOURNAL__20161217__PLOTS_OF_10_18_49__DURING_STORMPHASES__LINEAR_RANGES
 
   ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
   ;;Hemi stuff
-  hemi                           = 'NORTH'
-  minI                           = 60
-  maxI                           = 90
+  ;; hemi                           = 'NORTH'
+  ;; minI                           = 60
+  ;; maxI                           = 90
 
-  ;; hemi                           = 'SOUTH'
-  ;; minI                           = -90
-  ;; maxI                           = -60
-  ;; orbRange                       = [2000,10600]
+  hemi                           = 'SOUTH'
+  minI                           = -90
+  maxI                           = -60
+  ;; orbRange                       = [2000,orbRange[1]]
 
   binI                           = 2.5
   binM                           = 1.5
@@ -162,6 +165,9 @@ PRO JOURNAL__20161217__PLOTS_OF_10_18_49__DURING_STORMPHASES__LINEAR_RANGES
   ;;N Events
   nEventsPlotRange               = [0,500]
   nEventsPlot__noMask            = 1
+
+  summed_eFlux_pFluxplotRange    = [1e-2,1e0]
+  summed_eFlux_pFlux_logPlot     = 1
 
   ;;;;;;;;;;;;;;;;;;;;;;
   ;PROBOCCURRENCE
@@ -552,7 +558,8 @@ PRO JOURNAL__20161217__PLOTS_OF_10_18_49__DURING_STORMPHASES__LINEAR_RANGES
         MAKE_INTEGRAL_TXTFILE=make_integral_txtfile, $
         MAKE_INTEGRAL_SAVFILES=make_integral_savfiles, $
         INTEGRALSAVFILEPREF=integralSavFilePref, $
-        USE_PREVIOUS_PLOT_I_LISTS_IF_EXISTING=use_prev_plot_i
+        USE_PREVIOUS_PLOT_I_LISTS_IF_EXISTING=use_prev_plot_i, $
+        REMAKE_PREVIOUS_PLOT_I_LISTS_IF_EXISTING=remake_prev_plot_file
   ENDFOR
 
 END
