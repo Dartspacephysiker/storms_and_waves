@@ -9,7 +9,7 @@ PRO JOURNAL__20161219__ESPEC_PLOTS__DURING_STORMPHASES__LINEAR_RANGES
 
   disregard_sample_t              = 1
 
-  orbRange                        = [1000,10600]
+  orbRange                        = [1000,12670]
   ;; altRange                     = [ $
   ;;                                [ 500,4300], $
   ;;                                [1000,4300], $
@@ -18,7 +18,7 @@ PRO JOURNAL__20161219__ESPEC_PLOTS__DURING_STORMPHASES__LINEAR_RANGES
   ;;                                [ 500,3000]  $
   ;;                                ]
   altRange                        = [ $
-                                    [ 300,4300] $
+                                    [ 1000,4300] $
                                     ]
 
   justData                        = 0
@@ -31,7 +31,7 @@ PRO JOURNAL__20161219__ESPEC_PLOTS__DURING_STORMPHASES__LINEAR_RANGES
   show_integrals                  = 1
 
   EA_binning                      = 0
-  plotH2D_contour                 = 1
+  plotH2D_contour                 = 0
   plotH2D__kde                    = KEYWORD_SET(plotH2D_contour)
   ;; contour__levels              = [20,30,50,60,80,90]
   contour__levels                 = KEYWORD_SET(plotH2D_contour) ? [20,30,50,60,80,90,100] : !NULL
@@ -59,6 +59,7 @@ PRO JOURNAL__20161219__ESPEC_PLOTS__DURING_STORMPHASES__LINEAR_RANGES
   
   group_like_plots_for_tiling     = 1
   scale_like_plots_for_tiling     = 0
+  and_tiling_options              = 1
   ;; adj_upper_plotlim_thresh       = 3 ;;Check third maxima
   ;; adj_lower_plotlim_thresh       = 2 ;;Check minima
 
@@ -82,14 +83,14 @@ PRO JOURNAL__20161219__ESPEC_PLOTS__DURING_STORMPHASES__LINEAR_RANGES
   eSpec_flux_plots               = 1
   Newell_analyze_eFlux           = 1
   eSpec__all_fluxes              = 1
-  Newell__comb_accelerated       = 0
+  Newell__comb_accelerated       = 1
 
   eSpec__Newell_2009_interp      = 1
   eSpec__use_2000km_file         = 0
   eSpec__remove_outliers         = 0
   ;; eSpec__noMap                   = 1
 
-  ePlots                         = 0
+  ePlots                         = 1
   eNumFlPlots                    = 1
   charEPlots                     = 1
 
@@ -131,14 +132,14 @@ PRO JOURNAL__20161219__ESPEC_PLOTS__DURING_STORMPHASES__LINEAR_RANGES
 
   ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
   ;;Hemi stuff
-  hemi                           = 'NORTH'
-  minI                           = 60
-  maxI                           = 90
+  ;; hemi                           = 'NORTH'
+  ;; minI                           = 60
+  ;; maxI                           = 90
 
-  ;; hemi                           = 'SOUTH'
-  ;; minI                           = -90
-  ;; maxI                           = -60
-  ;; orbRange                       = [2000,10600]
+  hemi                           = 'SOUTH'
+  minI                           = -90
+  maxI                           = -60
+  orbRange                       = [2000,12670]
 
   binI                           = 2.5
   binM                           = 1.5
@@ -406,14 +407,6 @@ PRO JOURNAL__20161219__ESPEC_PLOTS__DURING_STORMPHASES__LINEAR_RANGES
         NEWELL_ANALYZE_MULTIPLY_BY_TYPE_PROBABILITY=newell_analyze_multiply_by_type_probability, $
         NEWELL_ANALYSIS__OUTPUT_SUMMARY=newell_analysis__output_summary, $
         NEWELL__COMBINE_ACCELERATED=Newell__comb_accelerated, $
-        ESPEC__NO_MAXIMUS=no_maximus, $
-        ESPEC_FLUX_PLOTS=eSpec_flux_plots, $
-        ESPEC__JUNK_ALFVEN_CANDIDATES=eSpec__junk_alfven_candidates, $
-        ESPEC__ALL_FLUXES=eSpec__all_fluxes, $
-        ESPEC__NEWELL_2009_INTERP=eSpec__Newell_2009_interp, $
-        ESPEC__USE_2000KM_FILE=eSpec__use_2000km_file, $
-        ESPEC__NOMAPTO100KM=eSpec__noMap, $
-        ESPEC__REMOVE_OUTLIERS=eSpec__remove_outliers, $
         PPLOTS=pPlots, $
         LOGPFPLOT=logPfPlot, $
         ABSPFLUX=absPflux, $
