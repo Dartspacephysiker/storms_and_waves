@@ -10,6 +10,7 @@ PRO JOURNAL__20161219__ESPEC_PLOTS__DURING_STORMPHASES__LINEAR_RANGES
   disregard_sample_t              = 1
 
   orbRange                        = [1000,12670]
+
   ;; altRange                     = [ $
   ;;                                [ 500,4300], $
   ;;                                [1000,4300], $
@@ -330,6 +331,8 @@ PRO JOURNAL__20161219__ESPEC_PLOTS__DURING_STORMPHASES__LINEAR_RANGES
         CLOCKSTR=clockStr, $
         ANGLELIM1=angleLim1, $
         ANGLELIM2=angleLim2, $
+        THETACONEMIN=tConeMin, $
+        THETACONEMAX=tConeMax, $
         BYMIN=byMin, $
         BYMAX=byMax, $
         BZMIN=bzMin, $
@@ -520,14 +523,9 @@ PRO JOURNAL__20161219__ESPEC_PLOTS__DURING_STORMPHASES__LINEAR_RANGES
         RESET_GOOD_INDS=reset_good_inds, $
         NO_BURSTDATA=no_burstData, $
         DATADIR=dataDir, $
-        CHASTDB=chastDB, $
-        DESPUNDB=despunDB, $
         COORDINATE_SYSTEM=coordinate_system, $
         USE_AACGM_COORDS=use_AACGM, $
         USE_MAG_COORDS=use_MAG, $
-        LOAD_DELTA_ILAT_FOR_WIDTH_TIME=load_dILAT, $
-        LOAD_DELTA_ANGLE_FOR_WIDTH_TIME=load_dAngle, $
-        LOAD_DELTA_X_FOR_WIDTH_TIME=load_dx, $
         NEVENTSPLOTRANGE=nEventsPlotRange, $
         LOGNEVENTSPLOT=logNEventsPlot, $
         NEVENTSPLOTAUTOSCALE=nEventsPlotAutoscale, $
