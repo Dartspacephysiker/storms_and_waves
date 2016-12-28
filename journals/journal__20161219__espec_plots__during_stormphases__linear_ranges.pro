@@ -5,7 +5,7 @@ PRO JOURNAL__20161219__ESPEC_PLOTS__DURING_STORMPHASES__LINEAR_RANGES
   use_mostRecent_Dst_files        = 1
 
   use_prev_plot_i                 = 1
-  despunDB                        = 0
+  remake_prev_plot_file           = 0
 
   disregard_sample_t              = 1
 
@@ -19,7 +19,7 @@ PRO JOURNAL__20161219__ESPEC_PLOTS__DURING_STORMPHASES__LINEAR_RANGES
   ;;                                [ 500,3000]  $
   ;;                                ]
   altRange                        = [ $
-                                    [ 1000,4300] $
+                                    [ 300,4300] $
                                     ]
 
   justData                        = 0
@@ -143,7 +143,7 @@ PRO JOURNAL__20161219__ESPEC_PLOTS__DURING_STORMPHASES__LINEAR_RANGES
   orbRange                       = [2000,12670]
 
   binI                           = 2.5
-  binM                           = 1.5
+  binM                           = 0.75
 
   ;; maskMin                        = 5
   ;; tHist_mask_bins_below_thresh   = 2
@@ -560,7 +560,8 @@ PRO JOURNAL__20161219__ESPEC_PLOTS__DURING_STORMPHASES__LINEAR_RANGES
         MAKE_INTEGRAL_TXTFILE=make_integral_txtfile, $
         MAKE_INTEGRAL_SAVFILES=make_integral_savfiles, $
         INTEGRALSAVFILEPREF=integralSavFilePref, $
-        USE_PREVIOUS_PLOT_I_LISTS_IF_EXISTING=use_prev_plot_i
+        USE_PREVIOUS_PLOT_I_LISTS_IF_EXISTING=use_prev_plot_i, $
+        REMAKE_PREVIOUS_PLOT_I_LISTS_IF_EXISTING=remake_prev_plot_file
   ENDFOR
 
 END
