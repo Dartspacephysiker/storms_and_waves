@@ -67,6 +67,7 @@ PRO GET_NONSTORM_MAINPHASE_AND_RECOVERYPHASE_OMNIDB_INDICES, $
                /FOR_OMNIDB, $
                DSTCUTOFF=alfDB_plot_struct.storm_opt.DstCutoff, $
                SMOOTH_DST=alfDB_plot_struct.storm_opt.smooth_Dst, $
+               FASTLOC_FOR_ESPEC=alfDB_plot_struct.for_eSpec_DBs, $
                USE_MOSTRECENT_DST_FILES=alfDB_plot_struct.storm_opt.use_mostRecent_Dst_files)
   
   GET_NONSTORM_MAINPHASE_AND_RECOVERYPHASE_PERIODS,dst, $

@@ -9,7 +9,7 @@ PRO JOURNAL__20161219__ESPEC_PLOTS__DURING_STORMPHASES__LINEAR_RANGES
 
   disregard_sample_t              = 1
 
-  orbRange                        = [1000,12670]
+  orbRange                        = [1000,16361]
 
   ;; altRange                     = [ $
   ;;                                [ 500,4300], $
@@ -24,14 +24,13 @@ PRO JOURNAL__20161219__ESPEC_PLOTS__DURING_STORMPHASES__LINEAR_RANGES
 
   justData                        = 0
 
-  EA_binning                      = 0
+  EA_binning                      = 1
 
   minMC                           = 1
   maxNegMC                        = -1
 
   show_integrals                  = 1
 
-  EA_binning                      = 0
   plotH2D_contour                 = 0
   plotH2D__kde                    = KEYWORD_SET(plotH2D_contour)
   ;; contour__levels              = [20,30,50,60,80,90]
@@ -42,7 +41,7 @@ PRO JOURNAL__20161219__ESPEC_PLOTS__DURING_STORMPHASES__LINEAR_RANGES
   do_timeAvg_fluxQuantities       = 1
   logAvgPlot                      = 0
   medianPlot                      = 0
-  divide_by_width_x               = 1
+  divide_by_width_x               = 0
 
   ;; write_obsArr_textFile        = 1
   ;; write_obsArr__inc_IMF        = 1
@@ -133,14 +132,14 @@ PRO JOURNAL__20161219__ESPEC_PLOTS__DURING_STORMPHASES__LINEAR_RANGES
 
   ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
   ;;Hemi stuff
-  ;; hemi                           = 'NORTH'
-  ;; minI                           = 60
-  ;; maxI                           = 90
+  hemi                           = 'NORTH'
+  minI                           = 60
+  maxI                           = 90
 
-  hemi                           = 'SOUTH'
-  minI                           = -90
-  maxI                           = -60
-  orbRange                       = [2000,12670]
+  ;; hemi                           = 'SOUTH'
+  ;; minI                           = -90
+  ;; maxI                           = -60
+  ;; orbRange                       = [2000,12670]
 
   binI                           = 2.5
   binM                           = 0.75

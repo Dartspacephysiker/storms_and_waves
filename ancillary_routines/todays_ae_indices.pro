@@ -38,6 +38,10 @@ FUNCTION TODAYS_AE_INDICES, $
      END
      KEYWORD_SET(for_OMNI): BEGIN
         dbNavn         = 'OMNI'
+
+        IF KEYWORD_SET(for_eSpec_DBs) THEN BEGIN
+           dbNavn += '--for_eSpec'
+        ENDIF
      END
      KEYWORD_SET(for_eSpecDB): BEGIN
         dbNavn         = 'eSpecDB'

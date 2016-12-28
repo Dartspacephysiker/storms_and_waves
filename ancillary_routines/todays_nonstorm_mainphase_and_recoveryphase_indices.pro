@@ -42,6 +42,10 @@ FUNCTION TODAYS_NONSTORM_MAINPHASE_AND_RECOVERYPHASE_INDICES, $
      END
      KEYWORD_SET(for_OMNIDB): BEGIN
         dbNavn         = 'OMNI'
+
+        IF KEYWORD_SET(for_eSpec_DBs) THEN BEGIN
+           dbNavn += '--for_eSpec'
+        ENDIF
      END
      KEYWORD_SET(for_eSpecDB): BEGIN
         dbNavn         = 'eSpecDB'

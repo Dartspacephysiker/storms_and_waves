@@ -77,9 +77,10 @@ PRO GET_AE_OMNIDB_INDICES, $
   dbTimes  = TEMPORARY(mag_utc)
   dbString = 'OMNI DB'
 
-  todaysFile = TODAYS_AE_OMNIDB_INDICES(AECUTOFF=alfDB_plot_struct.ae_opt.AEcutoff, $
-                                        AE_STR=ae_str, $
-                                        SMOOTH_AE=alfDB_plot_struct.ae_opt.smooth_AE)
+  todaysFile = TODAYS_AE_INDICES(AECUTOFF=alfDB_plot_struct.ae_opt.AEcutoff, $
+                                 AE_STR=ae_str, $
+                                 SMOOTH_AE=alfDB_plot_struct.ae_opt.smooth_AE, $
+                                 FASTLOC_FOR_ESPEC=alfDB_plot_struct.for_eSpec_DBs)
   
   GET_LOW_AND_HIGH_AE_PERIODS, $
      ae, $
