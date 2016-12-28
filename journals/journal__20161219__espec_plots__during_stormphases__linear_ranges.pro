@@ -132,14 +132,14 @@ PRO JOURNAL__20161219__ESPEC_PLOTS__DURING_STORMPHASES__LINEAR_RANGES
 
   ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
   ;;Hemi stuff
-  hemi                           = 'NORTH'
-  minI                           = 60
-  maxI                           = 90
+  ;; hemi                           = 'NORTH'
+  ;; minI                           = 60
+  ;; maxI                           = 90
 
-  ;; hemi                           = 'SOUTH'
-  ;; minI                           = -90
-  ;; maxI                           = -60
-  ;; orbRange                       = [2000,12670]
+  hemi                           = 'SOUTH'
+  minI                           = -90
+  maxI                           = -60
+  orbRange                       = [(2000 > orbRange[0]),orbRange[1]]
 
   binI                           = 2.5
   binM                           = 0.75
