@@ -8,6 +8,7 @@ PRO GET_AE_FASTDB_INDICES, $
    MIMC_STRUCT=MIMC_struct, $
    GET_TIME_I_NOT_ALFDB_I=get_time_i_not_alfDB_I, $
    GET_ESPECDB_I_NOT_ALFDB_I=get_eSpecdb_i_not_alfDB_i, $
+   GET_IONDB_I_NOT_ALFDB_I=get_iondb_i_not_alfDB_i, $
    ;; AECUTOFF=AEcutoff, $
    ;; SMOOTH_AE=smooth_AE, $
    USE_AU=use_au, $
@@ -67,6 +68,31 @@ PRO GET_AE_FASTDB_INDICES, $
 
         todaysFile = TODAYS_AE_INDICES( $
                      /FOR_ESPECDB, $
+                     UPGOING_ESPEC=alfDB_plot_struct.eSpec__upgoing, $
+                     AE_STR=ae_str, $
+                     AECUTOFF=alfDB_plot_struct.ae_opt.AEcutoff, $
+                     SMOOTH_AE=alfDB_plot_struct.ae_opt.smooth_AE, $
+                     LOAD_MOST_RECENT=most_recent)
+     END
+     KEYWORD_SET(get_iondb_i_not_alfDB_i): BEGIN
+        @common__newell_ion_db.pro
+
+        LOAD_NEWELL_ION_DB, $
+           DOWNGOING=alfDB_plot_struct.ion__downgoing, $
+           USE_UNSORTED_FILE=use_unsorted_file, $
+           NEWELLDBDIR=NewellDBDir, $
+           NEWELLDBFILE=NewellDBFile, $
+           FORCE_LOAD_DB=force_load_db, $
+           OUT_TIMES=dbTimes, $
+           LUN=lun, $
+           QUIET=quiet
+
+        dbString    = 'ion DB'
+        pdbStruct   = PTR_NEW(NEWELL_I__ion)
+
+        todaysFile = TODAYS_AE_INDICES( $
+                     /FOR_IONDB, $
+                     DOWNGOING_ION=alfDB_plot_struct.ion__downgoing, $
                      AE_STR=ae_str, $
                      AECUTOFF=alfDB_plot_struct.ae_opt.AEcutoff, $
                      SMOOTH_AE=alfDB_plot_struct.ae_opt.smooth_AE, $

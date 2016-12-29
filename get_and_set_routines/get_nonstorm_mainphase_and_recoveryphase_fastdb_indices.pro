@@ -8,6 +8,7 @@ PRO GET_NONSTORM_MAINPHASE_AND_RECOVERYPHASE_FASTDB_INDICES, $
    MIMC_STRUCT=MIMC_struct, $
    GET_TIME_I_NOT_ALFDB_I=get_time_i_not_alfDB_i, $
    GET_ESPECDB_I_NOT_ALFDB_I=get_eSpecdb_i_not_alfDB_i, $
+   GET_IONDB_I_NOT_ALFDB_I=get_iondb_i_not_alfDB_i, $
    NONSTORM_I=ns_i, $
    MAINPHASE_I=mp_i, $
    RECOVERYPHASE_I=rp_i, $
@@ -36,7 +37,9 @@ PRO GET_NONSTORM_MAINPHASE_AND_RECOVERYPHASE_FASTDB_INDICES, $
         @common__newell_espec.pro
 
         other_guys = alfDB_plot_struct.load_dILAT OR alfDB_plot_struct.load_dAngle OR alfDB_plot_struct.load_dx
+
         LOAD_NEWELL_ESPEC_DB, $
+           UPGOING=alfDB_plot_struct.eSpec__downgoing, $
            FAILCODES=failCode, $
            USE_UNSORTED_FILE=use_unsorted_file, $
            NEWELLDBDIR=NewellDBDir, $
@@ -61,6 +64,41 @@ PRO GET_NONSTORM_MAINPHASE_AND_RECOVERYPHASE_FASTDB_INDICES, $
 
         todaysFile  = TODAYS_NONSTORM_MAINPHASE_AND_RECOVERYPHASE_INDICES( $
                       /FOR_ESPECDB, $
+                      UPGOING_ESPEC=alfDB_plot_struct.eSpec__upgoing, $
+                      SAMPLE_T_RESTRICTION=alfDB_plot_struct.sample_t_restriction, $
+                      INCLUDE_32HZ=alfDB_plot_struct.include_32Hz, $
+                      DISREGARD_SAMPLE_T=alfDB_plot_struct.disregard_sample_t, $
+                      DSTCUTOFF=alfDB_plot_struct.storm_opt.dstCutoff, $
+                      SMOOTH_DST=alfDB_plot_struct.storm_opt.smooth_Dst, $
+                      USE_MOSTRECENT_DST_FILES=alfDB_plot_struct.storm_opt.use_mostRecent_Dst_files)
+     END
+     KEYWORD_SET(get_iondb_i_not_alfDB_i): BEGIN
+        @common__newell_ion_db.pro
+
+        other_guys = alfDB_plot_struct.load_dILAT OR alfDB_plot_struct.load_dAngle OR alfDB_plot_struct.load_dx
+
+        LOAD_NEWELL_ION_DB, $
+           DOWNGOING=alfDB_plot_struct.ion__downgoing, $
+           NEWELLDBDIR=NewellDBDir, $
+           NEWELLDBFILE=NewellDBFile, $
+           FORCE_LOAD_DB=force_load_db, $
+           DONT_MAP_TO_100KM=alfDB_plot_struct.ion__noMap, $
+           LOAD_DELTA_T=( (KEYWORD_SET(alfDB_plot_struct.do_timeAvg_fluxQuantities) OR $
+                           KEYWORD_SET(alfDB_plot_struct.t_probOccurrence) $
+                          ) $
+                          AND ~other_guys), $
+           LOAD_DELTA_ILAT_FOR_WIDTH_TIME=alfDB_plot_struct.load_dILAT, $
+           LOAD_DELTA_ANGLE_FOR_WIDTH_TIME=alfDB_plot_struct.load_dAngle, $
+           LOAD_DELTA_X_FOR_WIDTH_TIME=alfDB_plot_struct.load_dx, $
+           LUN=lun, $
+           QUIET=quiet
+
+        dbString    = 'ion DB'
+        pdbStruct   = PTR_NEW(NEWELL_I__ion)
+
+        todaysFile  = TODAYS_NONSTORM_MAINPHASE_AND_RECOVERYPHASE_INDICES( $
+                      /FOR_IONDB, $
+                      DOWNGOING_ION=alfDB_plot_struct.ion__downgoing, $
                       SAMPLE_T_RESTRICTION=alfDB_plot_struct.sample_t_restriction, $
                       INCLUDE_32HZ=alfDB_plot_struct.include_32Hz, $
                       DISREGARD_SAMPLE_T=alfDB_plot_struct.disregard_sample_t, $
@@ -180,7 +218,7 @@ PRO GET_NONSTORM_MAINPHASE_AND_RECOVERYPHASE_FASTDB_INDICES, $
         GET_DATA_AVAILABILITY_FOR_ARRAY_OF_UTC_RANGES, $
            T1_ARR=dst.time[inds[start_dst_ii]], $
            T2_ARR=dst.time[inds[stop_dst_ii]], $
-           FOR_ESPEC_DB=(dbString EQ 'eSpec DB'), $
+           FOR_ESPEC_DB=(dbString EQ 'eSpec DB') OR (dbString EQ 'ion DB'), $
            DBSTRUCT=*pdbStruct, $
            DBTIMES=N_ELEMENTS(pdbTimes) GT 0 ? *pdbTimes : !NULL, $
            ;; DBTIMES=*pdbTimes, $

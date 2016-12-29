@@ -5,7 +5,7 @@ PRO JOURNAL__20161217__PLOTS_OF_10_18_49__DURING_STORMPHASES__LINEAR_RANGES
   use_mostRecent_Dst_files     = 1
 
   use_prev_plot_i              = 1
-  remake_prev_plot_file        = 1
+  remake_prev_plot_file        = 0
   despunDB                     = 0
 
   include_32Hz                 = 1
@@ -20,8 +20,10 @@ PRO JOURNAL__20161217__PLOTS_OF_10_18_49__DURING_STORMPHASES__LINEAR_RANGES
   ;;                                [ 500,3000]  $
   ;;                                ]
   altRange                     = [ $
-                                 [ 750,4300] $
+                                 [ 300,4300] $
                                  ]
+
+  charE__Newell_the_cusp       = 0
 
   justData                     = 0
   ;; justInds                     = 0
@@ -29,10 +31,10 @@ PRO JOURNAL__20161217__PLOTS_OF_10_18_49__DURING_STORMPHASES__LINEAR_RANGES
 
   EA_binning                   = 1
 
-  use_AACGM                    = 1
+  use_AACGM                    = 0
 
-  minMC                        = 3
-  maxNegMC                     = -3
+  minMC                        = 1
+  maxNegMC                     = -1
 
   show_integrals               = 1
 
@@ -41,13 +43,13 @@ PRO JOURNAL__20161217__PLOTS_OF_10_18_49__DURING_STORMPHASES__LINEAR_RANGES
 
   ;;;;;;;;;;;;;;;;;
   ;;turn plots on and off
-  ionPlots                       = 1
-  probOccurrencePlot             = 1
+  ionPlots                       = 0
+  probOccurrencePlot             = 0
   eNumFlPlots                    = 1
-  ePlots                         = 1
-  pPlots                         = 1
-  charEPlots                     = 1
-  tHistDenominatorPlot           = 1
+  ePlots                         = 0
+  pPlots                         = 0
+  charEPlots                     = 0
+  tHistDenominatorPlot           = 0
   nPlots                         = 0
   sum_electron_and_poyntingflux  = 0
 
@@ -84,17 +86,17 @@ PRO JOURNAL__20161217__PLOTS_OF_10_18_49__DURING_STORMPHASES__LINEAR_RANGES
 
   ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
   ;;Hemi stuff
-  ;; hemi                           = 'NORTH'
-  ;; minI                           = 60
-  ;; maxI                           = 90
+  hemi                           = 'NORTH'
+  minI                           = 60
+  maxI                           = 90
 
-  hemi                           = 'SOUTH'
-  minI                           = -90
-  maxI                           = -60
-  ;; orbRange                       = [2000,orbRange[1]]
+  ;; hemi                           = 'SOUTH'
+  ;; minI                           = -90
+  ;; maxI                           = -60
+  ;; orbRange                       = [(orbRange[0] > 2000),orbRange[1]]
 
   binI                           = 2.5
-  binM                           = 1.5
+  binM                           = 1.0
 
   ;; maskMin                        = 5
   ;; tHist_mask_bins_below_thresh   = 0
@@ -114,18 +116,33 @@ PRO JOURNAL__20161217__PLOTS_OF_10_18_49__DURING_STORMPHASES__LINEAR_RANGES
 
   ;;;;;;;;;;;;;;;;;;;;;;
   ;;10-EFLUX_LOSSCONE_INTEG
-  maxInd                         = 10
-  eNumFlPlotType                 = ['Eflux_Losscone_Integ', 'ESA_Number_flux']
-  noNegENumFl                    = [1,1]
+  ;; maxInd                         = 10
+  ;; eNumFlPlotType                 = ['Eflux_Losscone_Integ', 'ESA_Number_flux','total_eflux_integ',"ESA_Current"]
+  ;; noNegENumFl                    = [1,1,0,0]
+  ;; ;; logENumFlPlot                  = [1,1]
+  ;; ;; eNumFlPlotRange                = [[1e-3,1e0], $
+  ;; ;;                                   [1e7,1e9]]
+  ;; logENumFlPlot                  = [1,1,0,0]
+  ;; eNumFlPlotRange                = [[1e-2,1e0], $
+  ;;                                   [1e7 ,1e9], $
+  ;;                                   [-0.25,0.25], $
+  ;;                                   [-0.5,0.5]]
+
+
+
+  eNumFlPlotType                 = ['Eflux_Losscone_Integ', 'ESA_Number_flux','total_eflux_integ',"ESA_Current"]
+  noNegENumFl                    = [1,0,0,0]
   ;; logENumFlPlot                  = [1,1]
   ;; eNumFlPlotRange                = [[1e-3,1e0], $
   ;;                                   [1e7,1e9]]
-  logENumFlPlot                  = [1,1]
+  logENumFlPlot                  = [1,0,0,0]
   eNumFlPlotRange                = [[1e-2,1e0], $
-                                    [1e7,1e9]]
-  eNumFlVarPlotRange             = [[1e1,1e8], $
-                                    [1e1,1e8]]
-  var__plotRange                 = [[var__plotRange],[eNumFlVarPlotRange]]
+                                    [-1e7 ,1e7], $
+                                    [-0.25,0.25], $
+                                    [-0.5,0.5]]
+  ;; eNumFlVarPlotRange             = [[1e1,1e8], $
+  ;;                                   [1e1,1e8]]
+  ;; var__plotRange                 = [[var__plotRange],[eNumFlVarPlotRange]]
 
   ;;;;;;;;;;;;;;;;;;;;;;
   ;;18-INTEG_ION_FLUX_UP

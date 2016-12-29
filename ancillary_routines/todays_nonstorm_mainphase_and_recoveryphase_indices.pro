@@ -4,7 +4,9 @@ FUNCTION TODAYS_NONSTORM_MAINPHASE_AND_RECOVERYPHASE_INDICES, $
    FOR_ALFVENDB=for_AlfvenDB, $
    FOR_FASTLOC=for_fastLoc, $
    FOR_ESPECDB=for_eSpecDB, $
+   UPGOING_ESPEC=upgoing_eSpec, $
    FOR_IONDB=for_ionDB, $
+   DOWNGOING_ION=downgoing_ion, $
    FOR_OMNIDB=for_OMNIDB, $
    FASTLOC_FOR_ESPEC=for_eSpec_DBs, $
    SAMPLE_T_RESTRICTION=sample_t_restriction, $
@@ -48,10 +50,12 @@ FUNCTION TODAYS_NONSTORM_MAINPHASE_AND_RECOVERYPHASE_INDICES, $
         ENDIF
      END
      KEYWORD_SET(for_eSpecDB): BEGIN
-        dbNavn         = 'eSpecDB'
+        dbNavn         = (KEYWORD_SET(upgoing_eSpec) ? 'up_' : '') + $
+                         'eSpecDB'
      END
      KEYWORD_SET(for_ionDB): BEGIN
-        dbNavn         = 'ionDB'
+        dbNavn         = (KEYWORD_SET(downgoing_ion) ? 'down_' : '') + $
+                         'ionDB'
      END
   ENDCASE
 
