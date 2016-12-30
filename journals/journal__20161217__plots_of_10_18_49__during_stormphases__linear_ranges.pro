@@ -8,7 +8,7 @@ PRO JOURNAL__20161217__PLOTS_OF_10_18_49__DURING_STORMPHASES__LINEAR_RANGES
   remake_prev_plot_file        = 0
   despunDB                     = 0
 
-  include_32Hz                 = 1
+  include_32Hz                 = 0
 
   ;; orbRange                     = [1000,10600]
   orbRange                     = [1000,12670]
@@ -29,7 +29,7 @@ PRO JOURNAL__20161217__PLOTS_OF_10_18_49__DURING_STORMPHASES__LINEAR_RANGES
   ;; justInds                     = 0
   ;; justInds_saveToFile          = 'check_out_flux_things--NORTH.sav'
 
-  EA_binning                   = 1
+  EA_binning                   = 0
 
   use_AACGM                    = 0
 
@@ -49,6 +49,7 @@ PRO JOURNAL__20161217__PLOTS_OF_10_18_49__DURING_STORMPHASES__LINEAR_RANGES
   ePlots                         = 0
   pPlots                         = 0
   charEPlots                     = 0
+  magCPlots                      = 1B
   tHistDenominatorPlot           = 0
   nPlots                         = 0
   sum_electron_and_poyntingflux  = 0
@@ -79,10 +80,10 @@ PRO JOURNAL__20161217__PLOTS_OF_10_18_49__DURING_STORMPHASES__LINEAR_RANGES
   cb_force_oobHigh = 0
   cb_force_oobLow  = 0
 
-  write_obsArr_textFile          = 0
+  write_obsArr_textFile          = 1
   write_obsArr__inc_IMF          = 1
   write_obsArr__orb_avg_obs      = 1
-  writeProcessedH2D              = 0
+  writeProcessedH2D              = 1
 
   ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
   ;;Hemi stuff
@@ -130,16 +131,25 @@ PRO JOURNAL__20161217__PLOTS_OF_10_18_49__DURING_STORMPHASES__LINEAR_RANGES
 
 
 
-  eNumFlPlotType                 = ['Eflux_Losscone_Integ', 'ESA_Number_flux','total_eflux_integ',"ESA_Current"]
-  noNegENumFl                    = [1,0,0,0]
+  ;; eNumFlPlotType                 = ['Eflux_Losscone_Integ', 'ESA_Number_flux','total_eflux_integ',"ESA_Current"]
+  ;; noNegENumFl                    = [1,0,0,0]
+  ;; ;; logENumFlPlot                  = [1,1]
+  ;; ;; eNumFlPlotRange                = [[1e-3,1e0], $
+  ;; ;;                                   [1e7,1e9]]
+  ;; logENumFlPlot                  = [1,0,0,0]
+  ;; eNumFlPlotRange                = [[1e-2,1e0], $
+  ;;                                   [-1e7 ,1e7], $
+  ;;                                   [-0.25,0.25], $
+  ;;                                   [-0.5,0.5]]
+
+  eNumFlPlotType                 = ["ESA_Current"]
+  noNegENumFl                    = [0]
   ;; logENumFlPlot                  = [1,1]
   ;; eNumFlPlotRange                = [[1e-3,1e0], $
   ;;                                   [1e7,1e9]]
-  logENumFlPlot                  = [1,0,0,0]
-  eNumFlPlotRange                = [[1e-2,1e0], $
-                                    [-1e7 ,1e7], $
-                                    [-0.25,0.25], $
-                                    [-0.5,0.5]]
+  logENumFlPlot                  = [0]
+  eNumFlPlotRange                = [[-0.5,0.5]]
+
   ;; eNumFlVarPlotRange             = [[1e1,1e8], $
   ;;                                   [1e1,1e8]]
   ;; var__plotRange                 = [[var__plotRange],[eNumFlVarPlotRange]]
@@ -170,6 +180,12 @@ PRO JOURNAL__20161217__PLOTS_OF_10_18_49__DURING_STORMPHASES__LINEAR_RANGES
   ;; multiply_pFlux_by_width_x      = 1
   pVarPlotRange                  = [1e1,1e8]
   var__plotRange                 = [[var__plotRange],[pVarPlotRange]]
+
+        logMagCPlot    = 0B
+        magCPlotRange  = [-10,10]
+        ;; absMagC        = 0B
+        ;; noNegMagC      = 0B
+        ;; noPosMagC      = 0B
 
   ;;;;;;;;;;;;;;;;;;;;;;
   ;;Time histogram
@@ -266,15 +282,44 @@ PRO JOURNAL__20161217__PLOTS_OF_10_18_49__DURING_STORMPHASES__LINEAR_RANGES
         NIGHTSIDE=nightside, $
         NPLOTS=nPlots, $
         EPLOTS=ePlots, $
+        PPLOTS=pPlots, $
+        IONPLOTS=ionPlots, $
+        CHAREPLOTS=charEPlots, $
+        CHARIEPLOTS=chariEPlots, $
+        MAGCPLOTS=magCPlots, $
         EFLUXPLOTTYPE=eFluxPlotType, $
         ENUMFLPLOTS=eNumFlPlots, $
         ENUMFLPLOTTYPE=eNumFlPlotType, $
-        PPLOTS=pPlots, $
-        IONPLOTS=ionPlots, $
         IFLUXPLOTTYPE=ifluxPlotType, $
-        CHAREPLOTS=charEPlots, $
         CHARETYPE=charEType, $
-        CHARIEPLOTS=chariEPlots, $
+        LOGCHARIEPLOT=logChariePlot, $
+        CHARIEPLOTRANGE=chariEPlotRange, $
+        LOGMAGCPLOT=logMagCPlot, $
+        MAGCPLOTRANGE=magCPlotRange, $
+        ABSCHARE=absCharE, $
+        ABSCHARIE=absCharie, $
+        ABSEFLUX=abseflux, $
+        ABSENUMFL=absENumFl, $
+        ABSIFLUX=absIflux, $
+        ABSMAGC=absMagC, $
+        ABSOXYFLUX=absOxyFlux, $
+        ABSPFLUX=absPflux, $
+        NONEGCHARE=noNegCharE, $
+        NONEGCHARIE=noNegCharie, $
+        NONEGEFLUX=noNegEflux, $
+        NONEGENUMFL=noNegENumFl, $
+        NONEGIFLUX=noNegIflux, $
+        NONEGMAGC=noNegMagC, $
+        NONEGOXYFLUX=noNegOxyFlux, $
+        NONEGPFLUX=noNegPflux, $
+        NOPOSCHARE=noPosCharE, $
+        NOPOSCHARIE=noPosCharie, $
+        NOPOSEFLUX=noPosEFlux, $
+        NOPOSENUMFL=noPosENumFl, $
+        NOPOSIFLUX=noPosIflux, $
+        NOPOSMAGC=noPosMagC, $
+        NOPOSOXYFLUX=noPosOxyFlux, $
+        NOPOSPFLUX=noPosPflux, $
         AUTOSCALE_FLUXPLOTS=autoscale_fluxPlots, $
         FLUXPLOTS__REMOVE_OUTLIERS=fluxPlots__remove_outliers, $
         FLUXPLOTS__REMOVE_LOG_OUTLIERS=fluxPlots__remove_log_outliers, $
@@ -410,15 +455,9 @@ PRO JOURNAL__20161217__PLOTS_OF_10_18_49__DURING_STORMPHASES__LINEAR_RANGES
         EPLOTRANGE=ePlotRange, $
         EFLUXPLOTTYPE=eFluxPlotType, $
         LOGEFPLOT=logEfPlot, $
-        ABSEFLUX=abseflux, $
-        NOPOSEFLUX=noPosEFlux, $
-        NONEGEFLUX=noNegEflux, $
         ENUMFLPLOTS=eNumFlPlots, $
         ENUMFLPLOTTYPE=eNumFlPlotType, $
         LOGENUMFLPLOT=logENumFlPlot, $
-        ABSENUMFL=absENumFl, $
-        NONEGENUMFL=noNegENumFl, $
-        NOPOSENUMFL=noPosENumFl, $
         ENUMFLPLOTRANGE=ENumFlPlotRange, $
         AUTOSCALE_ENUMFLPLOTS=autoscale_eNumFlplots, $
         NEWELL_ANALYZE_EFLUX=newell_analyze_eFlux, $
@@ -427,36 +466,21 @@ PRO JOURNAL__20161217__PLOTS_OF_10_18_49__DURING_STORMPHASES__LINEAR_RANGES
         NEWELL__COMBINE_ACCELERATED=Newell__comb_accelerated, $
         PPLOTS=pPlots, $
         LOGPFPLOT=logPfPlot, $
-        ABSPFLUX=absPflux, $
-        NONEGPFLUX=noNegPflux, $
-        NOPOSPFLUX=noPosPflux, $
         PPLOTRANGE=PPlotRange, $
         IONPLOTS=ionPlots, $
         IFLUXPLOTTYPE=ifluxPlotType, $
         LOGIFPLOT=logIfPlot, $
-        ABSIFLUX=absIflux, $
-        NONEGIFLUX=noNegIflux, $
-        NOPOSIFLUX=noPosIflux, $
         IPLOTRANGE=IPlotRange, $
         OXYPLOTS=oxyPlots, $
         OXYFLUXPLOTTYPE=oxyFluxPlotType, $
         LOGOXYFPLOT=logOxyfPlot, $
-        ABSOXYFLUX=absOxyFlux, $
-        NONEGOXYFLUX=noNegOxyFlux, $
-        NOPOSOXYFLUX=noPosOxyFlux, $
         OXYPLOTRANGE=oxyPlotRange, $
         CHAREPLOTS=charEPlots, $
         CHARETYPE=charEType, $
         LOGCHAREPLOT=logCharEPlot, $
-        ABSCHARE=absCharE, $
-        NONEGCHARE=noNegCharE, $
-        NOPOSCHARE=noPosCharE, $
         CHAREPLOTRANGE=CharEPlotRange, $
         CHARIEPLOTS=chariePlots, $
         LOGCHARIEPLOT=logChariePlot, $
-        ABSCHARIE=absCharie, $
-        NONEGCHARIE=noNegCharie, $
-        NOPOSCHARIE=noPosCharie, $
         CHARIEPLOTRANGE=ChariePlotRange, $
         AUTOSCALE_FLUXPLOTS=autoscale_fluxPlots, $
         FLUXPLOTS__NEWELL_THE_CUSP=fluxPlots__Newell_the_cusp, $
