@@ -5,7 +5,7 @@ PRO JOURNAL__20161219__ESPEC_PLOTS__DURING_STORMPHASES__LINEAR_RANGES
   use_mostRecent_Dst_files        = 1
 
   use_prev_plot_i                 = 1
-  remake_prev_plot_file           = 0
+  remake_prev_plot_file           = 1
 
   disregard_sample_t              = 1
 
@@ -24,7 +24,7 @@ PRO JOURNAL__20161219__ESPEC_PLOTS__DURING_STORMPHASES__LINEAR_RANGES
 
   justData                        = 0
 
-  EA_binning                      = 0
+  EA_binning                      = 1
 
   minMC                           = 1
   maxNegMC                        = -1
@@ -111,7 +111,7 @@ PRO JOURNAL__20161219__ESPEC_PLOTS__DURING_STORMPHASES__LINEAR_RANGES
         ePlotRange               = [[0,0.08],[0,0.50],[0,0.15],[0,0.20]]
      END
      ELSE: BEGIN
-        ePlotRange               = [[0,0.2],[0,1.0],[0,0.30],[0,0.5]]
+        ePlotRange               = [[0,0.2],[0,1.5],[0,0.30],[0,0.5]]
      END
   ENDCASE
   logEfPlot                      = 0
@@ -126,22 +126,22 @@ PRO JOURNAL__20161219__ESPEC_PLOTS__DURING_STORMPHASES__LINEAR_RANGES
         ENumFlPlotRange          = [[0,2.0e8],[0,6.0e8],[0,1.5e8],[0,3.0e8]]
      END
      ELSE: BEGIN
-        ENumFlPlotRange          = [[0,5.0e8],[0,1.2e9],[0,6.0e8],[0,8.0e8]]
+        ENumFlPlotRange          = [[0,5.0e8],[0,1.5e9],[0,4.0e8],[0,8.0e8]]
      END
   ENDCASE
 
   ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
   ;;Hemi stuff
   ;; hemi                           = 'NORTH'
-  ;; minI                           = 60
+  ;; minI                           = 48
   ;; maxI                           = 90
 
-  ;; hemi                           = 'SOUTH'
-  ;; minI                           = -90
-  ;; maxI                           = -60
-  ;; orbRange                       = [(2000 > orbRange[0]),orbRange[1]]
+  hemi                           = 'SOUTH'
+  minI                           = -90
+  maxI                           = -51
+  orbRange                       = [(1000 > orbRange[0]),orbRange[1]]
 
-  binI                           = 2.5
+  binI                           = 3.0
   binM                           = 1.5
 
   ;; maskMin                        = 5
@@ -308,6 +308,10 @@ PRO JOURNAL__20161219__ESPEC_PLOTS__DURING_STORMPHASES__LINEAR_RANGES
         ENUMFLPLOTRANGE=ENumFlPlotRange, $
         ESPEC__NEWELL_PLOTRANGE=eSpec__newell_plotRange, $
         ESPEC__T_PROBOCC_PLOTRANGE=eSpec__t_probOcc_plotRange, $
+        NEWELL_ANALYZE_EFLUX=newell_analyze_eFlux, $
+        NEWELL_ANALYZE_MULTIPLY_BY_TYPE_PROBABILITY=newell_analyze_multiply_by_type_probability, $
+        NEWELL_ANALYSIS__OUTPUT_SUMMARY=newell_analysis__output_summary, $
+        NEWELL__COMBINE_ACCELERATED=Newell__comb_accelerated, $
         IPLOTRANGE=IPlotRange, $
         MAGCPLOTRANGE=magCPlotRange, $
         NEVENTPERMINRANGE=nEventPerMinRange, $
@@ -365,7 +369,6 @@ PRO JOURNAL__20161219__ESPEC_PLOTS__DURING_STORMPHASES__LINEAR_RANGES
         PLOTH2D__KERNEL_DENSITY_UNMASK=plotH2D__kernel_density_unmask, $
         HOYDIA=hoyDia, $
         LUN=lun, $
-        NEWELL_ANALYZE_EFLUX=Newell_analyze_eFlux, $
         ESPEC__NO_MAXIMUS=no_maximus, $
         ESPEC_FLUX_PLOTS=eSpec_flux_plots, $
         ESPEC__JUNK_ALFVEN_CANDIDATES=eSpec__junk_alfven_candidates, $

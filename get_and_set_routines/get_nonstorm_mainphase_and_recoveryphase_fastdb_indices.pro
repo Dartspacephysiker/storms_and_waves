@@ -39,7 +39,7 @@ PRO GET_NONSTORM_MAINPHASE_AND_RECOVERYPHASE_FASTDB_INDICES, $
         other_guys = alfDB_plot_struct.load_dILAT OR alfDB_plot_struct.load_dAngle OR alfDB_plot_struct.load_dx
 
         LOAD_NEWELL_ESPEC_DB, $
-           UPGOING=alfDB_plot_struct.eSpec__downgoing, $
+           UPGOING=alfDB_plot_struct.eSpec__upgoing, $
            FAILCODES=failCode, $
            USE_UNSORTED_FILE=use_unsorted_file, $
            NEWELLDBDIR=NewellDBDir, $
