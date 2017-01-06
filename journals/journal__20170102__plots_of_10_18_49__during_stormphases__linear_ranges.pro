@@ -1,11 +1,11 @@
-;;2016/12/17 asdlfkjsafd;lkjalweoiruojdabcxbvxmbvclzjdahiw8392423
-PRO JOURNAL__20161217__PLOTS_OF_10_18_49__DURING_STORMPHASES__LINEAR_RANGES
+;;2017/01/02 asdlfkjsafd;lkjalweoiruojdabcxbvxmbvclzjdahiw8392423
+PRO JOURNAL__20170102__PLOTS_OF_10_18_49__DURING_STORMPHASES__LINEAR_RANGES
 
   dstCutoff                    = -20
   use_mostRecent_Dst_files     = 1
 
   use_prev_plot_i              = 1
-  remake_prev_plot_file        = 1
+  remake_prev_plot_file        = 0
   despunDB                     = 0
 
   include_32Hz                 = 0
@@ -26,30 +26,30 @@ PRO JOURNAL__20161217__PLOTS_OF_10_18_49__DURING_STORMPHASES__LINEAR_RANGES
   charE__Newell_the_cusp       = 0
 
   justData                     = 0
-  ;; justInds                     = 0
-  ;; justInds_saveToFile          = 'check_out_flux_things--NORTH.sav'
+  justInds                     = 0
+  ;; justInds_saveToFile          = 'grossRates--cur_-1_1--NORTH'
 
   EA_binning                   = 0
 
-  use_AACGM                    = 0
+  use_AACGM                    = 1
 
-  minMC                        = 1
-  maxNegMC                     = -1
+  minMC                        = 10
+  maxNegMC                     = -10
 
-  show_integrals               = 1
+  show_integrals               = 0
 
   dont_blackball_maximus       = 1
   dont_blackball_fastLoc       = 1
 
   ;;;;;;;;;;;;;;;;;
   ;;turn plots on and off
-  ionPlots                       = 1
+  ionPlots                       = 0
   probOccurrencePlot             = 0
   eNumFlPlots                    = 1
-  ePlots                         = 1
-  pPlots                         = 1
-  charEPlots                     = 1
-  magCPlots                      = 1
+  ePlots                         = 0
+  pPlots                         = 0
+  charEPlots                     = 0
+  magCPlots                      = 0
   tHistDenominatorPlot           = 0
   nPlots                         = 0
   sum_electron_and_poyntingflux  = 0
@@ -57,7 +57,8 @@ PRO JOURNAL__20161217__PLOTS_OF_10_18_49__DURING_STORMPHASES__LINEAR_RANGES
 
   divide_by_width_x              = 1
   medianPlot                     = 0
-  do_timeAvg_fluxQuantities      = 1
+  do_timeAvg_fluxQuantities      = 0
+  logAvgPlot                     = 1
   do_grossRate_fluxQuantities    = 0
   do_logAvg_the_timeAvg          = 0
 
@@ -73,13 +74,19 @@ PRO JOURNAL__20161217__PLOTS_OF_10_18_49__DURING_STORMPHASES__LINEAR_RANGES
 
   var__do_stddev_instead         = 0
 
-  fancyPresentationMode          = 0 ;Erases stormphase titles,
+  fancyPresentationMode          = 1 ;Erases stormphase titles,
                                      ;suppresses gridlabels, blows up plot titles. Keep it.
+  suppress_thickGrid             = 0
+  suppress_thinGrid              = 1
+  suppress_gridLabels            = [0,1,1]
+  suppress_MLT_labels            = [0,1,1]
+  suppress_ILAT_labels           = [0,1,1]
+
   and_tiling_options             = 1
   group_like_plots_for_tiling    = 1
 
-  cb_force_oobHigh = 0
-  cb_force_oobLow  = 0
+  cb_force_oobHigh = 1
+  cb_force_oobLow  = 1
 
   write_obsArr_textFile          = 0
   write_obsArr__inc_IMF          = 1
@@ -88,14 +95,14 @@ PRO JOURNAL__20161217__PLOTS_OF_10_18_49__DURING_STORMPHASES__LINEAR_RANGES
 
   ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
   ;;Hemi stuff
-  ;; hemi                           = 'NORTH'
-  ;; minI                           = 60
-  ;; maxI                           = 90
+  hemi                           = 'NORTH'
+  minI                           = 60
+  maxI                           = 90
 
-  hemi                           = 'SOUTH'
-  minI                           = -90
-  maxI                           = -60
-  orbRange                       = [(orbRange[0] > 1000),orbRange[1]]
+  ;; hemi                           = 'SOUTH'
+  ;; minI                           = -90
+  ;; maxI                           = -60
+  ;; orbRange                       = [(orbRange[0] > 1000),orbRange[1]]
 
   binI                           = 2.5
   binM                           = 1.5
@@ -132,16 +139,15 @@ PRO JOURNAL__20161217__PLOTS_OF_10_18_49__DURING_STORMPHASES__LINEAR_RANGES
 
 
 
-  eNumFlPlotType                 = ['Eflux_Losscone_Integ', 'ESA_Number_flux','total_eflux_integ',"ESA_Current"]
-  noNegENumFl                    = [0,0,0,0]
+  eNumFlPlotType                 = ['Eflux_Losscone_Integ', 'ESA_Number_flux']
+  noNegENumFl                    = [0,0]
   ;; logENumFlPlot                  = [1,1]
   ;; eNumFlPlotRange                = [[1e-3,1e0], $
   ;;                                   [1e7,1e9]]
-  logENumFlPlot                  = [0,0,0,0]
-  eNumFlPlotRange                = [[0,0.5], $
-                                    [0,5e8], $
-                                    [0.0,0.5], $
-                                    [-1,1]]
+  logENumFlPlot                  = [1,1]
+  eNumFlPlotRange                = [[1e-1,1e1], $
+                                    [1e7,1e9] $
+                                    ]
 
   ;; eNumFlPlotType                 = ["ESA_Current"]
   ;; noNegENumFl                    = [0]
@@ -158,19 +164,14 @@ PRO JOURNAL__20161217__PLOTS_OF_10_18_49__DURING_STORMPHASES__LINEAR_RANGES
   ;;;;;;;;;;;;;;;;;;;;;;
   ;;18-INTEG_ION_FLUX_UP
   maxInd                         = 18
-  ifluxPlotType                  = ['INTEG_UP','integ','integ','integ','Energy']
-  noNegIFlux                     = [1,0,1,0,0]
-  noPosIFlux                     = [0,0,0,1,0]
+  ifluxPlotType                  = ['INTEG_UP']
+  noNegIFlux                     = [1]
+  noPosIFlux                     = [0]
   ;; iPlotRange                     = [[1e6,1e8],[-1e7,1e7]]
   ;; logIFPlot                      = [1,0]
   ;; iPlotRange                     = [[1e6,1e8],[-5e7,5e7],[-5e7,5e7]]
-  iPlotRange                     = [[1e6,1e8], $
-                                    [-1e6,1e6],[1e4,1e6],[1e4,1e6], $
-                                    [1e-4,1e-2] $ ;already all pos
-                                   ]
-  logIFPlot                      = [1, $
-                                    0,1,0, $
-                                    1]
+  iPlotRange                     = [[1e6,1e8]]
+  logIFPlot                      = [1]
 
   ;; ifluxPlotType                  = ['integ','integ']
   ;; noNegIFlux                     = [0,0]
@@ -201,10 +202,10 @@ PRO JOURNAL__20161217__PLOTS_OF_10_18_49__DURING_STORMPHASES__LINEAR_RANGES
 
   ;;;;;;;;;;;;;;;;;;;;;;
   ;;49--PFLUXEST
-  ;; logPFPlot                      = 1
-  ;; pPlotRange                     = [1e-3,1e0]
-  logPFPlot                      = 0
-  pPlotRange                     = [0,0.25]
+  logPFPlot                      = 1
+  pPlotRange                     = [1e-2,1e0]
+  ;; logPFPlot                      = 0
+  ;; pPlotRange                     = [0,0.25]
   ;; multiply_pFlux_by_width_x      = 1
   pVarPlotRange                  = [1e1,1e8]
   var__plotRange                 = [[var__plotRange],[pVarPlotRange]]
@@ -358,6 +359,7 @@ PRO JOURNAL__20161217__PLOTS_OF_10_18_49__DURING_STORMPHASES__LINEAR_RANGES
         LOGNEVENTSPLOT=logNEventsPlot, $
         LOGORBCONTRIBPLOT=logOrbContribPlot, $
         LOGOXYFPLOT=logOxyfPlot, $
+        LOGPFPLOT=logPFPlot, $
         LOGPROBOCCURRENCE=logProbOccurrence, $
         LOGTIMEAVGD_EFLUXMAX=logTimeAvgd_EFluxMax, $
         LOGTIMEAVGD_PFLUX=logTimeAvgd_PFlux, $
@@ -569,10 +571,14 @@ PRO JOURNAL__20161217__PLOTS_OF_10_18_49__DURING_STORMPHASES__LINEAR_RANGES
         NEVENTSPLOTNORMALIZE=nEventsPlotNormalize, $
         PLOTPREFIX=plotPrefix, $
         SUFFIX_TXTDIR=suffix_txtDir, $
-        SUPPRESS_THICKGRID=fancyPresentationMode, $
-        SUPPRESS_GRIDLABELS=fancyPresentationMode, $
-        SUPPRESS_MLT_LABELS=fancyPresentationMode, $
-        SUPPRESS_ILAT_LABELS=fancyPresentationMode, $
+        ;; SUPPRESS_THICKGRID=fancyPresentationMode, $
+        SUPPRESS_THICKGRID=suppress_thickGrid, $
+        SUPPRESS_THINGRID=suppress_thinGrid, $
+        SUPPRESS_GRIDLABELS=suppress_gridLabels, $
+        ;; SUPPRESS_MLT_LABELS=fancyPresentationMode, $
+        ;; SUPPRESS_ILAT_LABELS=fancyPresentationMode, $
+        SUPPRESS_MLT_LABELS=suppress_MLT_labels, $
+        SUPPRESS_ILAT_LABELS=suppress_ILAT_labels, $
         SUPPRESS_MLT_NAME=suppress_MLT_name, $
         SUPPRESS_ILAT_NAME=suppress_ILAT_name, $
         SUPPRESS_TITLES=fancyPresentationMode, $
@@ -598,4 +604,5 @@ PRO JOURNAL__20161217__PLOTS_OF_10_18_49__DURING_STORMPHASES__LINEAR_RANGES
   ENDFOR
 
 END
+
 
