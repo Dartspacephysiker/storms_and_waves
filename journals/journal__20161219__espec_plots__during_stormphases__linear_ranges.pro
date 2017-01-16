@@ -10,6 +10,7 @@ PRO JOURNAL__20161219__ESPEC_PLOTS__DURING_STORMPHASES__LINEAR_RANGES
   disregard_sample_t              = 1
 
   orbRange                        = [1000,14972] ;Here's why: JOURNAL__20170102__WHICH_ORBITS_AT_REALLY_LOW_LATITUDES
+  ;; orbRange                        = [1000,12670]
 
   ;; altRange                     = [ $
   ;;                                [ 500,4300], $
@@ -19,12 +20,12 @@ PRO JOURNAL__20161219__ESPEC_PLOTS__DURING_STORMPHASES__LINEAR_RANGES
   ;;                                [ 500,3000]  $
   ;;                                ]
   altRange                        = [ $
-                                    [ 300,4300] $
+                                    [ 300,2000] $
                                     ]
 
   justData                        = 0
 
-  EA_binning                      = 1
+  EA_binning                      = 0
 
   minMC                           = 1
   maxNegMC                        = -1
@@ -133,15 +134,18 @@ PRO JOURNAL__20161219__ESPEC_PLOTS__DURING_STORMPHASES__LINEAR_RANGES
   ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
   ;;Hemi stuff
   ;; hemi                           = 'NORTH'
+  hemi                           = 'BOTH'
+  minI                           = 60
   ;; minI                           = 48
-  ;; maxI                           = 90
+  maxI                           = 90
 
-  hemi                           = 'SOUTH'
-  minI                           = -90
-  maxI                           = -48
-  orbRange                       = [(1000 > orbRange[0]),orbRange[1]]
+  ;; hemi                           = 'SOUTH'
+  ;; minI                           = -90
+  ;; ;; maxI                           = -48
+  ;; maxI                           = -60
+  ;; orbRange                       = [(1000 > orbRange[0]),orbRange[1]]
 
-  binI                           = 3.0
+  binI                           = 2.5
   binM                           = 1.5
 
   ;; maskMin                        = 5
