@@ -1,11 +1,11 @@
 ;;2017/01/02 asdlfkjsafd;lkjalweoiruojdabcxbvxmbvclzjdahiw8392423
-PRO JOURNAL__20170102__PLOTS_OF_10_18_49__DURING_STORMPHASES__LINEAR_RANGES
+PRO JOURNAL__20170117__PLOTS_OF_10_18_49__DURING_STORMPHASES__FINAL_URSI_PAPE
 
   dstCutoff                    = -20
-  use_mostRecent_Dst_files     = 0
+  use_mostRecent_Dst_files     = 1
 
-  use_prev_plot_i              = 0
-  remake_prev_plot_file        = 1
+  use_prev_plot_i              = 1
+  remake_prev_plot_file        = 0
   despunDB                     = 0
 
   include_32Hz                 = 0
@@ -26,9 +26,8 @@ PRO JOURNAL__20170102__PLOTS_OF_10_18_49__DURING_STORMPHASES__LINEAR_RANGES
   charE__Newell_the_cusp       = 0
 
   justData                     = 0
-  justInds                     = 0
-  ;; justInds_saveToFile          = 'grossRates--cur_-1_1--NORTH'
-  ;; justInds_saveToFile          = 'grossRates--cur_-1_1--SOUTH'
+  justInds                     = 1
+  justInds_saveToFilePref      = 'grossRates--cur_-1_1--'
 
   EA_binning                   = 0
 
@@ -44,7 +43,7 @@ PRO JOURNAL__20170102__PLOTS_OF_10_18_49__DURING_STORMPHASES__LINEAR_RANGES
 
   ;;;;;;;;;;;;;;;;;
   ;;turn plots on and off
-  ionPlots                       = 0
+  ionPlots                       = 1
   probOccurrencePlot             = 0
   eNumFlPlots                    = 1
   ePlots                         = 1
@@ -147,7 +146,7 @@ PRO JOURNAL__20170102__PLOTS_OF_10_18_49__DURING_STORMPHASES__LINEAR_RANGES
   ;; eNumFlPlotRange                = [[1e-3,1e0], $
   ;;                                   [1e7,1e9]]
   logENumFlPlot                  = [1,1]
-  eNumFlPlotRange                = [[1e-1,1e1], $
+  eNumFlPlotRange                = [[1e-2,1e0], $
                                     [1e7,1e9] $
                                     ]
 
@@ -243,6 +242,10 @@ PRO JOURNAL__20170102__PLOTS_OF_10_18_49__DURING_STORMPHASES__LINEAR_RANGES
 
   FOR h=0,N_ELEMENTS(hemiArr)-1 DO BEGIN
      hemi              = hemiArr[h]
+
+     IF N_ELEMENTS(justInds_saveToFilePref) GT 0 THEN BEGIN
+        justInds_saveToFile = justInds_saveToFilePref + hemi
+     ENDIF
 
      FOR k=0,N_ELEMENTS(altRange[0,*])-1 DO BEGIN
 
