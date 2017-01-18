@@ -25,11 +25,11 @@ PRO JOURNAL__20170117__PLOTS_OF_10_18_49__DURING_STORMPHASES__FINAL_URSI_PAPE
 
   charE__Newell_the_cusp       = 0
 
-  justData                     = 0
-  justInds                     = 1
+  justData                     = 1
+  justInds                     = 0
   justInds_saveToFilePref      = 'grossRates--cur_-1_1--'
 
-  EA_binning                   = 0
+  EA_binning                   = 1
 
   use_AACGM                    = 1
 
@@ -89,7 +89,7 @@ PRO JOURNAL__20170117__PLOTS_OF_10_18_49__DURING_STORMPHASES__FINAL_URSI_PAPE
   cb_force_oobHigh = 1
   cb_force_oobLow  = 1
 
-  write_obsArr_textFile          = 0
+  write_obsArr_textFile          = 1
   write_obsArr__inc_IMF          = 1
   write_obsArr__orb_avg_obs      = 1
   writeProcessedH2D              = 0
