@@ -4,14 +4,14 @@ PRO JOURNAL__20170117__PLOTS_OF_10_18_49__DURING_STORMPHASES__FINAL_URSI_PAPE
   dstCutoff                    = -20
   use_mostRecent_Dst_files     = 1
 
-  use_prev_plot_i              = 1
-  remake_prev_plot_file        = 0
+  use_prev_plot_i              = 0
+  remake_prev_plot_file        = 1
   despunDB                     = 0
 
-  include_32Hz                 = 0
+  include_32Hz                 = 1
 
   ;; orbRange                     = [1000,10600]
-  orbRange                     = [1000,12670]
+  orbRange                     = [500,12670]
   ;; altRange                     = [ $
   ;;                                [ 500,4300], $
   ;;                                [1000,4300], $
@@ -20,7 +20,7 @@ PRO JOURNAL__20170117__PLOTS_OF_10_18_49__DURING_STORMPHASES__FINAL_URSI_PAPE
   ;;                                [ 500,3000]  $
   ;;                                ]
   altRange                     = [ $
-                                 [ 750,4300] $
+                                 [ 300,4300] $
                                  ]
 
   charE__Newell_the_cusp       = 0
