@@ -25,7 +25,7 @@ PRO JOURNAL__20170117__PLOTS_OF_10_18_49__DURING_STORMPHASES__FINAL_URSI_PAPE
 
   charE__Newell_the_cusp       = 0
 
-  justData                     = 1
+  justData                     = 0
   justInds                     = 0
   justInds_saveToFilePref      = 'grossRates--cur_-1_1--'
 
