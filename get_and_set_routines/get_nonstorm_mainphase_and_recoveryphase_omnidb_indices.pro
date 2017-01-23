@@ -90,7 +90,7 @@ PRO GET_NONSTORM_MAINPHASE_AND_RECOVERYPHASE_OMNIDB_INDICES, $
   dst_i_list = LIST(ns_dst_i,mp_dst_i,rp_dst_i)
   strings    = ["nonstorm","mainphase","recoveryphase"]
 
-  IF FILE_TEST(todaysFile) THEN BEGIN
+  IF FILE_TEST(todaysFile) AND KEYWORD_SET(alfDB_plot_struct.storm_opt.use_mostRecent_Dst_files) THEN BEGIN
      PRINTF,lun,"Already have nonstorm and storm " + $
             dbString + " inds! Restoring today's file..."
      RESTORE,todaysFile
