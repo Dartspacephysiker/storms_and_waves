@@ -144,8 +144,8 @@ PRO READ_SEASONS__SORT,julDay, $
            shift--
            transSeason_ii = WHERE(julDay[Season_i_00] LT (SHIFT(julDay,shift))[Season_i_01])
         ENDWHILE
-        Season_i_00    = Season_i_00[transSeason_ii]-shift
-        Season_i_01    = Season_i_01[transSeason_ii]
+        Season_i_00    = Season_i_00[transSeason_ii]
+        Season_i_01    = Season_i_01[transSeason_ii]-shift
      END
      ELSE: BEGIN
         transSeason_ii = WHERE(julDay[Season_i_00] LT (SHIFT(julDay,shift))[Season_i_01])
