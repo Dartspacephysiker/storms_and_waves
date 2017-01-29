@@ -5,7 +5,7 @@ PRO JOURNAL__20161219__ESPEC_PLOTS__DURING_STORMPHASES__LINEAR_RANGES
   use_mostRecent_Dst_files        = 1
 
   use_prev_plot_i                 = 1
-  remake_prev_plot_file           = 1
+  remake_prev_plot_file           = 0
 
   disregard_sample_t              = 1
 
@@ -25,7 +25,7 @@ PRO JOURNAL__20161219__ESPEC_PLOTS__DURING_STORMPHASES__LINEAR_RANGES
 
   justData                        = 0
 
-  EA_binning                      = 0
+  EA_binning                      = 1
 
   minMC                           = 1
   maxNegMC                        = -1
@@ -133,20 +133,20 @@ PRO JOURNAL__20161219__ESPEC_PLOTS__DURING_STORMPHASES__LINEAR_RANGES
 
   ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
   ;;Hemi stuff
-  ;; hemi                           = 'NORTH'
+  hemi                           = 'NORTH'
   ;; hemi                           = 'BOTH'
-  minI                           = 60
-  ;; minI                           = 48
+  ;; minI                           = 50
+  minI                           = 48
   maxI                           = 90
 
-  hemi                           = 'SOUTH'
+  ;; hemi                           = 'SOUTH'
   ;; minI                           = -90
   ;; ;; maxI                           = -48
   ;; maxI                           = -60
   ;; orbRange                       = [(1000 > orbRange[0]),orbRange[1]]
 
-  binI                           = 2.0
-  binM                           = 1.0
+  binI                           = 0.5
+  binM                           = 0.25
 
   ;; maskMin                        = 5
   ;; tHist_mask_bins_below_thresh   = 2
