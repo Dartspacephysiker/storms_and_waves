@@ -5,8 +5,8 @@ PRO JOURNAL__20170201__ESPEC_PLOTS__DURING_STORMPHASES__ALTERNATE_COORDS
   use_mostRecent_Dst_files        = 1
 
   use_prev_plot_i                 = 1
-  remake_prev_plot_file           = 0
-  use_prev_tHistos                = 1
+  remake_prev_plot_file           = 1
+  use_prev_tHistos                = 0
   
   disregard_sample_t              = 1
 
@@ -26,8 +26,8 @@ PRO JOURNAL__20170201__ESPEC_PLOTS__DURING_STORMPHASES__ALTERNATE_COORDS
 
   use_Lng                         = 1
   use_GEI                         = 0
-  use_GEO                         = 1
-  use_MAG                         = 0
+  use_GEO                         = 0
+  use_MAG                         = 1
   use_SDT                         = 0
 
   justData                        = 0
