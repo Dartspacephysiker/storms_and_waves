@@ -23,6 +23,7 @@ PRO JOURNAL__20170201__ESPEC_PLOTS__DURING_STORMPHASES__ALTERNATE_COORDS
                                     [ 300,4300] $
                                     ]
 
+  use_Lng                         = 1
   use_GEI                         = 0
   use_GEO                         = 1
   use_MAG                         = 0
@@ -82,9 +83,9 @@ PRO JOURNAL__20170201__ESPEC_PLOTS__DURING_STORMPHASES__ALTERNATE_COORDS
   ;;The plots
   no_maximus                     = 1
   eSpec_flux_plots               = 1
-  Newell_analyze_eFlux           = 1
+  Newell_analyze_eFlux           = 0
   eSpec__all_fluxes              = 1
-  Newell__comb_accelerated       = 1
+  Newell__comb_accelerated       = 0
 
   eSpec__Newell_2009_interp      = 1
   eSpec__use_2000km_file         = 0
@@ -148,6 +149,14 @@ PRO JOURNAL__20170201__ESPEC_PLOTS__DURING_STORMPHASES__ALTERNATE_COORDS
 
   binI                           = 0.5
   binM                           = 0.25
+
+  hemi                           = 'GLOBE'
+  minI                           = -90
+  maxI                           = 90
+  binI                           = 2.0
+  binM                           = 0.5
+  map_projection                 = 'ROBINSON'
+
 
   ;; maskMin                        = 5
   ;; tHist_mask_bins_below_thresh   = 2
@@ -241,6 +250,7 @@ PRO JOURNAL__20170201__ESPEC_PLOTS__DURING_STORMPHASES__ALTERNATE_COORDS
         THIST_MASK_BINS_BELOW_THRESH=tHist_mask_bins_below_thresh, $
         DESPUNDB=despunDB, $
         COORDINATE_SYSTEM=coordinate_system, $
+        USE_LNG=use_Lng, $
         USE_AACGM_COORDS=use_AACGM, $
         USE_GEI_COORDS=use_GEI, $
         USE_GEO_COORDS=use_GEO, $
@@ -253,6 +263,8 @@ PRO JOURNAL__20170201__ESPEC_PLOTS__DURING_STORMPHASES__ALTERNATE_COORDS
         NORTH=north, $
         SOUTH=south, $
         BOTH_HEMIS=both_hemis, $
+        GLOBE=globe, $
+        MAP_PROJECTION=map_projection, $
         DAYSIDE=dayside, $
         NIGHTSIDE=nightside, $
         NPLOTS=nPlots, $
@@ -319,7 +331,7 @@ PRO JOURNAL__20170201__ESPEC_PLOTS__DURING_STORMPHASES__ALTERNATE_COORDS
         NEWELL_ANALYZE_EFLUX=newell_analyze_eFlux, $
         NEWELL_ANALYZE_MULTIPLY_BY_TYPE_PROBABILITY=newell_analyze_multiply_by_type_probability, $
         NEWELL_ANALYSIS__OUTPUT_SUMMARY=newell_analysis__output_summary, $
-        NEWELL__COMBINE_ACCELERATED=Newell__comb_accelerated, $
+        NEWELL__COMB_ACCELERATED=Newell__comb_accelerated, $
         IPLOTRANGE=IPlotRange, $
         MAGCPLOTRANGE=magCPlotRange, $
         NEVENTPERMINRANGE=nEventPerMinRange, $
@@ -512,8 +524,6 @@ PRO JOURNAL__20170201__ESPEC_PLOTS__DURING_STORMPHASES__ALTERNATE_COORDS
         NO_BURSTDATA=no_burstData, $
         DATADIR=dataDir, $
         COORDINATE_SYSTEM=coordinate_system, $
-        USE_AACGM_COORDS=use_AACGM, $
-        USE_MAG_COORDS=use_MAG, $
         NEVENTSPLOTRANGE=nEventsPlotRange, $
         NEVENTSPLOTAUTOSCALE=nEventsPlotAutoscale, $
         NEVENTSPLOTNORMALIZE=nEventsPlotNormalize, $
