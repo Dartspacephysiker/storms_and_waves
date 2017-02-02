@@ -24,13 +24,13 @@ PRO JOURNAL__20170201__ESPEC_PLOTS__DURING_STORMPHASES__ALTERNATE_COORDS
                                     ]
 
   use_GEI                         = 0
-  use_GEO                         = 0
-  use_MAG                         = 1
+  use_GEO                         = 1
+  use_MAG                         = 0
   use_SDT                         = 0
 
   justData                        = 0
 
-  EA_binning                      = 1
+  EA_binning                      = 0
 
   minMC                           = 1
   maxNegMC                        = -1
@@ -133,13 +133,14 @@ PRO JOURNAL__20170201__ESPEC_PLOTS__DURING_STORMPHASES__ALTERNATE_COORDS
 
   ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
   ;;Hemi stuff
-  hemi                           = 'NORTH'
+  ;; hemi                           = 'NORTH'
   ;; hemi                           = 'BOTH'
   ;; minI                           = 50
+  minI                           = KEYWORD_SET(use_MAG) OR KEYWORD_SET(use_GEO) OR KEYWORD_SET(use_GEI) ? 30 : 48
   minI                           = 48
   maxI                           = 90
 
-  ;; hemi                           = 'SOUTH'
+  hemi                           = 'SOUTH'
   ;; minI                           = -90
   ;; ;; maxI                           = -48
   ;; maxI                           = -60
