@@ -6,7 +6,8 @@ PRO JOURNAL__20170201__ESPEC_PLOTS__DURING_STORMPHASES__ALTERNATE_COORDS
 
   use_prev_plot_i                 = 1
   remake_prev_plot_file           = 0
-
+  use_prev_tHistos                = 1
+  
   disregard_sample_t              = 1
 
   orbRange                        = [500,16361] ;Here's why: JOURNAL__20170102__WHICH_ORBITS_AT_REALLY_LOW_LATITUDES
@@ -78,12 +79,11 @@ PRO JOURNAL__20170201__ESPEC_PLOTS__DURING_STORMPHASES__ALTERNATE_COORDS
 
   cb_force_oobHigh               = 1
 
-
   ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
   ;;The plots
   no_maximus                     = 1
   eSpec_flux_plots               = 1
-  Newell_analyze_eFlux           = 0
+  Newell_analyze_eFlux           = 1
   eSpec__all_fluxes              = 1
   Newell__comb_accelerated       = 0
 
@@ -554,6 +554,7 @@ PRO JOURNAL__20170201__ESPEC_PLOTS__DURING_STORMPHASES__ALTERNATE_COORDS
         ;; PLOTH2D__KERNEL_DENSITY_UNMASK=plotH2D__kernel_density_unmask, $
         FANCY_PLOTNAMES=fancy_plotNames, $
         USE_PREVIOUS_PLOT_I_LISTS_IF_EXISTING=use_prev_plot_i, $
+        USE_PREVIOUS_THISTOS_IF_EXISTING=use_prev_tHistos, $
         REMAKE_PREVIOUS_PLOT_I_LISTS_IF_EXISTING=remake_prev_plot_file
   ENDFOR
 
