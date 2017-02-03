@@ -26,8 +26,8 @@ PRO JOURNAL__20170201__ESPEC_PLOTS__DURING_STORMPHASES__ALTERNATE_COORDS
 
   use_Lng                         = 1
   use_GEI                         = 0
-  use_GEO                         = 0
-  use_MAG                         = 1
+  use_GEO                         = 1
+  use_MAG                         = 0
   use_SDT                         = 0
 
   justData                        = 0
