@@ -4,7 +4,7 @@ PRO JOURNAL__20170207__ESPEC_PLOTS__DURING_STORMPHASES__LINEAR_RANGES__TO_ORB_24
   dstCutoff                       = -20
   use_mostRecent_Dst_files        = 1
 
-  use_prev_plot_i                 = 1
+  use_prev_plot_i                 = 0
   remake_prev_plot_file           = 1
 
   disregard_sample_t              = 1
@@ -133,15 +133,15 @@ PRO JOURNAL__20170207__ESPEC_PLOTS__DURING_STORMPHASES__LINEAR_RANGES__TO_ORB_24
 
   ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
   ;;Hemi stuff
-  hemi                           = 'NORTH'
+  ;; hemi                           = 'NORTH'
   ;; hemi                           = 'BOTH'
   ;; minI                           = 50
   minI                           = 48
   maxI                           = 90
 
-  ;; hemi                           = 'SOUTH'
-  ;; minI                           = -90
-  ;; maxI                           = -48
+  hemi                           = 'SOUTH'
+  minI                           = -90
+  maxI                           = -48
   ;; maxI                           = -60
   ;; orbRange                       = [(1000 > orbRange[0]),orbRange[1]]
 
