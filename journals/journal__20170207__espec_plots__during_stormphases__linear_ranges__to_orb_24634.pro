@@ -53,6 +53,7 @@ PRO JOURNAL__20170207__ESPEC_PLOTS__DURING_STORMPHASES__LINEAR_RANGES__TO_ORB_24
   do_despun                       = 0
   use_AACGM                       = 0
   use_MAG                         = 0
+  use_GEO                         = 1
 
   autoscale_fluxPlots             = 0
   fluxPlots__remove_outliers      = 0
