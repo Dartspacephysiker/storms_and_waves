@@ -260,10 +260,10 @@ PRO GET_NONSTORM_MAINPHASE_AND_RECOVERYPHASE_FASTDB_INDICES, $
 
   CASE 1 OF
      KEYWORD_SET(get_eSpecdb_i_not_alfDB_i): BEGIN
-        NEWELL__eSpec = TEMPORARY(*pDBStruct)
+        NEWELL__eSpec        = TEMPORARY(*pDBStruct)
      END
      KEYWORD_SET(get_iondb_i_not_alfDB_i): BEGIN
-        NEWELL_I_ion = TEMPORARY(*pDBStruct)
+        NEWELL_I__ion        = TEMPORARY(*pDBStruct)
      END
      KEYWORD_SET(get_time_i_not_alfDB_I): BEGIN
         IF KEYWORD_SET(for_eSpec_DBs) THEN BEGIN
@@ -275,8 +275,8 @@ PRO GET_NONSTORM_MAINPHASE_AND_RECOVERYPHASE_FASTDB_INDICES, $
         ENDELSE        
      END
      ELSE: BEGIN
-        MAXIMUS__maximus    = TEMPORARY(*pDBStruct)
-        MAXIMUS__times      = TEMPORARY(*pDBTimes) 
+        MAXIMUS__maximus     = TEMPORARY(*pDBStruct)
+        MAXIMUS__times       = TEMPORARY(*pDBTimes) 
      END
   ENDCASE
 
