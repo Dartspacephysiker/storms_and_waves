@@ -60,7 +60,7 @@ PRO GET_NONSTORM_MAINPHASE_AND_RECOVERYPHASE_FASTDB_INDICES, $
            QUIET=quiet
 
         dbString    = 'eSpec DB'
-        pdbStruct   = PTR_NEW(NEWELL__eSpec)
+        pDBStruct   = PTR_NEW(TEMPORARY(NEWELL__eSpec))
 
         todaysFile  = TODAYS_NONSTORM_MAINPHASE_AND_RECOVERYPHASE_INDICES( $
                       /FOR_ESPECDB, $
@@ -94,7 +94,7 @@ PRO GET_NONSTORM_MAINPHASE_AND_RECOVERYPHASE_FASTDB_INDICES, $
            QUIET=quiet
 
         dbString    = 'ion DB'
-        pdbStruct   = PTR_NEW(NEWELL_I__ion)
+        pDBStruct   = PTR_NEW(TEMPORARY(NEWELL_I__ion))
 
         todaysFile  = TODAYS_NONSTORM_MAINPHASE_AND_RECOVERYPHASE_INDICES( $
                       /FOR_IONDB, $
@@ -126,10 +126,10 @@ PRO GET_NONSTORM_MAINPHASE_AND_RECOVERYPHASE_FASTDB_INDICES, $
               LUN=lun
         ENDIF
 
-        pdbStruct   = PTR_NEW(KEYWORD_SET(for_eSpec_DBs) ? FL_eSpec__fastLoc : FL__fastLoc)
-        pdbTimes    = PTR_NEW(KEYWORD_SET(for_eSpec_DBs) ? FASTLOC_E__times  : FASTLOC__times)
+        pDBStruct   = PTR_NEW(KEYWORD_SET(for_eSpec_DBs) ? FL_eSpec__fastLoc : FL__fastLoc)
+        pDBTimes    = PTR_NEW(KEYWORD_SET(for_eSpec_DBs) ? FASTLOC_E__times  : FASTLOC__times)
 
-        good_i      = FASTLOC_CLEANER(*pdbStruct, $
+        good_i      = FASTLOC_CLEANER(*pDBStruct, $
                                       FOR_ESPEC_DBS=for_eSpec_DBs, $
                                       SAMPLE_T_RESTRICTION=alfDB_plot_struct.sample_t_restriction, $
                                       INCLUDE_32Hz=alfDB_plot_struct.include_32Hz, $
@@ -158,12 +158,12 @@ PRO GET_NONSTORM_MAINPHASE_AND_RECOVERYPHASE_FASTDB_INDICES, $
               LUN=lun
         ENDIF
 
-        pdbStruct   = PTR_NEW(MAXIMUS__maximus)
-        pdbTimes    = PTR_NEW(MAXIMUS__times)
+        pDBStruct   = PTR_NEW(TEMPORARY(MAXIMUS__maximus))
+        pDBTimes    = PTR_NEW(TEMPORARY(MAXIMUS__times))
         dbString    = 'Alfven DB'
 
         good_i      = ALFVEN_DB_CLEANER( $
-                      *pdbstruct, $
+                      *pDBStruct, $
                       SAMPLE_T_RESTRICTION=alfDB_plot_struct.sample_t_restriction, $
                       INCLUDE_32Hz=alfDB_plot_struct.include_32Hz, $
                       DISREGARD_SAMPLE_T=alfDB_plot_struct.disregard_sample_t)
@@ -219,9 +219,9 @@ PRO GET_NONSTORM_MAINPHASE_AND_RECOVERYPHASE_FASTDB_INDICES, $
            T1_ARR=dst.time[inds[start_dst_ii]], $
            T2_ARR=dst.time[inds[stop_dst_ii]], $
            FOR_ESPEC_DB=(dbString EQ 'eSpec DB') OR (dbString EQ 'ion DB'), $
-           DBSTRUCT=*pdbStruct, $
-           DBTIMES=N_ELEMENTS(pdbTimes) GT 0 ? *pdbTimes : !NULL, $
-           ;; DBTIMES=*pdbTimes, $
+           DBSTRUCT=*pDBStruct, $
+           DBTIMES=N_ELEMENTS(pDBTimes) GT 0 ? *pDBTimes : !NULL, $
+           ;; DBTIMES=*pDBTimes, $
            RESTRICT_W_THESEINDS=good_i, $
            OUT_INDS_LIST=inds_list, $
            UNIQ_ORBS_LIST=uniq_orbs_list,UNIQ_ORB_INDS_LIST=uniq_orb_inds_list, $
@@ -257,5 +257,31 @@ PRO GET_NONSTORM_MAINPHASE_AND_RECOVERYPHASE_FASTDB_INDICES, $
           FILENAME=todaysFile
 
   ENDELSE
+
+  CASE 1 OF
+     KEYWORD_SET(get_eSpecdb_i_not_alfDB_i): BEGIN
+        NEWELL__eSpec = TEMPORARY(*pDBStruct)
+     END
+     KEYWORD_SET(get_iondb_i_not_alfDB_i): BEGIN
+        NEWELL_I_ion = TEMPORARY(*pDBStruct)
+     END
+     KEYWORD_SET(get_time_i_not_alfDB_I): BEGIN
+        IF KEYWORD_SET(for_eSpec_DBs) THEN BEGIN
+           FL_eSpec__fastLoc = TEMPORARY(*pDBStruct)
+           FASTLOC_E__times  = TEMPORARY(*pDBTimes)
+        ENDIF ELSE BEGIN
+           FL__fastLoc       = TEMPORARY(*pDBStruct)
+           FASTLOC__times    = TEMPORARY(*pDBTimes)
+        ENDELSE        
+     END
+     ELSE: BEGIN
+        MAXIMUS__maximus    = TEMPORARY(*pDBStruct)
+        MAXIMUS__times      = TEMPORARY(*pDBTimes) 
+     END
+  ENDCASE
+
+  HEAP_FREE,pDBStruct,/PTR
+  IF N_ELEMENTS(pDBTimes) GT 0 THEN HEAP_FREE,pDBTimes,/PTR
+  HEAP_GC
 
 END
