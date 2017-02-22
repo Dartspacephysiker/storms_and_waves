@@ -6,6 +6,7 @@ PRO JOURNAL__20170215__ION_PLOTS__DURING_STORMPHASES__LINEAR_RANGES__TO_ORB_1436
 
   use_prev_plot_i                 = 1
   remake_prev_plot_file           = 0
+  use_prev_tHistos                = 1
 
   disregard_sample_t              = 1
 
@@ -105,15 +106,15 @@ PRO JOURNAL__20170215__ION_PLOTS__DURING_STORMPHASES__LINEAR_RANGES__TO_ORB_1436
 
   ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
   ;;Hemi stuff
-  ;; hemi                           = 'NORTH'
+  hemi                           = 'NORTH'
   ;; hemi                           = 'BOTH'
   ;; minI                           = 50
   minI                           = 55
   maxI                           = 90
 
-  hemi                           = 'SOUTH'
-  minI                           = -90
-  maxI                           = -55
+  ;; hemi                           = 'SOUTH'
+  ;; minI                           = -90
+  ;; maxI                           = -55
   ;; maxI                           = -60
   ;; orbRange                       = [(1000 > orbRange[0]),orbRange[1]]
 
@@ -432,7 +433,9 @@ PRO JOURNAL__20170215__ION_PLOTS__DURING_STORMPHASES__LINEAR_RANGES__TO_ORB_1436
         CB_FORCE_OOBLOW=cb_force_oobLow, $
         FANCY_PLOTNAMES=fancy_plotNames, $
         USE_PREVIOUS_PLOT_I_LISTS_IF_EXISTING=use_prev_plot_i, $
-        REMAKE_PREVIOUS_PLOT_I_LISTS_IF_EXISTING=remake_prev_plot_file
+        REMAKE_PREVIOUS_PLOT_I_LISTS_IF_EXISTING=remake_prev_plot_file, $
+        USE_PREVIOUS_THISTOS_IF_EXISTING=use_prev_tHistos
+
   ENDFOR
 
 END
