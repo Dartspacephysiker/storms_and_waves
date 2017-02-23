@@ -5,3 +5,12 @@
 #No temp dir
 temp/#No txtOutput dir
 txtOutput/
+
+#Not plots dir
+plots/
+
+#Not saves and such
+saves_output_etc/
+
+#Not tempness
+temp/

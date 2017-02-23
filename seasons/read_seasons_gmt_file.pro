@@ -3,7 +3,7 @@ PRO READ_SEASONS_GMT_FILE
 
   COMPILE_OPT IDL2
 
-  inDir         = '/SPENCEdata/Research/Satellites/FAST/storms_Alfvens/seasons/'
+  inDir         = '/SPENCEdata/Research/database/storm_data/seasons/'
   inFile        = 'seasons_GMT.txt'
 
   tmpltFile     = 'seasons_GMT_tmplt__idl.sav'
