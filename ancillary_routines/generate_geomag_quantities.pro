@@ -21,7 +21,7 @@ PRO GENERATE_GEOMAG_QUANTITIES,DATSTARTSTOP=datStartStop,NEPOCHS=nEpochs, $
                                YRANGE=yRange,SET_YRANGE=set_yRange,USE_DATA_MINMAX=use_data_minMax, $
                                DATATITLE=dataTitle
  
-  COMPILE_OPT idl2
+  COMPILE_OPT IDL2,STRICTARRSUBS
 
   defUse_data_minMax = 0
 

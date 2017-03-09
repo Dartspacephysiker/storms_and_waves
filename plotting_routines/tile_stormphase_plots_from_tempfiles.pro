@@ -10,7 +10,7 @@ PRO TILE_STORMPHASE_PLOTS_FROM_TEMPFILES,tempFiles, $
 
                                          
 
-  COMPILE_OPT idl2
+  COMPILE_OPT IDL2,STRICTARRSUBS
 
   IF N_ELEMENTS(combine_stormphase_plots) EQ 0 THEN combine_stormphase_plots = 1
   IF N_ELEMENTS(save_combined_window)     EQ 0 THEN save_combined_window     = 1

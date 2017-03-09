@@ -26,7 +26,7 @@ PRO GET_AE_OMNIDB_INDICES, $
    LOW_AE_T2=low_ae_t2, $
    LUN=lun
 
-  COMPILE_OPT idl2
+  COMPILE_OPT IDL2,STRICTARRSUBS
 
   @common__omni_stability.pro
 

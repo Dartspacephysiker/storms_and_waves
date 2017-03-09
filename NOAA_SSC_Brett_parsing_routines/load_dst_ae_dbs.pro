@@ -5,7 +5,7 @@ PRO LOAD_DST_AE_DBS,Dst,ae, $
                     FULL_DST_DB=full_Dst_DB, $
                     LUN=lun
 
-  COMPILE_OPT idl2
+  COMPILE_OPT IDL2,STRICTARRSUBS
 
   IF N_ELEMENTS(lun) EQ 0 THEN lun = -1         ;stdout
 

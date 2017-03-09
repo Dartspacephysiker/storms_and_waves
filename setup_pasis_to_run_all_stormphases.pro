@@ -12,7 +12,7 @@ PRO SETUP_PASIS_TO_RUN_ALL_STORMPHASES, $
    COLORBAR_FOR_ALL=colorbar_for_all, $
    TILEPLOTSUFF=tilePlotSuff
 
-  COMPILE_OPT IDL2
+  COMPILE_OPT IDL2,STRICTARRSUBS
 
   all_storm_phases    = 1
   do_not_consider_IMF = 1

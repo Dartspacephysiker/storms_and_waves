@@ -13,7 +13,7 @@ FUNCTION GET_STORMPERIOD_RATIOS__TIME_SERIES,Dst, $
    CALC_FOR_ALL_AVAILABLE_TIMES=calc_all_times, $
    VERBOSE=verbose
 
-  COMPILE_OPT idl2
+  COMPILE_OPT IDL2,STRICTARRSUBS
 
   deltaMin       = 0.00069444444444444447D ;;The length of 1 min in units of days
 

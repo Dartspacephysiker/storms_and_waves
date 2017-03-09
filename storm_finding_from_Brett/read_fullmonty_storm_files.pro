@@ -2,7 +2,7 @@
 ;Still gotta give mad props to Brett for making this so very, very easy
 PRO READ_FULLMONTY_STORM_FILES
 
-  COMPILE_OPT idl2
+  COMPILE_OPT IDL2,STRICTARRSUBS
 
   stormDir       = '/SPENCEdata/Research/database/storm_data/'
 

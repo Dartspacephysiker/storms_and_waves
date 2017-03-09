@@ -1,6 +1,6 @@
 PRO JOURNAL__20160802__STATS_FROM_SEA__49_PFLUX
 
-  COMPILE_OPT idl2
+  COMPILE_OPT IDL2,STRICTARRSUBS
 
 ;; ***RUNNING AVERAGE--STATISTICS FOR REQUESTED RANGES***
 ;; Range              N points            Running average     10^Running average

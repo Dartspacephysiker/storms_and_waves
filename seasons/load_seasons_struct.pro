@@ -3,7 +3,7 @@
 PRO LOAD_SEASONS_STRUCT,seasons,spring,summer,fall,winter, $
                         QUIET=quiet
 
-  COMPILE_OPT IDL2
+  COMPILE_OPT IDL2,STRICTARRSUBS
 
   structDir    = '/SPENCEdata/Research/database/storm_data/seasons/'
   structFile   = 'seasons_v0_0__idl.sav'

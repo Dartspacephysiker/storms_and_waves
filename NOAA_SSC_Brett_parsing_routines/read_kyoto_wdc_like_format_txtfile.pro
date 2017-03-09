@@ -3,7 +3,7 @@
 
 PRO READ_KYOTO_WDC_LIKE_FORMAT_TXTFILE
 
-  COMPILE_OPT IDL2
+  COMPILE_OPT IDL2,STRICTARRSUBS
 
   kyotoDir   = '/SPENCEdata/Research/database/storm_data/'
   kyotoFiles = ['dst_1957-1981.txt', $

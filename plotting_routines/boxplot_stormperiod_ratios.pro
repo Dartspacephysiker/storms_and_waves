@@ -47,7 +47,7 @@ FUNCTION BOXPLOT_STORMPERIOD_RATIOS, $
    SPNAME=sPName, $
    PLOTDIR=plotDir
 
-  COMPILE_OPT idl2
+  COMPILE_OPT IDL2,STRICTARRSUBS
 
   @plot_stormstats_defaults.pro
 

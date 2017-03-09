@@ -1,7 +1,7 @@
 ;;01/26/17
 PRO READ_SEASONS_GMT_FILE
 
-  COMPILE_OPT IDL2
+  COMPILE_OPT IDL2,STRICTARRSUBS
 
   inDir         = '/SPENCEdata/Research/database/storm_data/seasons/'
   inFile        = 'seasons_GMT.txt'

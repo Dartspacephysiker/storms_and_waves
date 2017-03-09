@@ -1,6 +1,6 @@
 PRO SORT_BRETTS_DB,stormStruct,jd
 
-  COMPILE_OPT idl2
+  COMPILE_OPT IDL2,STRICTARRSUBS
 
   storm_i     = SORT(stormstruct.julday)
   jd          = stormstruct.julday[storm_i]

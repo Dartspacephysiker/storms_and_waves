@@ -16,7 +16,7 @@ FUNCTION GET_DST_STATISTICS_TIMESERIES_FROM_STORMSTRUCT,stormStruct, $
    ADD_FREQ_STATS=add_freq_stats, $
    VERBOSE=verbose
 
-  COMPILE_OPT IDL2
+  COMPILE_OPT IDL2,STRICTARRSUBS
 
   deltaMin = 0.00069444444444444447D ;;The length of 1 min in units of days
 

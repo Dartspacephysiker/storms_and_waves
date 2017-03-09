@@ -1,7 +1,7 @@
 ;2016/07/30 This is for the second rev to this paper. Gotta show Referee #1 wassup.
 PRO JOURNAL__20160730__SEAS_PROBOCCURRENCE_CALC__PRESTORM_AND_MAINPHASE__PAPESUBMISSIONS_DRAFT2
 
-  COMPILE_OPT idl2
+  COMPILE_OPT IDL2,STRICTARRSUBS
 
   lun                  = -1
 

@@ -3,7 +3,7 @@
 ;;CALDAT,storms.julday[where(storms.dst LE -300)],month,day,year
 PRO JOURNAL__20160829__STORMSTATS__MASTER_URSI_PLOT
 
-  COMPILE_OPT IDL2
+  COMPILE_OPT IDL2,STRICTARRSUBS
 
   ;;SavePlot names
   saveAllPlots         = 1

@@ -41,7 +41,7 @@ FUNCTION BOXPLOT_DSTMIN_STATISTICS, $
 
   @plot_stormstats_defaults.pro
 
-  COMPILE_OPT idl2
+  COMPILE_OPT IDL2,STRICTARRSUBS
 
   ;; IF N_ELEMENTS(fill_color      ) EQ 0 THEN fill_color       = "light gray"
   ;; IF N_ELEMENTS(background_color) EQ 0 THEN background_color = "white"

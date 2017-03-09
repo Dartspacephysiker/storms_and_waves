@@ -28,7 +28,7 @@ PRO GET_DATA_FOR_ALFVENDB_EPOCH_PLOTS,MAXIMUS=maximus,CDBTIME=cdbTime, $
                                       SAVEFILE=saveFile,SAVESTR=saveStr, $
                                       LUN=lun
 
-  COMPILE_OPT idl2
+  COMPILE_OPT IDL2,STRICTARRSUBS
 
   IF N_ELEMENTS(lun) EQ 0 THEN lun = -1
   

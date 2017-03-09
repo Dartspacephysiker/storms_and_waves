@@ -38,7 +38,7 @@ FUNCTION PLOT_DSTMIN_STATISTICS__TIME_SERIES,BPD,times, $
    PLOTDIR=plotDir, $
    CLOSE_WINDOW_AFTER_SAVE=close_window_after_save
 
-  COMPILE_OPT IDL2
+  COMPILE_OPT IDL2,STRICTARRSUBS
 
   @plot_stormstats_defaults.pro
 

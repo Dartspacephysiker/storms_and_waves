@@ -12,7 +12,7 @@ FUNCTION GET_SEASON_INDS,times, $
                          USE_JULDAY=use_julDay, $
                          QUIET=quiet
 
-  COMPILE_OPT IDL2
+  COMPILE_OPT IDL2,STRICTARRSUBS
 
   nTime = N_ELEMENTS(times)
   IF nTime EQ 0 THEN BEGIN

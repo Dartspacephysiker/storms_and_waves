@@ -104,7 +104,7 @@ PRO SCATTERPLOT_ALFVENDBQUANTITIES_DURING_STORMPHASES, $
                               SAVEFILE=saveFile,SAVESTR=saveStr, $
                               PLOTTITLE=plotTitle,SAVEPNAME=savePName
 
-  COMPILE_OPT idl2
+  COMPILE_OPT IDL2,STRICTARRSUBS
 
   @utcplot_defaults.pro
 

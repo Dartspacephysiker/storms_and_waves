@@ -22,7 +22,7 @@ FUNCTION PLOT_STORMPERIOD_RATIOS__TIME_SERIES,stormRatStruct, $
    CLOSE_WINDOW_AFTER_SAVE=close_window_after_save, $
    OUT_MEDIAN_OFFSETS=median_offsets
 
-  COMPILE_OPT idl2
+  COMPILE_OPT IDL2,STRICTARRSUBS
 
   @plot_stormstats_defaults.pro
 

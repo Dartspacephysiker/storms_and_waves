@@ -2,7 +2,7 @@
 ;;The heights--as wild as this database can
 PRO JOURNAL__20160608__TEST_OUT_NEWELL_EFLUX_PLOTS_FOR_STORMPHASES__NONALFVEN
 
-  COMPILE_OPT IDL2
+  COMPILE_OPT IDL2,STRICTARRSUBS
 
   dstCutoff                      = -20
 
