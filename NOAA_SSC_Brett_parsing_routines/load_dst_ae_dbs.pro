@@ -5,6 +5,9 @@ PRO LOAD_DST_AE_DBS,Dst,ae, $
                     FULL_DST_DB=full_Dst_DB, $
                     LUN=lun
 
+  COMMON DSTCOMMON,DST__Dst,DST__dbDir,Dst__dbFile
+  COMMON AECOMMON,AE__AE,AE__dbDir,AE__dbFile
+
   COMPILE_OPT IDL2,STRICTARRSUBS
 
   IF N_ELEMENTS(lun) EQ 0 THEN lun = -1         ;stdout
@@ -49,5 +52,13 @@ PRO LOAD_DST_AE_DBS,Dst,ae, $
   ENDIF ELSE BEGIN
      PRINTF,lun,"There are already Dst and AE structs loaded! Not loading " + Dst_AE_file
   ENDELSE
+
+  DST__Dst = Dst
+  DST__dbDir = Dst_AE_dir
+  DST__dbFile = Dst_AE_file
+  
+  AE__AE   = AE
+  AE__dbDir = Dst_AE_dir
+  AE__dbFile = Dst_AE_file
 
 END
