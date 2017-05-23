@@ -9,6 +9,7 @@ PRO GET_NONSTORM_MAINPHASE_AND_RECOVERYPHASE_FASTDB_INDICES, $
    GET_TIME_I_NOT_ALFDB_I=get_time_i_not_alfDB_i, $
    GET_ESPECDB_I_NOT_ALFDB_I=get_eSpecdb_i_not_alfDB_i, $
    GET_IONDB_I_NOT_ALFDB_I=get_iondb_i_not_alfDB_i, $
+   GET_SWAY_I_NOT_ALFDB_I=get_sWay_i_not_alfDB_i, $
    NONSTORM_I=ns_i, $
    MAINPHASE_I=mp_i, $
    RECOVERYPHASE_I=rp_i, $
