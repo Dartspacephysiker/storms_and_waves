@@ -9,6 +9,7 @@ PRO GET_AE_FASTDB_INDICES, $
    GET_TIME_I_NOT_ALFDB_I=get_time_i_not_alfDB_I, $
    GET_ESPECDB_I_NOT_ALFDB_I=get_eSpecdb_i_not_alfDB_i, $
    GET_IONDB_I_NOT_ALFDB_I=get_iondb_i_not_alfDB_i, $
+   GET_SWAY_I_NOT_ALFDB_I=get_sWay_i_not_alfDB_i, $
    ;; AECUTOFF=AEcutoff, $
    ;; SMOOTH_AE=smooth_AE, $
    USE_AU=use_au, $
@@ -89,6 +90,49 @@ PRO GET_AE_FASTDB_INDICES, $
 
         dbString    = 'ion DB'
         pDBStruct   = PTR_NEW(TEMPORARY(NEWELL_I__ion))
+
+        todaysFile = TODAYS_AE_INDICES( $
+                     /FOR_IONDB, $
+                     DOWNGOING_ION=alfDB_plot_struct.ion__downgoing, $
+                     AE_STR=ae_str, $
+                     AECUTOFF=alfDB_plot_struct.ae_opt.AEcutoff, $
+                     SMOOTH_AE=alfDB_plot_struct.ae_opt.smooth_AE, $
+                     LOAD_MOST_RECENT=most_recent)
+     END
+     KEYWORD_SET(get_sWay_i_not_alfDB_i): BEGIN
+        @common__strangeway_bands.pro
+
+        LOAD_STRANGEWAY_BANDS_PFLUX_DB,leMaitre,times, $
+                                   GOOD_I=good_i, $
+                                   DBDir=DBDir, $
+                                   DBFile=DBFile, $
+                                   ;; DB_TFILE=DB_tFile, $
+                                   CORRECT_FLUXES=correct_fluxes, $
+                                   DO_NOT_MAP_PFLUX=do_not_map_pflux, $
+                                   DO_NOT_MAP_IONFLUX=do_not_map_ionflux, $
+                                   DO_NOT_MAP_ANYTHING=no_mapping, $
+                                   COORDINATE_SYSTEM=coordinate_system, $
+                                   USE_LNG=use_lng, $
+                                   USE_AACGM_COORDS=use_AACGM, $
+                                   USE_GEI_COORDS=use_GEI, $
+                                   USE_GEO_COORDS=use_GEO, $
+                                   USE_MAG_COORDS=use_MAG, $
+                                   USE_SDT_COORDS=use_SDT, $
+                                   HEMI__GOOD_I=hemi__good_i, $
+                                   USING_HEAVIES=using_heavies, $
+                                   FORCE_LOAD=force_load, $
+                                   JUST_TIME=just_time, $
+                                   LOAD_DELTA_ILAT_FOR_WIDTH_TIME=load_dILAT, $
+                                   LOAD_DELTA_ANGLE_FOR_WIDTH_TIME=load_dAngle, $
+                                   LOAD_DELTA_X_FOR_WIDTH_TIME=load_dx, $
+                                   CHECK_DB=check_DB, $
+                                   QUIET=quiet, $
+                                   CLEAR_MEMORY=clear_memory, $
+                                   NO_MEMORY_LOAD=noMem, $
+                                   LUN=lun
+
+        dbString    = 'sWay DB'
+        pDBStruct   = PTR_NEW(TEMPORARY(SWAY__DB))
 
         todaysFile = TODAYS_AE_INDICES( $
                      /FOR_IONDB, $

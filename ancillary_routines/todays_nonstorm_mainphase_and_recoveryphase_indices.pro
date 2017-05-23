@@ -7,6 +7,7 @@ FUNCTION TODAYS_NONSTORM_MAINPHASE_AND_RECOVERYPHASE_INDICES, $
    UPGOING_ESPEC=upgoing_eSpec, $
    FOR_IONDB=for_ionDB, $
    DOWNGOING_ION=downgoing_ion, $
+   FOR_SWAYDB=for_sWayDB, $
    FOR_OMNIDB=for_OMNIDB, $
    FASTLOC_FOR_ESPEC=for_eSpec_DBs, $
    SAMPLE_T_RESTRICTION=sample_t_restriction, $
@@ -56,6 +57,9 @@ FUNCTION TODAYS_NONSTORM_MAINPHASE_AND_RECOVERYPHASE_INDICES, $
      KEYWORD_SET(for_ionDB): BEGIN
         dbNavn         = (KEYWORD_SET(downgoing_ion) ? 'down_' : '') + $
                          'ionDB'
+     END
+     KEYWORD_SET(for_sWayDB): BEGIN
+        dbNavn         = 'sWayDB'
      END
   ENDCASE
 

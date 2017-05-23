@@ -73,6 +73,51 @@ PRO GET_NONSTORM_MAINPHASE_AND_RECOVERYPHASE_FASTDB_INDICES, $
                       SMOOTH_DST=alfDB_plot_struct.storm_opt.smooth_Dst, $
                       USE_MOSTRECENT_DST_FILES=alfDB_plot_struct.storm_opt.use_mostRecent_Dst_files)
      END
+     KEYWORD_SET(get_sWay_i_not_alfDB_i): BEGIN
+        @common__strangeway_bands.pro
+
+        other_guys = alfDB_plot_struct.load_dILAT OR alfDB_plot_struct.load_dAngle OR alfDB_plot_struct.load_dx
+
+        LOAD_STRANGEWAY_BANDS_PFLUX_DB,leMaitre,times, $
+                                   GOOD_I=good_i, $
+                                   DBDir=DBDir, $
+                                   DBFile=DBFile, $
+                                   ;; DB_TFILE=DB_tFile, $
+                                   CORRECT_FLUXES=correct_fluxes, $
+                                   DO_NOT_MAP_PFLUX=do_not_map_pflux, $
+                                   DO_NOT_MAP_IONFLUX=do_not_map_ionflux, $
+                                   DO_NOT_MAP_ANYTHING=no_mapping, $
+                                   COORDINATE_SYSTEM=coordinate_system, $
+                                   USE_LNG=use_lng, $
+                                   USE_AACGM_COORDS=use_AACGM, $
+                                   USE_GEI_COORDS=use_GEI, $
+                                   USE_GEO_COORDS=use_GEO, $
+                                   USE_MAG_COORDS=use_MAG, $
+                                   USE_SDT_COORDS=use_SDT, $
+                                   HEMI__GOOD_I=hemi__good_i, $
+                                   USING_HEAVIES=using_heavies, $
+                                   FORCE_LOAD=force_load, $
+                                   JUST_TIME=just_time, $
+                                   LOAD_DELTA_ILAT_FOR_WIDTH_TIME=load_dILAT, $
+                                   LOAD_DELTA_ANGLE_FOR_WIDTH_TIME=load_dAngle, $
+                                   LOAD_DELTA_X_FOR_WIDTH_TIME=load_dx, $
+                                   CHECK_DB=check_DB, $
+                                   QUIET=quiet, $
+                                   CLEAR_MEMORY=clear_memory, $
+                                   NO_MEMORY_LOAD=noMem, $
+                                   LUN=lun
+
+
+        dbString    = 'sWay DB'
+        pDBStruct   = PTR_NEW(TEMPORARY(SWAY__DB))
+
+        todaysFile  = TODAYS_NONSTORM_MAINPHASE_AND_RECOVERYPHASE_INDICES( $
+                      /FOR_SWAYDB, $
+                      SAMPLE_T_RESTRICTION=alfDB_plot_struct.sample_t_restriction, $
+                      DSTCUTOFF=alfDB_plot_struct.storm_opt.dstCutoff, $
+                      SMOOTH_DST=alfDB_plot_struct.storm_opt.smooth_Dst, $
+                      USE_MOSTRECENT_DST_FILES=alfDB_plot_struct.storm_opt.use_mostRecent_Dst_files)
+     END
      KEYWORD_SET(get_iondb_i_not_alfDB_i): BEGIN
         @common__newell_ion_db.pro
 
@@ -220,6 +265,7 @@ PRO GET_NONSTORM_MAINPHASE_AND_RECOVERYPHASE_FASTDB_INDICES, $
            T1_ARR=dst.time[inds[start_dst_ii]], $
            T2_ARR=dst.time[inds[stop_dst_ii]], $
            FOR_ESPEC_DB=(dbString EQ 'eSpec DB') OR (dbString EQ 'ion DB'), $
+           FOR_SWAY_DB=(dbString EQ 'sWay DB'), $
            DBSTRUCT=*pDBStruct, $
            DBTIMES=N_ELEMENTS(pDBTimes) GT 0 ? *pDBTimes : !NULL, $
            ;; DBTIMES=*pDBTimes, $
@@ -265,6 +311,9 @@ PRO GET_NONSTORM_MAINPHASE_AND_RECOVERYPHASE_FASTDB_INDICES, $
      END
      KEYWORD_SET(get_iondb_i_not_alfDB_i): BEGIN
         NEWELL_I__ion        = TEMPORARY(*pDBStruct)
+     END
+     KEYWORD_SET(get_sWay_i_not_alfDB_i): BEGIN
+        SWAY__DB             = TEMPORARY(*pDBStruct)
      END
      KEYWORD_SET(get_time_i_not_alfDB_I): BEGIN
         IF KEYWORD_SET(for_eSpec_DBs) THEN BEGIN
