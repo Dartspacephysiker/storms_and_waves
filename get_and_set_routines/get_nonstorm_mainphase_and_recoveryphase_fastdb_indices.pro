@@ -79,7 +79,6 @@ PRO GET_NONSTORM_MAINPHASE_AND_RECOVERYPHASE_FASTDB_INDICES, $
         other_guys = alfDB_plot_struct.load_dILAT OR alfDB_plot_struct.load_dAngle OR alfDB_plot_struct.load_dx
 
         LOAD_STRANGEWAY_BANDS_PFLUX_DB,leMaitre,times, $
-                                   GOOD_I=good_i, $
                                    DBDir=DBDir, $
                                    DBFile=DBFile, $
                                    ;; DB_TFILE=DB_tFile, $
@@ -94,7 +93,6 @@ PRO GET_NONSTORM_MAINPHASE_AND_RECOVERYPHASE_FASTDB_INDICES, $
                                    USE_GEO_COORDS=use_GEO, $
                                    USE_MAG_COORDS=use_MAG, $
                                    USE_SDT_COORDS=use_SDT, $
-                                   HEMI__GOOD_I=hemi__good_i, $
                                    USING_HEAVIES=using_heavies, $
                                    FORCE_LOAD=force_load, $
                                    JUST_TIME=just_time, $
