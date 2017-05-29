@@ -81,6 +81,7 @@ PRO GET_NONSTORM_MAINPHASE_AND_RECOVERYPHASE_FASTDB_INDICES, $
         LOAD_STRANGEWAY_BANDS_PFLUX_DB,leMaitre,times, $
                                    DBDir=DBDir, $
                                    DBFile=DBFile, $
+                                   USE_8HZ_DB=alfDB_plot_struct.sWay_use_8Hz_DB, $
                                    ;; DB_TFILE=DB_tFile, $
                                    CORRECT_FLUXES=correct_fluxes, $
                                    DO_NOT_MAP_PFLUX=do_not_map_pflux, $
