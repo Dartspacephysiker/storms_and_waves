@@ -1,7 +1,5 @@
-;;2016/08/29
-;;You want statistics of big storms, don't you? Bare tenk på det: 
-;;CALDAT,storms.julday[where(storms.dst LE -300)],month,day,year
-PRO JOURNAL__20160829__STORMSTATS__MASTER_URSI_PLOT
+;;2017/06/28
+PRO JOURNAL__20170628__STORMSTATS__MASTER_URSI_PLOT__BEDRE
 
   COMPILE_OPT IDL2,STRICTARRSUBS
 
@@ -51,8 +49,9 @@ PRO JOURNAL__20160829__STORMSTATS__MASTER_URSI_PLOT
   sRatTxtOffset        = 2
   sRatLineStyle        = ['-','--']
 
-  ;; sRatBPLocs        = [-0.5,0.5,0.0] ;mp, rp, quiescence
-  sRatBPLocs           = REPLICATE(4.0,3) ;mp, rp, quiescence
+  sRatBPLocs        = [4.0,6.0,8.0] ;mp, rp, quiescence
+  ;; sRatBPLocs           = REPLICATE(4.0,3) ;mp, rp, quiescence
+  ;; sRatBPLocs           = REPLICATE(4.0,3) ;mp, rp, quiescence
   sRatBPThick          = 2.0
   sRatBPTransp         = 15
   sRatBPWidth          = 1.0
@@ -66,6 +65,9 @@ PRO JOURNAL__20160829__STORMSTATS__MASTER_URSI_PLOT
   sRatFastCol          = [smallColor,largeColor,allColor]
   ;; sRatFastCol       = REPLICATE('green',3)
   sRatBP_addText       = 1
+
+  sRat_add_medians     = 0
+  sRat_set_at_zero_line = 1
 
   ;;Dstmin plot options
   DMinLargeTransp      = 60
@@ -144,8 +146,8 @@ PRO JOURNAL__20160829__STORMSTATS__MASTER_URSI_PLOT
   fStudy1_julDay       = UTC_TO_JULDAY(fStudy1_UTC)
   fStudy2_julDay       = UTC_TO_JULDAY(fStudy2_UTC)
 
-  tsPos_combPlot       = [0.10,0.05,0.75,0.95]
-  bpPos_combPlot       = [0.75,0.05,0.95,0.95] ;Boxplot position for a combine time series/boxplot
+  tsPos_combPlot       = [0.10,0.05,0.70,0.95]
+  bpPos_combPlot       = [0.70,0.05,0.95,0.95] ;Boxplot position for a combine time series/boxplot
 
   ;;Plot positions
   CASE 1 OF
@@ -190,7 +192,6 @@ PRO JOURNAL__20160829__STORMSTATS__MASTER_URSI_PLOT
   ;;Gather statistics
 
   ;;Get stormRatio stats
-  verbose = 1
   stormRat = GET_STORMPERIOD_RATIOS__TIME_SERIES(Dst, $
                                                  /INCLUDE_STATISTICS, $
                                                  NMONTHS_PER_CALC=monthInterval, $
@@ -328,7 +329,7 @@ PRO JOURNAL__20160829__STORMSTATS__MASTER_URSI_PLOT
 
   ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
   ;;Now plots
-  window = WINDOW(DIMENSIONS=[1200,800])
+  window = WINDOW(DIMENSIONS=[1500,800])
 
   ;; dstMinTimeSeriesPos    = [0.0,0.5,1.0,1.0]
   ;; sFrqTSPos = [0.0,0.0,1.0,0.5]
@@ -404,7 +405,8 @@ PRO JOURNAL__20160829__STORMSTATS__MASTER_URSI_PLOT
                                             BPWIDTH=sRatBPWidth, $
                                             XRANGE=sRatBPXRange, $
                                             YRANGE=sRatYRange, $
-                                            /ADD_MEDIANS, $
+                                            ADD_MEDIANS=sRat_add_medians, $
+                                            SET_AT_ZERO_LINE=sRat_set_at_zero_line, $
                                             ;; MED_OFFSETS=sRatMedOffsets, $
                                             /STACKEM, $
                                             /ADD_BOXPLOT_NAMES, $
@@ -808,3 +810,4 @@ PRO JOURNAL__20160829__STORMSTATS__MASTER_URSI_PLOT
   ENDIF
 
 END
+

@@ -3,6 +3,7 @@ PRO LOAD_DST_AE_DBS,Dst,ae, $
                     DST_AE_DIR=Dst_AE_dir, $
                     DST_AE_FILE=Dst_AE_file, $
                     FULL_DST_DB=full_Dst_DB, $
+                    NO_AE=no_AE, $
                     LUN=lun
 
   COMMON DSTCOMMON,DST__Dst,DST__dbDir,Dst__dbFile
@@ -56,9 +57,20 @@ PRO LOAD_DST_AE_DBS,Dst,ae, $
   DST__Dst = Dst
   DST__dbDir = Dst_AE_dir
   DST__dbFile = Dst_AE_file
-  
-  AE__AE   = AE
-  AE__dbDir = Dst_AE_dir
-  AE__dbFile = Dst_AE_file
 
+  IF N_ELEMENTS(AE) GT 0 THEN BEGIN
+     
+     AE__AE   = AE
+     AE__dbDir = Dst_AE_dir
+     AE__dbFile = Dst_AE_file
+
+  ENDIF ELSE BEGIN
+
+     IF ~KEYWORD_SET(no_AE) THEN BEGIN
+        PRINT, "Don't have AE! You OK with that?"
+        STOP
+     ENDIF
+
+  ENDELSE
+     
 END

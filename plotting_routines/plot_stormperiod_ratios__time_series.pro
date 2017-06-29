@@ -50,9 +50,9 @@ FUNCTION PLOT_STORMPERIOD_RATIOS__TIME_SERIES,stormRatStruct, $
   ;; plotNames       = ['Main','Recovery','Quiescent']
   ;; colorArr        = ['Red','Blue','light gray']
 
-  plotOrder       = [0,1,2]
-  legOrder        = [2,1,0]
-  plotNames       = ['Recovery','Main','Quiescent']
+  plotOrder       = [1,0,2]
+  legOrder        = [2,0,1]
+  plotNames       = ['Main','Recovery','Quiescent']
   colorArr        = ['Blue','Red','light gray']
   lsArr           = ['-','-','-']
 
@@ -105,7 +105,7 @@ FUNCTION PLOT_STORMPERIOD_RATIOS__TIME_SERIES,stormRatStruct, $
                                    y_values, $
                                    XRANGE=xRange, $
                                    YRANGE=yRange, $
-                                   YTITLE='% Period', $
+                                   YTITLE='% 18-Month Interval', $
                                    BOTTOM_VALUES=bottom_values, $
                                    NAME=plotNames[plotOrder[iPlot]], $
                                    XMAJOR=nXTicks, $

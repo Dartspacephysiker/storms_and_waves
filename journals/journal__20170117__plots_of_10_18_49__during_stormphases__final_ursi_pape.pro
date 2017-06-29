@@ -574,8 +574,6 @@ PRO JOURNAL__20170117__PLOTS_OF_10_18_49__DURING_STORMPHASES__FINAL_URSI_PAPE
            NO_BURSTDATA=no_burstData, $
            DATADIR=dataDir, $
            COORDINATE_SYSTEM=coordinate_system, $
-           USE_AACGM_COORDS=use_AACGM, $
-           USE_MAG_COORDS=use_MAG, $
            NEVENTSPLOTRANGE=nEventsPlotRange, $
            NEVENTSPLOTAUTOSCALE=nEventsPlotAutoscale, $
            NEVENTSPLOTNORMALIZE=nEventsPlotNormalize, $

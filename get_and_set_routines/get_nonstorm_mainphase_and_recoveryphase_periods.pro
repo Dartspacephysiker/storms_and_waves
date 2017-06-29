@@ -51,6 +51,8 @@ PRO GET_NONSTORM_MAINPHASE_AND_RECOVERYPHASE_PERIODS,dst, $
    QUIET=quiet, $
    LUN=lun
   
+  COMPILE_OPT IDL2,STRICTARRSUBS
+
   defDstCutoff = -20
 
   IF N_ELEMENTS(lun) EQ 0 THEN lun = -1 ;stdout
@@ -100,6 +102,9 @@ PRO GET_NONSTORM_MAINPHASE_AND_RECOVERYPHASE_PERIODS,dst, $
      END
   ENDCASE
 
+  mp_dst_i=s_dst_i[mp_dst_ii]
+  rp_dst_i=s_dst_i[rp_dst_ii]
+  
   CASE 1 OF
      KEYWORD_SET(use_julDay_not_UTC): BEGIN
         IF KEYWORD_SET(earliest_julDay) THEN BEGIN
@@ -108,11 +113,15 @@ PRO GET_NONSTORM_MAINPHASE_AND_RECOVERYPHASE_PERIODS,dst, $
 
            s_dst_i   = CGSETINTERSECTION(early_i,s_dst_i)
            ns_dst_i  = CGSETINTERSECTION(early_i,ns_dst_i)
+           mp_dst_i  = CGSETINTERSECTION(early_i,mp_dst_i)
+           rp_dst_i  = CGSETINTERSECTION(early_i,rp_dst_i)
 
            IF ~KEYWORD_SET(quiet) THEN PRINTF,lun,FORMAT='("N lost to early julDay",T30,":",T35,I0)',n_s-N_ELEMENTS(s_dst_i)
 
            n_s       = N_ELEMENTS(s_dst_i)
            n_ns      = N_ELEMENTS(ns_dst_i)
+           n_mp      = N_ELEMENTS(mp_dst_i)
+           n_rp      = N_ELEMENTS(rp_dst_i)
         ENDIF
 
         IF KEYWORD_SET(latest_julDay) THEN BEGIN
@@ -121,11 +130,15 @@ PRO GET_NONSTORM_MAINPHASE_AND_RECOVERYPHASE_PERIODS,dst, $
 
            s_dst_i   = CGSETINTERSECTION(late_i,s_dst_i)
            ns_dst_i  = CGSETINTERSECTION(late_i,ns_dst_i)
+           mp_dst_i  = CGSETINTERSECTION(late_i,mp_dst_i)
+           rp_dst_i  = CGSETINTERSECTION(late_i,rp_dst_i)
 
            IF ~KEYWORD_SET(quiet) THEN PRINTF,lun,FORMAT='("N lost to latest julDay",T30,":",T35,I0)',n_s-N_ELEMENTS(s_dst_i)
 
            n_s       = N_ELEMENTS(s_dst_i)
            n_ns      = N_ELEMENTS(ns_dst_i)
+           n_mp      = N_ELEMENTS(mp_dst_i)
+           n_rp      = N_ELEMENTS(rp_dst_i)
         ENDIF
      END
      ELSE: BEGIN
@@ -135,11 +148,15 @@ PRO GET_NONSTORM_MAINPHASE_AND_RECOVERYPHASE_PERIODS,dst, $
 
            s_dst_i   = CGSETINTERSECTION(early_i,s_dst_i)
            ns_dst_i  = CGSETINTERSECTION(early_i,ns_dst_i)
+           mp_dst_i  = CGSETINTERSECTION(early_i,mp_dst_i)
+           rp_dst_i  = CGSETINTERSECTION(early_i,rp_dst_i)
 
            IF ~KEYWORD_SET(quiet) THEN PRINTF,lun,FORMAT='("N lost to early UTC",T30,":",T35,I0)',n_s-N_ELEMENTS(s_dst_i)
 
            n_s       = N_ELEMENTS(s_dst_i)
            n_ns      = N_ELEMENTS(ns_dst_i)
+           n_mp      = N_ELEMENTS(mp_dst_i)
+           n_rp      = N_ELEMENTS(rp_dst_i)
         ENDIF
 
         IF KEYWORD_SET(latest_UTC) THEN BEGIN
@@ -148,11 +165,15 @@ PRO GET_NONSTORM_MAINPHASE_AND_RECOVERYPHASE_PERIODS,dst, $
 
            s_dst_i   = CGSETINTERSECTION(late_i,s_dst_i)
            ns_dst_i  = CGSETINTERSECTION(late_i,ns_dst_i)
+           mp_dst_i  = CGSETINTERSECTION(late_i,mp_dst_i)
+           rp_dst_i  = CGSETINTERSECTION(late_i,rp_dst_i)
 
            IF ~KEYWORD_SET(quiet) THEN PRINTF,lun,FORMAT='("N lost to latest UTC",T30,":",T35,I0)',n_s-N_ELEMENTS(s_dst_i)
 
            n_s       = N_ELEMENTS(s_dst_i)
            n_ns      = N_ELEMENTS(ns_dst_i)
+           n_mp      = N_ELEMENTS(mp_dst_i)
+           n_rp      = N_ELEMENTS(rp_dst_i)
         ENDIF
      END
   ENDCASE
@@ -161,9 +182,6 @@ PRO GET_NONSTORM_MAINPHASE_AND_RECOVERYPHASE_PERIODS,dst, $
   ;;Make sure these all actually found stuff
   WHERECHECK,s_dst_i,ns_dst_i,mp_dst_ii,rp_dst_ii
 
-  mp_dst_i=s_dst_i[mp_dst_ii]
-  rp_dst_i=s_dst_i[rp_dst_ii]
-  
   IF ~KEYWORD_SET(quiet) THEN BEGIN
      PRINTF,lun,FORMAT='("**GET_NONSTORM_MAINPHASE_AND_RECOVERYPHASE_PERIODS**")'
      IF KEYWORD_SET(earliest_UTC) THEN PRINTF,lun,FORMAT='("Earliest allowed UTC",T30,":",T35,A0)',time_to_str(earliest_UTC)

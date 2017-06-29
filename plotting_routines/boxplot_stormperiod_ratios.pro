@@ -3,6 +3,7 @@ FUNCTION BOXPLOT_STORMPERIOD_RATIOS, $
    BPD, $
    ADD_MEDIANS=add_medians, $
    MED_OFFSETS=median_offsets, $
+   SET_AT_ZERO_LINE=set_at_zero_line, $
    INCLUDE_EXTRAS=include_extras, $
    EXCLUDE_MEAN_VALUES=exclude_mean_values, $          
    EXCLUDE_CI_VALUES=exclude_ci_values, $              
@@ -94,27 +95,37 @@ FUNCTION BOXPLOT_STORMPERIOD_RATIOS, $
      1: BEGIN
 
         plotDat = BPD.data*100
-        IF KEYWORD_SET(add_medians) THEN BEGIN
 
-           ;;Adds median of each previous bp
-           FOR iPlot=0,nBoxPlots-1 DO BEGIN
+        CASE 1 OF
+           KEYWORD_SET(add_medians): BEGIN
 
-              CASE KEYWORD_SET(median_offsets) OF
-                 1: BEGIN
-                    plotDat[iPlot,*] += (median_offsets[iPlot] - plotDat[iPlot,2])
-                 END
-                 ELSE: BEGIN
-                    j = iPlot+1
-                    WHILE j LT nBoxPlots-1 DO BEGIN
-                       plotDat[j,*] += plotDat[iPlot,2]
-                       j++
-                    ENDWHILE
-                 END
-              ENDCASE
+              ;;Adds median of each previous bp
+              FOR iPlot=0,nBoxPlots-1 DO BEGIN
 
-           ENDFOR
+                 CASE KEYWORD_SET(median_offsets) OF
+                    1: BEGIN
+                       plotDat[iPlot,*] += (median_offsets[iPlot] - plotDat[iPlot,2])
+                    END
+                    ELSE: BEGIN
+                       j = iPlot+1
+                       WHILE j LT nBoxPlots-1 DO BEGIN
+                          plotDat[j,*] += plotDat[iPlot,2]
+                          j++
+                       ENDWHILE
+                    END
+                 ENDCASE
 
-        ENDIF
+              ENDFOR
+
+           END
+           KEYWORD_SET(set_at_zero_line): BEGIN
+
+           END
+           ELSE: BEGIN
+
+           END
+        ENDCASE
+        
 
         FOR iPlot=0,nBoxPlots-1 DO BEGIN
            ;; PRINT,'Doing' + plotNames[i] + '...'
