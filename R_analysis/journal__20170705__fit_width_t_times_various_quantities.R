@@ -4,6 +4,11 @@ plotDir <- '/SPENCEdata/Research/Satellites/FAST/storms_Alfvens/plots/20170705/'
 ## setwd(paste(getwd(),'/exploratorio',sep='')
 setwd(dir)
 
+loc_and_stormphase <- "dayside_ns"
+
+## dataStrings <- c('magC','IntgUp','pF','eNumFl','eF_LC_intg','Max')
+dataStrings <- c('IntgUp','pF','eNumFl','eF_LC_intg','Max')
+
 library(fitdistrplus)
 
 ## fitType <- "norm"
@@ -17,12 +22,10 @@ fitTypes <- c('weibull',"lnorm")
 ##   1/(a*gamma(rho)) * (a / (x-s))^(rho+1) * exp( - a/(x-s) )
 ## fitdistr( x, inverseGammaF, list(rho=1, a=1, s=0) ) 
 
-## dataStrings <- c('magC','IntgUp','pF','eNumFl','eF_LC_intg','Max')
-dataStrings <- c('IntgUp','pF','eNumFl','eF_LC_intg','Max')
 for ( dStr in dataStrings) {
 ## for ( dStr in dataStrings[[1]]) {
 
-    dfile <- paste('width_t_and_',dStr,'_dayside_ns.txt',sep='')
+    dfile <- paste('width_t_and_',dStr,'_',loc_and_stormphase,'.txt',sep='')
 
     printf("Opening %s ...",dfile)
     data <- read.csv(paste(dir,dfile,sep='/'))
@@ -38,7 +41,7 @@ for ( dStr in dataStrings) {
         for ( i in v) {
 
 
-            fPref <- paste("dayside_ns",fitType,'_',sep='_')
+            fPref <- paste(loc_and_stormphase,fitType,'_',sep='_')
 
 
             tmpName <- (names(data))[[i]]
@@ -51,10 +54,10 @@ for ( dStr in dataStrings) {
 
 
             ## Make that png!
-            fname <- paste(plotDir,fPref,tmpName,'.png',sep='')
-            printf("Making %s ...",fname)
+            fname <- paste(fPref,tmpName,'.png',sep='')
+            printf("Making %s ...",fname
 
-            png(fname,width=800,height=800)
+            png(paste(plotDir,fname,sep=''),width=800,height=800)
 
             plot(fitted,cex.lab=1.5, cex.axis=1.5, cex.main=1.5, cex.sub=1.5)
             title(main=tmpName)
@@ -68,22 +71,3 @@ for ( dStr in dataStrings) {
 
 
 }
-
-## dfile <- 'width_t_and_eFlux_dayside_ns.txt'
-
-
-
-
-## png("dayside_widthTime_times_electron_energy_flux.png")
-
-
-
-## dev.off()
-
-## png("dayside_widthTime_times_electron_energy_flux.png")
-## plot(fitted)
-## dev.off()
-
-## hist(X, prob=TRUE, col="grey")# prob=TRUE for probabilities not counts
-## lines(density(X), col="blue", lwd=2) # add a density estimate with defaults
-## lines(density(X, adjust=2), lty="dotted", col="darkgreen", lwd=2) 

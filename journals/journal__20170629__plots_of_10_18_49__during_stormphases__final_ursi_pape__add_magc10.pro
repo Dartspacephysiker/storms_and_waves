@@ -5,7 +5,7 @@ PRO JOURNAL__20170629__PLOTS_OF_10_18_49__DURING_STORMPHASES__FINAL_URSI_PAPE__A
   use_mostRecent_Dst_files     = 1
 
   use_prev_plot_i              = 1
-  remake_prev_plot_file        = 1
+  remake_prev_plot_file        = 0
   despunDB                     = 0
 
   include_32Hz                 = 0
@@ -36,8 +36,8 @@ PRO JOURNAL__20170629__PLOTS_OF_10_18_49__DURING_STORMPHASES__FINAL_URSI_PAPE__A
 
   use_AACGM                    = 1
 
-  minMC                        = 10
-  maxNegMC                     = -10
+  minMC                        = 1
+  maxNegMC                     = -1
 
   show_integrals               = 1
 
@@ -49,24 +49,24 @@ PRO JOURNAL__20170629__PLOTS_OF_10_18_49__DURING_STORMPHASES__FINAL_URSI_PAPE__A
   ionPlots                       = 1
   probOccurrencePlot             = 0
   eNumFlPlots                    = 1
-  ePlots                         = 1
+  ePlots                         = 0
   pPlots                         = 1
   charEPlots                     = 0
-  magCPlots                      = 1
+  magCPlots                      = 0
   tHistDenominatorPlot           = 0
   nPlots                         = 0
   sum_electron_and_poyntingflux  = 0
 
 
-  calcVar_Eflux   = 1
-  calcVar_ENumFl  = 1
+  calcVar_Eflux   = 0
+  calcVar_ENumFl  = [1,1]
   ;; calcVar__sWay   = 0
   calcVar_Pflux   = 1
-  calcVar_Iflux   = 0
+  calcVar_Iflux   = 1
   calcVar_OxyFlux = 0
   calcVar_CharE   = 0
   calcVar_Charie  = 0
-  calcVar_MagC    = 1
+  calcVar_MagC    = 0
 
 
   divide_by_width_x              = 1
