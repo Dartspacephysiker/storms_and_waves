@@ -5,7 +5,7 @@ PRO JOURNAL__20170629__PLOTS_OF_10_18_49__DURING_STORMPHASES__FINAL_URSI_PAPE__A
   use_mostRecent_Dst_files     = 1
 
   use_prev_plot_i              = 1
-  remake_prev_plot_file        = 0
+  remake_prev_plot_file        = 1
   despunDB                     = 0
 
   include_32Hz                 = 0
@@ -19,6 +19,9 @@ PRO JOURNAL__20170629__PLOTS_OF_10_18_49__DURING_STORMPHASES__FINAL_URSI_PAPE__A
   ;;                                [3000,4300], $
   ;;                                [ 500,3000]  $
   ;;                                ]
+
+  var__each_bin                = 1
+  
   altRange                     = [ $
                                  [ 750,4300] $
                                  ]
@@ -55,6 +58,17 @@ PRO JOURNAL__20170629__PLOTS_OF_10_18_49__DURING_STORMPHASES__FINAL_URSI_PAPE__A
   sum_electron_and_poyntingflux  = 0
 
 
+  calcVar_Eflux   = 1
+  calcVar_ENumFl  = 1
+  ;; calcVar__sWay   = 0
+  calcVar_Pflux   = 1
+  calcVar_Iflux   = 0
+  calcVar_OxyFlux = 0
+  calcVar_CharE   = 0
+  calcVar_Charie  = 0
+  calcVar_MagC    = 1
+
+
   divide_by_width_x              = 1
   medianPlot                     = 0
   do_timeAvg_fluxQuantities      = 1
@@ -75,7 +89,7 @@ PRO JOURNAL__20170629__PLOTS_OF_10_18_49__DURING_STORMPHASES__FINAL_URSI_PAPE__A
 
   var__do_stddev_instead         = 0
 
-  fancyPresentationMode          = 1 ;Erases stormphase titles,
+  fancyPresentationMode          = 0 ;Erases stormphase titles,
                                      ;suppresses gridlabels, blows up plot titles. Keep it.
   suppress_thickGrid             = 0
   suppress_thinGrid              = 1
@@ -373,6 +387,15 @@ PRO JOURNAL__20170629__PLOTS_OF_10_18_49__DURING_STORMPHASES__FINAL_URSI_PAPE__A
            LOGTIMEAVGD_PFLUX=logTimeAvgd_PFlux, $
            LOG_NEWELLPLOT=log_newellPlot, $
            LOG_NOWEPCOPLOT=log_nowepcoPlot, $
+           CALCVAR_EFLUX=calcVar_Eflux, $
+           CALCVAR_ENUMFL=calcVar_ENumFl, $
+           CALCVAR__SWAY=calcVar__sWay, $
+           CALCVAR_PFLUX=calcVar_Pflux, $
+           CALCVAR_IFLUX=calcVar_Iflux, $
+           CALCVAR_OXYFLUX=calcVar_OxyFlux, $
+           CALCVAR_CHARE=calcVar_CharE, $
+           CALCVAR_CHARIE=calcVar_Charie, $
+           CALCVAR_MAGC=calcVar_MagC, $
            CHAREPLOTRANGE=charePlotRange, $
            CHARIEPLOTRANGE=chariEPlotRange, $
            EPLOTRANGE=EPlotRange, $
@@ -395,6 +418,8 @@ PRO JOURNAL__20170629__PLOTS_OF_10_18_49__DURING_STORMPHASES__FINAL_URSI_PAPE__A
            THISTDENOMPLOTRANGE=tHistDenomPlotRange, $
            TIMEAVGD_EFLUXMAXRANGE=timeAvgd_eFluxMaxRange, $
            TIMEAVGD_PFLUXRANGE=timeAvgd_pFluxRange, $
+           VAR__EACH_BIN=var__each_bin, $
+           VAR__DISTTYPE=var__distType, $
            AUTOSCALE_FLUXPLOTS=autoscale_fluxPlots, $
            FLUXPLOTS__REMOVE_OUTLIERS=fluxPlots__remove_outliers, $
            FLUXPLOTS__REMOVE_LOG_OUTLIERS=fluxPlots__remove_log_outliers, $
@@ -616,6 +641,3 @@ PRO JOURNAL__20170629__PLOTS_OF_10_18_49__DURING_STORMPHASES__FINAL_URSI_PAPE__A
   ENDFOR 
 
 END
-
-
-
