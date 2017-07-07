@@ -105,7 +105,8 @@ FUNCTION PLOT_STORMPERIOD_RATIOS__TIME_SERIES,stormRatStruct, $
                                    y_values, $
                                    XRANGE=xRange, $
                                    YRANGE=yRange, $
-                                   YTITLE='% 18-Month Interval', $
+                                   ;; YTITLE='% 18-Month Interval', $
+                                   YTITLE='% Interval', $
                                    BOTTOM_VALUES=bottom_values, $
                                    NAME=plotNames[plotOrder[iPlot]], $
                                    XMAJOR=nXTicks, $

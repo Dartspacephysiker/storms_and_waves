@@ -285,13 +285,13 @@ FUNCTION BOXPLOT_STORMPERIOD_RATIOS, $
   ENDIF
 
   IF KEYWORD_SET(add_column_text) THEN BEGIN
-     colText = TEXT(x_vals[0], $
+     colText = TEXT(x_vals[1], $
                     102, $
                     add_column_text, $
                     TARGET=plotArr[0], $
                     /DATA, $
                     ;; FONT_SIZE=xTickFont_size, $
-                    FONT_SIZE=18, $
+                    FONT_SIZE=27, $
                     VERTICAL_ALIGNMENT=0.5, $
                     CLIP=0, $
                     ALIGNMENT=0.5)

@@ -4,13 +4,13 @@ PRO JOURNAL__20170628__STORMSTATS__MASTER_URSI_PLOT__BEDRE
   COMPILE_OPT IDL2,STRICTARRSUBS
 
   ;;SavePlot names
-  saveAllPlots         = 0
+  saveAllPlots         = 1
 
-  stormRatPlots        = 1
+  stormRatPlots        = 0
   sRatTimeSeries       = 1
   sRatBoxPlots         = 1
 
-  dMinPlots            = 1
+  dMinPlots            = 0
   dMinTimeSeries       = 1
   dMinBoxPlots         = 1
 
@@ -28,6 +28,8 @@ PRO JOURNAL__20170628__STORMSTATS__MASTER_URSI_PLOT__BEDRE
   sRatSPName           = GET_TODAY_STRING(/DO_YYYYMMDD_FMT) + '--stormRatios_1957-2011.png'
   dMinSPName           = GET_TODAY_STRING(/DO_YYYYMMDD_FMT) + '--dstMinStats_1957-2011.png'
   sFrqSPName           = GET_TODAY_STRING(/DO_YYYYMMDD_FMT) + '--stormFrequencyStats_1957-2011.png'
+
+  winDim_all           = [1500,800]
 
   ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
   ;;Plot optionszz
@@ -49,19 +51,19 @@ PRO JOURNAL__20170628__STORMSTATS__MASTER_URSI_PLOT__BEDRE
   sRatTxtOffset        = 2
   sRatLineStyle        = ['-','--']
 
-  sRatBPLocs        = [4.0,6.0,8.0] ;mp, rp, quiescence
+  sRatBPLocs        = [2.5,5.0,7.5] ;mp, rp, quiescence
   ;; sRatBPLocs           = REPLICATE(4.0,3) ;mp, rp, quiescence
   ;; sRatBPLocs           = REPLICATE(4.0,3) ;mp, rp, quiescence
-  sRatBPThick          = 2.0
+  sRatBPThick          = 3.5
   sRatBPTransp         = 15
   sRatBPWidth          = 1.0
   sRatBPXRange         = [0,10]
-  sRatBPColumnText     = '1957–!C2011'
+  sRatBPColumnText     = '1957–2011'
 
   sRatBP_addPoints     = 1
-  sRatFASTXVals        = REPLICATE(8.2,3)
-  sRatFASTYVals        = [0.174,0.134,0.691]
-  sRatFASTYVals[1]     = sRatFASTYVals[0]+sRatFASTYVals[1]
+  sRatFASTXVals        = REPLICATE(10.2,3)
+  sRatFASTYVals        = [0.134,0.174,0.691]
+  ;; sRatFASTYVals[1]     = sRatFASTYVals[0]+sRatFASTYVals[1]
   sRatFastCol          = [smallColor,largeColor,allColor]
   ;; sRatFastCol       = REPLICATE('green',3)
   sRatBP_addText       = 1
@@ -82,8 +84,9 @@ PRO JOURNAL__20170628__STORMSTATS__MASTER_URSI_PLOT__BEDRE
   dMinSymbols          = ['+','x']
   ;; dMinLargeThick       = 4.0
 
-  dMinBPLocs           = REPLICATE(4.0,2) ;mp, rp, quiescence
-  dMinBPThick          = 2.0
+  ;; dMinBPLocs           = REPLICATE(4.0,2) ;mp, rp, quiescence
+  dMinBPLocs           = [3.75,6.25]
+  dMinBPThick          = 3.5
   dMinBPTransp         = 20
   dMinBPWidth          = 1.0
   dMinBPXRange         = [0,10]
@@ -91,8 +94,7 @@ PRO JOURNAL__20170628__STORMSTATS__MASTER_URSI_PLOT__BEDRE
   ;; dMinBPFillColor      = [smallColor,largeColor]
 
   dMinBP_addPoints     = 1
-  dMinFASTXVals        = REPLICATE(8.2,2)
-  ;; dMinFASTYVals     = [0.174,0.134]
+  dMinFASTXVals        = REPLICATE(10.2,2)
   dMinFastCol          = [smallColor,largeColor]
 
   ;;Freq plot options
@@ -121,7 +123,6 @@ PRO JOURNAL__20170628__STORMSTATS__MASTER_URSI_PLOT__BEDRE
 
   sFrqBP_addPoints     = 1
   sFrqFASTXVals        = REPLICATE(8.2,3)
-  ;; sFrqFASTYVals     = [0.174,0.134]
   sFrqColor            = [smallColor,largeColor,allColor]
   ;; sFrqBPFillColor      = [smallColor,largeColor,allColor]
   sFrqBPFillColor      = !NULL
@@ -329,7 +330,7 @@ PRO JOURNAL__20170628__STORMSTATS__MASTER_URSI_PLOT__BEDRE
 
   ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
   ;;Now plots
-  window = WINDOW(DIMENSIONS=[1500,800])
+  window = WINDOW(DIMENSIONS=winDim_all)
 
   ;; dstMinTimeSeriesPos    = [0.0,0.5,1.0,1.0]
   ;; sFrqTSPos = [0.0,0.0,1.0,0.5]
@@ -478,7 +479,7 @@ PRO JOURNAL__20170628__STORMSTATS__MASTER_URSI_PLOT__BEDRE
   IF KEYWORD_SET(dMinPlots) THEN BEGIN
 
      IF N_ELEMENTS(window) EQ 0 THEN BEGIN
-        window = WINDOW(DIMENSIONS=[1200,800])
+        window = WINDOW(DIMENSIONS=winDim_all)
      ENDIF
 
      large_i     = WHERE(storms.is_largeStorm,COMPLEMENT=small_i)
@@ -647,7 +648,7 @@ PRO JOURNAL__20170628__STORMSTATS__MASTER_URSI_PLOT__BEDRE
   IF KEYWORD_SET(sFrqPlots) THEN BEGIN
 
      IF N_ELEMENTS(window) EQ 0 THEN BEGIN
-        window = WINDOW(DIMENSIONS=[1200,800])
+        window = WINDOW(DIMENSIONS=winDim_all)
      ENDIF
 
      IF KEYWORD_SET(sFrqTimeSeries) THEN BEGIN
