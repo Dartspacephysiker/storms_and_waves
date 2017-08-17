@@ -157,7 +157,7 @@ FUNCTION GET_SEASON_INDS,times, $
      KEYWORD_SET(all_seasons): BEGIN
 
         IF ARG_PRESENT(indStruct) THEN BEGIN
-           indStruct = {season : [indStruct.season,'equinox'], $
+           indStruct = {season : [indStruct.season,'Equinox'], $
                         N      : [indStruct.N,indStruct.N[0]+indStruct.N[2]]}
         ENDIF
 
