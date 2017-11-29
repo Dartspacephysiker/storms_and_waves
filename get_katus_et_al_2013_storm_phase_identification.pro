@@ -71,6 +71,105 @@ PRO PRINT_KATUS_EVENTS,Dst,int_i,mod_i,mp_i,rp_i,numInt,numMod, $
 
 END
 
+PRO GET_KATUS__KILL_DUPES,Dst,mp_i,rp_i,dupeStruct, $
+                          STORM_I=storm_i, $
+                          STRUCTIND=structInd, $
+                          COUNT=count, $
+                          CUSTOMKILLS=customKills, $
+                          OUT_DUPESTRUCTIND=dupeStructInd, $
+                          OUT_KILLDUPE_I=killDupe_i, $
+                          OUT_KEEPDUPE_I=keepDupe_i, $
+                          OUT_NODUPE_I=noDupe_i, $
+                          OUT_STORMIND_NODUPE=storm_ii_noDupe, $
+                          OUT_STORMIND_KEEPDUPE=stormInd_keepDupe
+
+  killDupe_i     = !NULL
+  dupeStructInd  = 0
+
+  FOR k=0,count-1 DO BEGIN
+
+     ;; Quick look ahead
+     baseInd     = storm_i[k]
+     lookInd     = storm_i[(k+1)<(count-1)]
+     kLook       = 1
+     nAhead      = 0
+     nMatchDstMP = 0
+     nMatchDSTRP = 0
+     tSpan       = 0
+     warrior     = MIN(Dst.dst[[baseInd,lookInd]],tmpWarI)
+     warriorInd  = (tmpWarI EQ 0 ? baseInd : lookInd)
+     WHILE (((lookInd - baseInd) LE 6) AND $
+            (lookInd NE baseInd)           )  DO BEGIN
+
+        tSpan += (lookInd - baseInd)
+        ;;See if MP and RP are also the same
+        nMatchDstMP += (Dst.dst[mp_i.(structInd)[k]] EQ Dst.dst[mp_i.(structInd)[k+1+nAhead]])
+        nMatchDstRP += (Dst.dst[rp_i.(structInd)[k]] EQ Dst.dst[rp_i.(structInd)[k+1+nAhead]])
+
+        tmpWarrior = MIN(Dst.dst[[warriorInd,lookInd]],tmpWarI)
+        IF tmpWarI NE 0 THEN BEGIN
+           warrior = Dst.dst[lookInd]
+           warriorInd = lookInd
+        ENDIF
+
+        nAhead++
+        baseInd    = lookInd
+        lookInd    = storm_i[(k+1+nAhead)<(count-1)]
+
+     ENDWHILE
+     
+     IF nAhead GT 0 THEN BEGIN
+
+        dupeStruct.(structInd).ind        [dupeStructInd] = k
+        dupeStruct.(structInd).DstInds    [*,dupeStructInd] = [k,k+nAhead]
+        dupeStruct.(structInd).nAhead     [dupeStructInd] = nAhead
+        dupeStruct.(structInd).nMatchMP   [dupeStructInd] = nMatchDstMP
+        dupeStruct.(structInd).nMatchRP   [dupeStructInd] = nMatchDstRP
+        dupeStruct.(structInd).tSpan      [dupeStructInd] = tSpan
+        dupeStruct.(structInd).trueWarrior[dupeStructInd] = warriorInd
+        dupeStructInd++
+
+        PRINT,FORMAT='(I5,T10,A0,T35,I8,T45,I5,T55,I5,T65,A0)', $
+              k, $
+              Dst.date[storm_i[k]], $
+              nAhead, $
+              nMatchDstMP, $
+              tSpan, $
+              nMatchDstRP
+
+        dummy = 0
+        WHILE dummy LE nAhead DO BEGIN
+           ;; killDupe_i = [killDupe_i,[(storm_i[k]):(storm_i[k]+nAhead)]]
+           killDupe_i = [killDupe_i,(storm_i[k+dummy])]
+           dummy++
+        ENDWHILE
+
+        k = k + nAhead
+
+     ENDIF
+
+  ENDFOR
+
+  ;;Now we can get all events that don't have nasty duplicates
+  noDupe_i = CGSETDIFFERENCE(storm_i,killDupe_i,COUNT=nStorm_noDupe,POSITIONS=storm_ii_noDupe)
+
+  ;; Now the dupes
+  ;; This array of tossables comes from
+  keepDupe_i        = !NULL
+  stormInd_keepDupe = !NULL
+  FOR k=0,dupeStructInd-1 DO BEGIN
+     
+     IF N_ELEMENTS(customKills) GT 0 THEN BEGIN
+        IF (WHERE(dupeStruct.(structInd).ind[k] EQ customKills))[0] NE -1 THEN CONTINUE
+     ENDIF
+
+     keepDupe_i        = [keepDupe_i,dupeStruct.(structInd).trueWarrior[k]]
+     stormInd_keepDupe = [stormInd_keepDupe,WHERE(storm_i EQ dupeStruct.(structInd).trueWarrior[k])]
+
+  ENDFOR
+
+END
+
 PRO GET_KATUS_ET_AL_2013_STORM_PHASE_IDENTIFICATION, $
    USE_SYMH=use_SYMH, $
    FAST_ELECTRONDB_TIMES=FAST_electronDB_times
@@ -316,127 +415,145 @@ PRO GET_KATUS_ET_AL_2013_STORM_PHASE_IDENTIFICATION, $
                             tSpan       : MAKE_ARRAY(1000,/LONG,VALUE=0), $
                             trueWarrior : MAKE_ARRAY(1000,/LONG,VALUE=0)}}
 
-  killDupe_i     = !NULL
-  dupeStructInd  = 0
-  FOR k=0,nInt_sIII2-1 DO BEGIN
+  ;; ints           = 1
+  ;; First Ints, then Mods
+  int_customKills = [15,30,41,94,112] ; 41 is a special case, since the storm actually starts with ind = 40
+  GET_KATUS__KILL_DUPES,Dst,mp_i,rp_i,dupeStruct, $
+                        STORM_I=int_i, $
+                        STRUCTIND=0, $
+                        COUNT=nInt_sIII2, $
+                        CUSTOMKILLS=int_customKills, $
+                        OUT_DUPESTRUCTIND=dupeStructIntInd, $
+                        OUT_KILLDUPE_I=int_killDupe_i, $
+                        OUT_KEEPDUPE_I=int_keepDupe_i, $
+                        OUT_NODUPE_I=int_noDupe_i, $
+                        OUT_STORMIND_NODUPE=int_noDupe_ii, $
+                        OUT_STORMIND_KEEPDUPE=int_ind_keepDupe
 
-     ;; Quick look ahead
-     baseInd     = int_i[k]
-     lookInd     = int_i[(k+1)<(nInt_sIII2-1)]
-     kLook       = 1
-     nAhead      = 0
-     nMatchDstMP = 0
-     nMatchDSTRP = 0
-     tSpan       = 0
-     warrior     = MIN(Dst.dst[[baseInd,lookInd]],tmpWarI)
-     warriorInd  = (tmpWarI EQ 0 ? baseInd : lookInd)
-     WHILE (((lookInd - baseInd) LE 6) AND $
-            (lookInd NE baseInd)           )  DO BEGIN
+  GET_KATUS__KILL_DUPES,Dst,mp_i,rp_i,dupeStruct, $
+                        STORM_I=mod_i, $
+                        STRUCTIND=1, $
+                        COUNT=nMod_sIII2, $
+                        CUSTOMKILLS=customKills, $
+                        OUT_DUPESTRUCTIND=dupeStructModInd, $
+                        OUT_KILLDUPE_I=mod_killDupe_i, $
+                        OUT_KEEPDUPE_I=mod_keepDupe_i, $
+                        OUT_NODUPE_I=mod_noDupe_i, $
+                        OUT_STORMIND_NODUPE=mod_noDupe_ii, $
+                        OUT_STORMIND_KEEPDUPE=mod_ind_keepDupe
 
-        tSpan += (lookInd - baseInd)
-        ;;See if MP and RP are also the same
-        nMatchDstMP += (Dst.dst[mp_i.ints[k]] EQ Dst.dst[mp_i.ints[k+1+nAhead]])
-        nMatchDstRP += (Dst.dst[rp_i.ints[k]] EQ Dst.dst[rp_i.ints[k+1+nAhead]])
+  dupeStruct     = {ints : {ind         : dupeStruct.ints.ind        [0:dupeStructIntInd-1], $
+                            DstInds     : dupeStruct.ints.DstInds    [*,0:dupeStructIntInd-1], $ 
+                            nAhead      : dupeStruct.ints.nAhead     [0:dupeStructIntInd-1], $
+                            nMatchMP    : dupeStruct.ints.nMatchMP   [0:dupeStructIntInd-1], $
+                            nMatchRP    : dupeStruct.ints.nMatchRP   [0:dupeStructIntInd-1], $
+                            tSpan       : dupeStruct.ints.tSpan      [0:dupeStructIntInd-1], $
+                            trueWarrior : dupeStruct.ints.trueWarrior[0:dupeStructIntInd-1]}, $
+                    modr : {ind         : dupeStruct.modr.ind        [0:dupeStructModInd-1], $
+                            DstInds     : dupeStruct.modr.DstInds    [*,0:dupeStructModInd-1], $ 
+                            nAhead      : dupeStruct.modr.nAhead     [0:dupeStructModInd-1], $
+                            nMatchMP    : dupeStruct.modr.nMatchMP   [0:dupeStructModInd-1], $
+                            nMatchRP    : dupeStruct.modr.nMatchRP   [0:dupeStructModInd-1], $
+                            tSpan       : dupeStruct.modr.tSpan      [0:dupeStructModInd-1], $
+                            trueWarrior : dupeStruct.ints.trueWarrior[0:dupeStructModInd-1]}}
 
-        nAhead++
-        baseInd    = lookInd
-        lookInd    = int_i[k+1+nAhead]
+  ;; PRINT_KATUS_EVENTS,Dst,int_i,mod_i,mp_i,rp_i,nInt_sIII2,nMod_sIII2, $
+  ;;                    ;; DONT_PRINT_INTENSE_EVTS=noInts, $
+  ;;                    ;; /DONT_PRINT_MODERATE_EVTS=noMods
+  ;;                    /DONT_PRINT_MODERATE_EVTS, $
+  ;;                    ;; DUPLICADO_INT_I=duplicado_int_i;, $
+  ;;                    DUPLICADO_INT_I=dupeStruct.ints.ind;, $
+  ;;                    ;; DUPLICADO_MOD_I=duplicado_mod_i
 
-        tmpWarrior = MIN(Dst.dst[[warriorInd,lookInd]],tmpWarI)
-        IF tmpWarI NE 0 THEN BEGIN
-           warrior = Dst.dst[lookInd]
-           warriorInd = lookInd
-        ENDIF
+  ;; int_i_test = [int_noDupe_i,int_keepDupe_i]
+  ;; int_i_test = int_i_test[SORT(int_i_test)]
+  ;; mod_i_test = [mod_noDupe_i,mod_keepDupe_i]
+  ;; mod_i_test = mod_i_test[SORT(mod_i_test)]
 
-     ENDWHILE
-     
-     IF nAhead GT 0 THEN BEGIN
+  int_ii = [int_noDupe_ii,int_ind_keepDupe]
+  mod_ii = [mod_noDupe_ii,mod_ind_keepDupe]
 
-        dupeStruct.ints.ind        [dupeStructInd] = k
-        dupeStruct.ints.DstInds    [*,dupeStructInd] = [int_i[k],int_i[k]+nAhead]
-        dupeStruct.ints.nAhead     [dupeStructInd] = nAhead
-        dupeStruct.ints.nMatchMP   [dupeStructInd] = nMatchDstMP
-        dupeStruct.ints.nMatchRP   [dupeStructInd] = nMatchDstRP
-        dupeStruct.ints.tSpan      [dupeStructInd] = tSpan
-        dupeStruct.ints.trueWarrior[dupeStructInd] = warriorInd
-        dupeStructInd++
+  int_ii = int_ii[SORT(int_ii)]
+  mod_ii = mod_ii[SORT(mod_ii)]
+  ;; PRINT,ARRAY_EQUAL(int_i[int_ii],int_i_test)
+  ;; PRINT,ARRAY_EQUAL(mod_i[mod_ii],mod_i_test)
 
-        killDupe_i = [killDupe_i,[(int_i[k]):(int_i[k]+nAhead)]]
-        
-        ;; duplicado_int_i = [duplicado_int_i,k]
+  int_i = int_i[int_ii]
+  mod_i = mod_i[mod_ii]
 
-        PRINT,FORMAT='(I5,T10,A0,T35,I8,T45,I5,T55,I5,T65,A0)', $
-              k, $
-              Dst.date[int_i[k]], $
-              nAhead, $
-              nMatchDstMP, $
-              tSpan, $
-              nMatchDstRP
+  mp_i  = {ints : mp_i.ints[int_ii], $
+           modr : mp_i.modr[mod_ii]}
+  rp_i  = {ints : rp_i.ints[int_ii], $
+           modr : rp_i.modr[mod_ii]}
 
-        k = k + nAhead
-     ENDIF
+  ;; Step III.i
+  int_tooClose = int_i*0L
+  int_tooClose[1:-1] = (int_i[1:-1]-int_i[0:-2]) LE 48
+  int_tooClose_ii = WHERE(int_tooClose)
+  int_tooClose_ii = [int_tooClose_ii-1,int_tooClose_ii]
+  int_tooClose_ii = int_tooClose_ii[SORT(int_tooClose_ii)]
 
-  ENDFOR
+  mod_tooClose = mod_i*0L
+  mod_tooClose[1:-1] = (mod_i[1:-1]-mod_i[0:-2]) LE 48
+  mod_tooClose_ii = WHERE(mod_tooClose)
+  mod_tooClose_ii = [mod_tooClose_ii-1,mod_tooClose_ii]
+  mod_tooClose_ii = mod_tooClose_ii[SORT(mod_tooClose_ii)]
 
-  dupeStruct     = {ints : {ind         : dupeStruct.ints.ind        [0:dupeStructInd-1], $
-                            DstInds     : dupeStruct.ints.DstInds    [*,0:dupeStructInd-1], $ 
-                            nAhead      : dupeStruct.ints.nAhead     [0:dupeStructInd-1], $
-                            nMatchMP    : dupeStruct.ints.nMatchMP   [0:dupeStructInd-1], $
-                            nMatchRP    : dupeStruct.ints.nMatchRP   [0:dupeStructInd-1], $
-                            tSpan       : dupeStruct.ints.tSpan      [0:dupeStructInd-1], $
-                            trueWarrior : dupeStruct.ints.trueWarrior[0:dupeStructInd-1]}, $
-                    modr : {ind         : dupeStruct.modr.ind        [0:dupeStructInd-1], $
-                            DstInds     : dupeStruct.modr.DstInds    [*,0:dupeStructInd-1], $ 
-                            nAhead      : dupeStruct.modr.nAhead     [0:dupeStructInd-1], $
-                            nMatchMP    : dupeStruct.modr.nMatchMP   [0:dupeStructInd-1], $
-                            nMatchRP    : dupeStruct.modr.nMatchRP   [0:dupeStructInd-1], $
-                            tSpan       : dupeStruct.modr.tSpan      [0:dupeStructInd-1], $
-                            trueWarrior : dupeStruct.ints.trueWarrior[0:dupeStructInd-1]}}
+  int_ii = CGSETDIFFERENCE(LINDGEN(N_ELEMENTS(int_i)),int_tooClose_ii,COUNT=nInt_sIII1)
+  int_i  = int_i[int_ii]
 
-  PRINT_KATUS_EVENTS,Dst,int_i,mod_i,mp_i,rp_i,nInt_sIII2,nMod_sIII2, $
+  mod_ii = CGSETDIFFERENCE(LINDGEN(N_ELEMENTS(mod_i)),mod_tooClose_ii,COUNT=nMod_sIII1)
+  mod_i  = mod_i[mod_ii]
+
+  mp_i  = {ints : mp_i.ints[int_ii], $
+           modr : mp_i.modr[mod_ii]}
+  rp_i  = {ints : rp_i.ints[int_ii], $
+           modr : rp_i.modr[mod_ii]}
+
+  ;there are 6, so this should eliminate 12
+
+  ;; nInt_sIII1 = N_ELEMENTS(int_i)
+  ;; nMod_sIII1 = N_ELEMENTS(mod_i)
+
+  PRINT_KATUS_EVENTS,Dst,int_i,mod_i,mp_i,rp_i,nInt_sIII1,nMod_sIII1
                      ;; DONT_PRINT_INTENSE_EVTS=noInts, $
                      ;; /DONT_PRINT_MODERATE_EVTS=noMods
-                     /DONT_PRINT_MODERATE_EVTS, $
+                     ;; /DONT_PRINT_MODERATE_EVTS, $
                      ;; DUPLICADO_INT_I=duplicado_int_i;, $
-                     DUPLICADO_INT_I=dupeStruct.ints.ind;, $
+                     ;; DUPLICADO_INT_I=dupeStruct.ints.ind;, $
                      ;; DUPLICADO_MOD_I=duplicado_mod_i
 
-
-  ;;Now we can get all events that don't have nasty duplicates
-  int_noDupe_i = CGSETINTERSECTION(int_i,killDupe_i,COUNT=nInt_noDupe)
-  ;; mod_noDupe_i = CGSETINTERSECTION(mod_i,killDupe_i,COUNT=nMod_noDupe)
-
-  STOP
-
-  dupeInd[  2] : use   3
-  dupeInd[  6] : use   7
-  dupeInd[ 12] : use  12 (BUT TOSS? Mins spread over 18 h)
-  dupeInd[ 15] : use  16 (BUT TOSS? Mins spread over 11 h)
-  dupeInd[ 18] : use  20
-  dupeInd[ 21] : use  22
-  dupeInd[ 24] : use  26
-  dupeInd[ 28] : use  29
-  dupeInd[ 30] : use  30 (BUT TOSS! Mins spread over 18 h)
-  dupeInd[ 37] : use  37
-  dupeInd[ 41] : use  40 (! Yes, because the real bidness is 10 h before index 41)
-  dupeInd[ 43] : use  44 
-  dupeInd[ 45] : use  45
-  dupeInd[ 48] : use  49
-  dupeInd[ 54] : use  55
-  dupeInd[ 60] : use  60
-  dupeInd[ 63] : use  63
-  dupeInd[ 68] : use  69
-  dupeInd[ 72] : use  74
-  dupeInd[ 75] : use  76
-  dupeInd[ 82] : use  82 (But beware! Min showing up over 20 h)
-  dupeInd[ 92] : use  92 
-  dupeInd[ 94] : Throw out (part of dupeInd[92] storm)
-  dupeInd[ 96] : use 97
-  dupeInd[100] : use 101
-  dupeInd[105] : use 105
-  dupeInd[109] : use 110
-  dupeInd[112] : Toss everything through 117
-
+  ;; FOR k=0,N_ELEMENTS(dupestruct.ints.trueWarrior)-1 DO $
+  ;;     PRINT,dupeStruct.ints.ind[k],WHERE(int_i EQ dupestruct.ints.trueWarrior[k])
+  ;;         2           3M
+  ;;         6           7M
+  ;;         9           9M
+  ;;        12          12M
+  ;;        15          16M,TOSS 
+  ;;        18          20M
+  ;;        21          22M
+  ;;        24          26M
+  ;;        28          29M
+  ;;        30          30M,TOSS 
+  ;;        37          37M
+  ;;        41          40!!!
+  ;;        43          44M
+  ;;        45          45M
+  ;;        48          49M
+  ;;        54          55M
+  ;;        60          60M
+  ;;        63          63M
+  ;;        68          69M
+  ;;        72          74M
+  ;;        75          76M
+  ;;        82          82M
+  ;;        92          92M
+  ;;        94          94TOSS 
+  ;;        96          97M
+  ;;       100         101M
+  ;;       105         105M
+  ;;       109         110M
+  ;;       112         113TOSSEVERYTHING THROUGH 117
 
 
   ;;============================================
@@ -459,7 +576,7 @@ PRO GET_KATUS_ET_AL_2013_STORM_PHASE_IDENTIFICATION, $
   SSC_int_i        = !NULL
   SSC_mod_i        = !NULL
 
-  FOR k=0,nInt_sIII2-1 DO BEGIN
+  FOR k=0,nInt_sIII1-1 DO BEGIN
      tmpArr = Dst.dst[(mp_i.ints[k]-8):(mp_i.ints[k])] - Dst.dst[(mp_i.ints[k])]
      IF (WHERE(tmpArr LE -10))[0] EQ -1 THEN BEGIN
         discard_int_ii = [discard_int_ii,k]
@@ -469,7 +586,7 @@ PRO GET_KATUS_ET_AL_2013_STORM_PHASE_IDENTIFICATION, $
      ENDELSE
   ENDFOR
 
-  FOR k=0,nMod_sIII2-1 DO BEGIN
+  FOR k=0,nMod_sIII1-1 DO BEGIN
      tmpArr = Dst.dst[(mp_i.modr[k]-8):(mp_i.modr[k])] - Dst.dst[(mp_i.modr[k])]
      IF (WHERE(tmpArr LE -10))[0] EQ -1 THEN BEGIN
         discard_mod_ii = [discard_mod_ii,k]
@@ -483,9 +600,9 @@ PRO GET_KATUS_ET_AL_2013_STORM_PHASE_IDENTIFICATION, $
   mod_i = CGSETDIFFERENCE(mod_i,mod_i[discard_mod_ii],COUNT=nMod_sIV1,POSITIONS=modPos_ii)
 
   mp_i  = {ints : mp_i.ints[intPos_ii], $
-          modr : mp_i.modr[modPos_ii]}
+           modr : mp_i.modr[modPos_ii]}
   rp_i  = {ints : rp_i.ints[intPos_ii], $
-          modr : rp_i.modr[modPos_ii]}
+           modr : rp_i.modr[modPos_ii]}
   ssc_i = {ints : TEMPORARY(SSC_int_i), $
            modr : TEMPORARY(SSC_mod_i)}
 
