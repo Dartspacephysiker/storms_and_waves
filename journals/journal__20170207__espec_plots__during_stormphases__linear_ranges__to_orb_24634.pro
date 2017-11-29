@@ -2,7 +2,7 @@
 PRO JOURNAL__20170207__ESPEC_PLOTS__DURING_STORMPHASES__LINEAR_RANGES__TO_ORB_24634
 
   dstCutoff                       = -20
-  use_mostRecent_Dst_files        = 1
+  use_mostRecent_Dst_files        = 0
 
   use_prev_plot_i                 = 0
   remake_prev_plot_file           = 1
@@ -10,6 +10,7 @@ PRO JOURNAL__20170207__ESPEC_PLOTS__DURING_STORMPHASES__LINEAR_RANGES__TO_ORB_24
   disregard_sample_t              = 1
 
   orbRange                        = [500,24634] ;Here's why: JOURNAL__20170102__WHICH_ORBITS_AT_REALLY_LOW_LATITUDES
+  eSpec__gigante_DB               = 1
   ;; orbRange                        = [1000,12670]
 
   ;; altRange                     = [ $
@@ -53,7 +54,7 @@ PRO JOURNAL__20170207__ESPEC_PLOTS__DURING_STORMPHASES__LINEAR_RANGES__TO_ORB_24
   do_despun                       = 0
   use_AACGM                       = 0
   use_MAG                         = 0
-  use_GEO                         = 1
+  use_GEO                         = 0
 
   autoscale_fluxPlots             = 0
   fluxPlots__remove_outliers      = 0
@@ -134,15 +135,15 @@ PRO JOURNAL__20170207__ESPEC_PLOTS__DURING_STORMPHASES__LINEAR_RANGES__TO_ORB_24
 
   ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
   ;;Hemi stuff
-  ;; hemi                           = 'NORTH'
+  hemi                           = 'NORTH'
   ;; hemi                           = 'BOTH'
   ;; minI                           = 50
   minI                           = 48
   maxI                           = 90
 
-  hemi                           = 'SOUTH'
-  minI                           = -90
-  maxI                           = -48
+  ;; hemi                           = 'SOUTH'
+  ;; minI                           = -90
+  ;; maxI                           = -48
   ;; maxI                           = -60
   ;; orbRange                       = [(1000 > orbRange[0]),orbRange[1]]
 
@@ -376,6 +377,7 @@ PRO JOURNAL__20170207__ESPEC_PLOTS__DURING_STORMPHASES__LINEAR_RANGES__TO_ORB_24
         LUN=lun, $
         ESPEC__NO_MAXIMUS=no_maximus, $
         ESPEC_FLUX_PLOTS=eSpec_flux_plots, $
+        ESPEC__GIGANTE_DB=eSpec__gigante_DB, $
         ESPEC__JUNK_ALFVEN_CANDIDATES=eSpec__junk_alfven_candidates, $
         ESPEC__ALL_FLUXES=eSpec__all_fluxes, $
         ESPEC__NEWELL_2009_INTERP=eSpec__Newell_2009_interp, $
