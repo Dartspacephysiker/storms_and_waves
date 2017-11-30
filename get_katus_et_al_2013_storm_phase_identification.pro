@@ -170,7 +170,7 @@ PRO GET_KATUS__KILL_DUPES,Dst,mp_i,rp_i,dupeStruct, $
 
 END
 
-PRO GET_KATUS_ET_AL_2013_STORM_PHASE_IDENTIFICATION, $
+PRO GET_KATUS_ET_AL_2013_STORM_PHASE_IDENTIFICATION,intense,moderate, $
    USE_SYMH=use_SYMH, $
    FAST_ELECTRONDB_TIMES=FAST_electronDB_times
 
@@ -328,14 +328,14 @@ PRO GET_KATUS_ET_AL_2013_STORM_PHASE_IDENTIFICATION, $
 
   ;; Step II.i. and II.ii.
   FOR k=0,nInt_sII1-1 DO BEGIN
-     junk         = MAX(Dst.dst[(int_i[k] - 24):(int_i[k] -  1)],MPind)
-     junk         = MAX(Dst.dst[(int_i[k] +  1):(int_i[k] + 96)],RPind)
+     junk          = MAX(Dst.dst[(int_i[k] - 24):(int_i[k] -  1)],MPind)
+     junk          = MAX(Dst.dst[(int_i[k] +  1):(int_i[k] + 96)],RPind)
      mp_i.ints[k]  = int_i[k] - 24 + MPind
      rp_i.ints[k]  = int_i[k] +  1 + RPind
   ENDFOR
   FOR k=0,nMod_sII1-1 DO BEGIN
-     junk         = MAX(Dst.dst[(mod_i[k] - 24):(mod_i[k] -  1)],MPind)
-     junk         = MAX(Dst.dst[(mod_i[k] +  1):(mod_i[k] + 96)],RPind)
+     junk          = MAX(Dst.dst[(mod_i[k] - 24):(mod_i[k] -  1)],MPind)
+     junk          = MAX(Dst.dst[(mod_i[k] +  1):(mod_i[k] + 96)],RPind)
      mp_i.modr[k]  = mod_i[k] - 24 + MPind
      rp_i.modr[k]  = mod_i[k] +  1 + RPind
   ENDFOR
@@ -383,9 +383,6 @@ PRO GET_KATUS_ET_AL_2013_STORM_PHASE_IDENTIFICATION, $
   ;; STOP
 
   ;; NOW try to do step III.i.?
-  lastInd = int_i[0]
-  ;; duplicado_int_i = !NULL
-  ;; duplicado_mod_i = !NULL
 
   PRINT,''
   PRINT,"**********"
@@ -606,12 +603,57 @@ PRO GET_KATUS_ET_AL_2013_STORM_PHASE_IDENTIFICATION, $
   ssc_i = {ints : TEMPORARY(SSC_int_i), $
            modr : TEMPORARY(SSC_mod_i)}
 
+  intense = {date  : {ssc : Dst.date[ssc_i.ints], $
+                      mp  : Dst.date[mp_i.ints], $
+                      min : Dst.date[int_i], $
+                      rp  : Dst.date[mp_i.ints]}, $
+             time  : {ssc : S2T(Dst.date[ssc_i.ints]), $
+                      mp  : S2T(Dst.date[mp_i.ints]), $
+                      min : S2T(Dst.date[int_i]), $
+                      rp  : S2T(Dst.date[rp_i.ints])}, $
+             dst   : {ssc : Dst.dst[ssc_i.ints], $
+                      mp  : Dst.dst[mp_i.ints], $
+                      min : Dst.dst[int_i], $
+                      rp  : Dst.dst[rp_i.ints]}, $
+             stats : {ssc : {median  : MEDIAN(Dst.JulDay[ssc_i.ints] - Dst.JulDay[mp_i.ints])*24., $
+                             mean    : MEAN(Dst.JulDay[ssc_i.ints] - Dst.JulDay[mp_i.ints])*24., $
+                             stdev   : STDDEV(Dst.JulDay[ssc_i.ints] - Dst.JulDay[mp_i.ints])*24.}, $
+                      mp  : {median  : MEDIAN(Dst.JulDay[mp_i.ints] - Dst.JulDay[int_i])*24., $
+                             mean    : MEAN(Dst.JulDay[mp_i.ints] - Dst.JulDay[int_i])*24., $
+                             stdev   : STDDEV(Dst.JulDay[mp_i.ints] - Dst.JulDay[int_i])*24.}, $
+                      rp  : {median  : MEDIAN(Dst.JulDay[int_i] - Dst.JulDay[rp_i.ints])*24., $
+                             mean    : MEAN(Dst.JulDay[int_i] - Dst.JulDay[rp_i.ints])*24., $
+                             stdev   : STDDEV(Dst.JulDay[int_i] - Dst.JulDay[rp_i.ints])*24.}}}
+
+  moderate = {date : {ssc : Dst.date[ssc_i.modr], $
+                     mp  : Dst.date[mp_i.modr], $
+                     min : Dst.date[mod_i], $
+                     rp  : Dst.date[mp_i.modr]}, $
+              time  : {ssc : S2T(Dst.date[ssc_i.modr]), $
+                       mp  : S2T(Dst.date[mp_i.modr]), $
+                       min : S2T(Dst.date[mod_i]), $
+                       rp  : S2T(Dst.date[rp_i.modr])}, $
+              dst   : {ssc : Dst.dst[ssc_i.modr], $
+                       mp  : Dst.dst[mp_i.modr], $
+                       min : Dst.dst[mod_i], $
+                       rp  : Dst.dst[rp_i.modr]}, $
+             stats : {ssc : {median  : MEDIAN(Dst.JulDay[ssc_i.modr] - Dst.JulDay[mp_i.modr])*24., $
+                             mean    : MEAN(Dst.JulDay[ssc_i.modr] - Dst.JulDay[mp_i.modr])*24., $
+                             stdev   : STDDEV(Dst.JulDay[ssc_i.modr] - Dst.JulDay[mp_i.modr])*24.}, $
+                      mp  : {median  : MEDIAN(Dst.JulDay[mp_i.modr] - Dst.JulDay[mod_i])*24., $
+                             mean    : MEAN(Dst.JulDay[mp_i.modr] - Dst.JulDay[mod_i])*24., $
+                             stdev   : STDDEV(Dst.JulDay[mp_i.modr] - Dst.JulDay[mod_i])*24.}, $
+                      rp  : {median  : MEDIAN(Dst.JulDay[mod_i] - Dst.JulDay[rp_i.modr])*24., $
+                             mean    : MEAN(Dst.JulDay[mod_i] - Dst.JulDay[rp_i.modr])*24., $
+                             stdev   : STDDEV(Dst.JulDay[mod_i] - Dst.JulDay[rp_i.modr])*24.}}}
+
   PRINT_KATUS_EVENTS,Dst,int_i,mod_i,mp_i,rp_i,nInt_sIV1,nMod_sIV1, $
                      ;; DONT_PRINT_INTENSE_EVTS=noInts, $
                      ;; /DONT_PRINT_MODERATE_EVTS=noMods
                      /DONT_PRINT_MODERATE_EVTS
 
   DST__Dst = TEMPORARY(dst)
-  STOP
+
+  
 
 END

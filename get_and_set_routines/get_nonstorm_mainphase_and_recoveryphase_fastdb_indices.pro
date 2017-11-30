@@ -13,19 +13,41 @@ PRO GET_NONSTORM_MAINPHASE_AND_RECOVERYPHASE_FASTDB_INDICES, $
    NONSTORM_I=ns_i, $
    MAINPHASE_I=mp_i, $
    RECOVERYPHASE_I=rp_i, $
+   INITIALPHASE_I=init_i, $
    ;; DSTCUTOFF=dstCutoff, $
    ;; SMOOTH_DST=smooth_dst, $
    USE_MOSTRECENT_DST_FILES=use_mostRecent_Dst_files, $
+   USE_KATUS_STORM_PHASES=use_katus_storm_phases, $
    STORM_DST_I=s_dst_i, $
    NONSTORM_DST_I=ns_dst_i, $
    MAINPHASE_DST_I=mp_dst_i, $
    RECOVERYPHASE_DST_I=rp_dst_i, $
+   INITIALPHASE_DST_I=init_dst_i, $
    N_STORM=n_s, $
    N_NONSTORM=n_ns, $
    N_MAINPHASE=n_mp, $
    N_RECOVERYPHASE=n_rp, $
-   NONSTORM_T1=ns_t1,MAINPHASE_T1=mp_t1,RECOVERYPHASE_T1=rp_t1, $
-   NONSTORM_T2=ns_t2,MAINPHASE_T2=mp_t2,RECOVERYPHASE_T2=rp_t2, $
+   N_INITIALPHASE=n_init, $
+   N_EARLYMAINPHASE=n_earlyMP, $
+   N_EARLYRECOVERYPHASE=n_earlyRP, $
+   N_LATEMAINPHASE=n_lateMP, $
+   N_LATERECOVERYPHASE=n_lateRP, $
+   NONSTORM_T1=ns_t1, $
+   INITIALPHASE_T1=init_t1, $
+   MAINPHASE_T1=mp_t1, $
+   RECOVERYPHASE_T1=rp_t1, $
+   EARLYMAINPHASE_T1=earlyMP_t1, $
+   EARLYRECOVERYPHASE_T1=earlyRP_t1, $
+   LATEMAINPHASE_T1=lateMP_t1, $
+   LATERECOVERYPHASE_T1=lateRP_t1, $
+   NONSTORM_T2=ns_t2, $
+   INITIALPHASE_T2=init_t2, $
+   MAINPHASE_T2=mp_t2, $
+   RECOVERYPHASE_T2=rp_t2, $
+   EARLYMAINPHASE_T2=earlyMP_t2, $
+   EARLYRECOVERYPHASE_T2=earlyRP_t2, $
+   LATEMAINPHASE_T2=lateMP_t2, $
+   LATERECOVERYPHASE_T2=lateRP_t2, $
    GET_TIME_FOR_ESPEC_DBS=for_eSpec_DBs, $
    LUN=lun
 
@@ -71,7 +93,8 @@ PRO GET_NONSTORM_MAINPHASE_AND_RECOVERYPHASE_FASTDB_INDICES, $
                       DISREGARD_SAMPLE_T=alfDB_plot_struct.disregard_sample_t, $
                       DSTCUTOFF=alfDB_plot_struct.storm_opt.dstCutoff, $
                       SMOOTH_DST=alfDB_plot_struct.storm_opt.smooth_Dst, $
-                      USE_MOSTRECENT_DST_FILES=alfDB_plot_struct.storm_opt.use_mostRecent_Dst_files)
+                      USE_MOSTRECENT_DST_FILES=alfDB_plot_struct.storm_opt.use_mostRecent_Dst_files, $
+                      USE_KATUS_STORM_PHASES=alfDB_plot_struct.storm_opt.use_katus_storm_phases)
      END
      KEYWORD_SET(get_sWay_i_not_alfDB_i): BEGIN
         @common__strangeway_bands.pro
@@ -115,7 +138,8 @@ PRO GET_NONSTORM_MAINPHASE_AND_RECOVERYPHASE_FASTDB_INDICES, $
                       SAMPLE_T_RESTRICTION=alfDB_plot_struct.sample_t_restriction, $
                       DSTCUTOFF=alfDB_plot_struct.storm_opt.dstCutoff, $
                       SMOOTH_DST=alfDB_plot_struct.storm_opt.smooth_Dst, $
-                      USE_MOSTRECENT_DST_FILES=alfDB_plot_struct.storm_opt.use_mostRecent_Dst_files)
+                      USE_MOSTRECENT_DST_FILES=alfDB_plot_struct.storm_opt.use_mostRecent_Dst_files, $
+                      USE_KATUS_STORM_PHASES=alfDB_plot_struct.storm_opt.use_katus_storm_phases)
      END
      KEYWORD_SET(get_iondb_i_not_alfDB_i): BEGIN
         @common__newell_ion_db.pro
@@ -149,7 +173,8 @@ PRO GET_NONSTORM_MAINPHASE_AND_RECOVERYPHASE_FASTDB_INDICES, $
                       DISREGARD_SAMPLE_T=alfDB_plot_struct.disregard_sample_t, $
                       DSTCUTOFF=alfDB_plot_struct.storm_opt.dstCutoff, $
                       SMOOTH_DST=alfDB_plot_struct.storm_opt.smooth_Dst, $
-                      USE_MOSTRECENT_DST_FILES=alfDB_plot_struct.storm_opt.use_mostRecent_Dst_files)
+                      USE_MOSTRECENT_DST_FILES=alfDB_plot_struct.storm_opt.use_mostRecent_Dst_files, $
+                      USE_KATUS_STORM_PHASES=alfDB_plot_struct.storm_opt.use_katus_storm_phases)
      END
      KEYWORD_SET(get_time_i_not_alfDB_I): BEGIN
         IF KEYWORD_SET(for_eSpec_DBs) THEN BEGIN
@@ -189,7 +214,8 @@ PRO GET_NONSTORM_MAINPHASE_AND_RECOVERYPHASE_FASTDB_INDICES, $
                       DISREGARD_SAMPLE_T=alfDB_plot_struct.disregard_sample_t, $
                       DSTCUTOFF=alfDB_plot_struct.storm_opt.dstCutoff, $
                       SMOOTH_DST=alfDB_plot_struct.storm_opt.smooth_Dst, $
-                      USE_MOSTRECENT_DST_FILES=alfDB_plot_struct.storm_opt.use_mostRecent_Dst_files)
+                      USE_MOSTRECENT_DST_FILES=alfDB_plot_struct.storm_opt.use_mostRecent_Dst_files, $
+                      USE_KATUS_STORM_PHASES=alfDB_plot_struct.storm_opt.use_katus_storm_phases)
      END
      ELSE: BEGIN
         @common__maximus_vars.pro
@@ -221,7 +247,8 @@ PRO GET_NONSTORM_MAINPHASE_AND_RECOVERYPHASE_FASTDB_INDICES, $
                       DISREGARD_SAMPLE_T=alfDB_plot_struct.disregard_sample_t, $
                       DSTCUTOFF=alfDB_plot_struct.storm_opt.dstCutoff, $
                       SMOOTH_DST=alfDB_plot_struct.storm_opt.smooth_Dst, $
-                      USE_MOSTRECENT_DST_FILES=alfDB_plot_struct.storm_opt.use_mostRecent_Dst_files)
+                      USE_MOSTRECENT_DST_FILES=alfDB_plot_struct.storm_opt.use_mostRecent_Dst_files, $
+                      USE_KATUS_STORM_PHASES=alfDB_plot_struct.storm_opt.use_katus_storm_phases)
 
      END
   ENDCASE
@@ -234,18 +261,47 @@ PRO GET_NONSTORM_MAINPHASE_AND_RECOVERYPHASE_FASTDB_INDICES, $
      USE_JULDAY_NOT_UTC=IMF_struct.use_julDay_not_UTC, $
      EARLIEST_JULDAY=IMF_struct.earliest_julDay, $
      LATEST_JULDAY=IMF_struct.latest_julDay, $
+     USE_KATUS_STORM_PHASES=use_katus_storm_phases, $
      STORM_DST_I=s_dst_i, $
      NONSTORM_DST_I=ns_dst_i, $
      MAINPHASE_DST_I=mp_dst_i, $
      RECOVERYPHASE_DST_I=rp_dst_i, $
+     INITIALPHASE_DST_I=init_dst_i, $
+     EARLYMAINPHASE_DST_I=earlyMP_dst_i, $
+     EARLYRECOVERYPHASE_DST_I=earlyRP_dst_i, $
+     LATEMAINPHASE_DST_I=lateMP_dst_i, $
+     LATERECOVERYPHASE_DST_I=lateRP_dst_i, $
      N_STORM=n_s, $
      N_NONSTORM=n_ns, $
      N_MAINPHASE=n_mp, $
-     N_RECOVERYPHASE=n_rp,LUN=lun
+     N_RECOVERYPHASE=n_rp, $
+     N_INITIALPHASE=n_init, $
+     N_EARLYMAINPHASE=n_earlyMP, $
+     N_EARLYRECOVERYPHASE=n_earlyRP, $
+     N_LATEMAINPHASE=n_lateMP, $
+     N_LATERECOVERYPHASE=n_lateRP, $
+     LUN=lun
 
-  dst_i_list=LIST(ns_dst_i,mp_dst_i,rp_dst_i)
-  strings=["nonstorm","mainphase","recoveryphase"]
+  IF KEYWORD_SET(use_katus_storm_phases) THEN BEGIN
 
+     CASE katus_storm_phases OF
+        1: BEGIN
+           dst_i_list=LIST(init_dst_i,mp_dst_i,rp_dst_i)
+           strings=["initial","mainphase","recoveryphase"]
+        END
+        2: BEGIN
+           dst_i_list=LIST(init_dst_i,earlyMP_dst_i,lateMP_dst_i,earlyRP_dst_i,lateRP_dst_i)
+           strings=["initial","earlyMP","lateMP",'earlyRP','lateRP']
+        END
+     ENDCASE
+
+  ENDIF ELSE BEGIN
+
+     dst_i_list=LIST(ns_dst_i,mp_dst_i,rp_dst_i)
+     strings=["nonstorm","mainphase","recoveryphase"]
+
+  ENDELSE
+  
   IF FILE_TEST(todaysFile) AND KEYWORD_SET(alfDB_plot_struct.storm_opt.use_mostRecent_Dst_files) THEN BEGIN
      PRINTF,lun,"Already have nonstorm and storm " + dbString + $
             " inds! Restoring today's file..."
@@ -276,31 +332,133 @@ PRO GET_NONSTORM_MAINPHASE_AND_RECOVERYPHASE_FASTDB_INDICES, $
            TSPANS_ORBS_LIST=tspans_orbs_list, $
            PRINT_DATA_AVAILABILITY=0,VERBOSE=0,/LIST_TO_ARR
         
-        IF i EQ 0 THEN BEGIN
-           ns_i                = inds_list
-           ns_t1               = dst.time[inds[start_dst_ii]]
-           ns_t2               = dst.time[inds[stop_dst_ii]]
+        IF KEYWORD_SET(use_katus_storm_phases) THEN BEGIN
+
+           CASE use_katus_storm_phases OF
+              1: BEGIN
+
+                 CASE i OF
+                    0: BEGIN
+                       init_i   = inds_list
+                       init_t1  = dst.time[inds[start_dst_ii]]
+                       init_t2  = dst.time[inds[stop_dst_ii]]
+
+                    END
+                    1: BEGIN
+                       mp_i     = inds_list 
+                       mp_t1    = dst.time[inds[start_dst_ii]]
+                       mp_t2    = dst.time[inds[stop_dst_ii]]
+                    END
+                    2: BEGIN
+                       rp_i     = inds_list
+                       rp_t1    = dst.time[inds[start_dst_ii]]
+                       rp_t2    = dst.time[inds[stop_dst_ii]]
+                    END
+                 ENDCASE
+
+              END
+              2: BEGIN
+
+                 CASE i OF
+                    0: BEGIN
+                       init_i      = inds_list
+                       init_t1     = dst.time[inds[start_dst_ii]]
+                       init_t2     = dst.time[inds[stop_dst_ii]]
+
+                    END
+                    1: BEGIN
+                       earlyMP_i  = inds_list 
+                       earlyMP_t1 = dst.time[inds[start_dst_ii]]
+                       earlyMP_t2 = dst.time[inds[stop_dst_ii]]
+                    END
+                    2: BEGIN
+                       lateMP_i   = inds_list 
+                       lateMP_t1  = dst.time[inds[start_dst_ii]]
+                       lateMP_t2  = dst.time[inds[stop_dst_ii]]
+                    END
+                    1: BEGIN
+                       earlyRP_i  = inds_list 
+                       earlyRP_t1 = dst.time[inds[start_dst_ii]]
+                       earlyRP_t2 = dst.time[inds[stop_dst_ii]]
+                    END
+                    2: BEGIN
+                       lateRP_i   = inds_list 
+                       lateRP_t1  = dst.time[inds[start_dst_ii]]
+                       lateRP_t2  = dst.time[inds[stop_dst_ii]]
+                    END
+                 ENDCASE
+
+              END
+           ENDCASE
+
         ENDIF ELSE BEGIN
-           IF i EQ 1 THEN BEGIN
-              mp_i             = inds_list 
-              mp_t1            = dst.time[inds[start_dst_ii]]
-              mp_t2            = dst.time[inds[stop_dst_ii]]
-           ENDIF ELSE BEGIN
-              IF i EQ 2 THEN BEGIN
-                 rp_i          = inds_list
-                 rp_t1         = dst.time[inds[start_dst_ii]]
-                 rp_t2         = dst.time[inds[stop_dst_ii]]
-              ENDIF
-           ENDELSE
+
+           CASE i OF
+              0: BEGIN
+                 ns_i   = inds_list
+                 ns_t1  = dst.time[inds[start_dst_ii]]
+                 ns_t2  = dst.time[inds[stop_dst_ii]]
+              END
+              1: BEGIN
+                 mp_i   = inds_list 
+                 mp_t1  = dst.time[inds[start_dst_ii]]
+                 mp_t2  = dst.time[inds[stop_dst_ii]]
+              END
+              2: BEGIN
+                 rp_i   = inds_list
+                 rp_t1  = dst.time[inds[start_dst_ii]]
+                 rp_t2  = dst.time[inds[stop_dst_ii]]
+              END
+           ENDCASE
+
         ENDELSE
-        
+
      ENDFOR
 
      PRINTF,lun,"Saving FAST " + dbString + " nonstorm/storm indices for today: " + todaysFile
-     SAVE,ns_i,mp_i,rp_i,s_dst_i,ns_dst_i,mp_dst_i,rp_dst_i, $
-          n_s,n_ns,n_mp,n_rp, $
-          ns_t1,ns_t2,mp_t1,mp_t2,rp_t1,rp_t2, $
-          FILENAME=todaysFile
+
+     IF KEYWORD_SET(use_katus_storm_phases) THEN BEGIN
+
+        CASE use_katus_storm_phases OF
+           1: BEGIN
+
+              SAVE,ns_i,init_i,mp_i,rp_i,ns_dst_i,s_dst_i,init_dst_i,mp_dst_i,rp_dst_i, $
+                   n_ns,n_s,n_init,n_mp,n_rp, $
+                   ns_t1,ns_t2,init_t1,init_t2,mp_t1,mp_t2,rp_t1,rp_t2, $
+                   FILENAME=todaysFile
+
+           END
+           2: BEGIN
+
+              SAVE,ns_i, $
+                   init_i, $
+                   earlyMP_i,lateMP_i, $
+                   earlyRP_i,lateRP_i, $
+                   ns_dst_i,s_dst_i, $
+                   init_dst_i, $
+                   earlyMP_dst_i,lateMP_dst_i, $
+                   earlyRP_dst_i,lateRP_dst_i, $
+                   n_ns,n_s, $
+                   n_init, $
+                   n_earlyMP,n_lateMP, $
+                   n_earlyRP,n_lateRP, $
+                   ns_t1,ns_t2, $
+                   init_t1,init_t2, $
+                   earlyMP_t1,earlyMP_t2,lateMP_t1,lateMP_t2, $
+                   earlyRP_t1,earlyRP_t2, $
+                   FILENAME=todaysFile
+
+           END
+        ENDCASE
+
+     ENDIF ELSE BEGIN
+
+        SAVE,ns_i,mp_i,rp_i,s_dst_i,ns_dst_i,mp_dst_i,rp_dst_i, $
+             n_s,n_ns,n_mp,n_rp, $
+             ns_t1,ns_t2,mp_t1,mp_t2,rp_t1,rp_t2, $
+             FILENAME=todaysFile
+
+     ENDELSE
 
   ENDELSE
 

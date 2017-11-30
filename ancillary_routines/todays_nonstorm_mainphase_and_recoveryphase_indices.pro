@@ -16,6 +16,7 @@ FUNCTION TODAYS_NONSTORM_MAINPHASE_AND_RECOVERYPHASE_INDICES, $
    DSTCUTOFF=dstCutoff, $
    SMOOTH_DST=smooth_dst, $
    USE_MOSTRECENT_DST_FILES=most_recent, $
+   USE_KATUS_STORM_PHASES=use_katus_storm_phases, $
    SUFFIX=suffix
 
 
@@ -79,26 +80,33 @@ FUNCTION TODAYS_NONSTORM_MAINPHASE_AND_RECOVERYPHASE_INDICES, $
 
   indDir           = '/SPENCEdata/Research/database/temps/'
 
-  mostRecent_bash  = indDir + 'mostRecent_'+dbNavn + '--' + 'dstCutoff_' + $
-                     STRCOMPRESS(dstCutoff,/REMOVE_ALL) + "nT" + smoothStr + suffix + '_ns_mp_rp_inds.txt'
+  katusfPref       = ''
+  katusStr         = ''
+  dstCutoffFPref   = '--dstCutoff_' + STRCOMPRESS(dstCutoff,/REMOVE_ALL) + "nT" + smoothStr
+  IF KEYWORD_SET(use_katus_storm_phases) THEN BEGIN
+     katusfPref    = STRING(FORMAT='(A0,I1,"_")',"katus",use_katus_storm_phases)
+     katusStr      = STRING(FORMAT='(A0,I1," ")',"Katus",use_katus_storm_phases)
+     dstCutofffPref= ''
+  ENDIF
+  mostRecent_bash  = indDir + 'mostRecent_'+katusfPref+dbNavn + dstCutoffFPref + suffix + '_ns_mp_rp_inds.txt'
 
   IF KEYWORD_SET(most_recent) THEN BEGIN
      IF FILE_TEST(mostRecent_bash) THEN BEGIN
         SPAWN,'cat ' + mostRecent_bash,todaysFile
         makeNew    = 0
      ENDIF ELSE BEGIN
-        PRINT,"Couldn't get most recent " + dbNavn + " ns_mp_rp file! Making new ..."
+        PRINT,"Couldn't get most recent " + katusStr + dbNavn + " ns_mp_rp file! Making new ..."
         makeNew    = 1
      ENDELSE
   ENDIF ELSE makeNew = 1
 
   IF makeNew THEN BEGIN
      filePref      = 'todays_nonstorm_mainphase_and_recoveryphase_' $
-                     + dbNavn + '_inds--dstCutoff_' + $
-                     STRCOMPRESS(dstCutoff,/REMOVE_ALL) + "nT"
+                     + katusfPref $
+                     + dbNavn + '_inds'
 
      hoyDia        = GET_TODAY_STRING(/DO_YYYYMMDD_FMT)
-     todaysFile    = indDir+filePref+smoothStr+suffix + '--'+hoyDia+'.sav'
+     todaysFile    = indDir+filePref+dstCutoffFPref+suffix + '--'+hoyDia+'.sav'
      SPAWN,'echo "' + todaysFile + '" >' + mostRecent_bash
   ENDIF
 
