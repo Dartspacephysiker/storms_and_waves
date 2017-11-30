@@ -30,6 +30,8 @@
 ; EXAMPLE:
 ;
 ; MODIFICATION HISTORY:  2015/10/14     BORN
+;                        2017/11/30     Serious edits. Added all the Katus et al. [2013] stuff
+;                                       (The early/late phase stuff was my idea, o'course.)
 ;
 ;-
 PRO GET_NONSTORM_MAINPHASE_AND_RECOVERYPHASE_PERIODS,dst, $
