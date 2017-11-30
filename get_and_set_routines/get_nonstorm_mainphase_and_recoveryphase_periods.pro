@@ -113,17 +113,16 @@ PRO GET_NONSTORM_MAINPHASE_AND_RECOVERYPHASE_PERIODS,dst, $
               FOR ind=0,N_ELEMENTS(katus.date.utc)-1 DO BEGIN
 
                  tmpInit_i = WHERE((dst.time GE katus.init.utc[ind]) AND $
-                                   (dst.time LT katus.mp.utc[ind]  ), $
+                                   (dst.time LE katus.mp.utc[ind]  ), $
                                    /NULL, $
                                    initCount)
 
-
                  tmpMP_i   = WHERE((dst.time GE katus.mp.utc[ind]  ) AND $
-                                   (dst.time LT katus.peak.utc[ind]), $
+                                   (dst.time LE katus.peak.utc[ind]), $
                                    /NULL, $
                                    mpCount)
                  tmpRP_i   = WHERE((dst.time GE katus.peak.utc[ind]) AND $
-                                   (dst.time LT katus.rp.utc[ind]  ), $
+                                   (dst.time LE katus.rp.utc[ind]  ), $
                                    /NULL, $
                                    rpCount)
 
@@ -160,24 +159,24 @@ PRO GET_NONSTORM_MAINPHASE_AND_RECOVERYPHASE_PERIODS,dst, $
                  FOREACH date,katus.date,ind DO BEGIN
 
                     tmpInit_i = WHERE((dst.time GE katus.init.utc[ind]) AND $
-                                      (dst.time LT katus.mp.utc[ind]  ), $
+                                      (dst.time LE katus.mp.utc[ind]  ), $
                                       /NULL, $
                                       initCount)
                     
                     tmpEarlyMP_i   = WHERE((dst.time GE katus.mp.utc[ind]  ) AND $
-                                           (dst.time LT katus.mp.half.utc[ind]), $
+                                           (dst.time LE katus.mp.half.utc[ind]), $
                                            /NULL, $
                                            earlyMPCount)
                     tmpEarlyRP_i   = WHERE((dst.time GE katus.peak.utc[ind]) AND $
-                                           (dst.time LT katus.rp.half.utc[ind]  ), $
+                                           (dst.time LE katus.rp.half.utc[ind]  ), $
                                            /NULL, $
                                            earlyRPCount)
                     tmpLateMP_i    = WHERE((dst.time GE katus.mp.half.utc[ind]  ) AND $
-                                           (dst.time LT katus.peak.utc[ind]), $
+                                           (dst.time LE katus.peak.utc[ind]), $
                                            /NULL, $
                                            lateMPCount)
                     tmpLateRP_i    = WHERE((dst.time GE katus.rp.half.utc[ind]) AND $
-                                           (dst.time LT katus.rp.utc[ind]  ), $
+                                           (dst.time LE katus.rp.utc[ind]  ), $
                                            /NULL, $
                                            lateRPCount)
 
