@@ -11,7 +11,7 @@ FUNCTION LOAD_KATUS_STORM_PHASES,INTENSE=intense, $
   dir      = '/SPENCEdata/Research/database/storm_data/processed/katus_et_al_2013__normalized_storm_phases/'
   katusFil = 'katus_IDL_structs.sav'
 
-  IF ~FILE_TEST(dir+katusFile) THEN STOP
+  IF ~FILE_TEST(dir+katusFil) THEN STOP
 
   RESTORE,dir+katusFil
 

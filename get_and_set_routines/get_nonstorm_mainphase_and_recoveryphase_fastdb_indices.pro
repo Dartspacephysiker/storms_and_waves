@@ -102,7 +102,7 @@ PRO GET_NONSTORM_MAINPHASE_AND_RECOVERYPHASE_FASTDB_INDICES, $
                       DSTCUTOFF=alfDB_plot_struct.storm_opt.dstCutoff, $
                       SMOOTH_DST=alfDB_plot_struct.storm_opt.smooth_Dst, $
                       USE_MOSTRECENT_DST_FILES=alfDB_plot_struct.storm_opt.use_mostRecent_Dst_files, $
-                      USE_KATUS_STORM_PHASES=alfDB_plot_struct.storm_opt.use_katus_storm_phases)
+                      USE_KATUS_STORM_PHASES=use_katus_storm_phases)
      END
      KEYWORD_SET(get_sWay_i_not_alfDB_i): BEGIN
         @common__strangeway_bands.pro
@@ -147,7 +147,7 @@ PRO GET_NONSTORM_MAINPHASE_AND_RECOVERYPHASE_FASTDB_INDICES, $
                       DSTCUTOFF=alfDB_plot_struct.storm_opt.dstCutoff, $
                       SMOOTH_DST=alfDB_plot_struct.storm_opt.smooth_Dst, $
                       USE_MOSTRECENT_DST_FILES=alfDB_plot_struct.storm_opt.use_mostRecent_Dst_files, $
-                      USE_KATUS_STORM_PHASES=alfDB_plot_struct.storm_opt.use_katus_storm_phases)
+                      USE_KATUS_STORM_PHASES=use_katus_storm_phases)
      END
      KEYWORD_SET(get_iondb_i_not_alfDB_i): BEGIN
         @common__newell_ion_db.pro
@@ -182,7 +182,7 @@ PRO GET_NONSTORM_MAINPHASE_AND_RECOVERYPHASE_FASTDB_INDICES, $
                       DSTCUTOFF=alfDB_plot_struct.storm_opt.dstCutoff, $
                       SMOOTH_DST=alfDB_plot_struct.storm_opt.smooth_Dst, $
                       USE_MOSTRECENT_DST_FILES=alfDB_plot_struct.storm_opt.use_mostRecent_Dst_files, $
-                      USE_KATUS_STORM_PHASES=alfDB_plot_struct.storm_opt.use_katus_storm_phases)
+                      USE_KATUS_STORM_PHASES=use_katus_storm_phases)
      END
      KEYWORD_SET(get_time_i_not_alfDB_I): BEGIN
         IF KEYWORD_SET(for_eSpec_DBs) THEN BEGIN
@@ -223,7 +223,7 @@ PRO GET_NONSTORM_MAINPHASE_AND_RECOVERYPHASE_FASTDB_INDICES, $
                       DSTCUTOFF=alfDB_plot_struct.storm_opt.dstCutoff, $
                       SMOOTH_DST=alfDB_plot_struct.storm_opt.smooth_Dst, $
                       USE_MOSTRECENT_DST_FILES=alfDB_plot_struct.storm_opt.use_mostRecent_Dst_files, $
-                      USE_KATUS_STORM_PHASES=alfDB_plot_struct.storm_opt.use_katus_storm_phases)
+                      USE_KATUS_STORM_PHASES=use_katus_storm_phases)
      END
      ELSE: BEGIN
         @common__maximus_vars.pro
@@ -256,7 +256,7 @@ PRO GET_NONSTORM_MAINPHASE_AND_RECOVERYPHASE_FASTDB_INDICES, $
                       DSTCUTOFF=alfDB_plot_struct.storm_opt.dstCutoff, $
                       SMOOTH_DST=alfDB_plot_struct.storm_opt.smooth_Dst, $
                       USE_MOSTRECENT_DST_FILES=alfDB_plot_struct.storm_opt.use_mostRecent_Dst_files, $
-                      USE_KATUS_STORM_PHASES=alfDB_plot_struct.storm_opt.use_katus_storm_phases)
+                      USE_KATUS_STORM_PHASES=use_katus_storm_phases)
 
      END
   ENDCASE
@@ -292,7 +292,7 @@ PRO GET_NONSTORM_MAINPHASE_AND_RECOVERYPHASE_FASTDB_INDICES, $
 
   IF KEYWORD_SET(use_katus_storm_phases) THEN BEGIN
 
-     CASE katus_storm_phases OF
+     CASE use_katus_storm_phases OF
         1: BEGIN
            dst_i_list=LIST(init_dst_i,mp_dst_i,rp_dst_i)
            strings=["initial","mainphase","recoveryphase"]

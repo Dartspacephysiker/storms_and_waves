@@ -109,8 +109,8 @@ PRO GET_NONSTORM_MAINPHASE_AND_RECOVERYPHASE_PERIODS,dst, $
 
         CASE use_katus_storm_phases OF
            1: BEGIN
-              ;; FOREACH date,katus.date,ind DO BEGIN
-              FOREACH date,katus.date,ind DO BEGIN
+              ;; FOREACH date,katus.date.utc,ind DO BEGIN
+              FOR ind=0,N_ELEMENTS(katus.date.utc)-1 DO BEGIN
 
                  tmpInit_i = WHERE((dst.time GE katus.init.utc[ind]) AND $
                                    (dst.time LT katus.mp.utc[ind]  ), $
@@ -142,14 +142,14 @@ PRO GET_NONSTORM_MAINPHASE_AND_RECOVERYPHASE_PERIODS,dst, $
                     n_rp  += rpCount
                  ENDIF
 
-                 ;; ENDFOR
-                 ENDFOREACH
+                 ENDFOR
+                 ;; ENDFOREACH
 
                  init_dst_i = init_dst_i[0:(n_init-1)]
                  mp_dst_i   = mp_dst_i[0:(n_mp-1)]
                  rp_dst_i   = rp_dst_i[0:(n_rp-1)]
 
-                 stormCount = n_init + n_mp + n_rp
+                 n_s        = n_init + n_mp + n_rp
 
                  s_dst_i    = [init_dst_i,mp_dst_i,rp_dst_i]
                  s_dst_i    = s_dst_i[SORT(s_dst_i)]
@@ -215,7 +215,7 @@ PRO GET_NONSTORM_MAINPHASE_AND_RECOVERYPHASE_PERIODS,dst, $
                  earlyRP_dst_i = earlyRP_dst_i[0:(n_earlyRP-1)]
                  lateRP_dst_i  = lateRP_dst_i[0:(n_lateRP-1)]
 
-                 stormCount    = n_init + n_earlyMP + n_lateMP + n_earlyRP + n_lateRP
+                 n_s           = n_init + n_earlyMP + n_lateMP + n_earlyRP + n_lateRP
 
                  s_dst_i       = [init_dst_i,earlyMP_dst_i,lateMP_dst_i,earlyRP_dst_i,lateRP_dst_i]
                  s_dst_i       = s_dst_i[SORT(s_dst_i)]

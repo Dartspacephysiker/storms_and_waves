@@ -29,7 +29,7 @@ PRO JOURNAL__20171130__ESPEC_PLOTS__KATUS_STORMPHASES
   use_GEI                         = 0
   use_GEO                         = 0
   use_MAG                         = 0
-  use_SDT                         = 1
+  use_SDT                         = 0
 
   justData                        = 0
 
@@ -123,7 +123,7 @@ PRO JOURNAL__20171130__ESPEC_PLOTS__KATUS_STORMPHASES
 
   ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
   ;;Hemi stuff
-  globePlots         = 1
+  globePlots         = 0
 
   hemi               = 'NORTH'
   ;; hemi            = 'BOTH'
@@ -319,6 +319,7 @@ PRO JOURNAL__20171130__ESPEC_PLOTS__KATUS_STORMPHASES
         CHARIEPLOTRANGE=chariEPlotRange, $
         EPLOTRANGE=EPlotRange, $
         ENUMFLPLOTRANGE=ENumFlPlotRange, $
+        ESPEC__GIGANTE_DB=eSpec__gigante_DB, $
         ESPEC__NEWELL_PLOTRANGE=eSpec__newell_plotRange, $
         ESPEC__T_PROBOCC_PLOTRANGE=eSpec__t_probOcc_plotRange, $
         NEWELL_ANALYZE_EFLUX=newell_analyze_eFlux, $
