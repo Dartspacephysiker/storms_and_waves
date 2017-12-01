@@ -7,5 +7,10 @@ PRO JOURNAL__20171201__CHECK_OUT_KATUS_STORMS_TO_ORBIT_24634
   northFil = 'eSpec_katusPhases-orbs_1000-24634-48-90_ILAT-300-4300km-SOUTH.sav'
   southFil = 'eSpec_katusPhases-orbs_500-24634-48-90_ILAT-300-4300km-NORTH.sav'
 
+  RESTORE,dir+northFil
   
+  
+
+  STOP
+
 END
