@@ -5,7 +5,7 @@ PRO JOURNAL__20171130__ESPEC_PLOTS__KATUS_STORMPHASES
   use_katus_storm_phases          = 0 ;use 2 if you want earlyMP,lateMP,earlyRP,lateRP
 
   use_prev_plot_i                 = 1
-  remake_prev_plot_file           = 1
+  remake_prev_plot_file           = 0
   use_prev_tHistos                = 0
   
   disregard_sample_t              = 1
@@ -24,10 +24,14 @@ PRO JOURNAL__20171130__ESPEC_PLOTS__KATUS_STORMPHASES
                                     [ 300,4300] $
                                     ]
 
+  ;; restrict by season?
+  ;; spring, summer, fall, winter
+  restrict_by_season              = 'fall'
+
   use_Lng                         = 0
   use_GEI                         = 0
   use_GEO                         = 0
-  use_MAG                         = 1
+  use_MAG                         = 0
   use_SDT                         = 0
 
   justData                        = 0
@@ -122,22 +126,22 @@ PRO JOURNAL__20171130__ESPEC_PLOTS__KATUS_STORMPHASES
 
   ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
   ;;Hemi stuff
-  globePlots         = 1
-  tinyBins           = 1
+  globePlots         = 0
+  tinyBins           = 0
   bigBins            = 0
 
-  hemi               = 'NORTH'
-  ;; hemi            = 'BOTH'
-  ;; minI            = 50
-  minI               = KEYWORD_SET(use_MAG) OR KEYWORD_SET(use_GEO) OR KEYWORD_SET(use_GEI) ? 30 : 48
+  ;; hemi               = 'NORTH'
+  ;; ;; hemi            = 'BOTH'
+  ;; ;; minI            = 50
+  ;; ;; minI               = KEYWORD_SET(use_MAG) OR KEYWORD_SET(use_GEO) OR KEYWORD_SET(use_GEI) ? 30 : 48
   ;; minI            = 60
-  maxI               = 90
+  ;; maxI               = 90
 
-  hemi            = 'SOUTH'
-  minI            = -90
-  maxI         = -48
+  ;; hemi            = 'SOUTH'
+  ;; minI            = -90
+  ;; ;; maxI         = -48
   ;; maxI            = -60
-  orbRange        = [(1000 > orbRange[0]),orbRange[1]]
+  ;; orbRange        = [(1000 > orbRange[0]),orbRange[1]]
 
   CASE 1 OF
      KEYWORD_SET(tinyBins): BEGIN
@@ -471,6 +475,7 @@ PRO JOURNAL__20171130__ESPEC_PLOTS__KATUS_STORMPHASES
         LATEST_UTC=latest_UTC, $
         EARLIEST_JULDAY=earliest_julDay, $
         LATEST_JULDAY=latest_julDay, $
+        RESTRICT_BY_SEASON=restrict_by_season, $
         SHOW_INTEGRALS=show_integrals, $
         MAKE_INTEGRAL_TXTFILE=make_integral_txtfile, $
         MAKE_INTEGRAL_SAVFILES=make_integral_savfiles, $
