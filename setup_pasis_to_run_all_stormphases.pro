@@ -8,6 +8,7 @@ PRO SETUP_PASIS_TO_RUN_ALL_STORMPHASES, $
    TILING_ORDER=tiling_order, $
    N_TILE_COLUMNS=n_tile_columns, $
    N_TILE_ROWS=n_tile_rows, $
+   STACKED_PLOTS=stacked_plots, $
    TILE__NO_COLORBAR_ARRAY=tile__no_colorbar_array, $
    COLORBAR_FOR_ALL=colorbar_for_all, $
    USE_KATUS_STORM_PHASES=use_katus_storm_phases, $
@@ -28,9 +29,16 @@ PRO SETUP_PASIS_TO_RUN_ALL_STORMPHASES, $
            niceStrings   = ["Initial phase","Main phase","Recovery phase"]
            tileStr       = ["init"         ,"mp"        ,"rp"]
            tileTitle     = ["Initial phase","Main phase","Recovery phase"]
-           tileOrder     = [0,1,2]
-           tileCol       = 3
-           tileRow       = 1
+           IF KEYWORD_SET(stacked_plots) THEN BEGIN
+              tileOrder  = [ 0,1, $
+                            -9,2]
+              tileCol    = 2
+              tileRow    = 2
+           ENDIF ELSE BEGIN
+              tileOrder  = [0,1,2]
+              tileCol    = 3
+              tileRow    = 1
+           ENDELSE
            tilePlotSuff  = ""
 
         END
@@ -61,8 +69,8 @@ PRO SETUP_PASIS_TO_RUN_ALL_STORMPHASES, $
      tileStr       = ["quiesc"   ,"mp"        ,"rp"]
      tileTitle     = ["Quiescent","Main phase","Recovery phase"]
      tileOrder     = [0,1,2]
-     tileCol       = 3
-     tileRow       = 1
+     tileCol       = KEYWORD_SET(stacked_plots) ? 1 : 3
+     tileRow       = KEYWORD_SET(stacked_plots) ? 3 : 1
      tilePlotSuff  = ""
 
 

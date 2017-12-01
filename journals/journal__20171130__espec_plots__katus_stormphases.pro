@@ -2,10 +2,10 @@
 PRO JOURNAL__20171130__ESPEC_PLOTS__KATUS_STORMPHASES
 
   use_mostRecent_Dst_files        = 1
-  use_katus_storm_phases          = 1 ;use 2 if you want earlyMP,lateMP,earlyRP,lateRP
+  use_katus_storm_phases          = 0 ;use 2 if you want earlyMP,lateMP,earlyRP,lateRP
 
   use_prev_plot_i                 = 1
-  remake_prev_plot_file           = 0
+  remake_prev_plot_file           = 1
   use_prev_tHistos                = 0
   
   disregard_sample_t              = 1
@@ -27,7 +27,7 @@ PRO JOURNAL__20171130__ESPEC_PLOTS__KATUS_STORMPHASES
   use_Lng                         = 0
   use_GEI                         = 0
   use_GEO                         = 0
-  use_MAG                         = 0
+  use_MAG                         = 1
   use_SDT                         = 0
 
   justData                        = 0
@@ -122,29 +122,37 @@ PRO JOURNAL__20171130__ESPEC_PLOTS__KATUS_STORMPHASES
 
   ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
   ;;Hemi stuff
-  globePlots         = 0
-  tinyBins           = 0
+  globePlots         = 1
+  tinyBins           = 1
+  bigBins            = 0
 
   hemi               = 'NORTH'
   ;; hemi            = 'BOTH'
   ;; minI            = 50
-  ;; minI               = KEYWORD_SET(use_MAG) OR KEYWORD_SET(use_GEO) OR KEYWORD_SET(use_GEI) ? 30 : 48
-  minI            = 60
+  minI               = KEYWORD_SET(use_MAG) OR KEYWORD_SET(use_GEO) OR KEYWORD_SET(use_GEI) ? 30 : 48
+  ;; minI            = 60
   maxI               = 90
 
-  ;; hemi            = 'SOUTH'
-  ;; minI            = -90
-  ;; ;; maxI         = -48
+  hemi            = 'SOUTH'
+  minI            = -90
+  maxI         = -48
   ;; maxI            = -60
   orbRange        = [(1000 > orbRange[0]),orbRange[1]]
 
-  IF KEYWORD_SET(tinyBins) THEN BEGIN
-     binI               = 0.5
-     binM               = 0.25
-  ENDIF ELSE BEGIN
-     binI               = 1.0
-     binM               = 1.0
-  ENDELSE
+  CASE 1 OF
+     KEYWORD_SET(tinyBins): BEGIN
+        binI               = 0.5
+        binM               = 0.25
+     END
+     KEYWORD_SET(bigBins): BEGIN
+        binI               = 2.5
+        binM               = 1.5
+     END
+     ELSE: BEGIN
+        binI               = 1.0
+        binM               = 1.0
+     END
+  ENDCASE
 
   IF KEYWORD_SET(globePlots) THEN BEGIN
      hemi            = 'GLOBE'
@@ -153,6 +161,7 @@ PRO JOURNAL__20171130__ESPEC_PLOTS__KATUS_STORMPHASES
      binI            = 2.0
      binM            = 0.5
      map_projection  = 'ROBINSON'
+     stacked_plots   = 1
   ENDIF
 
   ;; maskMin                        = 5
@@ -209,6 +218,7 @@ PRO JOURNAL__20171130__ESPEC_PLOTS__KATUS_STORMPHASES
         TILING_ORDER=tiling_order, $
         N_TILE_COLUMNS=n_tile_columns, $
         N_TILE_ROWS=n_tile_rows, $
+        STACKED_PLOTS=stacked_plots, $
         TILE__NO_COLORBAR_ARRAY=tile__no_colorbar_array, $
         COLORBAR_FOR_ALL=colorbar_for_all, $
         USE_KATUS_STORM_PHASES=use_katus_storm_phases, $
