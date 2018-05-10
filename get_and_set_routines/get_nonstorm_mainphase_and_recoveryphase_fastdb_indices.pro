@@ -10,6 +10,10 @@ PRO GET_NONSTORM_MAINPHASE_AND_RECOVERYPHASE_FASTDB_INDICES, $
    GET_ESPECDB_I_NOT_ALFDB_I=get_eSpecdb_i_not_alfDB_i, $
    GET_IONDB_I_NOT_ALFDB_I=get_iondb_i_not_alfDB_i, $
    GET_SWAY_I_NOT_ALFDB_I=get_sWay_i_not_alfDB_i, $
+   GET_CUSTOM_I_NOT_ALFDB_I=get_custom_i, $
+   CUSTOMDB=customDB, $
+   CUSTOMTIMES=customTimes, $
+   CUSTOMGOOD_I=customGood_i, $
    NONSTORM_I=ns_i, $
    INITIALPHASE_I=init_i, $
    MAINPHASE_I=mp_i, $
@@ -224,6 +228,15 @@ PRO GET_NONSTORM_MAINPHASE_AND_RECOVERYPHASE_FASTDB_INDICES, $
                       SMOOTH_DST=alfDB_plot_struct.storm_opt.smooth_Dst, $
                       USE_MOSTRECENT_DST_FILES=alfDB_plot_struct.storm_opt.use_mostRecent_Dst_files, $
                       USE_KATUS_STORM_PHASES=use_katus_storm_phases)
+     END
+     KEYWORD_SET(get_custom_i): BEGIN
+        pDBStruct   = PTR_NEW(TEMPORARY(customDB))
+        pDBTimes    = PTR_NEW(TEMPORARY(customTimes))
+
+        good_i      = customGood_i
+        dbString    = 'customDB'
+        todaysFile  = ''
+
      END
      ELSE: BEGIN
         @common__maximus_vars.pro
@@ -461,7 +474,8 @@ PRO GET_NONSTORM_MAINPHASE_AND_RECOVERYPHASE_FASTDB_INDICES, $
 
      ENDIF ELSE BEGIN
 
-        SAVE,ns_i,mp_i,rp_i,s_dst_i,ns_dst_i,mp_dst_i,rp_dst_i, $
+        IF todaysFile NE '' THEN $
+           SAVE,ns_i,mp_i,rp_i,s_dst_i,ns_dst_i,mp_dst_i,rp_dst_i, $
              n_s,n_ns,n_mp,n_rp, $
              ns_t1,ns_t2,mp_t1,mp_t2,rp_t1,rp_t2, $
              FILENAME=todaysFile
@@ -488,6 +502,10 @@ PRO GET_NONSTORM_MAINPHASE_AND_RECOVERYPHASE_FASTDB_INDICES, $
            FL__fastLoc       = TEMPORARY(*pDBStruct)
            FASTLOC__times    = TEMPORARY(*pDBTimes)
         ENDELSE        
+     END
+     KEYWORD_SET(get_custom_i): BEGIN
+        customDB    = TEMPORARY(*pDBStruct)
+        customTimes = TEMPORARY(*pDBTimes)
      END
      ELSE: BEGIN
         MAXIMUS__maximus     = TEMPORARY(*pDBStruct)
