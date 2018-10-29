@@ -6,8 +6,8 @@ PRO JOURNAL__20181027__ESPEC_FINALDB_PLOTS_STORMPHASES
   use_mostRecent_Dst_files        = 1
   use_katus_storm_phases          = 0 ;use 2 if you want earlyMP,lateMP,earlyRP,lateRP
 
-  use_prev_plot_i                 = 0
-  remake_prev_plot_file           = 1
+  use_prev_plot_i                 = 1
+  remake_prev_plot_file           = 0
   use_prev_tHistos                = 1
   
   disregard_sample_t              = 1
@@ -137,17 +137,17 @@ PRO JOURNAL__20181027__ESPEC_FINALDB_PLOTS_STORMPHASES
   tinyBins           = 0
   bigBins            = 0
 
-  ;; hemi               = 'NORTH'
+  hemi               = 'NORTH'
   ;; hemi = 'SOUTH'
   ;; ;; hemi            = 'BOTH'
   ;; ;; minI            = 50
   ;; ;; minI               = KEYWORD_SET(use_MAG) OR KEYWORD_SET(use_GEO) OR KEYWORD_SET(use_GEI) ? 30 : 48
-  ;; minI            = 48
-  ;; maxI               = 90
+  minI            = 48
+  maxI               = 90
 
-  hemi            = 'SOUTH'
-  minI            = -90
-  maxI            = -48
+  ;; hemi            = 'SOUTH'
+  ;; minI            = -90
+  ;; maxI            = -48
   ;; maxI            = -60
   ;; orbRange        = [(1000 > orbRange[0]),orbRange[1]]
 
