@@ -1,17 +1,20 @@
 ;;2017/11/30 asdlfkjsafd;lkjalweoiruojdabcxbvxmbvclzjdahiw8392423
 PRO JOURNAL__20181027__ESPEC_FINALDB_PLOTS_STORMPHASES
 
+  ;; del_PS = 1
+
   use_mostRecent_Dst_files        = 1
   use_katus_storm_phases          = 0 ;use 2 if you want earlyMP,lateMP,earlyRP,lateRP
 
-  use_prev_plot_i                 = 1
-  remake_prev_plot_file           = 0
-  use_prev_tHistos                = 0
+  use_prev_plot_i                 = 0
+  remake_prev_plot_file           = 1
+  use_prev_tHistos                = 1
   
   disregard_sample_t              = 1
 
   ;; orbRange                        = [500,24634]
-  orbRange                        = [500,25445] 
+  ;; orbRange                        = [500,25445] 
+  orbRange                        = [500,29236] 
   ;; orbRange                        = [1000,12670]
 
   ;; altRange                     = [ $
@@ -27,7 +30,7 @@ PRO JOURNAL__20181027__ESPEC_FINALDB_PLOTS_STORMPHASES
 
   ;; restrict by season?
   ;; spring, summer, fall, winter
-  restrict_by_season              = 'fall'
+  ;; restrict_by_season              = 'fall'
 
   use_Lng                         = 0
   use_GEI                         = 0
@@ -135,15 +138,16 @@ PRO JOURNAL__20181027__ESPEC_FINALDB_PLOTS_STORMPHASES
   bigBins            = 0
 
   ;; hemi               = 'NORTH'
+  ;; hemi = 'SOUTH'
   ;; ;; hemi            = 'BOTH'
   ;; ;; minI            = 50
   ;; ;; minI               = KEYWORD_SET(use_MAG) OR KEYWORD_SET(use_GEO) OR KEYWORD_SET(use_GEI) ? 30 : 48
-  ;; minI            = 60
+  ;; minI            = 48
   ;; maxI               = 90
 
-  ;; hemi            = 'SOUTH'
-  ;; minI            = -90
-  ;; ;; maxI         = -48
+  hemi            = 'SOUTH'
+  minI            = -90
+  maxI            = -48
   ;; maxI            = -60
   ;; orbRange        = [(1000 > orbRange[0]),orbRange[1]]
 
